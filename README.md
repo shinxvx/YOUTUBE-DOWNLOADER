@@ -23,6 +23,7 @@ and music are provisional (see `ASSETS.md`).
 | Check the real Electron app (saves, preload) | `npm run check:electron` (Linux: `xvfb-run -a …`) |
 | Windows x64 app folder | `npm run package:win` → `out/EidraNexusAcademy-win32-x64/` |
 | Windows installer (Squirrel) | `npm run make:win` → `out/make/squirrel.windows/x64/EidraNexusAcademy-Setup.exe` |
+| Windows installer + portable (NSIS, needs Wine on Linux) | `npm run installer:win` → `release/` |
 | Windows portable zip | `npm run make:win-zip` → `out/make/zip/win32/x64/` |
 | Regenerate provisional art | `npm run art` (Python 3 + Pillow) |
 
@@ -33,6 +34,11 @@ The game opens through its own executable (`EidraNexusAcademy.exe`). The player
 does not need Node.js, a browser, a terminal or a dev server. The `.exe` ships
 with its support files (DLLs, `.pak`, `resources/app.asar`), which is normal
 for Electron and fine for Steam.
+
+## Download (v0.1)
+
+- Installer: https://updates.brgirlslive.com/eidra/EidraNexusAcademy-Setup.exe
+- Portable: https://updates.brgirlslive.com/eidra/EidraNexusAcademy-Portable.exe
 
 ## Desktop features
 

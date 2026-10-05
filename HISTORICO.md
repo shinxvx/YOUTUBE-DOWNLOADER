@@ -1,5 +1,15 @@
 # Histórico
 
+## 2026-10-05 — v0.1.0 publicada no servidor
+
+- Código mudou de lugar: `shinxvx/YOUTUBE-DOWNLOADER`, branch `claude/trusting-keller-kgiotm`
+  (o repositório novo não pôde ser criado pela integração).
+- `electron-builder.yml` + `npm run installer:win`: o Forge empacota e o electron-builder gera o instalador
+  NSIS e o portátil a partir do pacote (o Squirrel do Forge exige Windows).
+- Publicado pelo servidor (projeto /Home/Documents/umbrel-apps/eidra-nexus-academy):
+  https://updates.brgirlslive.com/eidra/EidraNexusAcademy-Setup.exe e EidraNexusAcademy-Portable.exe.
+  Download conferido (HTTP 200, sha256 e assinatura). Ainda não instalado num Windows real.
+
 ## 2026-10-05 — v0.1.0: primeira versão jogável
 
 - Projeto criado do zero: Electron 44 + Electron Forge 8, JavaScript, Canvas 480×320 com escala inteira.
