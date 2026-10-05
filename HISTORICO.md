@@ -1,5 +1,12 @@
 # Histórico — Veil of Dawn
 
+## 2026-10-05 — Instalador publicado no servidor de atualizações
+
+- Versão 0.1.0 (commit 4a0b782) publicada pelo projeto do servidor `umbrel-apps/veil-of-dawn`:
+  https://updates.brgirlslive.com/veilofdawn/VeilOfDawn-Setup.exe (e VeilOfDawn-Portable.exe).
+- O instalador é montado no próprio servidor (Docker electronuserland/builder:22-wine), com hash e
+  assinatura ed25519 no latest.json. Download público conferido (sha256 igual).
+
 ## 2026-10-05 — Virou app de desktop + HDRI do amanhecer
 
 - Pedido do dono: o jogo é para desktop, não para navegador. Criado o app Electron 38

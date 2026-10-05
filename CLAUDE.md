@@ -26,4 +26,8 @@ produto é o app (instalador Windows em `release/` via `npm run dist:win`). Tudo
 - HDRI: `assets-src/hdri/*.exr` → `python3 tools/bake_hdri.py` gera `public/assets/sky/`.
 - Depois de mudar algo: `npm run build` e `xvfb-run -a node tools/playthrough.mjs`
   (joga a fatia inteira dentro do app Electron). Não dizer que algo foi testado sem ter rodado.
+- Publicar uma versão para os jogadores: no servidor Umbrel, projeto
+  `/Home/Documents/umbrel-apps/veil-of-dawn` (leia o CLAUDE.md de lá). Faça push aqui primeiro; o
+  `ferramentas/publicar.mjs` de lá baixa este branch, monta o instalador e publica em
+  https://updates.brgirlslive.com/veilofdawn/VeilOfDawn-Setup.exe. Suba `version` no package.json.
 - Registrar cada alteração no topo do `HISTORICO.md`.
