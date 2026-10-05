@@ -48,7 +48,7 @@ export class TitleScene extends Phaser.Scene {
       onSelect: it => this.select(it.id),
     });
     text(this, GAME_W / 2, GAME_H - 26, 'An original JRPG · Vertical slice (Milestone 1) · F11 fullscreen', { size: 13, color: '#8a826f', origin: 0.5 });
-    text(this, 24, GAME_H - 26, 'v0.1', { size: 13, color: '#6d6758', origin: [0, 0.5] });
+    text(this, 24, GAME_H - 26, 'v0.2', { size: 13, color: '#6d6758', origin: [0, 0.5] });
     this.modal = null;
     audio.play('title');
     window.__VH = Object.assign(window.__VH || {}, { title: this });
