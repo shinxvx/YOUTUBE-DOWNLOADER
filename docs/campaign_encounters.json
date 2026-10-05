@@ -1,0 +1,517 @@
+{
+  "targetMainCampaignMinutes": 300,
+  "mandatoryGrinding": false,
+  "standardBattleTargetMinutes": [
+    1,
+    3
+  ],
+  "bossTargetMinutes": [
+    5,
+    8
+  ],
+  "finalSequenceTargetMinutes": [
+    12,
+    18
+  ],
+  "chapters": [
+    {
+      "chapter": 1,
+      "targetMinutes": 35,
+      "standardEncounters": [
+        {
+          "id": "chapter_1_encounter_01",
+          "enemyIds": [
+            "ash_thrall"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        },
+        {
+          "id": "chapter_1_encounter_02",
+          "enemyIds": [
+            "blood_hound"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        },
+        {
+          "id": "chapter_1_encounter_03",
+          "enemyIds": [
+            "gloom_stalker"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        },
+        {
+          "id": "chapter_1_encounter_04",
+          "enemyIds": [
+            "ash_thrall",
+            "blood_hound"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        },
+        {
+          "id": "chapter_1_encounter_05",
+          "enemyIds": [
+            "ash_thrall"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        },
+        {
+          "id": "chapter_1_encounter_06",
+          "enemyIds": [
+            "blood_hound"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        }
+      ],
+      "bossEncounters": [
+        {
+          "id": "garran",
+          "assetKey": "garran_enemy",
+          "nonlethal": false
+        }
+      ]
+    },
+    {
+      "chapter": 2,
+      "targetMinutes": 55,
+      "standardEncounters": [
+        {
+          "id": "chapter_2_encounter_01",
+          "enemyIds": [
+            "crypt_lancer"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        },
+        {
+          "id": "chapter_2_encounter_02",
+          "enemyIds": [
+            "scarlet_acolyte"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": "cassian_reed"
+        },
+        {
+          "id": "chapter_2_encounter_03",
+          "enemyIds": [
+            "crypt_lancer",
+            "scarlet_acolyte"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        },
+        {
+          "id": "chapter_2_encounter_04",
+          "enemyIds": [
+            "court_sentry",
+            "memory_moth"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        },
+        {
+          "id": "chapter_2_encounter_05",
+          "enemyIds": [
+            "crypt_lancer"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        },
+        {
+          "id": "chapter_2_encounter_06",
+          "enemyIds": [
+            "scarlet_acolyte"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        },
+        {
+          "id": "chapter_2_encounter_07",
+          "enemyIds": [
+            "crypt_lancer",
+            "scarlet_acolyte"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        },
+        {
+          "id": "chapter_2_encounter_08",
+          "enemyIds": [
+            "court_sentry",
+            "memory_moth"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": "cassian_reed"
+        },
+        {
+          "id": "chapter_2_encounter_09",
+          "enemyIds": [
+            "crypt_lancer"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        }
+      ],
+      "bossEncounters": [
+        {
+          "id": "maelis",
+          "assetKey": "maelis_enemy",
+          "nonlethal": false
+        }
+      ]
+    },
+    {
+      "chapter": 3,
+      "targetMinutes": 60,
+      "standardEncounters": [
+        {
+          "id": "chapter_3_encounter_01",
+          "enemyIds": [
+            "grave_weaver"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        },
+        {
+          "id": "chapter_3_encounter_02",
+          "enemyIds": [
+            "memory_moth",
+            "grave_weaver"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": "ayla_moon"
+        },
+        {
+          "id": "chapter_3_encounter_03",
+          "enemyIds": [
+            "grave_weaver",
+            "gloom_stalker"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        },
+        {
+          "id": "chapter_3_encounter_04",
+          "enemyIds": [
+            "crypt_lancer",
+            "memory_moth"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        },
+        {
+          "id": "chapter_3_encounter_05",
+          "enemyIds": [
+            "grave_weaver"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        },
+        {
+          "id": "chapter_3_encounter_06",
+          "enemyIds": [
+            "memory_moth",
+            "grave_weaver"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        },
+        {
+          "id": "chapter_3_encounter_07",
+          "enemyIds": [
+            "grave_weaver",
+            "gloom_stalker"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        },
+        {
+          "id": "chapter_3_encounter_08",
+          "enemyIds": [
+            "crypt_lancer",
+            "memory_moth"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": "ayla_moon"
+        },
+        {
+          "id": "chapter_3_encounter_09",
+          "enemyIds": [
+            "grave_weaver"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        }
+      ],
+      "bossEncounters": [
+        {
+          "id": "sevrin",
+          "assetKey": "sevrin_enemy",
+          "nonlethal": false
+        }
+      ]
+    },
+    {
+      "chapter": 4,
+      "targetMinutes": 70,
+      "standardEncounters": [
+        {
+          "id": "chapter_4_encounter_01",
+          "enemyIds": [
+            "raven_knight"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        },
+        {
+          "id": "chapter_4_encounter_02",
+          "enemyIds": [
+            "raven_knight",
+            "court_sentry"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": "nox_varen"
+        },
+        {
+          "id": "chapter_4_encounter_03",
+          "enemyIds": [
+            "scarlet_acolyte",
+            "crypt_lancer"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        },
+        {
+          "id": "chapter_4_encounter_04",
+          "enemyIds": [
+            "gloom_stalker",
+            "grave_weaver"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        },
+        {
+          "id": "chapter_4_encounter_05",
+          "enemyIds": [
+            "raven_knight"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        },
+        {
+          "id": "chapter_4_encounter_06",
+          "enemyIds": [
+            "raven_knight",
+            "court_sentry"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        },
+        {
+          "id": "chapter_4_encounter_07",
+          "enemyIds": [
+            "scarlet_acolyte",
+            "crypt_lancer"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": "nox_varen"
+        },
+        {
+          "id": "chapter_4_encounter_08",
+          "enemyIds": [
+            "gloom_stalker",
+            "grave_weaver"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        }
+      ],
+      "bossEncounters": [
+        {
+          "id": "rowan_voss",
+          "assetKey": "rowan_voss_battle",
+          "nonlethal": true
+        },
+        {
+          "id": "orin_ren",
+          "assetKey": "orin_ren_enemy",
+          "nonlethal": false
+        }
+      ]
+    },
+    {
+      "chapter": 5,
+      "targetMinutes": 80,
+      "standardEncounters": [
+        {
+          "id": "chapter_5_encounter_01",
+          "enemyIds": [
+            "raven_knight",
+            "scarlet_acolyte"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        },
+        {
+          "id": "chapter_5_encounter_02",
+          "enemyIds": [
+            "court_sentry",
+            "raven_knight"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        },
+        {
+          "id": "chapter_5_encounter_03",
+          "enemyIds": [
+            "grave_weaver",
+            "memory_moth"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        },
+        {
+          "id": "chapter_5_encounter_04",
+          "enemyIds": [
+            "crypt_lancer",
+            "scarlet_acolyte",
+            "court_sentry"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        },
+        {
+          "id": "chapter_5_encounter_05",
+          "enemyIds": [
+            "raven_knight",
+            "scarlet_acolyte"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        },
+        {
+          "id": "chapter_5_encounter_06",
+          "enemyIds": [
+            "court_sentry",
+            "raven_knight"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        },
+        {
+          "id": "chapter_5_encounter_07",
+          "enemyIds": [
+            "grave_weaver",
+            "memory_moth"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        },
+        {
+          "id": "chapter_5_encounter_08",
+          "enemyIds": [
+            "crypt_lancer",
+            "scarlet_acolyte",
+            "court_sentry"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        },
+        {
+          "id": "chapter_5_encounter_09",
+          "enemyIds": [
+            "raven_knight",
+            "scarlet_acolyte"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        },
+        {
+          "id": "chapter_5_encounter_10",
+          "enemyIds": [
+            "court_sentry",
+            "raven_knight"
+          ],
+          "placement": "Author a distinct route/objective for this planned slot",
+          "guestSupportId": null
+        }
+      ],
+      "bossEncounters": [
+        {
+          "id": "valka",
+          "assetKey": "valka_enemy",
+          "nonlethal": false
+        },
+        {
+          "id": "veyr",
+          "assetKey": "veyr_enemy",
+          "nonlethal": false
+        }
+      ]
+    }
+  ],
+  "optionalEncounters": [
+    {
+      "id": "optional_01",
+      "chapter": 2,
+      "enemyIds": [
+        "crypt_lancer",
+        "scarlet_acolyte"
+      ],
+      "quest": "Cassian evacuation ledger",
+      "mandatory": false
+    },
+    {
+      "id": "optional_02",
+      "chapter": 3,
+      "enemyIds": [
+        "grave_weaver"
+      ],
+      "quest": "Ayla shrine relay",
+      "mandatory": false
+    },
+    {
+      "id": "optional_03",
+      "chapter": 4,
+      "enemyIds": [
+        "raven_knight"
+      ],
+      "quest": "Nox captive testimony",
+      "mandatory": false
+    },
+    {
+      "id": "optional_04",
+      "chapter": 5,
+      "enemyIds": [
+        "selene_dusk"
+      ],
+      "quest": "Selene moon-seal archive",
+      "mandatory": false
+    },
+    {
+      "id": "optional_05",
+      "chapter": 1,
+      "enemyIds": [
+        "gloom_stalker",
+        "blood_hound"
+      ],
+      "quest": "Sheltered beast den",
+      "mandatory": false
+    },
+    {
+      "id": "optional_06",
+      "chapter": 5,
+      "enemyIds": [
+        "raven_knight",
+        "court_sentry"
+      ],
+      "quest": "Court vault",
+      "mandatory": false
+    }
+  ]
+}

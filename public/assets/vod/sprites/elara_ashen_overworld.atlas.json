@@ -1,0 +1,252 @@
+{
+  "frames": {
+    "0": {
+      "frame": {
+        "x": 87,
+        "y": 41,
+        "w": 219,
+        "h": 329
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 62,
+        "y": 19,
+        "w": 219,
+        "h": 329
+      },
+      "sourceSize": {
+        "w": 352,
+        "h": 352
+      }
+    },
+    "1": {
+      "frame": {
+        "x": 399,
+        "y": 44,
+        "w": 231,
+        "h": 330
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 60,
+        "y": 18,
+        "w": 231,
+        "h": 330
+      },
+      "sourceSize": {
+        "w": 352,
+        "h": 352
+      }
+    },
+    "2": {
+      "frame": {
+        "x": 731,
+        "y": 44,
+        "w": 230,
+        "h": 330
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 74,
+        "y": 18,
+        "w": 230,
+        "h": 330
+      },
+      "sourceSize": {
+        "w": 352,
+        "h": 352
+      }
+    },
+    "3": {
+      "frame": {
+        "x": 104,
+        "y": 409,
+        "w": 204,
+        "h": 322
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 92,
+        "y": 26,
+        "w": 204,
+        "h": 322
+      },
+      "sourceSize": {
+        "w": 352,
+        "h": 352
+      }
+    },
+    "4": {
+      "frame": {
+        "x": 413,
+        "y": 409,
+        "w": 241,
+        "h": 318
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 89,
+        "y": 30,
+        "w": 241,
+        "h": 318
+      },
+      "sourceSize": {
+        "w": 352,
+        "h": 352
+      }
+    },
+    "5": {
+      "frame": {
+        "x": 736,
+        "y": 409,
+        "w": 224,
+        "h": 318
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 94,
+        "y": 30,
+        "w": 224,
+        "h": 318
+      },
+      "sourceSize": {
+        "w": 352,
+        "h": 352
+      }
+    },
+    "6": {
+      "frame": {
+        "x": 88,
+        "y": 761,
+        "w": 180,
+        "h": 328
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 67,
+        "y": 20,
+        "w": 180,
+        "h": 328
+      },
+      "sourceSize": {
+        "w": 352,
+        "h": 352
+      }
+    },
+    "7": {
+      "frame": {
+        "x": 389,
+        "y": 761,
+        "w": 224,
+        "h": 327
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 44,
+        "y": 21,
+        "w": 224,
+        "h": 327
+      },
+      "sourceSize": {
+        "w": 352,
+        "h": 352
+      }
+    },
+    "8": {
+      "frame": {
+        "x": 711,
+        "y": 764,
+        "w": 226,
+        "h": 324
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 42,
+        "y": 24,
+        "w": 226,
+        "h": 324
+      },
+      "sourceSize": {
+        "w": 352,
+        "h": 352
+      }
+    },
+    "9": {
+      "frame": {
+        "x": 91,
+        "y": 1121,
+        "w": 213,
+        "h": 342
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 76,
+        "y": 6,
+        "w": 213,
+        "h": 342
+      },
+      "sourceSize": {
+        "w": 352,
+        "h": 352
+      }
+    },
+    "10": {
+      "frame": {
+        "x": 425,
+        "y": 1121,
+        "w": 217,
+        "h": 339
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 88,
+        "y": 9,
+        "w": 217,
+        "h": 339
+      },
+      "sourceSize": {
+        "w": 352,
+        "h": 352
+      }
+    },
+    "11": {
+      "frame": {
+        "x": 740,
+        "y": 1121,
+        "w": 224,
+        "h": 342
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 82,
+        "y": 6,
+        "w": 224,
+        "h": 342
+      },
+      "sourceSize": {
+        "w": 352,
+        "h": 352
+      }
+    }
+  },
+  "meta": {
+    "image": "elara_ashen_overworld_master.png",
+    "size": {
+      "w": 1024,
+      "h": 1536
+    },
+    "scale": "1"
+  }
+}

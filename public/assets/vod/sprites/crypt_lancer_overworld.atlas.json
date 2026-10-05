@@ -1,0 +1,252 @@
+{
+  "frames": {
+    "0": {
+      "frame": {
+        "x": 67,
+        "y": 103,
+        "w": 214,
+        "h": 270
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 58,
+        "y": 30,
+        "w": 214,
+        "h": 270
+      },
+      "sourceSize": {
+        "w": 304,
+        "h": 304
+      }
+    },
+    "1": {
+      "frame": {
+        "x": 417,
+        "y": 103,
+        "w": 224,
+        "h": 274
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 24,
+        "y": 26,
+        "w": 224,
+        "h": 274
+      },
+      "sourceSize": {
+        "w": 304,
+        "h": 304
+      }
+    },
+    "2": {
+      "frame": {
+        "x": 732,
+        "y": 107,
+        "w": 224,
+        "h": 270
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 26,
+        "y": 30,
+        "w": 224,
+        "h": 270
+      },
+      "sourceSize": {
+        "w": 304,
+        "h": 304
+      }
+    },
+    "3": {
+      "frame": {
+        "x": 63,
+        "y": 458,
+        "w": 224,
+        "h": 272
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 56,
+        "y": 28,
+        "w": 224,
+        "h": 272
+      },
+      "sourceSize": {
+        "w": 304,
+        "h": 304
+      }
+    },
+    "4": {
+      "frame": {
+        "x": 397,
+        "y": 457,
+        "w": 227,
+        "h": 273
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 58,
+        "y": 27,
+        "w": 227,
+        "h": 273
+      },
+      "sourceSize": {
+        "w": 304,
+        "h": 304
+      }
+    },
+    "5": {
+      "frame": {
+        "x": 722,
+        "y": 459,
+        "w": 240,
+        "h": 273
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 57,
+        "y": 27,
+        "w": 240,
+        "h": 273
+      },
+      "sourceSize": {
+        "w": 304,
+        "h": 304
+      }
+    },
+    "6": {
+      "frame": {
+        "x": 87,
+        "y": 806,
+        "w": 234,
+        "h": 275
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 17,
+        "y": 25,
+        "w": 234,
+        "h": 275
+      },
+      "sourceSize": {
+        "w": 304,
+        "h": 304
+      }
+    },
+    "7": {
+      "frame": {
+        "x": 414,
+        "y": 806,
+        "w": 231,
+        "h": 275
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 20,
+        "y": 25,
+        "w": 231,
+        "h": 275
+      },
+      "sourceSize": {
+        "w": 304,
+        "h": 304
+      }
+    },
+    "8": {
+      "frame": {
+        "x": 728,
+        "y": 806,
+        "w": 240,
+        "h": 275
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 10,
+        "y": 25,
+        "w": 240,
+        "h": 275
+      },
+      "sourceSize": {
+        "w": 304,
+        "h": 304
+      }
+    },
+    "9": {
+      "frame": {
+        "x": 90,
+        "y": 1160,
+        "w": 223,
+        "h": 270
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 27,
+        "y": 30,
+        "w": 223,
+        "h": 270
+      },
+      "sourceSize": {
+        "w": 304,
+        "h": 304
+      }
+    },
+    "10": {
+      "frame": {
+        "x": 400,
+        "y": 1153,
+        "w": 229,
+        "h": 280
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 22,
+        "y": 20,
+        "w": 229,
+        "h": 280
+      },
+      "sourceSize": {
+        "w": 304,
+        "h": 304
+      }
+    },
+    "11": {
+      "frame": {
+        "x": 722,
+        "y": 1156,
+        "w": 224,
+        "h": 277
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 27,
+        "y": 23,
+        "w": 224,
+        "h": 277
+      },
+      "sourceSize": {
+        "w": 304,
+        "h": 304
+      }
+    }
+  },
+  "meta": {
+    "image": "crypt_lancer_overworld_master.png",
+    "size": {
+      "w": 1024,
+      "h": 1536
+    },
+    "scale": "1"
+  }
+}

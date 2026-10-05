@@ -1,0 +1,231 @@
+{
+  "version": 1,
+  "tuningStatus": "proposed design data; playtest before final balance",
+  "enemies": [
+    {
+      "id": "ash_thrall",
+      "name": "Ash Thrall",
+      "type": "common",
+      "tacticalRole": "straightforward melee",
+      "counter": "Guard and Dawnstone",
+      "overworldKey": "ash_thrall_overworld",
+      "battleKey": "ash_thrall_enemy",
+      "profileKey": "ash_thrall"
+    },
+    {
+      "id": "blood_hound",
+      "name": "Blood Hound",
+      "type": "common",
+      "tacticalRole": "fast bleed pressure",
+      "counter": "Guard and cleanse Bleed",
+      "overworldKey": "blood_hound_overworld",
+      "battleKey": "blood_hound_enemy",
+      "profileKey": "blood_hound"
+    },
+    {
+      "id": "memory_moth",
+      "name": "Memory Moth",
+      "type": "common",
+      "tacticalRole": "memory interference",
+      "counter": "Eren illusion cleanse",
+      "overworldKey": "memory_moth_overworld",
+      "battleKey": "memory_moth_enemy",
+      "profileKey": "memory_moth"
+    },
+    {
+      "id": "court_sentry",
+      "name": "Court Sentry",
+      "type": "common",
+      "tacticalRole": "armored Court guard",
+      "counter": "Resolve break",
+      "overworldKey": "court_sentry_overworld",
+      "battleKey": "court_sentry_enemy",
+      "profileKey": "court_sentry"
+    },
+    {
+      "id": "garran",
+      "name": "Garran",
+      "type": "boss",
+      "tacticalRole": "opening abductor",
+      "counter": "Suppress regeneration",
+      "overworldKey": "garran_overworld",
+      "battleKey": "garran_enemy",
+      "profileKey": "garran"
+    },
+    {
+      "id": "maelis",
+      "name": "Maelis",
+      "type": "boss",
+      "tacticalRole": "city blood/memory crisis",
+      "counter": "Expose clinic anchors",
+      "overworldKey": "maelis_overworld",
+      "battleKey": "maelis_enemy",
+      "profileKey": "maelis"
+    },
+    {
+      "id": "sevrin",
+      "name": "Sevrin",
+      "type": "boss",
+      "tacticalRole": "illusion stage anchors",
+      "counter": "Eren cleanse and exposed anchors",
+      "overworldKey": "sevrin_overworld",
+      "battleKey": "sevrin_enemy",
+      "profileKey": "sevrin"
+    },
+    {
+      "id": "orin_ren",
+      "name": "Orin Ren",
+      "type": "boss",
+      "tacticalRole": "chained storm attacks",
+      "counter": "Ground storm pylons",
+      "overworldKey": "orin_ren_overworld",
+      "battleKey": "orin_ren_enemy",
+      "profileKey": "orin_ren"
+    },
+    {
+      "id": "valka",
+      "name": "Valka",
+      "type": "boss",
+      "tacticalRole": "observatory gate battle",
+      "counter": "Follow established story mechanics",
+      "overworldKey": "valka_overworld",
+      "battleKey": "valka_enemy",
+      "profileKey": "valka"
+    },
+    {
+      "id": "veyr",
+      "name": "Veyr",
+      "type": "final_boss",
+      "tacticalRole": "royal regeneration and engine seals",
+      "counter": "Three-phase seal inversion",
+      "overworldKey": "veyr_overworld",
+      "battleKey": "veyr_enemy",
+      "profileKey": "veyr"
+    },
+    {
+      "id": "crypt_lancer",
+      "name": "Crypt Lancer",
+      "type": "common",
+      "tacticalRole": "protect ally then thrust",
+      "counter": "Shock and flank pressure",
+      "overworldKey": "crypt_lancer_overworld",
+      "battleKey": "crypt_lancer_enemy",
+      "profileKey": "crypt_lancer"
+    },
+    {
+      "id": "scarlet_acolyte",
+      "name": "Scarlet Acolyte",
+      "type": "common",
+      "tacticalRole": "heal partner or curse channel",
+      "counter": "Interrupt the channel",
+      "overworldKey": "scarlet_acolyte_overworld",
+      "battleKey": "scarlet_acolyte_enemy",
+      "profileKey": "scarlet_acolyte"
+    },
+    {
+      "id": "gloom_stalker",
+      "name": "Gloom Stalker",
+      "type": "common",
+      "tacticalRole": "telegraphed Pounce",
+      "counter": "Guard marked ally; initiative control",
+      "overworldKey": "gloom_stalker_overworld",
+      "battleKey": "gloom_stalker_enemy",
+      "profileKey": "gloom_stalker"
+    },
+    {
+      "id": "grave_weaver",
+      "name": "Grave Weaver",
+      "type": "common",
+      "tacticalRole": "root and web anchors",
+      "counter": "Burn web anchor; cleanse Root",
+      "overworldKey": "grave_weaver_overworld",
+      "battleKey": "grave_weaver_enemy",
+      "profileKey": "grave_weaver"
+    },
+    {
+      "id": "raven_knight",
+      "name": "Raven Knight",
+      "type": "elite",
+      "tacticalRole": "counter stance then sweep",
+      "counter": "Support/Guard during stance; stagger recovery",
+      "overworldKey": "raven_knight_overworld",
+      "battleKey": "raven_knight_enemy",
+      "profileKey": "raven_knight"
+    },
+    {
+      "id": "selene_dusk",
+      "name": "Selene Dusk",
+      "type": "optional_miniboss",
+      "tacticalRole": "alternating moon seals",
+      "counter": "Attack the indicated open seal",
+      "overworldKey": "selene_dusk_overworld",
+      "battleKey": "selene_dusk_enemy",
+      "profileKey": "selene_dusk"
+    }
+  ],
+  "guests": [
+    {
+      "id": "cassian_reed",
+      "name": "Cassian Reed",
+      "title": "The Last Shield",
+      "discipline": "Cadence of the Steadfast Gate",
+      "supportSkill": "Hold the Line",
+      "chapters": [
+        2,
+        4
+      ],
+      "role": "guest shield defender",
+      "permanentPartyMember": false,
+      "cooldownTurns": 3,
+      "focusCost": 10,
+      "overworldKey": "cassian_reed_overworld",
+      "battleKey": "cassian_reed_battle",
+      "profileKey": "cassian_reed"
+    },
+    {
+      "id": "ayla_moon",
+      "name": "Ayla Moon",
+      "title": "The Bell of Return",
+      "discipline": "Cadence of the Gentle Chime",
+      "supportSkill": "Clear Chime",
+      "chapters": [
+        3,
+        5
+      ],
+      "role": "guest cleanser and healer",
+      "permanentPartyMember": false,
+      "cooldownTurns": 3,
+      "focusCost": 10,
+      "overworldKey": "ayla_moon_overworld",
+      "battleKey": "ayla_moon_battle",
+      "profileKey": "ayla_moon"
+    },
+    {
+      "id": "nox_varen",
+      "name": "Nox Varen",
+      "title": "The Oath Without a Dawn",
+      "discipline": "Night Domain: Borrowed Silence",
+      "supportSkill": "Anchor Cut",
+      "chapters": [
+        4,
+        5
+      ],
+      "role": "guest scout and regeneration disruptor",
+      "permanentPartyMember": false,
+      "cooldownTurns": 3,
+      "focusCost": 10,
+      "overworldKey": "nox_varen_overworld",
+      "battleKey": "nox_varen_battle",
+      "profileKey": "nox_varen"
+    }
+  ],
+  "coreParty": [
+    "kai",
+    "lyra_fen",
+    "eren_sol",
+    "mira_thorn"
+  ],
+  "activeCorePartySlots": 3,
+  "guestSupportLimit": 1,
+  "guestSupportConsumesPartyAction": true
+}
