@@ -14,6 +14,8 @@
   dentro do selo, chamas brancas, lua vermelha), câmera do palco separada da interface.
 - HDRI: segue na cinemática do nascer do sol e nas cores da luz; a névoa presa ao cenário antigo saiu.
 - Teste completo no app Electron passou sem erros (inclui 2 Clashes e o chefe).
+- Versão 0.2.0 publicada: https://updates.brgirlslive.com/vampirehunters/VampireHunters-Setup.exe (projeto do
+  servidor renomeado para umbrel-apps/vampire-hunters; o link antigo do veilofdawn foi removido).
 
 ## 2026-10-05 — Instalador publicado no servidor de atualizações
 
