@@ -1,6 +1,6 @@
 # Veil of Dawn
 
-An original single-player JRPG for desktop browsers: turn-based battles, exploration over painted
+An original single-player JRPG for desktop (Windows, via Electron): turn-based battles, exploration over painted
 pixel-art environments, cinematic portrait dialogue, and a five-chapter campaign about Kai, a
 nineteen-year-old with a sealed mark, and the vampire king Veyr.
 
@@ -10,15 +10,18 @@ Emberfall, from the festival eve to the dawn departure). The full campaign brief
 
 ## Run it
 
+The player-facing product is the desktop app. Phaser/Vite is only the engine underneath.
+
 ```bash
 npm install
-npm run dev        # http://localhost:5173
-# or a production build:
-npm run build && npm run preview   # http://localhost:4173
+npm run desktop        # build and open the desktop app (Electron)
+npm run dist:win       # Windows installer + portable .exe in release/ (on Linux needs wine)
+npm run dev            # engine-only dev server for fast iteration (not shipped)
 ```
 
-The game is fully offline: no backend, accounts or network calls. Saves live in the browser's
-`localStorage`.
+Fully offline: no backend, accounts or network calls. On desktop, saves and settings are JSON
+files in the user data folder (`%APPDATA%\Veil of Dawn\saves` on Windows; Settings → Open saves
+folder). F11 or Alt+Enter toggles fullscreen.
 
 ### Controls
 
@@ -29,7 +32,9 @@ The game is fully offline: no backend, accounts or network calls. Saves live in 
 | Cancel / back | X, Backspace |
 | Menu (party, items, journal, save, load, settings) | Esc, M |
 
-### Developer URLs
+### Developer switches
+
+Pass them as a query string: `VOD_QUERY='?debug' npm run desktop` (or append to the dev URL).
 
 - `?gallery` – asset gallery (all walking atlases and battle sheets with their animations).
 - `?debug` – draws walkable areas, blockers and occluders over the exploration map.
@@ -58,14 +63,20 @@ All narrative, quests, dialogue, enemies, skills, items and maps are data with s
 
 ## Testing
 
-`tools/playthrough.mjs` plays the whole vertical slice in headless Chromium through the real game
+`tools/playthrough.mjs` plays the whole vertical slice inside the Electron app through the real game
 (keyboard input for exploration and dialogue; battle commands are issued through the same
 `commit()` path the menus use). It checks every main beat, a manual save, autosaves and Continue.
 
 ```bash
-npm run build && npx vite preview --port 4173 &
-node tools/playthrough.mjs
+npm run build
+xvfb-run -a node tools/playthrough.mjs     # without a display; plain `node` on a desktop
 ```
+
+## HDRI sky
+
+`assets-src/hdri/citrus_orchard_puresky_2k.exr` is baked by `python3 tools/bake_hdri.py`
+(needs `pip install openexr numpy pillow`) into `public/assets/sky/`: the sunrise panorama, the
+dawn haze over Emberfall's mountains, and the image-based dawn light colours.
 
 ## Art
 

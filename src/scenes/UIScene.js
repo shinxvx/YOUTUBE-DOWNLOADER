@@ -143,6 +143,35 @@ export class UIScene extends Phaser.Scene {
     });
   }
 
+  // Sunrise over the HDRI sky panorama: the exposure rises from black while the view
+  // drifts toward the sun. Returns a handle; call end() to fade it out.
+  skyCinematic() {
+    const tex = this.textures.get('sky:dawn_panorama').getSourceImage();
+    const light = this.cache.json.get('sky:dawn_light');
+    const scale = GAME_H / tex.height;
+    const sunX = (light?.panorama.sunX ?? tex.width * 0.7) * scale;
+    const sunY = (light?.panorama.sunY ?? tex.height * 0.8) * scale;
+    const img = this.add.image(0, 0, 'sky:dawn_panorama').setOrigin(0).setScale(scale).setDepth(700).setAlpha(0);
+    img.x = GAME_W * 0.5 - sunX + 260;
+    const sun = this.add.image(img.x + sunX, sunY, 'light').setDepth(701).setBlendMode(Phaser.BlendModes.ADD).setTint(0xffc890).setScale(0.6).setAlpha(0);
+    const black = this.add.rectangle(0, 0, GAME_W, GAME_H, 0x05040a, 1).setOrigin(0).setDepth(702);
+    img.setAlpha(1);
+    this.tweens.add({ targets: black, alpha: 0, duration: 3200, ease: 'Sine.easeIn' });
+    this.tweens.add({ targets: sun, alpha: 0.6, scale: 2.2, duration: 4200, ease: 'Sine.easeOut' });
+    this.tweens.add({
+      targets: img, x: img.x - 220, duration: 14000, ease: 'Sine.easeInOut',
+      onUpdate: () => sun.setX(img.x + sunX),
+    });
+    return {
+      end: () => new Promise(res => {
+        this.tweens.add({
+          targets: [img, sun], alpha: 0, duration: 1200,
+          onComplete: () => { img.destroy(); sun.destroy(); black.destroy(); res(); },
+        });
+      }),
+    };
+  }
+
   tip(id) {
     const str = TIPS[id]?.();
     if (!str || state.tutorials[id]) return;

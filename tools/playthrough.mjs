@@ -1,15 +1,32 @@
 // Automated end-to-end playthrough of the vertical slice in headless Chromium.
 // Drives the real game through keyboard input; battles use a simple tactical policy
 // that issues the same commands a player would (via the battle's commit()).
-import { chromium } from 'playwright-core';
-const base = process.env.URL || 'http://localhost:4173/?test';
-const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome', args: ['--use-gl=angle', '--use-angle=swiftshader'] });
-const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
+// Default: runs the real desktop app (Electron) — use `xvfb-run -a node tools/playthrough.mjs`
+// on a machine without a display. WEB=1 runs the dev build in headless Chromium instead.
+import { chromium, _electron } from 'playwright-core';
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
+let browser, page;
+if (process.env.WEB) {
+  browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome', args: ['--use-gl=angle', '--use-angle=swiftshader'] });
+  page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
+  await page.goto(process.env.URL || 'http://localhost:4173/?test');
+} else {
+  const userData = fs.mkdtempSync(path.join(os.tmpdir(), 'vod-test-'));
+  browser = await _electron.launch({
+    executablePath: path.resolve('node_modules/electron/dist/electron'),
+    args: ['.', '--no-sandbox', `--user-data-dir=${userData}`],
+    env: { ...process.env, VOD_QUERY: '?test' },
+  });
+  page = await browser.firstWindow();
+  console.log('electron userData:', userData);
+}
 const errors = [];
 page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
 page.on('pageerror', e => errors.push(`[pageerror] ${e.message} ${e.stack?.split('\n')[1] || ''}`));
-await page.goto(base);
-await page.waitForTimeout(3000);
+await page.waitForFunction(() => window.__VOD?.game?.scene.getScene('Title')?.sys.isActive(), null, { timeout: 60000 });
+await page.waitForTimeout(1500);
 await page.mouse.click(4, 4);
 await page.evaluate(() => window.dispatchEvent(new Event('focus')));
 let shotN = 0;
@@ -112,7 +129,7 @@ for (let i = 0; i < 3; i++) { await page.keyboard.press('ArrowDown'); await page
 await page.keyboard.press('z'); await page.waitForTimeout(500);
 await page.keyboard.press('z'); await page.waitForTimeout(600);
 await shot('saved');
-const saved = await ev(() => !!localStorage.getItem('veilofdawn.save.slot1'));
+const saved = await ev(() => !!(window.vodNative ? window.vodNative.storage.getItem('veilofdawn.save.slot1') : localStorage.getItem('veilofdawn.save.slot1')));
 log('manual save slot1 present:', saved);
 await page.keyboard.press('x'); await page.waitForTimeout(300);
 await page.keyboard.press('x'); await page.waitForTimeout(500);
@@ -154,7 +171,7 @@ await pump(() => window.__VOD.game.scene.getScene('Title')?.sys.isActive(), 'end
 await page.waitForTimeout(1200);
 await shot('back_to_title');
 
-const final = await ev(() => ({ saves: Object.keys(localStorage).filter(k => k.startsWith('veilofdawn.save')), stage: window.__VOD.stateNow().sealStage, level: window.__VOD.stateNow().party[0].level, playtime: Math.round(window.__VOD.stateNow().playtime) }));
+const final = await ev(() => ({ desktop: !!window.vodNative, saves: (window.vodNative ? window.vodNative.storage.keys() : Object.keys(localStorage)).filter(k => k.startsWith('veilofdawn.save')), stage: window.__VOD.stateNow().sealStage, level: window.__VOD.stateNow().party[0].level, playtime: Math.round(window.__VOD.stateNow().playtime) }));
 log('final', JSON.stringify(final));
 // Continue → should land on the pre-departure autosave at dawn.
 await page.keyboard.press('ArrowDown'); await page.waitForTimeout(200);

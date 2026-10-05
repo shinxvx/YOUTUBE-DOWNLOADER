@@ -1,5 +1,6 @@
 import { GAME_W, GAME_H } from '../config.js';
-import { settings, saveSettings, TEXT_SPEEDS, resetKeys } from '../systems/settings.js';
+import { settings, saveSettings, TEXT_SPEEDS, resetKeys, setFullscreen, isFullscreen } from '../systems/settings.js';
+import { isDesktop, desktop } from '../systems/storage.js';
 import { listSaves, describeSave, saveTo, loadFrom, MANUAL_SLOTS } from '../systems/save.js';
 import { panel, text, MenuList } from './widgets.js';
 
@@ -19,6 +20,7 @@ export class SettingsPanel {
     this.objs.push(this.desc);
     this.x = x; this.y = y; this.w = w;
     this.rows = [
+      ...(isDesktop ? [{ key: '_fullscreen', label: 'Display', values: [false, true], get: () => isFullscreen(), set: v => setFullscreen(v), fmt: v => (v ? 'Fullscreen' : 'Windowed'), desc: 'Windowed or fullscreen. F11 or Alt+Enter also toggles it.' }] : []),
       { key: 'textSpeed', label: 'Text speed', values: Object.keys(TEXT_SPEEDS), desc: 'How quickly dialogue appears. Instant shows the whole line at once.' },
       { key: 'battleSpeed', label: 'Battle speed', values: [1, 1.5, 2, 3], fmt: v => `${v}×`, desc: 'Speeds up battle animations and effects.' },
       { key: 'musicVolume', label: 'Music volume', values: [0, 0.2, 0.4, 0.6, 0.8, 1], fmt: v => `${Math.round(v * 100)}%`, desc: 'Procedural score volume.' },
@@ -27,6 +29,7 @@ export class SettingsPanel {
       { key: 'reducedFlashing', label: 'Reduced flashing', values: [false, true], fmt: v => (v ? 'On' : 'Off'), desc: 'Replaces bright flashes with gentle colour pulses.' },
       { key: 'difficulty', label: 'Difficulty', values: ['story', 'standard'], fmt: v => (v === 'story' ? 'Story' : 'Standard'), desc: 'Story: gentler enemies for players here for the narrative. Standard: the intended tactical balance.' },
       { key: 'skipSeenAnimations', label: 'Short skill animations', values: [false, true], fmt: v => (v ? 'On' : 'Off'), desc: 'Shortens skill effects you have already seen once.' },
+      ...(isDesktop ? [{ key: '_saves', label: 'Open saves folder', action: () => desktop.openSavesFolder(), desc: 'Saves are JSON files in your user data folder. Copy them to back up your progress.' }] : []),
       { key: '_keys', label: 'Reset key bindings', action: () => resetKeys(), desc: 'Keys: arrows/WASD move · Z/Enter/Space confirm · X/Backspace cancel · Esc/M menu. (Full remapping arrives in a later milestone.)' },
       { key: '_back', label: 'Back', action: () => this.close(), desc: '' },
     ];
@@ -49,7 +52,7 @@ export class SettingsPanel {
   refresh() {
     this.rows.forEach((r, i) => {
       if (!r.values) { this.valueTexts[i].setText(''); return; }
-      const v = settings[r.key];
+      const v = r.get ? r.get() : settings[r.key];
       this.valueTexts[i].setText(`◂ ${r.fmt ? r.fmt(v) : String(v)[0].toUpperCase() + String(v).slice(1)} ▸`);
     });
   }
@@ -57,9 +60,10 @@ export class SettingsPanel {
   activate(i, dir) {
     const r = this.rows[i];
     if (r.action) { r.action(); return; }
-    const idx = r.values.indexOf(settings[r.key]);
-    settings[r.key] = r.values[(idx + dir + r.values.length) % r.values.length];
-    saveSettings();
+    const cur = r.get ? r.get() : settings[r.key];
+    const next = r.values[(r.values.indexOf(cur) + dir + r.values.length) % r.values.length];
+    if (r.set) r.set(next);
+    else { settings[r.key] = next; saveSettings(); }
     this.refresh();
   }
 

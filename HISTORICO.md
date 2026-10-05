@@ -1,5 +1,18 @@
 # Histórico — Veil of Dawn
 
+## 2026-10-05 — Virou app de desktop + HDRI do amanhecer
+
+- Pedido do dono: o jogo é para desktop, não para navegador. Criado o app Electron 38
+  (`electron/main.cjs` + `preload.cjs`): janela própria, tela cheia (F11 / Alt+Enter / Configurações),
+  "Quit" no título e "Quit to Desktop" no menu, saves e configurações em arquivos JSON na pasta do
+  usuário (gravação atômica), protocolo app:// com CSP rígida, uma instância só.
+- Instalador Windows (NSIS, por usuário, atalhos) e versão portátil: `npm run dist:win` → `release/`.
+- HDRI `citrus_orchard_puresky_2k.exr` integrado via `tools/bake_hdri.py`: cinemática do nascer do sol
+  no fim do capítulo, névoa do amanhecer nas montanhas de Emberfall e cores da luz do amanhecer.
+- Teste completo (`tools/playthrough.mjs`) agora roda dentro do app Electron: passou sem erros, saves
+  gravados como arquivos. O .exe do Windows foi gerado mas não foi testado num Windows real.
+- Aviso do dono: os sprites vão ser trocados por outros em breve.
+
 ## 2026-10-05 — Milestone 1 (fatia vertical) criada
 
 - Projeto montado do zero: Phaser 3.90 + Vite, sem backend.

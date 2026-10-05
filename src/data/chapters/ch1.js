@@ -290,8 +290,12 @@ export const CH1 = {
       S.phase('dawn');
       S.place('player', 1240, 700, 'right');
       S.music('dawn');
+      const sky = S.skyCinematic();
+      await S.wait(2600);
       await S.say('narrator', 'Dawn comes late to Emberfall. It comes all the same.');
+      await S.say('narrator', 'For the first time in eighteen years, the mark on Kai\'s shoulder is awake to see it.');
       S.refresh();
+      await sky.end();
       await S.fade('in', 1600);
       S.objective('Speak with Elara outside the clinic.');
       S.autosave('Dawn');

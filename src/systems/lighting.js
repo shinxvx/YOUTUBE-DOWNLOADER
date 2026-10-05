@@ -10,8 +10,23 @@ export const LIGHT_PRESETS = {
   dusk: { ambient: 0xb9a6ae, lamps: 0.85, personal: 0, fog: 0.08, wash: 0, particles: 'fireflies' },
   festival: { ambient: 0x9a92c0, lamps: 1.0, personal: 0, fog: 0.05, wash: 0, particles: 'embers' },
   dark: { ambient: 0x222a52, lamps: 0, personal: 0.6, fog: 0.15, wash: 0, particles: 'ash' },
-  dawn: { ambient: 0xffe9d2, lamps: 0, personal: 0, fog: 0.06, wash: 0.7, particles: 'motes' },
+  dawn: { ambient: 0xffe9d2, lamps: 0, personal: 0, fog: 0.06, wash: 0.7, haze: 1, sun: 0.75, particles: 'motes' },
 };
+
+// Image-based dawn: sun, sky and horizon colours come from the HDRI bake
+// (public/assets/sky/dawn_light.json). The ambient keeps the painting readable while
+// taking the HDRI's horizon hue; the sun is a broad warm light from the east.
+const hex = s => parseInt(s.slice(1), 16);
+export function applyDawnLight(json) {
+  if (!json) return;
+  const mix = (a, b, t) => {
+    const A = toRGB(a), B = toRGB(b);
+    return ((A.r + (B.r - A.r) * t) << 16) | ((A.g + (B.g - A.g) * t) << 8) | (A.b + (B.b - A.b) * t);
+  };
+  LIGHT_PRESETS.dawn.ambient = mix(0xffe6cc, hex(json.horizonColor), 0.45);
+  LIGHT_PRESETS.dawn.sunColor = mix(hex(json.sunColor), 0xffb070, 0.35);
+  LIGHT_PRESETS.dawn.washColor = mix(hex(json.horizonColor), 0xffa860, 0.5);
+}
 
 // Lamps that start broken at dusk and come on as Kai repairs them.
 const BROKEN_AT_DUSK = { lamp_plaza: 'lantern_plaza', lamp_southeast: 'lantern_southeast', lamp_bridge: 'lantern_bridge' };
@@ -38,6 +53,9 @@ export class Lighting {
     this.fogB = scene.add.tileSprite(0, 0, map.width, map.height, 'fog').setOrigin(0).setDepth(8501).setAlpha(0).setTileScale(1.6);
     this.wash = scene.add.image(0, 0, 'dawnwash').setOrigin(0).setDisplaySize(map.width, map.height)
       .setBlendMode(Phaser.BlendModes.ADD).setDepth(9002).setAlpha(0);
+    this.haze = map.dawnHaze && scene.textures.exists(map.dawnHaze)
+      ? scene.add.image(0, 0, map.dawnHaze).setOrigin(0).setBlendMode(Phaser.BlendModes.SCREEN).setDepth(1).setAlpha(0)
+      : null;
     this.ambient = toRGB(0x000000);
     this.target = null;
     this.personalLevel = 0;
@@ -56,7 +74,9 @@ export class Lighting {
       this.fogA.setAlpha(p.fog);
       this.fogB.setAlpha(p.fog * 0.7);
       this.wash.setAlpha(p.wash);
+      this.haze?.setAlpha(p.haze || 0);
     }
+    if (p.washColor) this.wash.setTint(p.washColor); else this.wash.clearTint();
     this.setParticles(p.particles);
   }
 
@@ -131,6 +151,7 @@ export class Lighting {
     this.fogA.setAlpha(this.fogA.alpha + (this.target.fog - this.fogA.alpha) * k);
     this.fogB.setAlpha(this.fogB.alpha + (this.target.fog * 0.7 - this.fogB.alpha) * k);
     this.wash.setAlpha(this.wash.alpha + (this.target.wash - this.wash.alpha) * k);
+    if (this.haze) this.haze.setAlpha(this.haze.alpha + ((this.target.haze || 0) - this.haze.alpha) * k * 0.5);
     this.fogA.tilePositionX += delta * 0.006;
     this.fogA.tilePositionY += delta * 0.002;
     this.fogB.tilePositionX -= delta * 0.004;
@@ -162,6 +183,10 @@ export class Lighting {
     this.extraLights = this.extraLights.filter(e => !e.life || e.age < e.life);
     if (player && this.personalLevel > 0.01) {
       rt.stamp('light', null, player.x * R, (player.y - 20) * R, { scale: R * 190 / 256, tint: 0x8fa2e0, alpha: this.personalLevel, blendMode: Phaser.BlendModes.ADD });
+    }
+    // Low dawn sun from the east, behind the mountains.
+    if (this.target.sun) {
+      rt.stamp('light', null, 1250 * R, 60 * R, { scale: R * 9, tint: this.target.sunColor || 0xffc890, alpha: this.target.sun * Math.min(1, this.wash.alpha / Math.max(0.01, this.target.wash)), blendMode: Phaser.BlendModes.ADD });
     }
     // Faint cold moonlight wash over the whole upper map when it is dark.
     if (this.presetName === 'dark' && this.map.moon) {

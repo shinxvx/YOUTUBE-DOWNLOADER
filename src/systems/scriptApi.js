@@ -27,6 +27,8 @@ export function makeScriptApi(w) {
       });
     },
 
+    skyCinematic() { closeBox(); return ui().skyCinematic(); },
+
     async chapterCard(title, subtitle) { closeBox(); await ui().chapterCard(title, subtitle); },
 
     face(id, dir) { actor(id)?.face(dir); },

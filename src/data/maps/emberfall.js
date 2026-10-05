@@ -6,6 +6,8 @@ export const EMBERFALL = {
   id: 'emberfall',
   name: 'Emberfall',
   backdrop: 'environment:emberfall',
+  // HDRI-derived dawn haze over the distant mountains (tools/bake_hdri.py).
+  dawnHaze: 'sky:emberfall_haze',
   width: 1536,
   height: 1024,
 

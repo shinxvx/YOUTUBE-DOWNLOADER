@@ -6,13 +6,16 @@ what exists and what is next. Nothing below counts as done until it has been exe
 
 ## Architecture
 
-- Phaser 3.90 + Vite, ES modules, no backend. 1280×720 canvas, FIT scaling.
+- Desktop app: Electron 38 shell (`electron/`), game served from `dist/` over a private
+  `app://` protocol with a strict CSP; saves/settings as JSON files in the user data folder;
+  fullscreen (F11 / Alt+Enter / Settings); Windows NSIS installer + portable exe.
+- Engine: Phaser 3.90 + Vite, ES modules, no backend. 1280×720 canvas, FIT scaling.
 - Exploration: painted backdrop + authored walkable polygons, blockers, occluders and light map
   (multiply light buffer, additive halos, fog, particles). Characters y-sorted with contact shadows.
 - Battles: CTB initiative (speed-based, visible forecast), Resolve/Stagger, vampiric regeneration
   with blood anchors, Veil Strain, telegraphed enemy actions, guest allies, mid-battle scripts.
 - Content as data: chapters (`src/data/chapters`), maps, encounters, enemies, skills, items.
-- Saves: 3 manual slots + 2 rotating autosaves in localStorage, versioned.
+- Saves: 3 manual slots + 2 rotating autosaves, versioned (JSON files on desktop).
 
 ## Milestone 1 — Vertical slice ✅ (implemented and played end to end)
 
@@ -36,7 +39,9 @@ what exists and what is next. Nothing below counts as done until it has been exe
 - Skill upgrades (compact branches), equipment slots, inventory sorting, limited respec at hub.
 - Aurora Bonds shared meter (team attack / rescue).
 - Quest log with chapter objectives and lore entries; profiles unlock without spoilers.
-- Key remapping UI; HDRI sky integration once the file is supplied.
+- Key remapping UI.
+- Swap to the new character sprite set when it arrives.
+- Auto-update for the desktop build (same pattern as the other desktop apps), if wanted.
 - Remaining Chapter 1 encounters (6 standard in the plan).
 
 ## Milestone 3 — Campaign middle

@@ -6,6 +6,7 @@ import { latestSave, loadFrom } from '../systems/save.js';
 import { SettingsPanel, SaveLoadPanel } from '../ui/panels.js';
 import { MenuList, text } from '../ui/widgets.js';
 import { audio } from '../audio/audio.js';
+import { isDesktop, desktop } from '../systems/storage.js';
 
 export class TitleScene extends Phaser.Scene {
   constructor() { super('Title'); }
@@ -38,12 +39,13 @@ export class TitleScene extends Phaser.Scene {
       { label: 'Load Game', id: 'load', disabled: !hasSave },
       { label: 'Settings', id: 'settings' },
       { label: 'Art Gallery', id: 'gallery' },
+      ...(isDesktop ? [{ label: 'Quit', id: 'quit' }] : []),
     ];
-    this.menu = new MenuList(this, GAME_W / 2 - 110, 420, items, {
-      width: 240, lineH: 40, size: 22, index: hasSave ? 1 : 0,
+    this.menu = new MenuList(this, GAME_W / 2 - 110, 400, items, {
+      width: 240, lineH: 38, size: 22, index: hasSave ? 1 : 0,
       onSelect: it => this.select(it.id),
     });
-    text(this, GAME_W / 2, GAME_H - 26, 'An original JRPG · Vertical slice (Milestone 1) · Keyboard & mouse', { size: 13, color: '#8a826f', origin: 0.5 });
+    text(this, GAME_W / 2, GAME_H - 26, 'An original JRPG · Vertical slice (Milestone 1) · F11 fullscreen', { size: 13, color: '#8a826f', origin: 0.5 });
     text(this, 24, GAME_H - 26, 'v0.1', { size: 13, color: '#6d6758', origin: [0, 0.5] });
     this.modal = null;
     audio.play('title');
@@ -65,6 +67,8 @@ export class TitleScene extends Phaser.Scene {
       this.modal = new SettingsPanel(this, () => this.closeModal());
     } else if (id === 'gallery') {
       this.scene.start('Gallery');
+    } else if (id === 'quit') {
+      desktop.quit();
     }
   }
 

@@ -1,5 +1,6 @@
 import { SAVE_PREFIX, SAVE_VERSION } from '../config.js';
 import { state, snapshot, loadState, formatPlaytime } from './state.js';
+import { storage } from './storage.js';
 
 // Three manual slots plus two rotating autosaves.
 export const MANUAL_SLOTS = ['slot1', 'slot2', 'slot3'];
@@ -7,7 +8,7 @@ export const AUTO_SLOTS = ['auto1', 'auto2'];
 
 function read(slot) {
   try {
-    const raw = localStorage.getItem(SAVE_PREFIX + slot);
+    const raw = storage.getItem(SAVE_PREFIX + slot);
     if (!raw) return null;
     const data = JSON.parse(raw);
     if (!data || data.state?.version !== SAVE_VERSION) return null;
@@ -31,8 +32,7 @@ function write(slot, label) {
     state: snapshot(),
   };
   try {
-    localStorage.setItem(SAVE_PREFIX + slot, JSON.stringify(data));
-    return true;
+    return storage.setItem(SAVE_PREFIX + slot, JSON.stringify(data)) !== false;
   } catch {
     return false;
   }

@@ -3,6 +3,7 @@ import { GAME_W, GAME_H, VOD } from '../config.js';
 import { queueManifestAssets, buildOverworldTextures, registerAnimations, setManifest } from '../gfx/assets.js';
 import { makeTextures, makeMarkOverlays } from '../gfx/textures.js';
 import { audio } from '../audio/audio.js';
+import { applyDawnLight } from '../systems/lighting.js';
 
 // Loads the manifest, then every asset it lists, then prepares runtime textures.
 export class BootScene extends Phaser.Scene {
@@ -27,6 +28,9 @@ export class BootScene extends Phaser.Scene {
     });
     this.load.on('fileprogress', f => sub.setText(f.key));
     queueManifestAssets(this, manifest);
+    this.load.image('sky:dawn_panorama', 'assets/sky/dawn_panorama.png');
+    this.load.image('sky:emberfall_haze', 'assets/sky/emberfall_dawn_haze.png');
+    this.load.json('sky:dawn_light', 'assets/sky/dawn_light.json');
     this.load.once('complete', () => {
       sub.setText('Preparing sprites…');
       this.time.delayedCall(30, () => {
@@ -34,6 +38,11 @@ export class BootScene extends Phaser.Scene {
         registerAnimations(this, manifest);
         makeTextures(this);
         makeMarkOverlays(this);
+        // Soft gradients and the photographic sky look best with linear filtering.
+        for (const k of ['light', 'glow', 'fog', 'vignette', 'dawnwash', 'sky:dawn_panorama', 'sky:emberfall_haze']) {
+          this.textures.get(k)?.setFilter(Phaser.Textures.FilterMode.LINEAR);
+        }
+        applyDawnLight(this.cache.json.get('sky:dawn_light'));
         label.destroy(); sub.destroy(); bar.destroy();
         this.game.events.on('sfx', name => audio.sfx(name));
         const params = new URLSearchParams(location.search);

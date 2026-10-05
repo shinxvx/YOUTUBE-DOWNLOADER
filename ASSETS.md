@@ -19,6 +19,15 @@ pieces are temporary.
 Not copied into the game: `animation_previews/` (review GIFs) and `frames/` (individual battle
 frames). They remain in the original package.
 
+## HDRI sky (user-supplied)
+
+| Asset | Path | Use |
+| --- | --- | --- |
+| `citrus_orchard_puresky_2k.exr` (Poly Haven, CC0) | `assets-src/hdri/` | Source. Baked by `tools/bake_hdri.py`. |
+| Sunrise panorama | `public/assets/sky/dawn_panorama.png` | Full-screen sunrise cinematic at the end of Chapter 1 (exposure ramp + drift toward the sun). |
+| Emberfall dawn haze | `public/assets/sky/emberfall_dawn_haze.png` | HDRI sky colour projected onto the distant mountains and mist, screen-blended at dawn. |
+| Dawn light values | `public/assets/sky/dawn_light.json` | Sun, sky and horizon colours for the dawn lighting preset. |
+
 ## Generated in code (original)
 
 | Asset | Where | Status |
@@ -34,4 +43,5 @@ frames). They remain in the original package.
   doors, stalls and off-screen voices in Emberfall.
 - Additional portrait expressions, later Veyr forms, and maps for Firstlight Bastion, Brassveil
   interiors, Hushspire and Noctis Crown interiors still need art.
-- HDRI sky panorama: requested by the user; will be integrated when the `.exr` file is supplied.
+- The character sprites will be replaced by a new set (announced by the user). Loading is
+  manifest-driven, so a new pack only needs a matching `manifest.json`.

@@ -6,13 +6,71 @@
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
-    "preview": "vite preview --host --port 4173"
-  },
-  "dependencies": {
-    "phaser": "^3.90.0"
+    "desktop": "vite build && electron .",
+    "dist:win": "vite build && electron-builder --win",
+    "dist:linux": "vite build && electron-builder --linux"
   },
   "devDependencies": {
+    "electron": "^38.8.6",
+    "electron-builder": "^26.15.3",
     "playwright-core": "^1.63.0",
-    "vite": "^5.4.21"
+    "vite": "^5.4.21",
+    "phaser": "^3.90.0"
+  },
+  "productName": "Veil of Dawn",
+  "description": "Veil of Dawn \u2014 an original JRPG.",
+  "author": "Veil of Dawn",
+  "main": "electron/main.cjs",
+  "build": {
+    "appId": "com.veilofdawn.game",
+    "productName": "Veil of Dawn",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "build/icon.png",
+      "package.json"
+    ],
+    "asar": true,
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.png",
+      "signExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Veil of Dawn",
+      "artifactName": "VeilOfDawn-Setup-${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "VeilOfDawn-Portable-${version}.${ext}"
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "category": "Game",
+      "icon": "build/icon.png"
+    }
   }
 }

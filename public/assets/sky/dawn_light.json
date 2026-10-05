@@ -1,0 +1,15 @@
+{
+  "source": "citrus_orchard_puresky_2k.exr (Poly Haven, CC0)",
+  "sunColor": "#e8dfd4",
+  "skyColor": "#cdd9e4",
+  "horizonColor": "#d2c8bd",
+  "sunU": 0.705078125,
+  "sunElevationDeg": 7.55859375,
+  "panorama": {
+    "width": 2048,
+    "height": 441,
+    "sunX": 1444,
+    "sunY": 347
+  },
+  "exposure": 0.56
+}

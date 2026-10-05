@@ -8,6 +8,7 @@ import { state, memberStats, SEAL_STAGES, formatPlaytime, addItem } from '../sys
 import { XP_CURVE } from '../data/characters.js';
 import { SettingsPanel, SaveLoadPanel } from '../ui/panels.js';
 import { panel, text, bar, MenuList } from '../ui/widgets.js';
+import { isDesktop, desktop } from '../systems/storage.js';
 
 const PROFILE_TEXT = {
   kai: CHARACTERS.kai.bio,
@@ -38,6 +39,7 @@ export class MenuScene extends Phaser.Scene {
       { label: 'Load', id: 'load' },
       { label: 'Settings', id: 'settings' },
       { label: 'Return to Title', id: 'title' },
+      ...(isDesktop ? [{ label: 'Quit to Desktop', id: 'quit' }] : []),
       { label: 'Close', id: 'close' },
     ], {
       width: 220, lineH: 40, size: 20,
@@ -65,7 +67,7 @@ export class MenuScene extends Phaser.Scene {
     else if (id === 'items') this.drawItems(x, y, w, false);
     else if (id === 'journal') this.drawJournal(x, y, w, false);
     else {
-      const msg = { save: 'Record your progress in one of three slots.', load: 'Return to a previous save or autosave.', settings: 'Text speed, battle speed, audio, accessibility and difficulty.', title: 'Return to the title screen. Unsaved progress since your last save will be lost.', close: 'Return to Emberfall.' }[id];
+      const msg = { save: 'Record your progress in one of three slots.', load: 'Return to a previous save or autosave.', settings: 'Text speed, battle speed, audio, accessibility and difficulty.', title: 'Return to the title screen. Unsaved progress since your last save will be lost.', quit: 'Close the game. Unsaved progress since your last save will be lost.', close: 'Return to Emberfall.' }[id];
       this.add_(text(this, x + 30, y + 30, msg || '', { size: 18, wrap: w - 60, color: '#d8d0bc' }));
     }
   }
@@ -150,6 +152,7 @@ export class MenuScene extends Phaser.Scene {
 
   select(id) {
     if (id === 'close') return this.close();
+    if (id === 'quit') return desktop.quit();
     if (id === 'party') return;
     if (id === 'items' || id === 'journal') {
       this.clearContent();

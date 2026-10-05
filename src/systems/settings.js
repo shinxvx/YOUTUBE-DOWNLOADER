@@ -1,4 +1,5 @@
 import { SETTINGS_KEY } from '../config.js';
+import { storage, desktop } from './storage.js';
 
 export const TEXT_SPEEDS = { slow: 22, normal: 45, fast: 90, instant: 0 };
 
@@ -24,7 +25,7 @@ const DEFAULTS = {
 
 function load() {
   try {
-    const raw = localStorage.getItem(SETTINGS_KEY);
+    const raw = storage.getItem(SETTINGS_KEY);
     if (!raw) return structuredClone(DEFAULTS);
     const parsed = JSON.parse(raw);
     return { ...structuredClone(DEFAULTS), ...parsed, keys: { ...DEFAULTS.keys, ...(parsed.keys || {}) } };
@@ -37,13 +38,21 @@ export const settings = load();
 const listeners = new Set();
 
 export function saveSettings() {
-  try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch { /* storage unavailable */ }
+  try { storage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch { /* storage unavailable */ }
   for (const fn of listeners) fn(settings);
 }
 
 export function onSettingsChange(fn) {
   listeners.add(fn);
   return () => listeners.delete(fn);
+}
+
+export function setFullscreen(on) {
+  if (desktop) desktop.setFullscreen(on);
+}
+
+export function isFullscreen() {
+  return desktop ? desktop.isFullscreen() : false;
 }
 
 export function resetKeys() {
