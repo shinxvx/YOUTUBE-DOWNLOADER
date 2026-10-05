@@ -7,6 +7,9 @@ Tudo offline, sem pagamento real. Converse com o dono em português; todo texto 
 
 ## Onde está cada coisa
 
+- Repositório: `shinxvx/YOUTUBE-DOWNLOADER`, branch `claude/trusting-keller-kgiotm` (só o Eidra; o
+  Vampire Hunters fica no branch `claude/laughing-mccarthy-ekayva` do mesmo repositório).
+
 - Regras do duelo: `src/engine/duel.js` (puro, determinístico). IA: `src/ai/ai.js`.
 - Conteúdo é dado: `src/content/` (cartas, decks, história/eventos, personagens, lore, desafios).
   IDs estáveis (saves dependem deles).
