@@ -8,29 +8,29 @@ export const SKILLS = {
     desc: 'A plain strike with your weapon.',
   },
   ember_cut: {
-    name: 'Ember Cut', kind: 'cadence', cost: { focus: 4 }, target: 'enemy', power: 1.55, break: 24, element: 'ember',
+    school: 'Cadence of the Pale Ember', name: 'Ember Cut', kind: 'cadence', cost: { focus: 4 }, target: 'enemy', power: 1.55, break: 24, element: 'ember',
     desc: 'Cadence of the Pale Ember. A controlled violet-white slash that cracks an enemy\'s Resolve.',
   },
   pale_return: {
-    name: 'Pale Return', kind: 'cadence', cost: { focus: 3 }, target: 'self', effect: 'counterStance',
+    school: 'Cadence of the Pale Ember', name: 'Pale Return', kind: 'cadence', cost: { focus: 3 }, target: 'self', effect: 'counterStance',
     desc: 'Settle into a guarded stance. Halves the next hit and answers it with a counter-slash.',
   },
   seal_rend: {
-    name: 'Seal Rend', kind: 'veil', cost: { strain: 22 }, target: 'enemy', power: 1.2, break: 16, suppress: 2,
+    school: 'Veil Arts', name: 'Seal Rend', kind: 'veil', cost: { strain: 22 }, target: 'enemy', power: 1.2, break: 16, suppress: 2,
     anchorBonus: 2, requiresStage: 1,
     desc: 'Veil Art. Tears at the blood beneath the flesh, suppressing regeneration for 2 turns. Strong against blood anchors.',
   },
   veilpiercer: {
-    name: 'Veilpiercer', kind: 'veil', cost: { strain: 34 }, target: 'enemy', power: 2.3, break: 38, requiresStage: 1,
+    school: 'Veil Arts', name: 'Veilpiercer', kind: 'veil', cost: { strain: 34 }, target: 'enemy', power: 2.3, break: 38, requiresStage: 1,
     desc: 'Veil Art. Channels the mark through the blade in a single piercing line. Heavy damage and Resolve break.',
   },
   ashen_arc: {
-    name: 'Ashen Arc', kind: 'cadence', cost: { focus: 6 }, target: 'enemy', power: 1.7, break: 20, status: { burn: 3 },
+    school: 'Cadence of the Ashen Sun', name: 'Ashen Arc', kind: 'cadence', cost: { focus: 6 }, target: 'enemy', power: 1.7, break: 20, status: { burn: 3 },
     dawnstone: true, anchorBonus: 1.5,
     desc: 'Cadence of the Ashen Sun. White flame that strips regeneration and leaves a Burn.',
   },
   white_funeral: {
-    name: 'White Funeral', kind: 'cadence', cost: { focus: 14 }, target: 'allEnemies', power: 1.15, break: 14,
+    school: 'Cadence of the Ashen Sun', name: 'White Funeral', kind: 'cadence', cost: { focus: 14 }, target: 'allEnemies', power: 1.15, break: 14,
     dawnstone: true, effect: 'sealField', anchorBonus: 1.5,
     desc: 'Elara\'s signature. A ring of pale flame that seals the battlefield: blood anchors cannot mend and all regeneration is suppressed for 2 turns.',
   },

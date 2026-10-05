@@ -37,10 +37,11 @@ export const BATTLE_SCRIPTS = {
 
 export const BATTLE_TIPS = {
   basics: 'The turn order runs along the top: faster fighters act more often.\n\nAttack, or spend Focus on Cadence techniques. Guard halves damage until your next turn and restores 3 Focus.\n\nThe yellow bar under an enemy is its Resolve. Empty it to Stagger the enemy: it loses its next action and takes 50% more damage.',
-  windup: 'The enemy is winding up a heavy blow at the named ally. Guard with that ally now to halve it.',
+  windup: 'The enemy is winding up a heavy blow at the named ally. Read the telegraph: when it lands you will get a CLASH.',
+  clash: 'CLASH! A committed attack can be answered.\n\n• Straight lunges and thrusts — EVADE.\n• Pounces from above — PARRY.\n• Wide sweeps — COUNTER (costs 4 Focus).\n\nA perfect read cancels the hit and cracks the attacker\'s Resolve. A partial read halves it. Choose with ← → and Z, the number keys, or the mouse.',
   bleed: 'Blood Hounds inflict Bleed, which drains HP at the start of each turn. Ember Salves cure it — or end the fight quickly.',
   priority: 'Two enemies. Choose targets with the arrow keys or the mouse. Fast enemies act more often; removing them first can save a lot of HP.',
-  telegraph: 'Gloom Stalkers mark their prey before they pounce. When an ally is HUNTED, Guard with that ally: the pounce glances off and shatters the stalker\'s Resolve.',
+  telegraph: 'Gloom Stalkers mark their prey before they pounce. A HUNTED ally will face a Clash — pounces are answered with a PARRY.',
   regen: 'Garran is a vampire. The green numbers on his turn are regeneration, and the hanging lanterns feed it.\n\nYour festival blade has no Dawnstone and cannot stop him. Hold on.',
   veil: 'VEIL ARTS AWAKENED.\n\nSeal Rend suppresses regeneration and is strong against blood anchors. Veilpiercer hits very hard.\n\nVeil Arts raise Veil Strain. At 70 or more Kai is Strained: lower defense, costlier Veil Arts. Guard to bring Strain down — it never takes control away from you.\n\nElara fights beside you. Her White Funeral seals every anchor at once.',
 };

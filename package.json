@@ -1,5 +1,5 @@
 {
-  "name": "veil-of-dawn",
+  "name": "vampire-hunters",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -17,13 +17,13 @@
     "vite": "^5.4.21",
     "phaser": "^3.90.0"
   },
-  "productName": "Veil of Dawn",
-  "description": "Veil of Dawn \u2014 an original JRPG.",
-  "author": "Veil of Dawn",
+  "productName": "Vampire Hunters",
+  "description": "Vampire Hunters \u2014 an original JRPG.",
+  "author": "Vampire Hunters",
   "main": "electron/main.cjs",
   "build": {
-    "appId": "com.veilofdawn.game",
-    "productName": "Veil of Dawn",
+    "appId": "com.vampirehunters.game",
+    "productName": "Vampire Hunters",
     "directories": {
       "output": "release",
       "buildResources": "build"
@@ -59,11 +59,11 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "Veil of Dawn",
-      "artifactName": "VeilOfDawn-Setup-${version}.${ext}"
+      "shortcutName": "Vampire Hunters",
+      "artifactName": "VampireHunters-Setup-${version}.${ext}"
     },
     "portable": {
-      "artifactName": "VeilOfDawn-Portable-${version}.${ext}"
+      "artifactName": "VampireHunters-Portable-${version}.${ext}"
     },
     "linux": {
       "target": [

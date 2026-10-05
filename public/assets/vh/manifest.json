@@ -1,0 +1,8478 @@
+{
+  "version": 4,
+  "title": "Vampire Hunters",
+  "alternateTitle": "\u30f4\u30a1\u30f3\u30d1\u30a4\u30a2\u30cf\u30f3\u30bf\u30fc\u30ba",
+  "pixelSampling": "nearest",
+  "sprites": [
+    {
+      "id": "kai_overworld",
+      "character": "kai",
+      "kind": "overworld",
+      "path": "originals/kai_overworld_master.png",
+      "frameWidth": 368,
+      "frameHeight": 368,
+      "columns": 3,
+      "rows": 4,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "directional",
+      "animations": {
+        "idle_down": {
+          "frames": [
+            0
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_down": {
+          "frames": [
+            1,
+            0,
+            2,
+            0
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/kai_overworld_walk_down.gif"
+        },
+        "idle_left": {
+          "frames": [
+            3
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_left": {
+          "frames": [
+            4,
+            3,
+            5,
+            3
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/kai_overworld_walk_left.gif"
+        },
+        "idle_right": {
+          "frames": [
+            6
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_right": {
+          "frames": [
+            7,
+            6,
+            8,
+            6
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/kai_overworld_walk_right.gif"
+        },
+        "idle_up": {
+          "frames": [
+            9
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_up": {
+          "frames": [
+            10,
+            9,
+            11,
+            9
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/kai_overworld_walk_up.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_compact_original",
+      "preparation": {
+        "resized": false,
+        "alignment": "head center and feet via atlas trim offsets"
+      },
+      "originalMasterReference": "originals/kai_overworld_master.png",
+      "originalMasterIncluded": true,
+      "atlasPath": "sprites/kai_overworld.atlas.json",
+      "loadMethod": "atlas",
+      "logicalFrameWidth": 48,
+      "logicalFrameHeight": 48,
+      "displayScale": 0.13043478260869565,
+      "sourceRects": [
+        {
+          "x": 135,
+          "y": 5,
+          "w": 192,
+          "h": 351,
+          "offsetX": 90,
+          "offsetY": 13
+        },
+        {
+          "x": 433,
+          "y": 5,
+          "w": 197,
+          "h": 351,
+          "offsetX": 80,
+          "offsetY": 13
+        },
+        {
+          "x": 761,
+          "y": 3,
+          "w": 189,
+          "h": 353,
+          "offsetX": 91,
+          "offsetY": 11
+        },
+        {
+          "x": 106,
+          "y": 364,
+          "w": 230,
+          "h": 343,
+          "offsetX": 78,
+          "offsetY": 21
+        },
+        {
+          "x": 458,
+          "y": 365,
+          "w": 210,
+          "h": 346,
+          "offsetX": 80,
+          "offsetY": 18
+        },
+        {
+          "x": 767,
+          "y": 365,
+          "w": 221,
+          "h": 345,
+          "offsetX": 80,
+          "offsetY": 19
+        },
+        {
+          "x": 114,
+          "y": 729,
+          "w": 221,
+          "h": 341,
+          "offsetX": 67,
+          "offsetY": 23
+        },
+        {
+          "x": 424,
+          "y": 720,
+          "w": 225,
+          "h": 346,
+          "offsetX": 65,
+          "offsetY": 18
+        },
+        {
+          "x": 746,
+          "y": 721,
+          "w": 234,
+          "h": 351,
+          "offsetX": 61,
+          "offsetY": 13
+        },
+        {
+          "x": 122,
+          "y": 1081,
+          "w": 204,
+          "h": 353,
+          "offsetX": 74,
+          "offsetY": 11
+        },
+        {
+          "x": 439,
+          "y": 1081,
+          "w": 204,
+          "h": 351,
+          "offsetX": 81,
+          "offsetY": 13
+        },
+        {
+          "x": 756,
+          "y": 1083,
+          "w": 196,
+          "h": 351,
+          "offsetX": 81,
+          "offsetY": 13
+        }
+      ]
+    },
+    {
+      "id": "kai_battle",
+      "character": "kai",
+      "kind": "battle",
+      "path": "sprites/kai_battle_128x128.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "columns": 4,
+      "rows": 4,
+      "frameCount": 16,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "right",
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 5,
+          "repeat": -1,
+          "preview": "animation_previews/kai_battle_idle.gif"
+        },
+        "attack": {
+          "frames": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 9,
+          "repeat": 0,
+          "preview": "animation_previews/kai_battle_attack.gif"
+        },
+        "skill": {
+          "frames": [
+            8,
+            9,
+            10,
+            11
+          ],
+          "fps": 8,
+          "repeat": 0,
+          "preview": "animation_previews/kai_battle_skill.gif"
+        },
+        "hurt": {
+          "frames": [
+            12,
+            13
+          ],
+          "fps": 7,
+          "repeat": 0,
+          "preview": "animation_previews/kai_battle_hurt.gif"
+        },
+        "knockout": {
+          "frames": [
+            14,
+            15
+          ],
+          "fps": 4,
+          "repeat": 0,
+          "preview": "animation_previews/kai_battle_knockout.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_detailed_battle",
+      "preparation": {
+        "uniformScale": 0.3155216284987277,
+        "sourceColumnCuts": [
+          0,
+          403,
+          785,
+          1186,
+          1536
+        ],
+        "sourceRowCuts": [
+          0,
+          276,
+          499,
+          774,
+          1024
+        ],
+        "alignment": "bottom-center"
+      },
+      "loadMethod": "spritesheet"
+    },
+    {
+      "id": "court_sentry_overworld",
+      "character": "court_sentry",
+      "kind": "overworld",
+      "path": "originals/court_sentry_overworld_master.png",
+      "frameWidth": 368,
+      "frameHeight": 368,
+      "columns": 3,
+      "rows": 4,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "directional",
+      "animations": {
+        "idle_down": {
+          "frames": [
+            0
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_down": {
+          "frames": [
+            1,
+            0,
+            2,
+            0
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/court_sentry_overworld_walk_down.gif"
+        },
+        "idle_left": {
+          "frames": [
+            3
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_left": {
+          "frames": [
+            4,
+            3,
+            5,
+            3
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/court_sentry_overworld_walk_left.gif"
+        },
+        "idle_right": {
+          "frames": [
+            6
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_right": {
+          "frames": [
+            7,
+            6,
+            8,
+            6
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/court_sentry_overworld_walk_right.gif"
+        },
+        "idle_up": {
+          "frames": [
+            9
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_up": {
+          "frames": [
+            10,
+            9,
+            11,
+            9
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/court_sentry_overworld_walk_up.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_compact_original",
+      "preparation": {
+        "resized": false,
+        "alignment": "head center and feet via atlas trim offsets"
+      },
+      "originalMasterReference": "originals/court_sentry_overworld_master.png",
+      "originalMasterIncluded": true,
+      "atlasPath": "sprites/court_sentry_overworld.atlas.json",
+      "loadMethod": "atlas",
+      "logicalFrameWidth": 48,
+      "logicalFrameHeight": 48,
+      "displayScale": 0.13043478260869565,
+      "sourceRects": [
+        {
+          "x": 142,
+          "y": 9,
+          "w": 195,
+          "h": 339,
+          "offsetX": 88,
+          "offsetY": 25
+        },
+        {
+          "x": 446,
+          "y": 12,
+          "w": 212,
+          "h": 339,
+          "offsetX": 88,
+          "offsetY": 25
+        },
+        {
+          "x": 751,
+          "y": 9,
+          "w": 211,
+          "h": 342,
+          "offsetX": 87,
+          "offsetY": 22
+        },
+        {
+          "x": 127,
+          "y": 359,
+          "w": 218,
+          "h": 336,
+          "offsetX": 95,
+          "offsetY": 28
+        },
+        {
+          "x": 454,
+          "y": 359,
+          "w": 221,
+          "h": 340,
+          "offsetX": 97,
+          "offsetY": 24
+        },
+        {
+          "x": 795,
+          "y": 362,
+          "w": 212,
+          "h": 337,
+          "offsetX": 98,
+          "offsetY": 27
+        },
+        {
+          "x": 105,
+          "y": 710,
+          "w": 210,
+          "h": 337,
+          "offsetX": 65,
+          "offsetY": 27
+        },
+        {
+          "x": 427,
+          "y": 711,
+          "w": 222,
+          "h": 339,
+          "offsetX": 52,
+          "offsetY": 25
+        },
+        {
+          "x": 756,
+          "y": 712,
+          "w": 220,
+          "h": 340,
+          "offsetX": 54,
+          "offsetY": 24
+        },
+        {
+          "x": 133,
+          "y": 1063,
+          "w": 203,
+          "h": 341,
+          "offsetX": 79,
+          "offsetY": 23
+        },
+        {
+          "x": 432,
+          "y": 1065,
+          "w": 207,
+          "h": 351,
+          "offsetX": 73,
+          "offsetY": 13
+        },
+        {
+          "x": 742,
+          "y": 1065,
+          "w": 203,
+          "h": 350,
+          "offsetX": 77,
+          "offsetY": 14
+        }
+      ]
+    },
+    {
+      "id": "court_sentry_enemy",
+      "character": "court_sentry",
+      "kind": "enemy",
+      "path": "sprites/court_sentry_enemy_96x96.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "columns": 4,
+      "rows": 3,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "left",
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 5,
+          "repeat": -1,
+          "preview": "animation_previews/court_sentry_enemy_idle.gif"
+        },
+        "attack": {
+          "frames": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 8,
+          "repeat": 0,
+          "preview": "animation_previews/court_sentry_enemy_attack.gif"
+        },
+        "hurt": {
+          "frames": [
+            8,
+            9
+          ],
+          "fps": 6,
+          "repeat": 0,
+          "preview": "animation_previews/court_sentry_enemy_hurt.gif"
+        },
+        "defeat": {
+          "frames": [
+            10,
+            11
+          ],
+          "fps": 4,
+          "repeat": 0,
+          "preview": "animation_previews/court_sentry_enemy_defeat.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_detailed_battle",
+      "preparation": {
+        "uniformScale": 0.215962441314554,
+        "sourceColumnCuts": [
+          0,
+          358,
+          722,
+          1148,
+          1448
+        ],
+        "sourceRowCuts": [
+          0,
+          362,
+          736,
+          1086
+        ],
+        "alignment": "bottom-center"
+      },
+      "loadMethod": "spritesheet"
+    },
+    {
+      "id": "garran_overworld",
+      "character": "garran",
+      "kind": "overworld",
+      "path": "originals/garran_overworld_master.png",
+      "frameWidth": 368,
+      "frameHeight": 368,
+      "columns": 3,
+      "rows": 4,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "directional",
+      "animations": {
+        "idle_down": {
+          "frames": [
+            0
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_down": {
+          "frames": [
+            1,
+            0,
+            2,
+            0
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/garran_overworld_walk_down.gif"
+        },
+        "idle_left": {
+          "frames": [
+            3
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_left": {
+          "frames": [
+            4,
+            3,
+            5,
+            3
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/garran_overworld_walk_left.gif"
+        },
+        "idle_right": {
+          "frames": [
+            6
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_right": {
+          "frames": [
+            7,
+            6,
+            8,
+            6
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/garran_overworld_walk_right.gif"
+        },
+        "idle_up": {
+          "frames": [
+            9
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_up": {
+          "frames": [
+            10,
+            9,
+            11,
+            9
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/garran_overworld_walk_up.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_compact_original",
+      "preparation": {
+        "resized": false,
+        "alignment": "head center and feet via atlas trim offsets"
+      },
+      "originalMasterReference": "originals/garran_overworld_master.png",
+      "originalMasterIncluded": true,
+      "atlasPath": "sprites/garran_overworld.atlas.json",
+      "loadMethod": "atlas",
+      "logicalFrameWidth": 48,
+      "logicalFrameHeight": 48,
+      "displayScale": 0.13043478260869565,
+      "sourceRects": [
+        {
+          "x": 106,
+          "y": 10,
+          "w": 222,
+          "h": 346,
+          "offsetX": 62,
+          "offsetY": 18
+        },
+        {
+          "x": 438,
+          "y": 10,
+          "w": 221,
+          "h": 349,
+          "offsetX": 66,
+          "offsetY": 15
+        },
+        {
+          "x": 758,
+          "y": 10,
+          "w": 226,
+          "h": 349,
+          "offsetX": 58,
+          "offsetY": 15
+        },
+        {
+          "x": 98,
+          "y": 364,
+          "w": 257,
+          "h": 342,
+          "offsetX": 82,
+          "offsetY": 22
+        },
+        {
+          "x": 433,
+          "y": 366,
+          "w": 258,
+          "h": 341,
+          "offsetX": 82,
+          "offsetY": 23
+        },
+        {
+          "x": 755,
+          "y": 365,
+          "w": 282,
+          "h": 342,
+          "offsetX": 82,
+          "offsetY": 22
+        },
+        {
+          "x": 68,
+          "y": 715,
+          "w": 270,
+          "h": 344,
+          "offsetX": 20,
+          "offsetY": 20
+        },
+        {
+          "x": 404,
+          "y": 716,
+          "w": 269,
+          "h": 343,
+          "offsetX": 20,
+          "offsetY": 21
+        },
+        {
+          "x": 736,
+          "y": 716,
+          "w": 264,
+          "h": 343,
+          "offsetX": 26,
+          "offsetY": 21
+        },
+        {
+          "x": 94,
+          "y": 1064,
+          "w": 247,
+          "h": 340,
+          "offsetX": 81,
+          "offsetY": 24
+        },
+        {
+          "x": 418,
+          "y": 1064,
+          "w": 242,
+          "h": 345,
+          "offsetX": 72,
+          "offsetY": 19
+        },
+        {
+          "x": 758,
+          "y": 1064,
+          "w": 245,
+          "h": 347,
+          "offsetX": 82,
+          "offsetY": 17
+        }
+      ]
+    },
+    {
+      "id": "garran_enemy",
+      "character": "garran",
+      "kind": "enemy",
+      "path": "sprites/garran_enemy_128x128.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "columns": 4,
+      "rows": 3,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "left",
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 5,
+          "repeat": -1,
+          "preview": "animation_previews/garran_enemy_idle.gif"
+        },
+        "attack": {
+          "frames": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 8,
+          "repeat": 0,
+          "preview": "animation_previews/garran_enemy_attack.gif"
+        },
+        "hurt": {
+          "frames": [
+            8,
+            9
+          ],
+          "fps": 6,
+          "repeat": 0,
+          "preview": "animation_previews/garran_enemy_hurt.gif"
+        },
+        "defeat": {
+          "frames": [
+            10,
+            11
+          ],
+          "fps": 4,
+          "repeat": 0,
+          "preview": "animation_previews/garran_enemy_defeat.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_detailed_battle",
+      "preparation": {
+        "uniformScale": 0.26215644820295986,
+        "sourceColumnCuts": [
+          0,
+          356,
+          681,
+          1154,
+          1448
+        ],
+        "sourceRowCuts": [
+          0,
+          355,
+          736,
+          1086
+        ],
+        "alignment": "bottom-center"
+      },
+      "loadMethod": "spritesheet"
+    },
+    {
+      "id": "maelis_overworld",
+      "character": "maelis",
+      "kind": "overworld",
+      "path": "originals/maelis_overworld_master.png",
+      "frameWidth": 368,
+      "frameHeight": 368,
+      "columns": 3,
+      "rows": 4,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "directional",
+      "animations": {
+        "idle_down": {
+          "frames": [
+            0
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_down": {
+          "frames": [
+            1,
+            0,
+            2,
+            0
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/maelis_overworld_walk_down.gif"
+        },
+        "idle_left": {
+          "frames": [
+            3
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_left": {
+          "frames": [
+            4,
+            3,
+            5,
+            3
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/maelis_overworld_walk_left.gif"
+        },
+        "idle_right": {
+          "frames": [
+            6
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_right": {
+          "frames": [
+            7,
+            6,
+            8,
+            6
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/maelis_overworld_walk_right.gif"
+        },
+        "idle_up": {
+          "frames": [
+            9
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_up": {
+          "frames": [
+            10,
+            9,
+            11,
+            9
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/maelis_overworld_walk_up.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_compact_original",
+      "preparation": {
+        "resized": false,
+        "alignment": "head center and feet via atlas trim offsets"
+      },
+      "originalMasterReference": "originals/maelis_overworld_master.png",
+      "originalMasterIncluded": true,
+      "atlasPath": "sprites/maelis_overworld.atlas.json",
+      "loadMethod": "atlas",
+      "logicalFrameWidth": 48,
+      "logicalFrameHeight": 48,
+      "displayScale": 0.13043478260869565,
+      "sourceRects": [
+        {
+          "x": 116,
+          "y": 9,
+          "w": 232,
+          "h": 333,
+          "offsetX": 66,
+          "offsetY": 31
+        },
+        {
+          "x": 431,
+          "y": 10,
+          "w": 240,
+          "h": 331,
+          "offsetX": 62,
+          "offsetY": 33
+        },
+        {
+          "x": 753,
+          "y": 10,
+          "w": 234,
+          "h": 332,
+          "offsetX": 66,
+          "offsetY": 32
+        },
+        {
+          "x": 130,
+          "y": 365,
+          "w": 230,
+          "h": 323,
+          "offsetX": 91,
+          "offsetY": 41
+        },
+        {
+          "x": 448,
+          "y": 368,
+          "w": 234,
+          "h": 327,
+          "offsetX": 90,
+          "offsetY": 37
+        },
+        {
+          "x": 776,
+          "y": 366,
+          "w": 229,
+          "h": 329,
+          "offsetX": 92,
+          "offsetY": 35
+        },
+        {
+          "x": 88,
+          "y": 716,
+          "w": 231,
+          "h": 329,
+          "offsetX": 51,
+          "offsetY": 35
+        },
+        {
+          "x": 407,
+          "y": 719,
+          "w": 235,
+          "h": 328,
+          "offsetX": 45,
+          "offsetY": 36
+        },
+        {
+          "x": 741,
+          "y": 718,
+          "w": 228,
+          "h": 329,
+          "offsetX": 52,
+          "offsetY": 35
+        },
+        {
+          "x": 105,
+          "y": 1059,
+          "w": 244,
+          "h": 349,
+          "offsetX": 65,
+          "offsetY": 15
+        },
+        {
+          "x": 407,
+          "y": 1062,
+          "w": 250,
+          "h": 354,
+          "offsetX": 54,
+          "offsetY": 10
+        },
+        {
+          "x": 740,
+          "y": 1062,
+          "w": 251,
+          "h": 357,
+          "offsetX": 64,
+          "offsetY": 7
+        }
+      ]
+    },
+    {
+      "id": "maelis_enemy",
+      "character": "maelis",
+      "kind": "enemy",
+      "path": "sprites/maelis_enemy_128x128.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "columns": 4,
+      "rows": 3,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "left",
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 5,
+          "repeat": -1,
+          "preview": "animation_previews/maelis_enemy_idle.gif"
+        },
+        "attack": {
+          "frames": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 8,
+          "repeat": 0,
+          "preview": "animation_previews/maelis_enemy_attack.gif"
+        },
+        "hurt": {
+          "frames": [
+            8,
+            9
+          ],
+          "fps": 6,
+          "repeat": 0,
+          "preview": "animation_previews/maelis_enemy_hurt.gif"
+        },
+        "defeat": {
+          "frames": [
+            10,
+            11
+          ],
+          "fps": 4,
+          "repeat": 0,
+          "preview": "animation_previews/maelis_enemy_defeat.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_detailed_battle",
+      "preparation": {
+        "uniformScale": 0.30617283950617286,
+        "sourceColumnCuts": [
+          0,
+          324,
+          730,
+          1114,
+          1448
+        ],
+        "sourceRowCuts": [
+          0,
+          359,
+          710,
+          1086
+        ],
+        "alignment": "bottom-center"
+      },
+      "loadMethod": "spritesheet"
+    },
+    {
+      "id": "sevrin_overworld",
+      "character": "sevrin",
+      "kind": "overworld",
+      "path": "originals/sevrin_overworld_master.png",
+      "frameWidth": 352,
+      "frameHeight": 352,
+      "columns": 3,
+      "rows": 4,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "directional",
+      "animations": {
+        "idle_down": {
+          "frames": [
+            0
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_down": {
+          "frames": [
+            1,
+            0,
+            2,
+            0
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/sevrin_overworld_walk_down.gif"
+        },
+        "idle_left": {
+          "frames": [
+            3
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_left": {
+          "frames": [
+            4,
+            3,
+            5,
+            3
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/sevrin_overworld_walk_left.gif"
+        },
+        "idle_right": {
+          "frames": [
+            6
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_right": {
+          "frames": [
+            7,
+            6,
+            8,
+            6
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/sevrin_overworld_walk_right.gif"
+        },
+        "idle_up": {
+          "frames": [
+            9
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_up": {
+          "frames": [
+            10,
+            9,
+            11,
+            9
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/sevrin_overworld_walk_up.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_compact_original",
+      "preparation": {
+        "resized": false,
+        "alignment": "head center and feet via atlas trim offsets"
+      },
+      "originalMasterReference": "originals/sevrin_overworld_master.png",
+      "originalMasterIncluded": true,
+      "atlasPath": "sprites/sevrin_overworld.atlas.json",
+      "loadMethod": "atlas",
+      "logicalFrameWidth": 48,
+      "logicalFrameHeight": 48,
+      "displayScale": 0.13636363636363635,
+      "sourceRects": [
+        {
+          "x": 167,
+          "y": 3,
+          "w": 185,
+          "h": 337,
+          "offsetX": 88,
+          "offsetY": 11
+        },
+        {
+          "x": 460,
+          "y": 3,
+          "w": 184,
+          "h": 338,
+          "offsetX": 85,
+          "offsetY": 10
+        },
+        {
+          "x": 751,
+          "y": 2,
+          "w": 183,
+          "h": 339,
+          "offsetX": 86,
+          "offsetY": 9
+        },
+        {
+          "x": 140,
+          "y": 352,
+          "w": 227,
+          "h": 330,
+          "offsetX": 82,
+          "offsetY": 18
+        },
+        {
+          "x": 442,
+          "y": 352,
+          "w": 231,
+          "h": 330,
+          "offsetX": 80,
+          "offsetY": 18
+        },
+        {
+          "x": 747,
+          "y": 356,
+          "w": 227,
+          "h": 326,
+          "offsetX": 81,
+          "offsetY": 22
+        },
+        {
+          "x": 131,
+          "y": 700,
+          "w": 223,
+          "h": 332,
+          "offsetX": 52,
+          "offsetY": 16
+        },
+        {
+          "x": 438,
+          "y": 700,
+          "w": 224,
+          "h": 332,
+          "offsetX": 52,
+          "offsetY": 16
+        },
+        {
+          "x": 739,
+          "y": 700,
+          "w": 236,
+          "h": 332,
+          "offsetX": 40,
+          "offsetY": 16
+        },
+        {
+          "x": 145,
+          "y": 1044,
+          "w": 193,
+          "h": 334,
+          "offsetX": 82,
+          "offsetY": 14
+        },
+        {
+          "x": 439,
+          "y": 1044,
+          "w": 221,
+          "h": 337,
+          "offsetX": 73,
+          "offsetY": 11
+        },
+        {
+          "x": 761,
+          "y": 1044,
+          "w": 203,
+          "h": 337,
+          "offsetX": 82,
+          "offsetY": 11
+        }
+      ]
+    },
+    {
+      "id": "sevrin_enemy",
+      "character": "sevrin",
+      "kind": "enemy",
+      "path": "sprites/sevrin_enemy_128x128.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "columns": 4,
+      "rows": 3,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "left",
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 5,
+          "repeat": -1,
+          "preview": "animation_previews/sevrin_enemy_idle.gif"
+        },
+        "attack": {
+          "frames": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 8,
+          "repeat": 0,
+          "preview": "animation_previews/sevrin_enemy_attack.gif"
+        },
+        "hurt": {
+          "frames": [
+            8,
+            9
+          ],
+          "fps": 6,
+          "repeat": 0,
+          "preview": "animation_previews/sevrin_enemy_hurt.gif"
+        },
+        "defeat": {
+          "frames": [
+            10,
+            11
+          ],
+          "fps": 4,
+          "repeat": 0,
+          "preview": "animation_previews/sevrin_enemy_defeat.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_detailed_battle",
+      "preparation": {
+        "uniformScale": 0.3147208121827411,
+        "sourceColumnCuts": [
+          0,
+          352,
+          696,
+          1090,
+          1448
+        ],
+        "sourceRowCuts": [
+          0,
+          365,
+          732,
+          1086
+        ],
+        "alignment": "bottom-center"
+      },
+      "loadMethod": "spritesheet"
+    },
+    {
+      "id": "orin_ren_overworld",
+      "character": "orin_ren",
+      "kind": "overworld",
+      "path": "originals/orin_ren_overworld_master.png",
+      "frameWidth": 368,
+      "frameHeight": 368,
+      "columns": 3,
+      "rows": 4,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "directional",
+      "animations": {
+        "idle_down": {
+          "frames": [
+            0
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_down": {
+          "frames": [
+            1,
+            0,
+            2,
+            0
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/orin_ren_overworld_walk_down.gif"
+        },
+        "idle_left": {
+          "frames": [
+            3
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_left": {
+          "frames": [
+            4,
+            3,
+            5,
+            3
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/orin_ren_overworld_walk_left.gif"
+        },
+        "idle_right": {
+          "frames": [
+            6
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_right": {
+          "frames": [
+            7,
+            6,
+            8,
+            6
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/orin_ren_overworld_walk_right.gif"
+        },
+        "idle_up": {
+          "frames": [
+            9
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_up": {
+          "frames": [
+            10,
+            9,
+            11,
+            9
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/orin_ren_overworld_walk_up.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_compact_original",
+      "preparation": {
+        "resized": false,
+        "alignment": "head center and feet via atlas trim offsets"
+      },
+      "originalMasterReference": "originals/orin_ren_overworld_master.png",
+      "originalMasterIncluded": true,
+      "atlasPath": "sprites/orin_ren_overworld.atlas.json",
+      "loadMethod": "atlas",
+      "logicalFrameWidth": 48,
+      "logicalFrameHeight": 48,
+      "displayScale": 0.13043478260869565,
+      "sourceRects": [
+        {
+          "x": 112,
+          "y": 2,
+          "w": 193,
+          "h": 346,
+          "offsetX": 93,
+          "offsetY": 18
+        },
+        {
+          "x": 432,
+          "y": 6,
+          "w": 211,
+          "h": 347,
+          "offsetX": 76,
+          "offsetY": 17
+        },
+        {
+          "x": 772,
+          "y": 6,
+          "w": 210,
+          "h": 347,
+          "offsetX": 79,
+          "offsetY": 17
+        },
+        {
+          "x": 90,
+          "y": 362,
+          "w": 219,
+          "h": 338,
+          "offsetX": 89,
+          "offsetY": 26
+        },
+        {
+          "x": 425,
+          "y": 364,
+          "w": 252,
+          "h": 335,
+          "offsetX": 88,
+          "offsetY": 29
+        },
+        {
+          "x": 781,
+          "y": 365,
+          "w": 236,
+          "h": 335,
+          "offsetX": 89,
+          "offsetY": 29
+        },
+        {
+          "x": 85,
+          "y": 712,
+          "w": 222,
+          "h": 340,
+          "offsetX": 61,
+          "offsetY": 24
+        },
+        {
+          "x": 401,
+          "y": 713,
+          "w": 252,
+          "h": 339,
+          "offsetX": 30,
+          "offsetY": 25
+        },
+        {
+          "x": 759,
+          "y": 713,
+          "w": 238,
+          "h": 342,
+          "offsetX": 42,
+          "offsetY": 22
+        },
+        {
+          "x": 91,
+          "y": 1065,
+          "w": 187,
+          "h": 351,
+          "offsetX": 92,
+          "offsetY": 13
+        },
+        {
+          "x": 431,
+          "y": 1066,
+          "w": 218,
+          "h": 359,
+          "offsetX": 74,
+          "offsetY": 5
+        },
+        {
+          "x": 803,
+          "y": 1068,
+          "w": 205,
+          "h": 359,
+          "offsetX": 93,
+          "offsetY": 5
+        }
+      ]
+    },
+    {
+      "id": "orin_ren_enemy",
+      "character": "orin_ren",
+      "kind": "enemy",
+      "path": "sprites/orin_ren_enemy_128x128.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "columns": 4,
+      "rows": 3,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "left",
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 5,
+          "repeat": -1,
+          "preview": "animation_previews/orin_ren_enemy_idle.gif"
+        },
+        "attack": {
+          "frames": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 8,
+          "repeat": 0,
+          "preview": "animation_previews/orin_ren_enemy_attack.gif"
+        },
+        "hurt": {
+          "frames": [
+            8,
+            9
+          ],
+          "fps": 6,
+          "repeat": 0,
+          "preview": "animation_previews/orin_ren_enemy_hurt.gif"
+        },
+        "defeat": {
+          "frames": [
+            10,
+            11
+          ],
+          "fps": 4,
+          "repeat": 0,
+          "preview": "animation_previews/orin_ren_enemy_defeat.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_detailed_battle",
+      "preparation": {
+        "uniformScale": 0.34065934065934067,
+        "sourceColumnCuts": [
+          0,
+          380,
+          724,
+          1077,
+          1448
+        ],
+        "sourceRowCuts": [
+          0,
+          372,
+          744,
+          1086
+        ],
+        "alignment": "bottom-center"
+      },
+      "loadMethod": "spritesheet"
+    },
+    {
+      "id": "valka_overworld",
+      "character": "valka",
+      "kind": "overworld",
+      "path": "originals/valka_overworld_master.png",
+      "frameWidth": 368,
+      "frameHeight": 368,
+      "columns": 3,
+      "rows": 4,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "directional",
+      "animations": {
+        "idle_down": {
+          "frames": [
+            0
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_down": {
+          "frames": [
+            1,
+            0,
+            2,
+            0
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/valka_overworld_walk_down.gif"
+        },
+        "idle_left": {
+          "frames": [
+            3
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_left": {
+          "frames": [
+            4,
+            3,
+            5,
+            3
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/valka_overworld_walk_left.gif"
+        },
+        "idle_right": {
+          "frames": [
+            6
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_right": {
+          "frames": [
+            7,
+            6,
+            8,
+            6
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/valka_overworld_walk_right.gif"
+        },
+        "idle_up": {
+          "frames": [
+            9
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_up": {
+          "frames": [
+            10,
+            9,
+            11,
+            9
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/valka_overworld_walk_up.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_compact_original",
+      "preparation": {
+        "resized": false,
+        "alignment": "head center and feet via atlas trim offsets"
+      },
+      "originalMasterReference": "originals/valka_overworld_master.png",
+      "originalMasterIncluded": true,
+      "atlasPath": "sprites/valka_overworld.atlas.json",
+      "loadMethod": "atlas",
+      "logicalFrameWidth": 48,
+      "logicalFrameHeight": 48,
+      "displayScale": 0.13043478260869565,
+      "sourceRects": [
+        {
+          "x": 71,
+          "y": 10,
+          "w": 247,
+          "h": 339,
+          "offsetX": 59,
+          "offsetY": 25
+        },
+        {
+          "x": 415,
+          "y": 10,
+          "w": 267,
+          "h": 339,
+          "offsetX": 58,
+          "offsetY": 25
+        },
+        {
+          "x": 760,
+          "y": 10,
+          "w": 255,
+          "h": 340,
+          "offsetX": 54,
+          "offsetY": 24
+        },
+        {
+          "x": 79,
+          "y": 367,
+          "w": 247,
+          "h": 330,
+          "offsetX": 98,
+          "offsetY": 34
+        },
+        {
+          "x": 447,
+          "y": 367,
+          "w": 249,
+          "h": 334,
+          "offsetX": 100,
+          "offsetY": 30
+        },
+        {
+          "x": 797,
+          "y": 367,
+          "w": 252,
+          "h": 334,
+          "offsetX": 94,
+          "offsetY": 30
+        },
+        {
+          "x": 70,
+          "y": 720,
+          "w": 237,
+          "h": 332,
+          "offsetX": 33,
+          "offsetY": 32
+        },
+        {
+          "x": 398,
+          "y": 720,
+          "w": 253,
+          "h": 334,
+          "offsetX": 18,
+          "offsetY": 30
+        },
+        {
+          "x": 761,
+          "y": 721,
+          "w": 254,
+          "h": 336,
+          "offsetX": 12,
+          "offsetY": 28
+        },
+        {
+          "x": 72,
+          "y": 1069,
+          "w": 243,
+          "h": 356,
+          "offsetX": 66,
+          "offsetY": 8
+        },
+        {
+          "x": 418,
+          "y": 1069,
+          "w": 249,
+          "h": 356,
+          "offsetX": 56,
+          "offsetY": 8
+        },
+        {
+          "x": 774,
+          "y": 1069,
+          "w": 272,
+          "h": 356,
+          "offsetX": 58,
+          "offsetY": 8
+        }
+      ]
+    },
+    {
+      "id": "valka_enemy",
+      "character": "valka",
+      "kind": "enemy",
+      "path": "sprites/valka_enemy_128x128.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "columns": 4,
+      "rows": 3,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "left",
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 5,
+          "repeat": -1,
+          "preview": "animation_previews/valka_enemy_idle.gif"
+        },
+        "attack": {
+          "frames": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 8,
+          "repeat": 0,
+          "preview": "animation_previews/valka_enemy_attack.gif"
+        },
+        "hurt": {
+          "frames": [
+            8,
+            9
+          ],
+          "fps": 6,
+          "repeat": 0,
+          "preview": "animation_previews/valka_enemy_hurt.gif"
+        },
+        "defeat": {
+          "frames": [
+            10,
+            11
+          ],
+          "fps": 4,
+          "repeat": 0,
+          "preview": "animation_previews/valka_enemy_defeat.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_detailed_battle",
+      "preparation": {
+        "uniformScale": 0.30392156862745096,
+        "sourceColumnCuts": [
+          0,
+          350,
+          708,
+          1116,
+          1448
+        ],
+        "sourceRowCuts": [
+          0,
+          357,
+          717,
+          1086
+        ],
+        "alignment": "bottom-center"
+      },
+      "loadMethod": "spritesheet"
+    },
+    {
+      "id": "veyr_enemy",
+      "character": "veyr",
+      "kind": "enemy",
+      "path": "sprites/veyr_enemy_128x128.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "columns": 4,
+      "rows": 3,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "left",
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 5,
+          "repeat": -1,
+          "preview": "animation_previews/veyr_enemy_idle.gif"
+        },
+        "attack": {
+          "frames": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 8,
+          "repeat": 0,
+          "preview": "animation_previews/veyr_enemy_attack.gif"
+        },
+        "hurt": {
+          "frames": [
+            8,
+            9
+          ],
+          "fps": 6,
+          "repeat": 0,
+          "preview": "animation_previews/veyr_enemy_hurt.gif"
+        },
+        "defeat": {
+          "frames": [
+            10,
+            11
+          ],
+          "fps": 4,
+          "repeat": 0,
+          "preview": "animation_previews/veyr_enemy_defeat.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_detailed_battle",
+      "preparation": {
+        "uniformScale": 0.30845771144278605,
+        "sourceColumnCuts": [
+          0,
+          382,
+          784,
+          1157,
+          1448
+        ],
+        "sourceRowCuts": [
+          0,
+          380,
+          758,
+          1086
+        ],
+        "alignment": "bottom-center"
+      },
+      "loadMethod": "spritesheet"
+    },
+    {
+      "id": "crypt_lancer_overworld",
+      "character": "crypt_lancer",
+      "kind": "overworld",
+      "path": "originals/crypt_lancer_overworld_master.png",
+      "frameWidth": 352,
+      "frameHeight": 352,
+      "columns": 3,
+      "rows": 4,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "directional",
+      "animations": {
+        "idle_down": {
+          "frames": [
+            0
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_down": {
+          "frames": [
+            1,
+            0,
+            2,
+            0
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/crypt_lancer_overworld_walk_down.gif"
+        },
+        "idle_left": {
+          "frames": [
+            3
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_left": {
+          "frames": [
+            4,
+            3,
+            5,
+            3
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/crypt_lancer_overworld_walk_left.gif"
+        },
+        "idle_right": {
+          "frames": [
+            6
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_right": {
+          "frames": [
+            7,
+            6,
+            8,
+            6
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/crypt_lancer_overworld_walk_right.gif"
+        },
+        "idle_up": {
+          "frames": [
+            9
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_up": {
+          "frames": [
+            10,
+            9,
+            11,
+            9
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/crypt_lancer_overworld_walk_up.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_compact_original",
+      "preparation": {
+        "resized": false,
+        "alignment": "head center and feet via atlas trim offsets"
+      },
+      "expansion": true,
+      "originalMasterReference": "originals/crypt_lancer_overworld_master.png",
+      "originalMasterIncluded": true,
+      "atlasPath": "sprites/crypt_lancer_overworld.atlas.json",
+      "loadMethod": "atlas",
+      "logicalFrameWidth": 48,
+      "logicalFrameHeight": 48,
+      "displayScale": 0.13636363636363635,
+      "sourceRects": [
+        {
+          "x": 103,
+          "y": 13,
+          "w": 218,
+          "h": 338,
+          "offsetX": 71,
+          "offsetY": 10
+        },
+        {
+          "x": 434,
+          "y": 17,
+          "w": 220,
+          "h": 337,
+          "offsetX": 70,
+          "offsetY": 11
+        },
+        {
+          "x": 764,
+          "y": 14,
+          "w": 222,
+          "h": 340,
+          "offsetX": 66,
+          "offsetY": 8
+        },
+        {
+          "x": 97,
+          "y": 383,
+          "w": 236,
+          "h": 325,
+          "offsetX": 58,
+          "offsetY": 23
+        },
+        {
+          "x": 441,
+          "y": 384,
+          "w": 230,
+          "h": 324,
+          "offsetX": 61,
+          "offsetY": 24
+        },
+        {
+          "x": 777,
+          "y": 384,
+          "w": 236,
+          "h": 324,
+          "offsetX": 63,
+          "offsetY": 24
+        },
+        {
+          "x": 94,
+          "y": 742,
+          "w": 234,
+          "h": 322,
+          "offsetX": 58,
+          "offsetY": 26
+        },
+        {
+          "x": 417,
+          "y": 743,
+          "w": 231,
+          "h": 321,
+          "offsetX": 62,
+          "offsetY": 27
+        },
+        {
+          "x": 747,
+          "y": 742,
+          "w": 240,
+          "h": 322,
+          "offsetX": 52,
+          "offsetY": 26
+        },
+        {
+          "x": 92,
+          "y": 1095,
+          "w": 224,
+          "h": 317,
+          "offsetX": 60,
+          "offsetY": 31
+        },
+        {
+          "x": 428,
+          "y": 1098,
+          "w": 223,
+          "h": 321,
+          "offsetX": 66,
+          "offsetY": 27
+        },
+        {
+          "x": 759,
+          "y": 1094,
+          "w": 224,
+          "h": 331,
+          "offsetX": 63,
+          "offsetY": 17
+        }
+      ]
+    },
+    {
+      "id": "lyra_fen_overworld",
+      "character": "lyra_fen",
+      "kind": "overworld",
+      "path": "originals/lyra_fen_overworld_master.png",
+      "frameWidth": 384,
+      "frameHeight": 384,
+      "columns": 3,
+      "rows": 4,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "directional",
+      "animations": {
+        "idle_down": {
+          "frames": [
+            0
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_down": {
+          "frames": [
+            1,
+            0,
+            2,
+            0
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/lyra_fen_overworld_walk_down.gif"
+        },
+        "idle_left": {
+          "frames": [
+            3
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_left": {
+          "frames": [
+            4,
+            3,
+            5,
+            3
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/lyra_fen_overworld_walk_left.gif"
+        },
+        "idle_right": {
+          "frames": [
+            6
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_right": {
+          "frames": [
+            7,
+            6,
+            8,
+            6
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/lyra_fen_overworld_walk_right.gif"
+        },
+        "idle_up": {
+          "frames": [
+            9
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_up": {
+          "frames": [
+            10,
+            9,
+            11,
+            9
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/lyra_fen_overworld_walk_up.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_compact_original",
+      "preparation": {
+        "resized": false,
+        "alignment": "head center and feet via atlas trim offsets"
+      },
+      "originalMasterReference": "originals/lyra_fen_overworld_master.png",
+      "originalMasterIncluded": true,
+      "atlasPath": "sprites/lyra_fen_overworld.atlas.json",
+      "loadMethod": "atlas",
+      "logicalFrameWidth": 48,
+      "logicalFrameHeight": 48,
+      "displayScale": 0.125,
+      "sourceRects": [
+        {
+          "x": 133,
+          "y": 4,
+          "w": 197,
+          "h": 328,
+          "offsetX": 96,
+          "offsetY": 52
+        },
+        {
+          "x": 452,
+          "y": 4,
+          "w": 191,
+          "h": 328,
+          "offsetX": 99,
+          "offsetY": 52
+        },
+        {
+          "x": 769,
+          "y": 5,
+          "w": 199,
+          "h": 327,
+          "offsetX": 93,
+          "offsetY": 53
+        },
+        {
+          "x": 102,
+          "y": 347,
+          "w": 228,
+          "h": 331,
+          "offsetX": 86,
+          "offsetY": 49
+        },
+        {
+          "x": 436,
+          "y": 348,
+          "w": 226,
+          "h": 330,
+          "offsetX": 86,
+          "offsetY": 50
+        },
+        {
+          "x": 755,
+          "y": 348,
+          "w": 233,
+          "h": 329,
+          "offsetX": 83,
+          "offsetY": 51
+        },
+        {
+          "x": 83,
+          "y": 700,
+          "w": 230,
+          "h": 330,
+          "offsetX": 74,
+          "offsetY": 50
+        },
+        {
+          "x": 432,
+          "y": 700,
+          "w": 225,
+          "h": 332,
+          "offsetX": 80,
+          "offsetY": 48
+        },
+        {
+          "x": 760,
+          "y": 700,
+          "w": 231,
+          "h": 332,
+          "offsetX": 73,
+          "offsetY": 48
+        },
+        {
+          "x": 103,
+          "y": 1048,
+          "w": 195,
+          "h": 350,
+          "offsetX": 91,
+          "offsetY": 30
+        },
+        {
+          "x": 456,
+          "y": 1048,
+          "w": 182,
+          "h": 363,
+          "offsetX": 102,
+          "offsetY": 17
+        },
+        {
+          "x": 784,
+          "y": 1049,
+          "w": 189,
+          "h": 352,
+          "offsetX": 96,
+          "offsetY": 28
+        }
+      ]
+    },
+    {
+      "id": "lyra_fen_battle",
+      "character": "lyra_fen",
+      "kind": "battle",
+      "path": "sprites/lyra_fen_battle_128x128.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "columns": 4,
+      "rows": 4,
+      "frameCount": 16,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "right",
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 5,
+          "repeat": -1,
+          "preview": "animation_previews/lyra_fen_battle_idle.gif"
+        },
+        "attack": {
+          "frames": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 9,
+          "repeat": 0,
+          "preview": "animation_previews/lyra_fen_battle_attack.gif"
+        },
+        "skill": {
+          "frames": [
+            8,
+            9,
+            10,
+            11
+          ],
+          "fps": 8,
+          "repeat": 0,
+          "preview": "animation_previews/lyra_fen_battle_skill.gif"
+        },
+        "hurt": {
+          "frames": [
+            12,
+            13
+          ],
+          "fps": 7,
+          "repeat": 0,
+          "preview": "animation_previews/lyra_fen_battle_hurt.gif"
+        },
+        "knockout": {
+          "frames": [
+            14,
+            15
+          ],
+          "fps": 4,
+          "repeat": 0,
+          "preview": "animation_previews/lyra_fen_battle_knockout.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_detailed_battle",
+      "preparation": {
+        "uniformScale": 0.3701492537313433,
+        "sourceColumnCuts": [
+          0,
+          313,
+          607,
+          942,
+          1246
+        ],
+        "sourceRowCuts": [
+          0,
+          343,
+          632,
+          946,
+          1263
+        ],
+        "alignment": "bottom-center"
+      },
+      "loadMethod": "spritesheet"
+    },
+    {
+      "id": "eren_sol_overworld",
+      "character": "eren_sol",
+      "kind": "overworld",
+      "path": "originals/eren_sol_overworld_master.png",
+      "frameWidth": 368,
+      "frameHeight": 368,
+      "columns": 3,
+      "rows": 4,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "directional",
+      "animations": {
+        "idle_down": {
+          "frames": [
+            0
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_down": {
+          "frames": [
+            1,
+            0,
+            2,
+            0
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/eren_sol_overworld_walk_down.gif"
+        },
+        "idle_left": {
+          "frames": [
+            3
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_left": {
+          "frames": [
+            4,
+            3,
+            5,
+            3
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/eren_sol_overworld_walk_left.gif"
+        },
+        "idle_right": {
+          "frames": [
+            6
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_right": {
+          "frames": [
+            7,
+            6,
+            8,
+            6
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/eren_sol_overworld_walk_right.gif"
+        },
+        "idle_up": {
+          "frames": [
+            9
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_up": {
+          "frames": [
+            10,
+            9,
+            11,
+            9
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/eren_sol_overworld_walk_up.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_compact_original",
+      "preparation": {
+        "resized": false,
+        "alignment": "head center and feet via atlas trim offsets"
+      },
+      "originalMasterReference": "originals/eren_sol_overworld_master.png",
+      "originalMasterIncluded": true,
+      "atlasPath": "sprites/eren_sol_overworld.atlas.json",
+      "loadMethod": "atlas",
+      "logicalFrameWidth": 48,
+      "logicalFrameHeight": 48,
+      "displayScale": 0.13043478260869565,
+      "sourceRects": [
+        {
+          "x": 147,
+          "y": 8,
+          "w": 174,
+          "h": 338,
+          "offsetX": 95,
+          "offsetY": 26
+        },
+        {
+          "x": 457,
+          "y": 10,
+          "w": 182,
+          "h": 337,
+          "offsetX": 89,
+          "offsetY": 27
+        },
+        {
+          "x": 759,
+          "y": 10,
+          "w": 180,
+          "h": 337,
+          "offsetX": 97,
+          "offsetY": 27
+        },
+        {
+          "x": 153,
+          "y": 364,
+          "w": 191,
+          "h": 326,
+          "offsetX": 94,
+          "offsetY": 38
+        },
+        {
+          "x": 453,
+          "y": 369,
+          "w": 198,
+          "h": 322,
+          "offsetX": 90,
+          "offsetY": 42
+        },
+        {
+          "x": 770,
+          "y": 364,
+          "w": 198,
+          "h": 328,
+          "offsetX": 92,
+          "offsetY": 36
+        },
+        {
+          "x": 136,
+          "y": 714,
+          "w": 192,
+          "h": 333,
+          "offsetX": 86,
+          "offsetY": 31
+        },
+        {
+          "x": 442,
+          "y": 714,
+          "w": 209,
+          "h": 331,
+          "offsetX": 70,
+          "offsetY": 33
+        },
+        {
+          "x": 753,
+          "y": 714,
+          "w": 197,
+          "h": 331,
+          "offsetX": 82,
+          "offsetY": 33
+        },
+        {
+          "x": 141,
+          "y": 1065,
+          "w": 187,
+          "h": 342,
+          "offsetX": 85,
+          "offsetY": 22
+        },
+        {
+          "x": 453,
+          "y": 1064,
+          "w": 182,
+          "h": 349,
+          "offsetX": 92,
+          "offsetY": 15
+        },
+        {
+          "x": 754,
+          "y": 1064,
+          "w": 205,
+          "h": 354,
+          "offsetX": 96,
+          "offsetY": 10
+        }
+      ]
+    },
+    {
+      "id": "eren_sol_battle",
+      "character": "eren_sol",
+      "kind": "battle",
+      "path": "sprites/eren_sol_battle_128x128.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "columns": 4,
+      "rows": 4,
+      "frameCount": 16,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "right",
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 5,
+          "repeat": -1,
+          "preview": "animation_previews/eren_sol_battle_idle.gif"
+        },
+        "attack": {
+          "frames": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 9,
+          "repeat": 0,
+          "preview": "animation_previews/eren_sol_battle_attack.gif"
+        },
+        "skill": {
+          "frames": [
+            8,
+            9,
+            10,
+            11
+          ],
+          "fps": 8,
+          "repeat": 0,
+          "preview": "animation_previews/eren_sol_battle_skill.gif"
+        },
+        "hurt": {
+          "frames": [
+            12,
+            13
+          ],
+          "fps": 7,
+          "repeat": 0,
+          "preview": "animation_previews/eren_sol_battle_hurt.gif"
+        },
+        "knockout": {
+          "frames": [
+            14,
+            15
+          ],
+          "fps": 4,
+          "repeat": 0,
+          "preview": "animation_previews/eren_sol_battle_knockout.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_detailed_battle",
+      "preparation": {
+        "uniformScale": 0.31155778894472363,
+        "sourceColumnCuts": [
+          0,
+          318,
+          616,
+          1014,
+          1262
+        ],
+        "sourceRowCuts": [
+          0,
+          320,
+          636,
+          946,
+          1246
+        ],
+        "alignment": "bottom-center"
+      },
+      "loadMethod": "spritesheet"
+    },
+    {
+      "id": "mira_thorn_overworld",
+      "character": "mira_thorn",
+      "kind": "overworld",
+      "path": "originals/mira_thorn_overworld_master.png",
+      "frameWidth": 368,
+      "frameHeight": 368,
+      "columns": 3,
+      "rows": 4,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "directional",
+      "animations": {
+        "idle_down": {
+          "frames": [
+            0
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_down": {
+          "frames": [
+            1,
+            0,
+            2,
+            0
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/mira_thorn_overworld_walk_down.gif"
+        },
+        "idle_left": {
+          "frames": [
+            3
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_left": {
+          "frames": [
+            4,
+            3,
+            5,
+            3
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/mira_thorn_overworld_walk_left.gif"
+        },
+        "idle_right": {
+          "frames": [
+            6
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_right": {
+          "frames": [
+            7,
+            6,
+            8,
+            6
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/mira_thorn_overworld_walk_right.gif"
+        },
+        "idle_up": {
+          "frames": [
+            9
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_up": {
+          "frames": [
+            10,
+            9,
+            11,
+            9
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/mira_thorn_overworld_walk_up.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_compact_original",
+      "preparation": {
+        "resized": false,
+        "alignment": "head center and feet via atlas trim offsets"
+      },
+      "originalMasterReference": "originals/mira_thorn_overworld_master.png",
+      "originalMasterIncluded": true,
+      "atlasPath": "sprites/mira_thorn_overworld.atlas.json",
+      "loadMethod": "atlas",
+      "logicalFrameWidth": 48,
+      "logicalFrameHeight": 48,
+      "displayScale": 0.13043478260869565,
+      "sourceRects": [
+        {
+          "x": 131,
+          "y": 5,
+          "w": 180,
+          "h": 340,
+          "offsetX": 92,
+          "offsetY": 24
+        },
+        {
+          "x": 451,
+          "y": 4,
+          "w": 188,
+          "h": 342,
+          "offsetX": 86,
+          "offsetY": 22
+        },
+        {
+          "x": 796,
+          "y": 5,
+          "w": 187,
+          "h": 341,
+          "offsetX": 86,
+          "offsetY": 23
+        },
+        {
+          "x": 106,
+          "y": 359,
+          "w": 232,
+          "h": 327,
+          "offsetX": 70,
+          "offsetY": 37
+        },
+        {
+          "x": 425,
+          "y": 364,
+          "w": 241,
+          "h": 322,
+          "offsetX": 67,
+          "offsetY": 42
+        },
+        {
+          "x": 770,
+          "y": 364,
+          "w": 234,
+          "h": 322,
+          "offsetX": 68,
+          "offsetY": 42
+        },
+        {
+          "x": 72,
+          "y": 703,
+          "w": 239,
+          "h": 325,
+          "offsetX": 62,
+          "offsetY": 39
+        },
+        {
+          "x": 398,
+          "y": 704,
+          "w": 243,
+          "h": 327,
+          "offsetX": 60,
+          "offsetY": 37
+        },
+        {
+          "x": 746,
+          "y": 704,
+          "w": 255,
+          "h": 328,
+          "offsetX": 58,
+          "offsetY": 36
+        },
+        {
+          "x": 104,
+          "y": 1047,
+          "w": 178,
+          "h": 344,
+          "offsetX": 97,
+          "offsetY": 20
+        },
+        {
+          "x": 437,
+          "y": 1044,
+          "w": 189,
+          "h": 351,
+          "offsetX": 92,
+          "offsetY": 13
+        },
+        {
+          "x": 805,
+          "y": 1048,
+          "w": 178,
+          "h": 347,
+          "offsetX": 95,
+          "offsetY": 17
+        }
+      ]
+    },
+    {
+      "id": "mira_thorn_battle",
+      "character": "mira_thorn",
+      "kind": "battle",
+      "path": "sprites/mira_thorn_battle_128x128.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "columns": 4,
+      "rows": 4,
+      "frameCount": 16,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "right",
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 5,
+          "repeat": -1,
+          "preview": "animation_previews/mira_thorn_battle_idle.gif"
+        },
+        "attack": {
+          "frames": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 9,
+          "repeat": 0,
+          "preview": "animation_previews/mira_thorn_battle_attack.gif"
+        },
+        "skill": {
+          "frames": [
+            8,
+            9,
+            10,
+            11
+          ],
+          "fps": 8,
+          "repeat": 0,
+          "preview": "animation_previews/mira_thorn_battle_skill.gif"
+        },
+        "hurt": {
+          "frames": [
+            12,
+            13
+          ],
+          "fps": 7,
+          "repeat": 0,
+          "preview": "animation_previews/mira_thorn_battle_hurt.gif"
+        },
+        "knockout": {
+          "frames": [
+            14,
+            15
+          ],
+          "fps": 4,
+          "repeat": 0,
+          "preview": "animation_previews/mira_thorn_battle_knockout.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_detailed_battle",
+      "preparation": {
+        "uniformScale": 0.2995169082125604,
+        "sourceColumnCuts": [
+          0,
+          296,
+          611,
+          1025,
+          1290
+        ],
+        "sourceRowCuts": [
+          0,
+          314,
+          619,
+          930,
+          1219
+        ],
+        "alignment": "bottom-center"
+      },
+      "loadMethod": "spritesheet"
+    },
+    {
+      "id": "rowan_voss_overworld",
+      "character": "rowan_voss",
+      "kind": "overworld",
+      "path": "originals/rowan_voss_overworld_master.png",
+      "frameWidth": 368,
+      "frameHeight": 368,
+      "columns": 3,
+      "rows": 4,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "directional",
+      "animations": {
+        "idle_down": {
+          "frames": [
+            0
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_down": {
+          "frames": [
+            1,
+            0,
+            2,
+            0
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/rowan_voss_overworld_walk_down.gif"
+        },
+        "idle_left": {
+          "frames": [
+            3
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_left": {
+          "frames": [
+            4,
+            3,
+            5,
+            3
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/rowan_voss_overworld_walk_left.gif"
+        },
+        "idle_right": {
+          "frames": [
+            6
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_right": {
+          "frames": [
+            7,
+            6,
+            8,
+            6
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/rowan_voss_overworld_walk_right.gif"
+        },
+        "idle_up": {
+          "frames": [
+            9
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_up": {
+          "frames": [
+            10,
+            9,
+            11,
+            9
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/rowan_voss_overworld_walk_up.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_compact_original",
+      "preparation": {
+        "resized": false,
+        "alignment": "head center and feet via atlas trim offsets"
+      },
+      "originalMasterReference": "originals/rowan_voss_overworld_master.png",
+      "originalMasterIncluded": true,
+      "atlasPath": "sprites/rowan_voss_overworld.atlas.json",
+      "loadMethod": "atlas",
+      "logicalFrameWidth": 48,
+      "logicalFrameHeight": 48,
+      "displayScale": 0.13043478260869565,
+      "sourceRects": [
+        {
+          "x": 148,
+          "y": 13,
+          "w": 181,
+          "h": 328,
+          "offsetX": 95,
+          "offsetY": 36
+        },
+        {
+          "x": 448,
+          "y": 14,
+          "w": 183,
+          "h": 327,
+          "offsetX": 90,
+          "offsetY": 37
+        },
+        {
+          "x": 761,
+          "y": 14,
+          "w": 175,
+          "h": 327,
+          "offsetX": 96,
+          "offsetY": 37
+        },
+        {
+          "x": 136,
+          "y": 369,
+          "w": 216,
+          "h": 329,
+          "offsetX": 90,
+          "offsetY": 35
+        },
+        {
+          "x": 432,
+          "y": 367,
+          "w": 233,
+          "h": 330,
+          "offsetX": 90,
+          "offsetY": 34
+        },
+        {
+          "x": 761,
+          "y": 371,
+          "w": 228,
+          "h": 326,
+          "offsetX": 88,
+          "offsetY": 38
+        },
+        {
+          "x": 109,
+          "y": 722,
+          "w": 221,
+          "h": 331,
+          "offsetX": 60,
+          "offsetY": 33
+        },
+        {
+          "x": 404,
+          "y": 721,
+          "w": 239,
+          "h": 332,
+          "offsetX": 42,
+          "offsetY": 32
+        },
+        {
+          "x": 734,
+          "y": 722,
+          "w": 227,
+          "h": 330,
+          "offsetX": 52,
+          "offsetY": 34
+        },
+        {
+          "x": 136,
+          "y": 1073,
+          "w": 195,
+          "h": 345,
+          "offsetX": 84,
+          "offsetY": 19
+        },
+        {
+          "x": 443,
+          "y": 1073,
+          "w": 194,
+          "h": 347,
+          "offsetX": 88,
+          "offsetY": 17
+        },
+        {
+          "x": 755,
+          "y": 1073,
+          "w": 197,
+          "h": 343,
+          "offsetX": 88,
+          "offsetY": 21
+        }
+      ]
+    },
+    {
+      "id": "rowan_voss_battle",
+      "character": "rowan_voss",
+      "kind": "battle",
+      "path": "sprites/rowan_voss_battle_128x128.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "columns": 4,
+      "rows": 4,
+      "frameCount": 16,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "right",
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 5,
+          "repeat": -1,
+          "preview": "animation_previews/rowan_voss_battle_idle.gif"
+        },
+        "attack": {
+          "frames": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 9,
+          "repeat": 0,
+          "preview": "animation_previews/rowan_voss_battle_attack.gif"
+        },
+        "skill": {
+          "frames": [
+            8,
+            9,
+            10,
+            11
+          ],
+          "fps": 8,
+          "repeat": 0,
+          "preview": "animation_previews/rowan_voss_battle_skill.gif"
+        },
+        "hurt": {
+          "frames": [
+            12,
+            13
+          ],
+          "fps": 7,
+          "repeat": 0,
+          "preview": "animation_previews/rowan_voss_battle_hurt.gif"
+        },
+        "knockout": {
+          "frames": [
+            14,
+            15
+          ],
+          "fps": 4,
+          "repeat": 0,
+          "preview": "animation_previews/rowan_voss_battle_knockout.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_detailed_battle",
+      "preparation": {
+        "uniformScale": 0.32041343669250644,
+        "sourceColumnCuts": [
+          0,
+          294,
+          600,
+          882,
+          1274
+        ],
+        "sourceRowCuts": [
+          0,
+          308,
+          618,
+          922,
+          1234
+        ],
+        "alignment": "bottom-center"
+      },
+      "loadMethod": "spritesheet"
+    },
+    {
+      "id": "elara_ashen_overworld",
+      "character": "elara_ashen",
+      "kind": "overworld",
+      "path": "originals/elara_ashen_overworld_master.png",
+      "frameWidth": 368,
+      "frameHeight": 368,
+      "columns": 3,
+      "rows": 4,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "directional",
+      "animations": {
+        "idle_down": {
+          "frames": [
+            0
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_down": {
+          "frames": [
+            1,
+            0,
+            2,
+            0
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/elara_ashen_overworld_walk_down.gif"
+        },
+        "idle_left": {
+          "frames": [
+            3
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_left": {
+          "frames": [
+            4,
+            3,
+            5,
+            3
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/elara_ashen_overworld_walk_left.gif"
+        },
+        "idle_right": {
+          "frames": [
+            6
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_right": {
+          "frames": [
+            7,
+            6,
+            8,
+            6
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/elara_ashen_overworld_walk_right.gif"
+        },
+        "idle_up": {
+          "frames": [
+            9
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_up": {
+          "frames": [
+            10,
+            9,
+            11,
+            9
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/elara_ashen_overworld_walk_up.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_compact_original",
+      "preparation": {
+        "resized": false,
+        "alignment": "head center and feet via atlas trim offsets"
+      },
+      "originalMasterReference": "originals/elara_ashen_overworld_master.png",
+      "originalMasterIncluded": true,
+      "atlasPath": "sprites/elara_ashen_overworld.atlas.json",
+      "loadMethod": "atlas",
+      "logicalFrameWidth": 48,
+      "logicalFrameHeight": 48,
+      "displayScale": 0.13043478260869565,
+      "sourceRects": [
+        {
+          "x": 131,
+          "y": 5,
+          "w": 187,
+          "h": 350,
+          "offsetX": 98,
+          "offsetY": 14
+        },
+        {
+          "x": 455,
+          "y": 5,
+          "w": 188,
+          "h": 351,
+          "offsetX": 98,
+          "offsetY": 13
+        },
+        {
+          "x": 778,
+          "y": 5,
+          "w": 189,
+          "h": 352,
+          "offsetX": 98,
+          "offsetY": 12
+        },
+        {
+          "x": 106,
+          "y": 366,
+          "w": 203,
+          "h": 348,
+          "offsetX": 88,
+          "offsetY": 16
+        },
+        {
+          "x": 441,
+          "y": 366,
+          "w": 215,
+          "h": 347,
+          "offsetX": 87,
+          "offsetY": 17
+        },
+        {
+          "x": 773,
+          "y": 366,
+          "w": 224,
+          "h": 347,
+          "offsetX": 82,
+          "offsetY": 17
+        },
+        {
+          "x": 102,
+          "y": 725,
+          "w": 212,
+          "h": 349,
+          "offsetX": 72,
+          "offsetY": 15
+        },
+        {
+          "x": 430,
+          "y": 725,
+          "w": 222,
+          "h": 348,
+          "offsetX": 61,
+          "offsetY": 16
+        },
+        {
+          "x": 772,
+          "y": 725,
+          "w": 217,
+          "h": 348,
+          "offsetX": 65,
+          "offsetY": 16
+        },
+        {
+          "x": 107,
+          "y": 1082,
+          "w": 196,
+          "h": 358,
+          "offsetX": 76,
+          "offsetY": 6
+        },
+        {
+          "x": 455,
+          "y": 1082,
+          "w": 172,
+          "h": 359,
+          "offsetX": 97,
+          "offsetY": 5
+        },
+        {
+          "x": 787,
+          "y": 1083,
+          "w": 167,
+          "h": 358,
+          "offsetX": 100,
+          "offsetY": 6
+        }
+      ]
+    },
+    {
+      "id": "elara_ashen_battle",
+      "character": "elara_ashen",
+      "kind": "battle",
+      "path": "sprites/elara_ashen_battle_128x128.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "columns": 4,
+      "rows": 4,
+      "frameCount": 16,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "right",
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 5,
+          "repeat": -1,
+          "preview": "animation_previews/elara_ashen_battle_idle.gif"
+        },
+        "attack": {
+          "frames": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 9,
+          "repeat": 0,
+          "preview": "animation_previews/elara_ashen_battle_attack.gif"
+        },
+        "skill": {
+          "frames": [
+            8,
+            9,
+            10,
+            11
+          ],
+          "fps": 8,
+          "repeat": 0,
+          "preview": "animation_previews/elara_ashen_battle_skill.gif"
+        },
+        "hurt": {
+          "frames": [
+            12,
+            13
+          ],
+          "fps": 7,
+          "repeat": 0,
+          "preview": "animation_previews/elara_ashen_battle_hurt.gif"
+        },
+        "knockout": {
+          "frames": [
+            14,
+            15
+          ],
+          "fps": 4,
+          "repeat": 0,
+          "preview": "animation_previews/elara_ashen_battle_knockout.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_detailed_battle",
+      "preparation": {
+        "uniformScale": 0.29314420803782504,
+        "sourceColumnCuts": [
+          0,
+          366,
+          754,
+          1179,
+          1536
+        ],
+        "sourceRowCuts": [
+          0,
+          263,
+          516,
+          782,
+          1024
+        ],
+        "alignment": "bottom-center"
+      },
+      "loadMethod": "spritesheet"
+    },
+    {
+      "id": "daigo_ren_overworld",
+      "character": "daigo_ren",
+      "kind": "overworld",
+      "path": "originals/daigo_ren_overworld_master.png",
+      "frameWidth": 384,
+      "frameHeight": 384,
+      "columns": 3,
+      "rows": 4,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "directional",
+      "animations": {
+        "idle_down": {
+          "frames": [
+            0
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_down": {
+          "frames": [
+            1,
+            0,
+            2,
+            0
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/daigo_ren_overworld_walk_down.gif"
+        },
+        "idle_left": {
+          "frames": [
+            3
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_left": {
+          "frames": [
+            4,
+            3,
+            5,
+            3
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/daigo_ren_overworld_walk_left.gif"
+        },
+        "idle_right": {
+          "frames": [
+            6
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_right": {
+          "frames": [
+            7,
+            6,
+            8,
+            6
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/daigo_ren_overworld_walk_right.gif"
+        },
+        "idle_up": {
+          "frames": [
+            9
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_up": {
+          "frames": [
+            10,
+            9,
+            11,
+            9
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/daigo_ren_overworld_walk_up.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_compact_original",
+      "preparation": {
+        "resized": false,
+        "alignment": "head center and feet via atlas trim offsets"
+      },
+      "originalMasterReference": "originals/daigo_ren_overworld_master.png",
+      "originalMasterIncluded": true,
+      "atlasPath": "sprites/daigo_ren_overworld.atlas.json",
+      "loadMethod": "atlas",
+      "logicalFrameWidth": 48,
+      "logicalFrameHeight": 48,
+      "displayScale": 0.125,
+      "sourceRects": [
+        {
+          "x": 112,
+          "y": 6,
+          "w": 207,
+          "h": 343,
+          "offsetX": 89,
+          "offsetY": 37
+        },
+        {
+          "x": 438,
+          "y": 8,
+          "w": 215,
+          "h": 342,
+          "offsetX": 82,
+          "offsetY": 38
+        },
+        {
+          "x": 783,
+          "y": 7,
+          "w": 207,
+          "h": 343,
+          "offsetX": 94,
+          "offsetY": 37
+        },
+        {
+          "x": 116,
+          "y": 365,
+          "w": 208,
+          "h": 322,
+          "offsetX": 113,
+          "offsetY": 58
+        },
+        {
+          "x": 456,
+          "y": 362,
+          "w": 222,
+          "h": 326,
+          "offsetX": 114,
+          "offsetY": 54
+        },
+        {
+          "x": 790,
+          "y": 367,
+          "w": 223,
+          "h": 321,
+          "offsetX": 103,
+          "offsetY": 59
+        },
+        {
+          "x": 94,
+          "y": 702,
+          "w": 207,
+          "h": 322,
+          "offsetX": 64,
+          "offsetY": 58
+        },
+        {
+          "x": 426,
+          "y": 700,
+          "w": 218,
+          "h": 328,
+          "offsetX": 68,
+          "offsetY": 52
+        },
+        {
+          "x": 763,
+          "y": 702,
+          "w": 231,
+          "h": 326,
+          "offsetX": 59,
+          "offsetY": 54
+        },
+        {
+          "x": 100,
+          "y": 1037,
+          "w": 226,
+          "h": 356,
+          "offsetX": 78,
+          "offsetY": 24
+        },
+        {
+          "x": 432,
+          "y": 1035,
+          "w": 234,
+          "h": 363,
+          "offsetX": 74,
+          "offsetY": 17
+        },
+        {
+          "x": 783,
+          "y": 1036,
+          "w": 225,
+          "h": 363,
+          "offsetX": 80,
+          "offsetY": 17
+        }
+      ]
+    },
+    {
+      "id": "daigo_ren_battle",
+      "character": "daigo_ren",
+      "kind": "battle",
+      "path": "sprites/daigo_ren_battle_128x128.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "columns": 4,
+      "rows": 4,
+      "frameCount": 16,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "right",
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 5,
+          "repeat": -1,
+          "preview": "animation_previews/daigo_ren_battle_idle.gif"
+        },
+        "attack": {
+          "frames": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 9,
+          "repeat": 0,
+          "preview": "animation_previews/daigo_ren_battle_attack.gif"
+        },
+        "skill": {
+          "frames": [
+            8,
+            9,
+            10,
+            11
+          ],
+          "fps": 8,
+          "repeat": 0,
+          "preview": "animation_previews/daigo_ren_battle_skill.gif"
+        },
+        "hurt": {
+          "frames": [
+            12,
+            13
+          ],
+          "fps": 7,
+          "repeat": 0,
+          "preview": "animation_previews/daigo_ren_battle_hurt.gif"
+        },
+        "knockout": {
+          "frames": [
+            14,
+            15
+          ],
+          "fps": 4,
+          "repeat": 0,
+          "preview": "animation_previews/daigo_ren_battle_knockout.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_detailed_battle",
+      "preparation": {
+        "uniformScale": 0.30097087378640774,
+        "sourceColumnCuts": [
+          0,
+          381,
+          807,
+          1170,
+          1536
+        ],
+        "sourceRowCuts": [
+          0,
+          256,
+          506,
+          768,
+          1024
+        ],
+        "alignment": "bottom-center"
+      },
+      "loadMethod": "spritesheet"
+    },
+    {
+      "id": "nyra_vale_overworld",
+      "character": "nyra_vale",
+      "kind": "overworld",
+      "path": "originals/nyra_vale_overworld_master.png",
+      "frameWidth": 384,
+      "frameHeight": 384,
+      "columns": 3,
+      "rows": 4,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "directional",
+      "animations": {
+        "idle_down": {
+          "frames": [
+            0
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_down": {
+          "frames": [
+            1,
+            0,
+            2,
+            0
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/nyra_vale_overworld_walk_down.gif"
+        },
+        "idle_left": {
+          "frames": [
+            3
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_left": {
+          "frames": [
+            4,
+            3,
+            5,
+            3
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/nyra_vale_overworld_walk_left.gif"
+        },
+        "idle_right": {
+          "frames": [
+            6
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_right": {
+          "frames": [
+            7,
+            6,
+            8,
+            6
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/nyra_vale_overworld_walk_right.gif"
+        },
+        "idle_up": {
+          "frames": [
+            9
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_up": {
+          "frames": [
+            10,
+            9,
+            11,
+            9
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/nyra_vale_overworld_walk_up.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_compact_original",
+      "preparation": {
+        "resized": false,
+        "alignment": "head center and feet via atlas trim offsets"
+      },
+      "originalMasterReference": "originals/nyra_vale_overworld_master.png",
+      "originalMasterIncluded": true,
+      "atlasPath": "sprites/nyra_vale_overworld.atlas.json",
+      "loadMethod": "atlas",
+      "logicalFrameWidth": 48,
+      "logicalFrameHeight": 48,
+      "displayScale": 0.125,
+      "sourceRects": [
+        {
+          "x": 110,
+          "y": 2,
+          "w": 191,
+          "h": 351,
+          "offsetX": 99,
+          "offsetY": 29
+        },
+        {
+          "x": 446,
+          "y": 2,
+          "w": 190,
+          "h": 352,
+          "offsetX": 102,
+          "offsetY": 28
+        },
+        {
+          "x": 783,
+          "y": 2,
+          "w": 184,
+          "h": 353,
+          "offsetX": 93,
+          "offsetY": 27
+        },
+        {
+          "x": 85,
+          "y": 365,
+          "w": 242,
+          "h": 325,
+          "offsetX": 76,
+          "offsetY": 55
+        },
+        {
+          "x": 418,
+          "y": 368,
+          "w": 246,
+          "h": 323,
+          "offsetX": 72,
+          "offsetY": 57
+        },
+        {
+          "x": 418,
+          "y": 368,
+          "w": 246,
+          "h": 323,
+          "offsetX": 72,
+          "offsetY": 57
+        },
+        {
+          "x": 59,
+          "y": 701,
+          "w": 251,
+          "h": 325,
+          "offsetX": 64,
+          "offsetY": 55
+        },
+        {
+          "x": 397,
+          "y": 705,
+          "w": 257,
+          "h": 321,
+          "offsetX": 59,
+          "offsetY": 59
+        },
+        {
+          "x": 748,
+          "y": 702,
+          "w": 256,
+          "h": 324,
+          "offsetX": 60,
+          "offsetY": 56
+        },
+        {
+          "x": 116,
+          "y": 1030,
+          "w": 200,
+          "h": 352,
+          "offsetX": 98,
+          "offsetY": 28
+        },
+        {
+          "x": 442,
+          "y": 1030,
+          "w": 205,
+          "h": 362,
+          "offsetX": 88,
+          "offsetY": 18
+        },
+        {
+          "x": 770,
+          "y": 1032,
+          "w": 209,
+          "h": 361,
+          "offsetX": 84,
+          "offsetY": 19
+        }
+      ]
+    },
+    {
+      "id": "nyra_vale_battle",
+      "character": "nyra_vale",
+      "kind": "battle",
+      "path": "sprites/nyra_vale_battle_128x128.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "columns": 4,
+      "rows": 4,
+      "frameCount": 16,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "right",
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 5,
+          "repeat": -1,
+          "preview": "animation_previews/nyra_vale_battle_idle.gif"
+        },
+        "attack": {
+          "frames": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 9,
+          "repeat": 0,
+          "preview": "animation_previews/nyra_vale_battle_attack.gif"
+        },
+        "skill": {
+          "frames": [
+            8,
+            9,
+            10,
+            11
+          ],
+          "fps": 8,
+          "repeat": 0,
+          "preview": "animation_previews/nyra_vale_battle_skill.gif"
+        },
+        "hurt": {
+          "frames": [
+            12,
+            13
+          ],
+          "fps": 7,
+          "repeat": 0,
+          "preview": "animation_previews/nyra_vale_battle_hurt.gif"
+        },
+        "knockout": {
+          "frames": [
+            14,
+            15
+          ],
+          "fps": 4,
+          "repeat": 0,
+          "preview": "animation_previews/nyra_vale_battle_knockout.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_detailed_battle",
+      "preparation": {
+        "uniformScale": 0.2897196261682243,
+        "sourceColumnCuts": [
+          0,
+          380,
+          778,
+          1108,
+          1536
+        ],
+        "sourceRowCuts": [
+          0,
+          258,
+          512,
+          767,
+          1024
+        ],
+        "alignment": "bottom-center"
+      },
+      "loadMethod": "spritesheet"
+    },
+    {
+      "id": "soren_mire_overworld",
+      "character": "soren_mire",
+      "kind": "overworld",
+      "path": "originals/soren_mire_overworld_master.png",
+      "frameWidth": 352,
+      "frameHeight": 352,
+      "columns": 3,
+      "rows": 4,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "directional",
+      "animations": {
+        "idle_down": {
+          "frames": [
+            0
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_down": {
+          "frames": [
+            1,
+            0,
+            2,
+            0
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/soren_mire_overworld_walk_down.gif"
+        },
+        "idle_left": {
+          "frames": [
+            3
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_left": {
+          "frames": [
+            4,
+            3,
+            5,
+            3
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/soren_mire_overworld_walk_left.gif"
+        },
+        "idle_right": {
+          "frames": [
+            6
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_right": {
+          "frames": [
+            7,
+            6,
+            8,
+            6
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/soren_mire_overworld_walk_right.gif"
+        },
+        "idle_up": {
+          "frames": [
+            9
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_up": {
+          "frames": [
+            10,
+            9,
+            11,
+            9
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/soren_mire_overworld_walk_up.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_compact_original",
+      "preparation": {
+        "resized": false,
+        "alignment": "head center and feet via atlas trim offsets"
+      },
+      "originalMasterReference": "originals/soren_mire_overworld_master.png",
+      "originalMasterIncluded": true,
+      "atlasPath": "sprites/soren_mire_overworld.atlas.json",
+      "loadMethod": "atlas",
+      "logicalFrameWidth": 48,
+      "logicalFrameHeight": 48,
+      "displayScale": 0.13636363636363635,
+      "sourceRects": [
+        {
+          "x": 112,
+          "y": 9,
+          "w": 209,
+          "h": 339,
+          "offsetX": 76,
+          "offsetY": 9
+        },
+        {
+          "x": 451,
+          "y": 9,
+          "w": 203,
+          "h": 340,
+          "offsetX": 79,
+          "offsetY": 8
+        },
+        {
+          "x": 794,
+          "y": 9,
+          "w": 202,
+          "h": 340,
+          "offsetX": 79,
+          "offsetY": 8
+        },
+        {
+          "x": 99,
+          "y": 369,
+          "w": 215,
+          "h": 333,
+          "offsetX": 78,
+          "offsetY": 15
+        },
+        {
+          "x": 435,
+          "y": 366,
+          "w": 221,
+          "h": 335,
+          "offsetX": 78,
+          "offsetY": 13
+        },
+        {
+          "x": 782,
+          "y": 366,
+          "w": 216,
+          "h": 339,
+          "offsetX": 78,
+          "offsetY": 9
+        },
+        {
+          "x": 101,
+          "y": 727,
+          "w": 221,
+          "h": 337,
+          "offsetX": 58,
+          "offsetY": 11
+        },
+        {
+          "x": 431,
+          "y": 726,
+          "w": 224,
+          "h": 338,
+          "offsetX": 52,
+          "offsetY": 10
+        },
+        {
+          "x": 781,
+          "y": 726,
+          "w": 218,
+          "h": 338,
+          "offsetX": 60,
+          "offsetY": 10
+        },
+        {
+          "x": 106,
+          "y": 1082,
+          "w": 201,
+          "h": 340,
+          "offsetX": 74,
+          "offsetY": 8
+        },
+        {
+          "x": 439,
+          "y": 1085,
+          "w": 201,
+          "h": 340,
+          "offsetX": 71,
+          "offsetY": 8
+        },
+        {
+          "x": 775,
+          "y": 1083,
+          "w": 206,
+          "h": 342,
+          "offsetX": 68,
+          "offsetY": 6
+        }
+      ]
+    },
+    {
+      "id": "soren_mire_battle",
+      "character": "soren_mire",
+      "kind": "battle",
+      "path": "sprites/soren_mire_battle_128x128.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "columns": 4,
+      "rows": 4,
+      "frameCount": 16,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "right",
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 5,
+          "repeat": -1,
+          "preview": "animation_previews/soren_mire_battle_idle.gif"
+        },
+        "attack": {
+          "frames": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 9,
+          "repeat": 0,
+          "preview": "animation_previews/soren_mire_battle_attack.gif"
+        },
+        "skill": {
+          "frames": [
+            8,
+            9,
+            10,
+            11
+          ],
+          "fps": 8,
+          "repeat": 0,
+          "preview": "animation_previews/soren_mire_battle_skill.gif"
+        },
+        "hurt": {
+          "frames": [
+            12,
+            13
+          ],
+          "fps": 7,
+          "repeat": 0,
+          "preview": "animation_previews/soren_mire_battle_hurt.gif"
+        },
+        "knockout": {
+          "frames": [
+            14,
+            15
+          ],
+          "fps": 4,
+          "repeat": 0,
+          "preview": "animation_previews/soren_mire_battle_knockout.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_detailed_battle",
+      "preparation": {
+        "uniformScale": 0.3780487804878049,
+        "sourceColumnCuts": [
+          0,
+          312,
+          650,
+          946,
+          1243
+        ],
+        "sourceRowCuts": [
+          0,
+          334,
+          644,
+          950,
+          1265
+        ],
+        "alignment": "bottom-center"
+      },
+      "loadMethod": "spritesheet"
+    },
+    {
+      "id": "cassian_reed_overworld",
+      "character": "cassian_reed",
+      "kind": "overworld",
+      "path": "originals/cassian_reed_overworld_master.png",
+      "frameWidth": 368,
+      "frameHeight": 368,
+      "columns": 3,
+      "rows": 4,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "directional",
+      "animations": {
+        "idle_down": {
+          "frames": [
+            0
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_down": {
+          "frames": [
+            1,
+            0,
+            2,
+            0
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/cassian_reed_overworld_walk_down.gif"
+        },
+        "idle_left": {
+          "frames": [
+            3
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_left": {
+          "frames": [
+            4,
+            3,
+            5,
+            3
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/cassian_reed_overworld_walk_left.gif"
+        },
+        "idle_right": {
+          "frames": [
+            6
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_right": {
+          "frames": [
+            7,
+            6,
+            8,
+            6
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/cassian_reed_overworld_walk_right.gif"
+        },
+        "idle_up": {
+          "frames": [
+            9
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_up": {
+          "frames": [
+            10,
+            9,
+            11,
+            9
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/cassian_reed_overworld_walk_up.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_compact_original",
+      "preparation": {
+        "resized": false,
+        "alignment": "head center and feet via atlas trim offsets"
+      },
+      "expansion": true,
+      "originalMasterReference": "originals/cassian_reed_overworld_master.png",
+      "originalMasterIncluded": true,
+      "atlasPath": "sprites/cassian_reed_overworld.atlas.json",
+      "loadMethod": "atlas",
+      "logicalFrameWidth": 48,
+      "logicalFrameHeight": 48,
+      "displayScale": 0.13043478260869565,
+      "sourceRects": [
+        {
+          "x": 124,
+          "y": 8,
+          "w": 181,
+          "h": 337,
+          "offsetX": 98,
+          "offsetY": 27
+        },
+        {
+          "x": 444,
+          "y": 8,
+          "w": 191,
+          "h": 341,
+          "offsetX": 84,
+          "offsetY": 23
+        },
+        {
+          "x": 779,
+          "y": 8,
+          "w": 180,
+          "h": 341,
+          "offsetX": 92,
+          "offsetY": 23
+        },
+        {
+          "x": 116,
+          "y": 366,
+          "w": 197,
+          "h": 330,
+          "offsetX": 94,
+          "offsetY": 34
+        },
+        {
+          "x": 445,
+          "y": 366,
+          "w": 191,
+          "h": 333,
+          "offsetX": 94,
+          "offsetY": 31
+        },
+        {
+          "x": 789,
+          "y": 365,
+          "w": 196,
+          "h": 334,
+          "offsetX": 94,
+          "offsetY": 30
+        },
+        {
+          "x": 111,
+          "y": 720,
+          "w": 199,
+          "h": 337,
+          "offsetX": 76,
+          "offsetY": 27
+        },
+        {
+          "x": 444,
+          "y": 721,
+          "w": 196,
+          "h": 335,
+          "offsetX": 80,
+          "offsetY": 29
+        },
+        {
+          "x": 789,
+          "y": 717,
+          "w": 186,
+          "h": 337,
+          "offsetX": 90,
+          "offsetY": 27
+        },
+        {
+          "x": 108,
+          "y": 1073,
+          "w": 195,
+          "h": 343,
+          "offsetX": 84,
+          "offsetY": 21
+        },
+        {
+          "x": 447,
+          "y": 1072,
+          "w": 195,
+          "h": 351,
+          "offsetX": 89,
+          "offsetY": 13
+        },
+        {
+          "x": 786,
+          "y": 1075,
+          "w": 191,
+          "h": 352,
+          "offsetX": 96,
+          "offsetY": 12
+        }
+      ]
+    },
+    {
+      "id": "cassian_reed_battle",
+      "character": "cassian_reed",
+      "kind": "battle",
+      "path": "sprites/cassian_reed_battle_128x128.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "columns": 4,
+      "rows": 4,
+      "frameCount": 16,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "right",
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 5,
+          "repeat": -1,
+          "preview": "animation_previews/cassian_reed_battle_idle.gif"
+        },
+        "attack": {
+          "frames": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 9,
+          "repeat": 0,
+          "preview": "animation_previews/cassian_reed_battle_attack.gif"
+        },
+        "skill": {
+          "frames": [
+            8,
+            9,
+            10,
+            11
+          ],
+          "fps": 8,
+          "repeat": 0,
+          "preview": "animation_previews/cassian_reed_battle_skill.gif"
+        },
+        "hurt": {
+          "frames": [
+            12,
+            13
+          ],
+          "fps": 7,
+          "repeat": 0,
+          "preview": "animation_previews/cassian_reed_battle_hurt.gif"
+        },
+        "knockout": {
+          "frames": [
+            14,
+            15
+          ],
+          "fps": 4,
+          "repeat": 0,
+          "preview": "animation_previews/cassian_reed_battle_knockout.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_detailed_battle",
+      "preparation": {
+        "uniformScale": 0.38557993730407525,
+        "sourceColumnCuts": [
+          0,
+          302,
+          601,
+          910,
+          1222
+        ],
+        "sourceRowCuts": [
+          0,
+          304,
+          639,
+          962,
+          1287
+        ],
+        "alignment": "bottom-center"
+      },
+      "loadMethod": "spritesheet"
+    },
+    {
+      "id": "ayla_moon_overworld",
+      "character": "ayla_moon",
+      "kind": "overworld",
+      "path": "originals/ayla_moon_overworld_master.png",
+      "frameWidth": 368,
+      "frameHeight": 368,
+      "columns": 3,
+      "rows": 4,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "directional",
+      "animations": {
+        "idle_down": {
+          "frames": [
+            0
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_down": {
+          "frames": [
+            1,
+            0,
+            2,
+            0
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/ayla_moon_overworld_walk_down.gif"
+        },
+        "idle_left": {
+          "frames": [
+            3
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_left": {
+          "frames": [
+            4,
+            3,
+            5,
+            3
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/ayla_moon_overworld_walk_left.gif"
+        },
+        "idle_right": {
+          "frames": [
+            6
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_right": {
+          "frames": [
+            7,
+            6,
+            8,
+            6
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/ayla_moon_overworld_walk_right.gif"
+        },
+        "idle_up": {
+          "frames": [
+            9
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_up": {
+          "frames": [
+            10,
+            9,
+            11,
+            9
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/ayla_moon_overworld_walk_up.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_compact_original",
+      "preparation": {
+        "resized": false,
+        "alignment": "head center and feet via atlas trim offsets"
+      },
+      "expansion": true,
+      "originalMasterReference": "originals/ayla_moon_overworld_master.png",
+      "originalMasterIncluded": true,
+      "atlasPath": "sprites/ayla_moon_overworld.atlas.json",
+      "loadMethod": "atlas",
+      "logicalFrameWidth": 48,
+      "logicalFrameHeight": 48,
+      "displayScale": 0.13043478260869565,
+      "sourceRects": [
+        {
+          "x": 109,
+          "y": 3,
+          "w": 189,
+          "h": 344,
+          "offsetX": 72,
+          "offsetY": 20
+        },
+        {
+          "x": 451,
+          "y": 5,
+          "w": 176,
+          "h": 342,
+          "offsetX": 85,
+          "offsetY": 22
+        },
+        {
+          "x": 778,
+          "y": 4,
+          "w": 177,
+          "h": 343,
+          "offsetX": 86,
+          "offsetY": 21
+        },
+        {
+          "x": 106,
+          "y": 361,
+          "w": 191,
+          "h": 340,
+          "offsetX": 86,
+          "offsetY": 24
+        },
+        {
+          "x": 445,
+          "y": 363,
+          "w": 195,
+          "h": 338,
+          "offsetX": 88,
+          "offsetY": 26
+        },
+        {
+          "x": 784,
+          "y": 366,
+          "w": 194,
+          "h": 338,
+          "offsetX": 86,
+          "offsetY": 26
+        },
+        {
+          "x": 107,
+          "y": 718,
+          "w": 194,
+          "h": 340,
+          "offsetX": 90,
+          "offsetY": 24
+        },
+        {
+          "x": 437,
+          "y": 720,
+          "w": 198,
+          "h": 338,
+          "offsetX": 86,
+          "offsetY": 26
+        },
+        {
+          "x": 766,
+          "y": 721,
+          "w": 203,
+          "h": 340,
+          "offsetX": 84,
+          "offsetY": 24
+        },
+        {
+          "x": 115,
+          "y": 1069,
+          "w": 201,
+          "h": 351,
+          "offsetX": 86,
+          "offsetY": 13
+        },
+        {
+          "x": 446,
+          "y": 1071,
+          "w": 198,
+          "h": 351,
+          "offsetX": 104,
+          "offsetY": 13
+        },
+        {
+          "x": 782,
+          "y": 1071,
+          "w": 196,
+          "h": 351,
+          "offsetX": 104,
+          "offsetY": 13
+        }
+      ]
+    },
+    {
+      "id": "ayla_moon_battle",
+      "character": "ayla_moon",
+      "kind": "battle",
+      "path": "sprites/ayla_moon_battle_128x128.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "columns": 4,
+      "rows": 4,
+      "frameCount": 16,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "right",
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 5,
+          "repeat": -1,
+          "preview": "animation_previews/ayla_moon_battle_idle.gif"
+        },
+        "attack": {
+          "frames": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 9,
+          "repeat": 0,
+          "preview": "animation_previews/ayla_moon_battle_attack.gif"
+        },
+        "skill": {
+          "frames": [
+            8,
+            9,
+            10,
+            11
+          ],
+          "fps": 8,
+          "repeat": 0,
+          "preview": "animation_previews/ayla_moon_battle_skill.gif"
+        },
+        "hurt": {
+          "frames": [
+            12,
+            13
+          ],
+          "fps": 7,
+          "repeat": 0,
+          "preview": "animation_previews/ayla_moon_battle_hurt.gif"
+        },
+        "knockout": {
+          "frames": [
+            14,
+            15
+          ],
+          "fps": 4,
+          "repeat": 0,
+          "preview": "animation_previews/ayla_moon_battle_knockout.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_detailed_battle",
+      "preparation": {
+        "uniformScale": 0.3563218390804598,
+        "sourceColumnCuts": [
+          0,
+          321,
+          660,
+          1008,
+          1286
+        ],
+        "sourceRowCuts": [
+          0,
+          321,
+          611,
+          942,
+          1223
+        ],
+        "alignment": "bottom-center"
+      },
+      "loadMethod": "spritesheet"
+    },
+    {
+      "id": "nox_varen_overworld",
+      "character": "nox_varen",
+      "kind": "overworld",
+      "path": "originals/nox_varen_overworld_master.png",
+      "frameWidth": 368,
+      "frameHeight": 368,
+      "columns": 3,
+      "rows": 4,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "directional",
+      "animations": {
+        "idle_down": {
+          "frames": [
+            0
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_down": {
+          "frames": [
+            1,
+            0,
+            2,
+            0
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/nox_varen_overworld_walk_down.gif"
+        },
+        "idle_left": {
+          "frames": [
+            3
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_left": {
+          "frames": [
+            4,
+            3,
+            5,
+            3
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/nox_varen_overworld_walk_left.gif"
+        },
+        "idle_right": {
+          "frames": [
+            6
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_right": {
+          "frames": [
+            7,
+            6,
+            8,
+            6
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/nox_varen_overworld_walk_right.gif"
+        },
+        "idle_up": {
+          "frames": [
+            9
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_up": {
+          "frames": [
+            10,
+            9,
+            11,
+            9
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/nox_varen_overworld_walk_up.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_compact_original",
+      "preparation": {
+        "resized": false,
+        "alignment": "head center and feet via atlas trim offsets"
+      },
+      "expansion": true,
+      "originalMasterReference": "originals/nox_varen_overworld_master.png",
+      "originalMasterIncluded": true,
+      "atlasPath": "sprites/nox_varen_overworld.atlas.json",
+      "loadMethod": "atlas",
+      "logicalFrameWidth": 48,
+      "logicalFrameHeight": 48,
+      "displayScale": 0.13043478260869565,
+      "sourceRects": [
+        {
+          "x": 102,
+          "y": 8,
+          "w": 205,
+          "h": 348,
+          "offsetX": 79,
+          "offsetY": 16
+        },
+        {
+          "x": 441,
+          "y": 8,
+          "w": 227,
+          "h": 348,
+          "offsetX": 84,
+          "offsetY": 16
+        },
+        {
+          "x": 761,
+          "y": 8,
+          "w": 216,
+          "h": 348,
+          "offsetX": 69,
+          "offsetY": 16
+        },
+        {
+          "x": 92,
+          "y": 370,
+          "w": 230,
+          "h": 343,
+          "offsetX": 80,
+          "offsetY": 21
+        },
+        {
+          "x": 427,
+          "y": 369,
+          "w": 263,
+          "h": 344,
+          "offsetX": 78,
+          "offsetY": 20
+        },
+        {
+          "x": 781,
+          "y": 369,
+          "w": 246,
+          "h": 340,
+          "offsetX": 80,
+          "offsetY": 24
+        },
+        {
+          "x": 80,
+          "y": 729,
+          "w": 239,
+          "h": 341,
+          "offsetX": 50,
+          "offsetY": 23
+        },
+        {
+          "x": 405,
+          "y": 729,
+          "w": 253,
+          "h": 340,
+          "offsetX": 34,
+          "offsetY": 24
+        },
+        {
+          "x": 759,
+          "y": 728,
+          "w": 243,
+          "h": 341,
+          "offsetX": 45,
+          "offsetY": 23
+        },
+        {
+          "x": 80,
+          "y": 1083,
+          "w": 224,
+          "h": 328,
+          "offsetX": 62,
+          "offsetY": 36
+        },
+        {
+          "x": 411,
+          "y": 1083,
+          "w": 248,
+          "h": 330,
+          "offsetX": 57,
+          "offsetY": 34
+        },
+        {
+          "x": 786,
+          "y": 1083,
+          "w": 201,
+          "h": 334,
+          "offsetX": 90,
+          "offsetY": 30
+        }
+      ]
+    },
+    {
+      "id": "nox_varen_battle",
+      "character": "nox_varen",
+      "kind": "battle",
+      "path": "sprites/nox_varen_battle_128x128.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "columns": 4,
+      "rows": 4,
+      "frameCount": 16,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "right",
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 5,
+          "repeat": -1,
+          "preview": "animation_previews/nox_varen_battle_idle.gif"
+        },
+        "attack": {
+          "frames": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 9,
+          "repeat": 0,
+          "preview": "animation_previews/nox_varen_battle_attack.gif"
+        },
+        "skill": {
+          "frames": [
+            8,
+            9,
+            10,
+            11
+          ],
+          "fps": 8,
+          "repeat": 0,
+          "preview": "animation_previews/nox_varen_battle_skill.gif"
+        },
+        "hurt": {
+          "frames": [
+            12,
+            13
+          ],
+          "fps": 7,
+          "repeat": 0,
+          "preview": "animation_previews/nox_varen_battle_hurt.gif"
+        },
+        "knockout": {
+          "frames": [
+            14,
+            15
+          ],
+          "fps": 4,
+          "repeat": 0,
+          "preview": "animation_previews/nox_varen_battle_knockout.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_detailed_battle",
+      "preparation": {
+        "uniformScale": 0.3147208121827411,
+        "sourceColumnCuts": [
+          0,
+          368,
+          743,
+          1138,
+          1465
+        ],
+        "sourceRowCuts": [
+          0,
+          272,
+          521,
+          800,
+          1073
+        ],
+        "alignment": "bottom-center"
+      },
+      "loadMethod": "spritesheet"
+    },
+    {
+      "id": "ash_thrall_overworld",
+      "character": "ash_thrall",
+      "kind": "overworld",
+      "path": "originals/ash_thrall_overworld_master.png",
+      "frameWidth": 384,
+      "frameHeight": 384,
+      "columns": 3,
+      "rows": 4,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "directional",
+      "animations": {
+        "idle_down": {
+          "frames": [
+            0
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_down": {
+          "frames": [
+            1,
+            0,
+            2,
+            0
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/ash_thrall_overworld_walk_down.gif"
+        },
+        "idle_left": {
+          "frames": [
+            3
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_left": {
+          "frames": [
+            4,
+            3,
+            5,
+            3
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/ash_thrall_overworld_walk_left.gif"
+        },
+        "idle_right": {
+          "frames": [
+            6
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_right": {
+          "frames": [
+            7,
+            6,
+            8,
+            6
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/ash_thrall_overworld_walk_right.gif"
+        },
+        "idle_up": {
+          "frames": [
+            9
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_up": {
+          "frames": [
+            10,
+            9,
+            11,
+            9
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/ash_thrall_overworld_walk_up.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_compact_original",
+      "preparation": {
+        "resized": false,
+        "alignment": "head center and feet via atlas trim offsets"
+      },
+      "originalMasterReference": "originals/ash_thrall_overworld_master.png",
+      "originalMasterIncluded": true,
+      "atlasPath": "sprites/ash_thrall_overworld.atlas.json",
+      "loadMethod": "atlas",
+      "logicalFrameWidth": 48,
+      "logicalFrameHeight": 48,
+      "displayScale": 0.125,
+      "sourceRects": [
+        {
+          "x": 122,
+          "y": 10,
+          "w": 221,
+          "h": 336,
+          "offsetX": 88,
+          "offsetY": 44
+        },
+        {
+          "x": 450,
+          "y": 11,
+          "w": 216,
+          "h": 337,
+          "offsetX": 88,
+          "offsetY": 43
+        },
+        {
+          "x": 781,
+          "y": 13,
+          "w": 218,
+          "h": 335,
+          "offsetX": 88,
+          "offsetY": 45
+        },
+        {
+          "x": 110,
+          "y": 367,
+          "w": 246,
+          "h": 320,
+          "offsetX": 88,
+          "offsetY": 60
+        },
+        {
+          "x": 450,
+          "y": 369,
+          "w": 249,
+          "h": 318,
+          "offsetX": 86,
+          "offsetY": 62
+        },
+        {
+          "x": 790,
+          "y": 367,
+          "w": 235,
+          "h": 320,
+          "offsetX": 86,
+          "offsetY": 60
+        },
+        {
+          "x": 90,
+          "y": 698,
+          "w": 263,
+          "h": 333,
+          "offsetX": 38,
+          "offsetY": 47
+        },
+        {
+          "x": 423,
+          "y": 703,
+          "w": 257,
+          "h": 328,
+          "offsetX": 44,
+          "offsetY": 52
+        },
+        {
+          "x": 761,
+          "y": 705,
+          "w": 247,
+          "h": 327,
+          "offsetX": 56,
+          "offsetY": 53
+        },
+        {
+          "x": 112,
+          "y": 1047,
+          "w": 216,
+          "h": 363,
+          "offsetX": 78,
+          "offsetY": 17
+        },
+        {
+          "x": 435,
+          "y": 1047,
+          "w": 219,
+          "h": 372,
+          "offsetX": 76,
+          "offsetY": 8
+        },
+        {
+          "x": 776,
+          "y": 1047,
+          "w": 219,
+          "h": 372,
+          "offsetX": 76,
+          "offsetY": 8
+        }
+      ]
+    },
+    {
+      "id": "ash_thrall_enemy",
+      "character": "ash_thrall",
+      "kind": "enemy",
+      "path": "sprites/ash_thrall_enemy_96x96.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "columns": 4,
+      "rows": 3,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "left",
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 5,
+          "repeat": -1,
+          "preview": "animation_previews/ash_thrall_enemy_idle.gif"
+        },
+        "attack": {
+          "frames": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 8,
+          "repeat": 0,
+          "preview": "animation_previews/ash_thrall_enemy_attack.gif"
+        },
+        "hurt": {
+          "frames": [
+            8,
+            9
+          ],
+          "fps": 6,
+          "repeat": 0,
+          "preview": "animation_previews/ash_thrall_enemy_hurt.gif"
+        },
+        "defeat": {
+          "frames": [
+            10,
+            11
+          ],
+          "fps": 4,
+          "repeat": 0,
+          "preview": "animation_previews/ash_thrall_enemy_defeat.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_detailed_battle",
+      "preparation": {
+        "uniformScale": 0.22330097087378642,
+        "sourceColumnCuts": [
+          0,
+          351,
+          770,
+          1054,
+          1448
+        ],
+        "sourceRowCuts": [
+          0,
+          408,
+          740,
+          1086
+        ],
+        "alignment": "bottom-center"
+      },
+      "loadMethod": "spritesheet"
+    },
+    {
+      "id": "blood_hound_overworld",
+      "character": "blood_hound",
+      "kind": "overworld",
+      "path": "originals/blood_hound_overworld_master.png",
+      "frameWidth": 384,
+      "frameHeight": 384,
+      "columns": 3,
+      "rows": 4,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "directional",
+      "animations": {
+        "idle_down": {
+          "frames": [
+            0
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_down": {
+          "frames": [
+            1,
+            0,
+            2,
+            0
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/blood_hound_overworld_walk_down.gif"
+        },
+        "idle_left": {
+          "frames": [
+            3
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_left": {
+          "frames": [
+            4,
+            3,
+            5,
+            3
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/blood_hound_overworld_walk_left.gif"
+        },
+        "idle_right": {
+          "frames": [
+            6
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_right": {
+          "frames": [
+            7,
+            6,
+            8,
+            6
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/blood_hound_overworld_walk_right.gif"
+        },
+        "idle_up": {
+          "frames": [
+            9
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_up": {
+          "frames": [
+            10,
+            9,
+            11,
+            9
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/blood_hound_overworld_walk_up.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_compact_original",
+      "preparation": {
+        "resized": false,
+        "alignment": "head center and feet via atlas trim offsets"
+      },
+      "originalMasterReference": "originals/blood_hound_overworld_master.png",
+      "originalMasterIncluded": true,
+      "atlasPath": "sprites/blood_hound_overworld.atlas.json",
+      "loadMethod": "atlas",
+      "logicalFrameWidth": 48,
+      "logicalFrameHeight": 48,
+      "displayScale": 0.125,
+      "sourceRects": [
+        {
+          "x": 49,
+          "y": 22,
+          "w": 306,
+          "h": 333,
+          "offsetX": 39,
+          "offsetY": 47
+        },
+        {
+          "x": 422,
+          "y": 24,
+          "w": 263,
+          "h": 331,
+          "offsetX": 60,
+          "offsetY": 49
+        },
+        {
+          "x": 768,
+          "y": 24,
+          "w": 267,
+          "h": 331,
+          "offsetX": 58,
+          "offsetY": 49
+        },
+        {
+          "x": 20,
+          "y": 384,
+          "w": 340,
+          "h": 289,
+          "offsetX": 22,
+          "offsetY": 91
+        },
+        {
+          "x": 389,
+          "y": 384,
+          "w": 330,
+          "h": 290,
+          "offsetX": 27,
+          "offsetY": 90
+        },
+        {
+          "x": 743,
+          "y": 384,
+          "w": 327,
+          "h": 290,
+          "offsetX": 28,
+          "offsetY": 90
+        },
+        {
+          "x": 19,
+          "y": 713,
+          "w": 348,
+          "h": 291,
+          "offsetX": 18,
+          "offsetY": 89
+        },
+        {
+          "x": 390,
+          "y": 713,
+          "w": 329,
+          "h": 291,
+          "offsetX": 28,
+          "offsetY": 89
+        },
+        {
+          "x": 751,
+          "y": 713,
+          "w": 327,
+          "h": 287,
+          "offsetX": 28,
+          "offsetY": 93
+        },
+        {
+          "x": 113,
+          "y": 1034,
+          "w": 259,
+          "h": 356,
+          "offsetX": 62,
+          "offsetY": 24
+        },
+        {
+          "x": 466,
+          "y": 1035,
+          "w": 253,
+          "h": 364,
+          "offsetX": 66,
+          "offsetY": 16
+        },
+        {
+          "x": 815,
+          "y": 1035,
+          "w": 249,
+          "h": 349,
+          "offsetX": 68,
+          "offsetY": 31
+        }
+      ]
+    },
+    {
+      "id": "blood_hound_enemy",
+      "character": "blood_hound",
+      "kind": "enemy",
+      "path": "sprites/blood_hound_enemy_96x96.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "columns": 4,
+      "rows": 3,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "left",
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 5,
+          "repeat": -1,
+          "preview": "animation_previews/blood_hound_enemy_idle.gif"
+        },
+        "attack": {
+          "frames": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 8,
+          "repeat": 0,
+          "preview": "animation_previews/blood_hound_enemy_attack.gif"
+        },
+        "hurt": {
+          "frames": [
+            8,
+            9
+          ],
+          "fps": 6,
+          "repeat": 0,
+          "preview": "animation_previews/blood_hound_enemy_hurt.gif"
+        },
+        "defeat": {
+          "frames": [
+            10,
+            11
+          ],
+          "fps": 4,
+          "repeat": 0,
+          "preview": "animation_previews/blood_hound_enemy_defeat.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_detailed_battle",
+      "preparation": {
+        "uniformScale": 0.25136612021857924,
+        "sourceColumnCuts": [
+          0,
+          374,
+          738,
+          1098,
+          1448
+        ],
+        "sourceRowCuts": [
+          0,
+          348,
+          750,
+          1086
+        ],
+        "alignment": "bottom-center"
+      },
+      "loadMethod": "spritesheet"
+    },
+    {
+      "id": "memory_moth_overworld",
+      "character": "memory_moth",
+      "kind": "overworld",
+      "path": "originals/memory_moth_overworld_master.png",
+      "frameWidth": 368,
+      "frameHeight": 368,
+      "columns": 3,
+      "rows": 4,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "directional",
+      "animations": {
+        "idle_down": {
+          "frames": [
+            0
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_down": {
+          "frames": [
+            1,
+            0,
+            2,
+            0
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/memory_moth_overworld_walk_down.gif"
+        },
+        "idle_left": {
+          "frames": [
+            3
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_left": {
+          "frames": [
+            4,
+            3,
+            5,
+            3
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/memory_moth_overworld_walk_left.gif"
+        },
+        "idle_right": {
+          "frames": [
+            6
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_right": {
+          "frames": [
+            7,
+            6,
+            8,
+            6
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/memory_moth_overworld_walk_right.gif"
+        },
+        "idle_up": {
+          "frames": [
+            9
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_up": {
+          "frames": [
+            10,
+            9,
+            11,
+            9
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/memory_moth_overworld_walk_up.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_compact_original",
+      "preparation": {
+        "resized": false,
+        "alignment": "head center and feet via atlas trim offsets"
+      },
+      "originalMasterReference": "originals/memory_moth_overworld_master.png",
+      "originalMasterIncluded": true,
+      "atlasPath": "sprites/memory_moth_overworld.atlas.json",
+      "loadMethod": "atlas",
+      "logicalFrameWidth": 48,
+      "logicalFrameHeight": 48,
+      "displayScale": 0.13043478260869565,
+      "sourceRects": [
+        {
+          "x": 26,
+          "y": 29,
+          "w": 345,
+          "h": 319,
+          "offsetX": 12,
+          "offsetY": 45
+        },
+        {
+          "x": 394,
+          "y": 25,
+          "w": 319,
+          "h": 323,
+          "offsetX": 24,
+          "offsetY": 41
+        },
+        {
+          "x": 736,
+          "y": 23,
+          "w": 337,
+          "h": 326,
+          "offsetX": 16,
+          "offsetY": 38
+        },
+        {
+          "x": 54,
+          "y": 384,
+          "w": 303,
+          "h": 314,
+          "offsetX": 32,
+          "offsetY": 50
+        },
+        {
+          "x": 411,
+          "y": 384,
+          "w": 294,
+          "h": 316,
+          "offsetX": 37,
+          "offsetY": 48
+        },
+        {
+          "x": 762,
+          "y": 384,
+          "w": 294,
+          "h": 318,
+          "offsetX": 37,
+          "offsetY": 46
+        },
+        {
+          "x": 38,
+          "y": 741,
+          "w": 309,
+          "h": 310,
+          "offsetX": 30,
+          "offsetY": 54
+        },
+        {
+          "x": 391,
+          "y": 741,
+          "w": 298,
+          "h": 313,
+          "offsetX": 35,
+          "offsetY": 51
+        },
+        {
+          "x": 737,
+          "y": 734,
+          "w": 306,
+          "h": 320,
+          "offsetX": 31,
+          "offsetY": 44
+        },
+        {
+          "x": 31,
+          "y": 1081,
+          "w": 336,
+          "h": 327,
+          "offsetX": 16,
+          "offsetY": 37
+        },
+        {
+          "x": 385,
+          "y": 1086,
+          "w": 322,
+          "h": 320,
+          "offsetX": 23,
+          "offsetY": 44
+        },
+        {
+          "x": 726,
+          "y": 1086,
+          "w": 333,
+          "h": 320,
+          "offsetX": 18,
+          "offsetY": 44
+        }
+      ]
+    },
+    {
+      "id": "memory_moth_enemy",
+      "character": "memory_moth",
+      "kind": "enemy",
+      "path": "sprites/memory_moth_enemy_96x96.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "columns": 4,
+      "rows": 3,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "left",
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 5,
+          "repeat": -1,
+          "preview": "animation_previews/memory_moth_enemy_idle.gif"
+        },
+        "attack": {
+          "frames": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 8,
+          "repeat": 0,
+          "preview": "animation_previews/memory_moth_enemy_attack.gif"
+        },
+        "hurt": {
+          "frames": [
+            8,
+            9
+          ],
+          "fps": 6,
+          "repeat": 0,
+          "preview": "animation_previews/memory_moth_enemy_hurt.gif"
+        },
+        "defeat": {
+          "frames": [
+            10,
+            11
+          ],
+          "fps": 4,
+          "repeat": 0,
+          "preview": "animation_previews/memory_moth_enemy_defeat.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_detailed_battle",
+      "preparation": {
+        "uniformScale": 0.24274406332453827,
+        "sourceColumnCuts": [
+          0,
+          364,
+          746,
+          1072,
+          1448
+        ],
+        "sourceRowCuts": [
+          0,
+          356,
+          736,
+          1086
+        ],
+        "alignment": "bottom-center"
+      },
+      "loadMethod": "spritesheet"
+    },
+    {
+      "id": "veyr_overworld",
+      "character": "veyr",
+      "kind": "overworld",
+      "path": "originals/veyr_overworld_master.png",
+      "frameWidth": 384,
+      "frameHeight": 384,
+      "columns": 3,
+      "rows": 4,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "directional",
+      "animations": {
+        "idle_down": {
+          "frames": [
+            0
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_down": {
+          "frames": [
+            1,
+            0,
+            2,
+            0
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/veyr_overworld_walk_down.gif"
+        },
+        "idle_left": {
+          "frames": [
+            3
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_left": {
+          "frames": [
+            4,
+            3,
+            5,
+            3
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/veyr_overworld_walk_left.gif"
+        },
+        "idle_right": {
+          "frames": [
+            6
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_right": {
+          "frames": [
+            7,
+            6,
+            8,
+            6
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/veyr_overworld_walk_right.gif"
+        },
+        "idle_up": {
+          "frames": [
+            9
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_up": {
+          "frames": [
+            10,
+            9,
+            11,
+            9
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/veyr_overworld_walk_up.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_compact_original",
+      "preparation": {
+        "resized": false,
+        "alignment": "head center and feet via atlas trim offsets"
+      },
+      "originalMasterReference": "originals/veyr_overworld_master.png",
+      "originalMasterIncluded": true,
+      "atlasPath": "sprites/veyr_overworld.atlas.json",
+      "loadMethod": "atlas",
+      "logicalFrameWidth": 48,
+      "logicalFrameHeight": 48,
+      "displayScale": 0.125,
+      "sourceRects": [
+        {
+          "x": 77,
+          "y": 7,
+          "w": 247,
+          "h": 328,
+          "offsetX": 67,
+          "offsetY": 52
+        },
+        {
+          "x": 425,
+          "y": 11,
+          "w": 248,
+          "h": 329,
+          "offsetX": 70,
+          "offsetY": 51
+        },
+        {
+          "x": 778,
+          "y": 7,
+          "w": 232,
+          "h": 336,
+          "offsetX": 72,
+          "offsetY": 44
+        },
+        {
+          "x": 81,
+          "y": 356,
+          "w": 249,
+          "h": 338,
+          "offsetX": 112,
+          "offsetY": 42
+        },
+        {
+          "x": 426,
+          "y": 356,
+          "w": 259,
+          "h": 339,
+          "offsetX": 112,
+          "offsetY": 41
+        },
+        {
+          "x": 787,
+          "y": 356,
+          "w": 255,
+          "h": 339,
+          "offsetX": 98,
+          "offsetY": 41
+        },
+        {
+          "x": 35,
+          "y": 710,
+          "w": 253,
+          "h": 337,
+          "offsetX": 24,
+          "offsetY": 43
+        },
+        {
+          "x": 389,
+          "y": 710,
+          "w": 270,
+          "h": 338,
+          "offsetX": 6,
+          "offsetY": 42
+        },
+        {
+          "x": 769,
+          "y": 710,
+          "w": 265,
+          "h": 339,
+          "offsetX": 22,
+          "offsetY": 41
+        },
+        {
+          "x": 56,
+          "y": 1061,
+          "w": 284,
+          "h": 350,
+          "offsetX": 62,
+          "offsetY": 30
+        },
+        {
+          "x": 422,
+          "y": 1061,
+          "w": 260,
+          "h": 352,
+          "offsetX": 64,
+          "offsetY": 28
+        },
+        {
+          "x": 771,
+          "y": 1063,
+          "w": 262,
+          "h": 342,
+          "offsetX": 60,
+          "offsetY": 38
+        }
+      ]
+    },
+    {
+      "id": "crypt_lancer_enemy",
+      "character": "crypt_lancer",
+      "kind": "enemy",
+      "path": "sprites/crypt_lancer_enemy_128x128.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "columns": 4,
+      "rows": 3,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "left",
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 5,
+          "repeat": -1,
+          "preview": "animation_previews/crypt_lancer_enemy_idle.gif"
+        },
+        "attack": {
+          "frames": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 8,
+          "repeat": 0,
+          "preview": "animation_previews/crypt_lancer_enemy_attack.gif"
+        },
+        "hurt": {
+          "frames": [
+            8,
+            9
+          ],
+          "fps": 6,
+          "repeat": 0,
+          "preview": "animation_previews/crypt_lancer_enemy_hurt.gif"
+        },
+        "defeat": {
+          "frames": [
+            10,
+            11
+          ],
+          "fps": 4,
+          "repeat": 0,
+          "preview": "animation_previews/crypt_lancer_enemy_defeat.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_detailed_battle",
+      "preparation": {
+        "uniformScale": 0.3360655737704918,
+        "sourceColumnCuts": [
+          0,
+          360,
+          716,
+          1067,
+          1448
+        ],
+        "sourceRowCuts": [
+          0,
+          385,
+          726,
+          1086
+        ],
+        "alignment": "bottom-center"
+      },
+      "loadMethod": "spritesheet"
+    },
+    {
+      "id": "scarlet_acolyte_overworld",
+      "character": "scarlet_acolyte",
+      "kind": "overworld",
+      "path": "originals/scarlet_acolyte_overworld_master.png",
+      "frameWidth": 368,
+      "frameHeight": 368,
+      "columns": 3,
+      "rows": 4,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "directional",
+      "animations": {
+        "idle_down": {
+          "frames": [
+            0
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_down": {
+          "frames": [
+            1,
+            0,
+            2,
+            0
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/scarlet_acolyte_overworld_walk_down.gif"
+        },
+        "idle_left": {
+          "frames": [
+            3
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_left": {
+          "frames": [
+            4,
+            3,
+            5,
+            3
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/scarlet_acolyte_overworld_walk_left.gif"
+        },
+        "idle_right": {
+          "frames": [
+            6
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_right": {
+          "frames": [
+            7,
+            6,
+            8,
+            6
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/scarlet_acolyte_overworld_walk_right.gif"
+        },
+        "idle_up": {
+          "frames": [
+            9
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_up": {
+          "frames": [
+            10,
+            9,
+            11,
+            9
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/scarlet_acolyte_overworld_walk_up.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_compact_original",
+      "preparation": {
+        "resized": false,
+        "alignment": "head center and feet via atlas trim offsets"
+      },
+      "expansion": true,
+      "originalMasterReference": "originals/scarlet_acolyte_overworld_master.png",
+      "originalMasterIncluded": true,
+      "atlasPath": "sprites/scarlet_acolyte_overworld.atlas.json",
+      "loadMethod": "atlas",
+      "logicalFrameWidth": 48,
+      "logicalFrameHeight": 48,
+      "displayScale": 0.13043478260869565,
+      "sourceRects": [
+        {
+          "x": 113,
+          "y": 2,
+          "w": 223,
+          "h": 344,
+          "offsetX": 76,
+          "offsetY": 20
+        },
+        {
+          "x": 437,
+          "y": 4,
+          "w": 235,
+          "h": 342,
+          "offsetX": 75,
+          "offsetY": 22
+        },
+        {
+          "x": 758,
+          "y": 4,
+          "w": 224,
+          "h": 342,
+          "offsetX": 75,
+          "offsetY": 22
+        },
+        {
+          "x": 129,
+          "y": 363,
+          "w": 225,
+          "h": 337,
+          "offsetX": 93,
+          "offsetY": 27
+        },
+        {
+          "x": 446,
+          "y": 363,
+          "w": 240,
+          "h": 339,
+          "offsetX": 90,
+          "offsetY": 25
+        },
+        {
+          "x": 768,
+          "y": 364,
+          "w": 226,
+          "h": 336,
+          "offsetX": 94,
+          "offsetY": 28
+        },
+        {
+          "x": 101,
+          "y": 718,
+          "w": 229,
+          "h": 342,
+          "offsetX": 47,
+          "offsetY": 22
+        },
+        {
+          "x": 403,
+          "y": 718,
+          "w": 250,
+          "h": 340,
+          "offsetX": 28,
+          "offsetY": 24
+        },
+        {
+          "x": 732,
+          "y": 719,
+          "w": 232,
+          "h": 341,
+          "offsetX": 44,
+          "offsetY": 23
+        },
+        {
+          "x": 101,
+          "y": 1065,
+          "w": 241,
+          "h": 344,
+          "offsetX": 66,
+          "offsetY": 20
+        },
+        {
+          "x": 410,
+          "y": 1063,
+          "w": 252,
+          "h": 346,
+          "offsetX": 53,
+          "offsetY": 18
+        },
+        {
+          "x": 753,
+          "y": 1066,
+          "w": 239,
+          "h": 343,
+          "offsetX": 69,
+          "offsetY": 21
+        }
+      ]
+    },
+    {
+      "id": "scarlet_acolyte_enemy",
+      "character": "scarlet_acolyte",
+      "kind": "enemy",
+      "path": "sprites/scarlet_acolyte_enemy_128x128.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "columns": 4,
+      "rows": 3,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "left",
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 5,
+          "repeat": -1,
+          "preview": "animation_previews/scarlet_acolyte_enemy_idle.gif"
+        },
+        "attack": {
+          "frames": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 8,
+          "repeat": 0,
+          "preview": "animation_previews/scarlet_acolyte_enemy_attack.gif"
+        },
+        "hurt": {
+          "frames": [
+            8,
+            9
+          ],
+          "fps": 6,
+          "repeat": 0,
+          "preview": "animation_previews/scarlet_acolyte_enemy_hurt.gif"
+        },
+        "defeat": {
+          "frames": [
+            10,
+            11
+          ],
+          "fps": 4,
+          "repeat": 0,
+          "preview": "animation_previews/scarlet_acolyte_enemy_defeat.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_detailed_battle",
+      "preparation": {
+        "uniformScale": 0.29009433962264153,
+        "sourceColumnCuts": [
+          0,
+          326,
+          602,
+          951,
+          1208
+        ],
+        "sourceRowCuts": [
+          0,
+          434,
+          880,
+          1302
+        ],
+        "alignment": "bottom-center"
+      },
+      "loadMethod": "spritesheet"
+    },
+    {
+      "id": "gloom_stalker_overworld",
+      "character": "gloom_stalker",
+      "kind": "overworld",
+      "path": "originals/gloom_stalker_overworld_master.png",
+      "frameWidth": 384,
+      "frameHeight": 384,
+      "columns": 3,
+      "rows": 4,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "directional",
+      "animations": {
+        "idle_down": {
+          "frames": [
+            0
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_down": {
+          "frames": [
+            1,
+            0,
+            2,
+            0
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/gloom_stalker_overworld_walk_down.gif"
+        },
+        "idle_left": {
+          "frames": [
+            3
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_left": {
+          "frames": [
+            4,
+            3,
+            5,
+            3
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/gloom_stalker_overworld_walk_left.gif"
+        },
+        "idle_right": {
+          "frames": [
+            6
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_right": {
+          "frames": [
+            7,
+            6,
+            8,
+            6
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/gloom_stalker_overworld_walk_right.gif"
+        },
+        "idle_up": {
+          "frames": [
+            9
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_up": {
+          "frames": [
+            10,
+            9,
+            11,
+            9
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/gloom_stalker_overworld_walk_up.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_compact_original",
+      "preparation": {
+        "resized": false,
+        "alignment": "head center and feet via atlas trim offsets"
+      },
+      "expansion": true,
+      "originalMasterReference": "originals/gloom_stalker_overworld_master.png",
+      "originalMasterIncluded": true,
+      "atlasPath": "sprites/gloom_stalker_overworld.atlas.json",
+      "loadMethod": "atlas",
+      "logicalFrameWidth": 48,
+      "logicalFrameHeight": 48,
+      "displayScale": 0.125,
+      "sourceRects": [
+        {
+          "x": 89,
+          "y": 48,
+          "w": 281,
+          "h": 312,
+          "offsetX": 52,
+          "offsetY": 68
+        },
+        {
+          "x": 425,
+          "y": 49,
+          "w": 279,
+          "h": 313,
+          "offsetX": 52,
+          "offsetY": 67
+        },
+        {
+          "x": 774,
+          "y": 49,
+          "w": 284,
+          "h": 313,
+          "offsetX": 50,
+          "offsetY": 67
+        },
+        {
+          "x": 43,
+          "y": 386,
+          "w": 339,
+          "h": 293,
+          "offsetX": 22,
+          "offsetY": 87
+        },
+        {
+          "x": 394,
+          "y": 387,
+          "w": 328,
+          "h": 290,
+          "offsetX": 28,
+          "offsetY": 90
+        },
+        {
+          "x": 722,
+          "y": 385,
+          "w": 356,
+          "h": 293,
+          "offsetX": 14,
+          "offsetY": 87
+        },
+        {
+          "x": 16,
+          "y": 725,
+          "w": 376,
+          "h": 290,
+          "offsetX": 4,
+          "offsetY": 90
+        },
+        {
+          "x": 392,
+          "y": 725,
+          "w": 330,
+          "h": 287,
+          "offsetX": 27,
+          "offsetY": 93
+        },
+        {
+          "x": 722,
+          "y": 720,
+          "w": 339,
+          "h": 300,
+          "offsetX": 22,
+          "offsetY": 80
+        },
+        {
+          "x": 100,
+          "y": 1041,
+          "w": 201,
+          "h": 323,
+          "offsetX": 92,
+          "offsetY": 57
+        },
+        {
+          "x": 436,
+          "y": 1040,
+          "w": 204,
+          "h": 340,
+          "offsetX": 90,
+          "offsetY": 40
+        },
+        {
+          "x": 789,
+          "y": 1040,
+          "w": 201,
+          "h": 350,
+          "offsetX": 92,
+          "offsetY": 30
+        }
+      ]
+    },
+    {
+      "id": "gloom_stalker_enemy",
+      "character": "gloom_stalker",
+      "kind": "enemy",
+      "path": "sprites/gloom_stalker_enemy_128x128.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "columns": 4,
+      "rows": 3,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "left",
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 5,
+          "repeat": -1,
+          "preview": "animation_previews/gloom_stalker_enemy_idle.gif"
+        },
+        "attack": {
+          "frames": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 8,
+          "repeat": 0,
+          "preview": "animation_previews/gloom_stalker_enemy_attack.gif"
+        },
+        "hurt": {
+          "frames": [
+            8,
+            9
+          ],
+          "fps": 6,
+          "repeat": 0,
+          "preview": "animation_previews/gloom_stalker_enemy_hurt.gif"
+        },
+        "defeat": {
+          "frames": [
+            10,
+            11
+          ],
+          "fps": 4,
+          "repeat": 0,
+          "preview": "animation_previews/gloom_stalker_enemy_defeat.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_detailed_battle",
+      "preparation": {
+        "uniformScale": 0.328042328042328,
+        "sourceColumnCuts": [
+          0,
+          350,
+          730,
+          1094,
+          1448
+        ],
+        "sourceRowCuts": [
+          0,
+          342,
+          720,
+          1086
+        ],
+        "alignment": "bottom-center"
+      },
+      "loadMethod": "spritesheet"
+    },
+    {
+      "id": "grave_weaver_overworld",
+      "character": "grave_weaver",
+      "kind": "overworld",
+      "path": "originals/grave_weaver_overworld_master.png",
+      "frameWidth": 368,
+      "frameHeight": 368,
+      "columns": 3,
+      "rows": 4,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "directional",
+      "animations": {
+        "idle_down": {
+          "frames": [
+            0
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_down": {
+          "frames": [
+            1,
+            0,
+            2,
+            0
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/grave_weaver_overworld_walk_down.gif"
+        },
+        "idle_left": {
+          "frames": [
+            3
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_left": {
+          "frames": [
+            4,
+            3,
+            5,
+            3
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/grave_weaver_overworld_walk_left.gif"
+        },
+        "idle_right": {
+          "frames": [
+            6
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_right": {
+          "frames": [
+            7,
+            6,
+            8,
+            6
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/grave_weaver_overworld_walk_right.gif"
+        },
+        "idle_up": {
+          "frames": [
+            9
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_up": {
+          "frames": [
+            10,
+            9,
+            11,
+            9
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/grave_weaver_overworld_walk_up.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_compact_original",
+      "preparation": {
+        "resized": false,
+        "alignment": "head center and feet via atlas trim offsets"
+      },
+      "expansion": true,
+      "originalMasterReference": "originals/grave_weaver_overworld_master.png",
+      "originalMasterIncluded": true,
+      "atlasPath": "sprites/grave_weaver_overworld.atlas.json",
+      "loadMethod": "atlas",
+      "logicalFrameWidth": 48,
+      "logicalFrameHeight": 48,
+      "displayScale": 0.13043478260869565,
+      "sourceRects": [
+        {
+          "x": 54,
+          "y": 26,
+          "w": 301,
+          "h": 313,
+          "offsetX": 34,
+          "offsetY": 51
+        },
+        {
+          "x": 400,
+          "y": 26,
+          "w": 305,
+          "h": 313,
+          "offsetX": 32,
+          "offsetY": 51
+        },
+        {
+          "x": 756,
+          "y": 26,
+          "w": 305,
+          "h": 313,
+          "offsetX": 32,
+          "offsetY": 51
+        },
+        {
+          "x": 54,
+          "y": 372,
+          "w": 308,
+          "h": 305,
+          "offsetX": 30,
+          "offsetY": 59
+        },
+        {
+          "x": 403,
+          "y": 372,
+          "w": 310,
+          "h": 305,
+          "offsetX": 29,
+          "offsetY": 59
+        },
+        {
+          "x": 777,
+          "y": 373,
+          "w": 285,
+          "h": 303,
+          "offsetX": 42,
+          "offsetY": 61
+        },
+        {
+          "x": 27,
+          "y": 713,
+          "w": 304,
+          "h": 304,
+          "offsetX": 32,
+          "offsetY": 60
+        },
+        {
+          "x": 393,
+          "y": 712,
+          "w": 309,
+          "h": 302,
+          "offsetX": 30,
+          "offsetY": 62
+        },
+        {
+          "x": 761,
+          "y": 713,
+          "w": 289,
+          "h": 305,
+          "offsetX": 40,
+          "offsetY": 59
+        },
+        {
+          "x": 49,
+          "y": 1054,
+          "w": 305,
+          "h": 346,
+          "offsetX": 32,
+          "offsetY": 18
+        },
+        {
+          "x": 394,
+          "y": 1054,
+          "w": 301,
+          "h": 356,
+          "offsetX": 34,
+          "offsetY": 8
+        },
+        {
+          "x": 744,
+          "y": 1054,
+          "w": 308,
+          "h": 346,
+          "offsetX": 30,
+          "offsetY": 18
+        }
+      ]
+    },
+    {
+      "id": "grave_weaver_enemy",
+      "character": "grave_weaver",
+      "kind": "enemy",
+      "path": "sprites/grave_weaver_enemy_128x128.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "columns": 4,
+      "rows": 3,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "left",
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 5,
+          "repeat": -1,
+          "preview": "animation_previews/grave_weaver_enemy_idle.gif"
+        },
+        "attack": {
+          "frames": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 8,
+          "repeat": 0,
+          "preview": "animation_previews/grave_weaver_enemy_attack.gif"
+        },
+        "hurt": {
+          "frames": [
+            8,
+            9
+          ],
+          "fps": 6,
+          "repeat": 0,
+          "preview": "animation_previews/grave_weaver_enemy_hurt.gif"
+        },
+        "defeat": {
+          "frames": [
+            10,
+            11
+          ],
+          "fps": 4,
+          "repeat": 0,
+          "preview": "animation_previews/grave_weaver_enemy_defeat.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_detailed_battle",
+      "preparation": {
+        "uniformScale": 0.3076923076923077,
+        "sourceColumnCuts": [
+          0,
+          359,
+          762,
+          1090,
+          1448
+        ],
+        "sourceRowCuts": [
+          0,
+          339,
+          713,
+          1086
+        ],
+        "alignment": "bottom-center"
+      },
+      "loadMethod": "spritesheet"
+    },
+    {
+      "id": "raven_knight_overworld",
+      "character": "raven_knight",
+      "kind": "overworld",
+      "path": "originals/raven_knight_overworld_master.png",
+      "frameWidth": 368,
+      "frameHeight": 368,
+      "columns": 3,
+      "rows": 4,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "directional",
+      "animations": {
+        "idle_down": {
+          "frames": [
+            0
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_down": {
+          "frames": [
+            1,
+            0,
+            2,
+            0
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/raven_knight_overworld_walk_down.gif"
+        },
+        "idle_left": {
+          "frames": [
+            3
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_left": {
+          "frames": [
+            4,
+            3,
+            5,
+            3
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/raven_knight_overworld_walk_left.gif"
+        },
+        "idle_right": {
+          "frames": [
+            6
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_right": {
+          "frames": [
+            7,
+            6,
+            8,
+            6
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/raven_knight_overworld_walk_right.gif"
+        },
+        "idle_up": {
+          "frames": [
+            9
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_up": {
+          "frames": [
+            10,
+            9,
+            11,
+            9
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/raven_knight_overworld_walk_up.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_compact_original",
+      "preparation": {
+        "resized": false,
+        "alignment": "head center and feet via atlas trim offsets"
+      },
+      "expansion": true,
+      "originalMasterReference": "originals/raven_knight_overworld_master.png",
+      "originalMasterIncluded": true,
+      "atlasPath": "sprites/raven_knight_overworld.atlas.json",
+      "loadMethod": "atlas",
+      "logicalFrameWidth": 48,
+      "logicalFrameHeight": 48,
+      "displayScale": 0.13043478260869565,
+      "sourceRects": [
+        {
+          "x": 38,
+          "y": 6,
+          "w": 281,
+          "h": 335,
+          "offsetX": 42,
+          "offsetY": 29
+        },
+        {
+          "x": 414,
+          "y": 7,
+          "w": 282,
+          "h": 339,
+          "offsetX": 56,
+          "offsetY": 25
+        },
+        {
+          "x": 768,
+          "y": 6,
+          "w": 280,
+          "h": 335,
+          "offsetX": 46,
+          "offsetY": 29
+        },
+        {
+          "x": 106,
+          "y": 364,
+          "w": 250,
+          "h": 334,
+          "offsetX": 92,
+          "offsetY": 30
+        },
+        {
+          "x": 473,
+          "y": 365,
+          "w": 268,
+          "h": 335,
+          "offsetX": 92,
+          "offsetY": 29
+        },
+        {
+          "x": 849,
+          "y": 365,
+          "w": 229,
+          "h": 333,
+          "offsetX": 93,
+          "offsetY": 31
+        },
+        {
+          "x": 28,
+          "y": 725,
+          "w": 245,
+          "h": 337,
+          "offsetX": 30,
+          "offsetY": 27
+        },
+        {
+          "x": 386,
+          "y": 723,
+          "w": 266,
+          "h": 340,
+          "offsetX": 12,
+          "offsetY": 24
+        },
+        {
+          "x": 781,
+          "y": 723,
+          "w": 241,
+          "h": 338,
+          "offsetX": 34,
+          "offsetY": 26
+        },
+        {
+          "x": 33,
+          "y": 1079,
+          "w": 276,
+          "h": 328,
+          "offsetX": 45,
+          "offsetY": 36
+        },
+        {
+          "x": 405,
+          "y": 1079,
+          "w": 277,
+          "h": 333,
+          "offsetX": 50,
+          "offsetY": 31
+        },
+        {
+          "x": 774,
+          "y": 1080,
+          "w": 280,
+          "h": 335,
+          "offsetX": 40,
+          "offsetY": 29
+        }
+      ]
+    },
+    {
+      "id": "raven_knight_enemy",
+      "character": "raven_knight",
+      "kind": "enemy",
+      "path": "sprites/raven_knight_enemy_128x128.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "columns": 4,
+      "rows": 3,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "left",
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 5,
+          "repeat": -1,
+          "preview": "animation_previews/raven_knight_enemy_idle.gif"
+        },
+        "attack": {
+          "frames": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 8,
+          "repeat": 0,
+          "preview": "animation_previews/raven_knight_enemy_attack.gif"
+        },
+        "hurt": {
+          "frames": [
+            8,
+            9
+          ],
+          "fps": 6,
+          "repeat": 0,
+          "preview": "animation_previews/raven_knight_enemy_hurt.gif"
+        },
+        "defeat": {
+          "frames": [
+            10,
+            11
+          ],
+          "fps": 4,
+          "repeat": 0,
+          "preview": "animation_previews/raven_knight_enemy_defeat.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_detailed_battle",
+      "preparation": {
+        "uniformScale": 0.3220779220779221,
+        "sourceColumnCuts": [
+          0,
+          389,
+          745,
+          1112,
+          1448
+        ],
+        "sourceRowCuts": [
+          0,
+          371,
+          780,
+          1086
+        ],
+        "alignment": "bottom-center"
+      },
+      "loadMethod": "spritesheet"
+    },
+    {
+      "id": "selene_dusk_overworld",
+      "character": "selene_dusk",
+      "kind": "overworld",
+      "path": "originals/selene_dusk_overworld_master.png",
+      "frameWidth": 384,
+      "frameHeight": 384,
+      "columns": 3,
+      "rows": 4,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "directional",
+      "animations": {
+        "idle_down": {
+          "frames": [
+            0
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_down": {
+          "frames": [
+            1,
+            0,
+            2,
+            0
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/selene_dusk_overworld_walk_down.gif"
+        },
+        "idle_left": {
+          "frames": [
+            3
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_left": {
+          "frames": [
+            4,
+            3,
+            5,
+            3
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/selene_dusk_overworld_walk_left.gif"
+        },
+        "idle_right": {
+          "frames": [
+            6
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_right": {
+          "frames": [
+            7,
+            6,
+            8,
+            6
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/selene_dusk_overworld_walk_right.gif"
+        },
+        "idle_up": {
+          "frames": [
+            9
+          ],
+          "fps": 1,
+          "repeat": -1
+        },
+        "walk_up": {
+          "frames": [
+            10,
+            9,
+            11,
+            9
+          ],
+          "fps": 8,
+          "repeat": -1,
+          "preview": "animation_previews/selene_dusk_overworld_walk_up.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_compact_original",
+      "preparation": {
+        "resized": false,
+        "alignment": "head center and feet via atlas trim offsets"
+      },
+      "expansion": true,
+      "originalMasterReference": "originals/selene_dusk_overworld_master.png",
+      "originalMasterIncluded": true,
+      "atlasPath": "sprites/selene_dusk_overworld.atlas.json",
+      "loadMethod": "atlas",
+      "logicalFrameWidth": 48,
+      "logicalFrameHeight": 48,
+      "displayScale": 0.125,
+      "sourceRects": [
+        {
+          "x": 88,
+          "y": 8,
+          "w": 263,
+          "h": 337,
+          "offsetX": 66,
+          "offsetY": 43
+        },
+        {
+          "x": 423,
+          "y": 9,
+          "w": 267,
+          "h": 336,
+          "offsetX": 64,
+          "offsetY": 44
+        },
+        {
+          "x": 753,
+          "y": 9,
+          "w": 266,
+          "h": 336,
+          "offsetX": 62,
+          "offsetY": 44
+        },
+        {
+          "x": 113,
+          "y": 367,
+          "w": 253,
+          "h": 328,
+          "offsetX": 92,
+          "offsetY": 52
+        },
+        {
+          "x": 443,
+          "y": 364,
+          "w": 282,
+          "h": 331,
+          "offsetX": 91,
+          "offsetY": 49
+        },
+        {
+          "x": 781,
+          "y": 367,
+          "w": 275,
+          "h": 331,
+          "offsetX": 92,
+          "offsetY": 49
+        },
+        {
+          "x": 62,
+          "y": 719,
+          "w": 255,
+          "h": 327,
+          "offsetX": 34,
+          "offsetY": 53
+        },
+        {
+          "x": 399,
+          "y": 717,
+          "w": 265,
+          "h": 331,
+          "offsetX": 26,
+          "offsetY": 49
+        },
+        {
+          "x": 737,
+          "y": 719,
+          "w": 266,
+          "h": 328,
+          "offsetX": 24,
+          "offsetY": 52
+        },
+        {
+          "x": 78,
+          "y": 1063,
+          "w": 276,
+          "h": 335,
+          "offsetX": 61,
+          "offsetY": 45
+        },
+        {
+          "x": 416,
+          "y": 1063,
+          "w": 278,
+          "h": 336,
+          "offsetX": 55,
+          "offsetY": 44
+        },
+        {
+          "x": 753,
+          "y": 1063,
+          "w": 273,
+          "h": 336,
+          "offsetX": 59,
+          "offsetY": 44
+        }
+      ]
+    },
+    {
+      "id": "selene_dusk_enemy",
+      "character": "selene_dusk",
+      "kind": "enemy",
+      "path": "sprites/selene_dusk_enemy_128x128.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "columns": 4,
+      "rows": 3,
+      "frameCount": 12,
+      "origin": [
+        0.5,
+        1
+      ],
+      "facing": "left",
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 5,
+          "repeat": -1,
+          "preview": "animation_previews/selene_dusk_enemy_idle.gif"
+        },
+        "attack": {
+          "frames": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 8,
+          "repeat": 0,
+          "preview": "animation_previews/selene_dusk_enemy_attack.gif"
+        },
+        "hurt": {
+          "frames": [
+            8,
+            9
+          ],
+          "fps": 6,
+          "repeat": 0,
+          "preview": "animation_previews/selene_dusk_enemy_hurt.gif"
+        },
+        "defeat": {
+          "frames": [
+            10,
+            11
+          ],
+          "fps": 4,
+          "repeat": 0,
+          "preview": "animation_previews/selene_dusk_enemy_defeat.gif"
+        }
+      },
+      "artStyle": "Japanese_anime_detailed_battle",
+      "preparation": {
+        "uniformScale": 0.2824601366742597,
+        "sourceColumnCuts": [
+          0,
+          410,
+          749,
+          1188,
+          1448
+        ],
+        "sourceRowCuts": [
+          0,
+          388,
+          757,
+          1086
+        ],
+        "alignment": "bottom-center"
+      },
+      "loadMethod": "spritesheet"
+    }
+  ],
+  "portraits": [
+    {
+      "id": "kai",
+      "path": "portraits/kai_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral"
+    },
+    {
+      "id": "lyra_fen",
+      "path": "portraits/lyra_fen_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral"
+    },
+    {
+      "id": "eren_sol",
+      "path": "portraits/eren_sol_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral"
+    },
+    {
+      "id": "mira_thorn",
+      "path": "portraits/mira_thorn_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral"
+    },
+    {
+      "id": "rowan_voss",
+      "path": "portraits/rowan_voss_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral"
+    },
+    {
+      "id": "elara_ashen",
+      "path": "portraits/elara_ashen_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral"
+    },
+    {
+      "id": "daigo_ren",
+      "path": "portraits/daigo_ren_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral"
+    },
+    {
+      "id": "nyra_vale",
+      "path": "portraits/nyra_vale_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral"
+    },
+    {
+      "id": "soren_mire",
+      "path": "portraits/soren_mire_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral"
+    },
+    {
+      "id": "hana_thorn",
+      "path": "portraits/hana_thorn_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral"
+    },
+    {
+      "id": "ivo_renn",
+      "path": "portraits/ivo_renn_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral"
+    },
+    {
+      "id": "tessa_wren",
+      "path": "portraits/tessa_wren_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral"
+    },
+    {
+      "id": "tomas_fen",
+      "path": "portraits/tomas_fen_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral"
+    },
+    {
+      "id": "odel_marr",
+      "path": "portraits/odel_marr_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral"
+    },
+    {
+      "id": "abbess_seren",
+      "path": "portraits/abbess_seren_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral"
+    },
+    {
+      "id": "nell",
+      "path": "portraits/nell_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral"
+    },
+    {
+      "id": "corin",
+      "path": "portraits/corin_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral"
+    },
+    {
+      "id": "vesper_rook",
+      "path": "portraits/vesper_rook_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral"
+    },
+    {
+      "id": "aurel_veyr",
+      "path": "portraits/aurel_veyr_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral"
+    },
+    {
+      "id": "garran",
+      "path": "portraits/garran_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral"
+    },
+    {
+      "id": "maelis",
+      "path": "portraits/maelis_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral"
+    },
+    {
+      "id": "sevrin",
+      "path": "portraits/sevrin_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral"
+    },
+    {
+      "id": "orin_ren",
+      "path": "portraits/orin_ren_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral"
+    },
+    {
+      "id": "valka",
+      "path": "portraits/valka_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral"
+    },
+    {
+      "id": "veyr",
+      "path": "portraits/veyr_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral"
+    },
+    {
+      "id": "ash_thrall",
+      "path": "portraits/ash_thrall_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral"
+    },
+    {
+      "id": "blood_hound",
+      "path": "portraits/blood_hound_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral"
+    },
+    {
+      "id": "memory_moth",
+      "path": "portraits/memory_moth_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral"
+    },
+    {
+      "id": "court_sentry",
+      "path": "portraits/court_sentry_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral"
+    },
+    {
+      "id": "crypt_lancer",
+      "path": "portraits/crypt_lancer_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral",
+      "expansion": true
+    },
+    {
+      "id": "scarlet_acolyte",
+      "path": "portraits/scarlet_acolyte_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral",
+      "expansion": true
+    },
+    {
+      "id": "gloom_stalker",
+      "path": "portraits/gloom_stalker_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral",
+      "expansion": true
+    },
+    {
+      "id": "grave_weaver",
+      "path": "portraits/grave_weaver_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral",
+      "expansion": true
+    },
+    {
+      "id": "raven_knight",
+      "path": "portraits/raven_knight_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral",
+      "expansion": true
+    },
+    {
+      "id": "selene_dusk",
+      "path": "portraits/selene_dusk_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral",
+      "expansion": true
+    },
+    {
+      "id": "cassian_reed",
+      "path": "portraits/cassian_reed_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral",
+      "expansion": true
+    },
+    {
+      "id": "ayla_moon",
+      "path": "portraits/ayla_moon_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral",
+      "expansion": true
+    },
+    {
+      "id": "nox_varen",
+      "path": "portraits/nox_varen_profile_256.png",
+      "width": 256,
+      "height": 256,
+      "background": "opaque",
+      "expression": "neutral",
+      "expansion": true
+    }
+  ],
+  "environments": [
+    {
+      "id": "emberfall",
+      "path": "environments/emberfall_night_backdrop.png",
+      "width": 1983,
+      "height": 793,
+      "type": "flattened_backdrop",
+      "use": "Village festival, nighttime opening",
+      "collisionIncluded": false,
+      "layersIncluded": false
+    },
+    {
+      "id": "brassveil",
+      "path": "environments/brassveil_night_backdrop.png",
+      "width": 1774,
+      "height": 887,
+      "type": "flattened_backdrop",
+      "use": "Industrial city streets and clinic surroundings",
+      "collisionIncluded": false,
+      "layersIncluded": false
+    },
+    {
+      "id": "noctis_crown",
+      "path": "environments/noctis_crown_night_backdrop.png",
+      "width": 1672,
+      "height": 941,
+      "type": "flattened_backdrop",
+      "use": "Royal observatory and final boss arena",
+      "collisionIncluded": false,
+      "layersIncluded": false
+    }
+  ],
+  "logos": [
+    {
+      "id": "vampire_hunters",
+      "path": "logos/vampire_hunters_logo_transparent.png",
+      "width": 1774,
+      "height": 887,
+      "format": "raster_png",
+      "transparent": true
+    }
+  ],
+  "tiles": {
+    "path": "tiles/environment_tiles_32.png",
+    "tileWidth": 32,
+    "tileHeight": 32,
+    "columns": 6,
+    "rows": 6,
+    "seamlessVerified": false,
+    "autotileRulesIncluded": false,
+    "entries": [
+      {
+        "index": 0,
+        "name": "cobblestone_01",
+        "path": "tiles/cobblestone_01_32.png"
+      },
+      {
+        "index": 1,
+        "name": "cobblestone_02",
+        "path": "tiles/cobblestone_02_32.png"
+      },
+      {
+        "index": 2,
+        "name": "cobblestone_03",
+        "path": "tiles/cobblestone_03_32.png"
+      },
+      {
+        "index": 3,
+        "name": "cobblestone_04",
+        "path": "tiles/cobblestone_04_32.png"
+      },
+      {
+        "index": 4,
+        "name": "cobblestone_05",
+        "path": "tiles/cobblestone_05_32.png"
+      },
+      {
+        "index": 5,
+        "name": "cobblestone_06",
+        "path": "tiles/cobblestone_06_32.png"
+      },
+      {
+        "index": 6,
+        "name": "grass_dirt_01",
+        "path": "tiles/grass_dirt_01_32.png"
+      },
+      {
+        "index": 7,
+        "name": "grass_dirt_02",
+        "path": "tiles/grass_dirt_02_32.png"
+      },
+      {
+        "index": 8,
+        "name": "grass_dirt_03",
+        "path": "tiles/grass_dirt_03_32.png"
+      },
+      {
+        "index": 9,
+        "name": "grass_dirt_04",
+        "path": "tiles/grass_dirt_04_32.png"
+      },
+      {
+        "index": 10,
+        "name": "grass_dirt_05",
+        "path": "tiles/grass_dirt_05_32.png"
+      },
+      {
+        "index": 11,
+        "name": "grass_dirt_06",
+        "path": "tiles/grass_dirt_06_32.png"
+      },
+      {
+        "index": 12,
+        "name": "roof_shingle_01",
+        "path": "tiles/roof_shingle_01_32.png"
+      },
+      {
+        "index": 13,
+        "name": "roof_shingle_02",
+        "path": "tiles/roof_shingle_02_32.png"
+      },
+      {
+        "index": 14,
+        "name": "roof_shingle_03",
+        "path": "tiles/roof_shingle_03_32.png"
+      },
+      {
+        "index": 15,
+        "name": "roof_shingle_04",
+        "path": "tiles/roof_shingle_04_32.png"
+      },
+      {
+        "index": 16,
+        "name": "roof_shingle_05",
+        "path": "tiles/roof_shingle_05_32.png"
+      },
+      {
+        "index": 17,
+        "name": "roof_shingle_06",
+        "path": "tiles/roof_shingle_06_32.png"
+      },
+      {
+        "index": 18,
+        "name": "wall_copper_01",
+        "path": "tiles/wall_copper_01_32.png"
+      },
+      {
+        "index": 19,
+        "name": "wall_copper_02",
+        "path": "tiles/wall_copper_02_32.png"
+      },
+      {
+        "index": 20,
+        "name": "wall_copper_03",
+        "path": "tiles/wall_copper_03_32.png"
+      },
+      {
+        "index": 21,
+        "name": "wall_copper_04",
+        "path": "tiles/wall_copper_04_32.png"
+      },
+      {
+        "index": 22,
+        "name": "wall_copper_05",
+        "path": "tiles/wall_copper_05_32.png"
+      },
+      {
+        "index": 23,
+        "name": "wall_copper_06",
+        "path": "tiles/wall_copper_06_32.png"
+      },
+      {
+        "index": 24,
+        "name": "observatory_floor_01",
+        "path": "tiles/observatory_floor_01_32.png"
+      },
+      {
+        "index": 25,
+        "name": "observatory_floor_02",
+        "path": "tiles/observatory_floor_02_32.png"
+      },
+      {
+        "index": 26,
+        "name": "observatory_floor_03",
+        "path": "tiles/observatory_floor_03_32.png"
+      },
+      {
+        "index": 27,
+        "name": "observatory_floor_04",
+        "path": "tiles/observatory_floor_04_32.png"
+      },
+      {
+        "index": 28,
+        "name": "observatory_floor_05",
+        "path": "tiles/observatory_floor_05_32.png"
+      },
+      {
+        "index": 29,
+        "name": "observatory_floor_06",
+        "path": "tiles/observatory_floor_06_32.png"
+      },
+      {
+        "index": 30,
+        "name": "deep_water",
+        "path": "tiles/deep_water_32.png"
+      },
+      {
+        "index": 31,
+        "name": "shallow_water",
+        "path": "tiles/shallow_water_32.png"
+      },
+      {
+        "index": 32,
+        "name": "snow",
+        "path": "tiles/snow_32.png"
+      },
+      {
+        "index": 33,
+        "name": "ice",
+        "path": "tiles/ice_32.png"
+      },
+      {
+        "index": 34,
+        "name": "red_energy",
+        "path": "tiles/red_energy_32.png"
+      },
+      {
+        "index": 35,
+        "name": "violet_energy",
+        "path": "tiles/violet_energy_32.png"
+      }
+    ]
+  },
+  "edition": "Japanese anime redesign; separate walking and combat sources",
+  "originalsIncluded": "overworld_only",
+  "assetCoverage": {
+    "heroAllies": 12,
+    "enemies": 16,
+    "walkingAtlases": 28,
+    "combatSheets": 28,
+    "portraits": 38,
+    "backgrounds": 3,
+    "starterTiles": 36,
+    "logos": 1
+  },
+  "overworldRendering": "Native-resolution original atlases, logical 48x48 footprint; combat uses preview sheets."
+}

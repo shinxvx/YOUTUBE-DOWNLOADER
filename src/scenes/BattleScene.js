@@ -9,6 +9,9 @@ import { BATTLE_SCRIPTS, BATTLE_TIPS } from '../data/battleScripts.js';
 import { state, member, memberStats, grantXp, addItem, addProfile, restoreParty } from '../systems/state.js';
 import { settings } from '../systems/settings.js';
 import { latestSave, loadFrom } from '../systems/save.js';
+import { uiScale } from '../systems/display.js';
+import { BattleStage } from '../battle/stage.js';
+import { techniqueCutIn, clashPrompt, CLASH_TABLE } from '../battle/cutin.js';
 import { Controls } from '../systems/input.js';
 import { spriteAsset } from '../gfx/assets.js';
 import { DialogueBox } from '../ui/dialogue.js';
@@ -41,6 +44,7 @@ export class BattleScene extends Phaser.Scene {
     this.anims.globalTimeScale = speed;
     this.events.once('shutdown', () => { this.anims.globalTimeScale = 1; });
 
+    this.setupCameras();
     this.controls = new Controls(this);
     this.partySnapshot = structuredClone(state.party);
     this.units = [];
@@ -59,29 +63,51 @@ export class BattleScene extends Phaser.Scene {
 
     audio.play(this.enc.music || 'battle');
     this.cameras.main.fadeIn(350);
-    window.__VOD = Object.assign(window.__VOD || {}, { battle: this });
+    this.hudCam.fadeIn(350);
+    window.__VH = Object.assign(window.__VH || {}, { battle: this });
     this.time.delayedCall(450, () => this.run());
   }
 
   // ---------------------------------------------------------------- setup
+  // Two cameras: the stage camera moves and zooms with the action; the HUD camera stays put.
+  // Objects are routed by depth: HUD layers (>= 90, except on-stage effects 290-430) render
+  // only on the HUD camera.
+  setupCameras() {
+    this.stageCam = this.cameras.main;
+    this.hudCam = this.cameras.add(0, 0, this.scale.width, this.scale.height);
+    const apply = () => {
+      const s = uiScale(this.game);
+      this.uiS = s;
+      this.hudCam.setSize(this.scale.width, this.scale.height).setOrigin(0, 0).setZoom(s).setScroll(0, 0);
+      this.stageCam.setSize(this.scale.width, this.scale.height).setZoom(s * (this.camZoom || 1));
+      this.stageCam.centerOn(this.camFocus?.x ?? GAME_W / 2, this.camFocus?.y ?? GAME_H / 2);
+    };
+    apply();
+    this.game.events.on('display-changed', apply);
+    this.events.once('shutdown', () => this.game.events.off('display-changed', apply));
+  }
+
+  routeCameras() {
+    const stageBit = this.stageCam.id, hudBit = this.hudCam.id;
+    for (const go of this.children.list) {
+      const d = go.depth;
+      const hud = d >= 90 && !(d >= 290 && d < 430);
+      go.cameraFilter = hud ? stageBit : hudBit;
+    }
+  }
+
+  // Ease the stage camera toward a point of interest (or back to centre).
+  focus(x, y, zoom = 1, ms = 260) {
+    this.camFocus = x === undefined ? null : { x, y };
+    this.camZoom = zoom;
+    const tx = x ?? GAME_W / 2, ty = y ?? GAME_H / 2;
+    this.stageCam.pan(tx, ty, ms, 'Sine.easeInOut', true);
+    this.stageCam.zoomTo(this.uiS * zoom, ms, 'Sine.easeInOut', true);
+  }
+
   buildBackground() {
-    const img = this.add.image(0, 0, `environment:${this.enc.background || 'emberfall'}`).setOrigin(0);
-    const crop = { x: 520, y: 360, w: 800, h: 450 };
-    const s = GAME_W / crop.w;
-    img.setCrop(crop.x, crop.y, crop.w, crop.h).setScale(s).setPosition(-crop.x * s, -crop.y * s);
-    const night = state.phase === 'dark' || this.enc.boss;
-    this.add.rectangle(0, 0, GAME_W, GAME_H, night ? 0x3a3f6a : 0x8a7f9a, 1).setOrigin(0).setBlendMode(Phaser.BlendModes.MULTIPLY);
-    const fog = this.add.tileSprite(0, 0, GAME_W, GAME_H, 'fog').setOrigin(0).setAlpha(0.18);
-    this.events.on('update', (t, d) => { fog.tilePositionX += d * 0.012; });
-    // Ground band for contact shadows to read against.
-    const g = this.add.graphics();
-    g.fillGradientStyle(0x000000, 0x000000, 0x000000, 0x000000, 0, 0, 0.55, 0.55);
-    g.fillRect(0, 380, GAME_W, GAME_H - 380);
-    this.add.image(GAME_W / 2, GAME_H / 2, 'vignette').setDisplaySize(GAME_W, GAME_H).setDepth(5);
-    this.add.particles(0, 0, 'mote', {
-      x: { min: 0, max: GAME_W }, y: { min: 0, max: 400 }, lifespan: 6000, speedX: { min: 5, max: 15 }, speedY: { min: 5, max: 14 },
-      scale: { start: 0.9, end: 0.4 }, alpha: { start: 0.45, end: 0 }, tint: [0x8c8c96, 0xa06060], frequency: 140,
-    }).setDepth(6);
+    const mood = state.phase === 'dawn' ? 'dawn' : state.phase === 'dusk' || state.phase === 'festival' ? 'dusk' : 'night';
+    this.stage = new BattleStage(this, this.enc.background || 'emberfall', mood);
   }
 
   buildUnits() {
@@ -570,6 +596,7 @@ export class BattleScene extends Phaser.Scene {
   }
 
   update(time, delta) {
+    this.routeCameras();
     this.dialogue?.update(this.controls, delta);
     if (this.dialogue?.active) return;
     if (this.modalWait) {
@@ -709,6 +736,17 @@ export class BattleScene extends Phaser.Scene {
     const multi = action.targets.length > 1;
     const veil = sk.kind === 'veil';
     const flame = action.skill === 'ashen_arc' || action.skill === 'white_funeral';
+    const color = veil ? 0x8a4dff : flame ? 0xffc77a : 0xc9b8ff;
+    if (sk.kind !== 'basic') {
+      const seen = state.seenAnimations[action.skill];
+      if (!(seen && settings.skipSeenAnimations)) {
+        await techniqueCutIn(this, { portrait: u.portrait, name: sk.name, school: sk.school, color, short: !!seen && action.skill !== 'white_funeral' });
+      }
+      state.seenAnimations[action.skill] = true;
+    }
+    const tgt0 = action.targets[0];
+    if (!multi && tgt0) this.focus((u.home.x + tgt0.home.x) / 2, 400, 1.12);
+    else this.focus(GAME_W / 2, 380, 1.04);
     if (veil) { audio.sfx('veil'); this.ring(u, 0xa970ff); }
     if (!multi) await this.lunge(u, action.targets[0], 170);
     const anim = sk.kind === 'basic' ? 'attack' : 'skill';
@@ -725,8 +763,10 @@ export class BattleScene extends Phaser.Scene {
       await this.hit(u, t, sk, { veil, flame });
       if (multi) await sleep(this, 90);
     }
+    if (sk.kind !== 'basic') this.stage.wash(color, 0.3);
     await p;
     if (!multi) await this.retreat(u);
+    this.focus();
     if (action.skill === 'white_funeral') {
       for (const t of this.foes()) if (t.def.vampire) t.status.suppressed = Math.max(t.status.suppressed || 0, 2);
       this.say_('White Funeral seals the square. The blood anchors cannot be rekindled.');
@@ -745,6 +785,11 @@ export class BattleScene extends Phaser.Scene {
     if (!t.anchor && !t.dead) this.playOnce(t, 'hurt');
     this.shakeTarget(t);
     this.damage(t, dmg, { big: dmg > 40 });
+    if (t.def.boss && !this.bloodMood && t.hp > 0 && t.hp / t.maxHp < 0.35 && state.sealStage >= 1) {
+      this.bloodMood = true;
+      this.stage.setMood('blood', 1200);
+      this.say_(`${t.name} is cornered — the moon bleeds red over the square.`);
+    }
     if (weak) this.popup(t, 'WEAK', '#f2c14e', false, -26);
     if (t.dead) return;
     if (sk.suppress && t.def.vampire) { t.status.suppressed = Math.max(t.status.suppressed || 0, sk.suppress); this.popup(t, 'SUPPRESSED', '#c9a0ff', false, -26); }
@@ -821,35 +866,48 @@ export class BattleScene extends Phaser.Scene {
       return;
     }
 
+    let power = act.power;
+    let clash = null;
+    if (act.clash && target.side === 'hero') {
+      this.focus((u.home.x + target.home.x) / 2, 420, 1.15);
+      clash = await this.runClash(u, target, act.clash);
+      power *= { best: clash === 'counter' ? 0.2 : 0, ok: 0.45, bad: 1.25 }[clash.result];
+    } else {
+      this.focus((u.home.x + target.home.x) / 2, 420, 1.06, 200);
+    }
     await this.lunge(u, target, 150);
     const p = this.playOnce(u, 'attack');
     await sleep(this, 300);
-    let power = act.power;
-    let deflected = false;
-    if (act.punishGuard || plan.action === 'lunge') {
-      if (target.status.guard || target.status.counter) {
-        deflected = true;
-        power *= act.punishGuard ? 0.25 : 1;
-      }
-    }
-    const dmg = this.calcDamage(u, target, power);
-    this.slashFx(target, 0xff7070);
+    const dmg = power > 0 ? this.calcDamage(u, target, power) : 0;
+    if (dmg === 0) { this.popup(target, 'MISS', '#9fd3ff', true); audio.sfx('guard'); }
+    else this.slashFx(target, 0xff7070);
     audio.sfx(power > 1.5 ? 'heavy' : 'hit');
     this.shakeTarget(target);
     if (power > 1.5) this.shake(200, 0.006);
-    this.damage(target, dmg);
-    if (!target.dead) this.playOnce(target, 'hurt');
+    if (dmg > 0) {
+      this.damage(target, dmg);
+      if (!target.dead) this.playOnce(target, 'hurt');
+    }
     if (act.status?.bleed && !target.dead && !target.status.guard) target.status.bleed = Math.max(target.status.bleed || 0, act.status.bleed);
     if (act.drain) { const h = Math.round(dmg * act.drain); u.hp = Math.min(u.maxHp, u.hp + h); this.popup(u, `+${h}`, '#8be38b'); }
-    if (act.punishGuard) target.status.marked = false;
-    if (deflected) {
-      this.say_(`${target.name} braced in time — the blow glances off!`);
-      u.resolve = Math.max(0, u.resolve - 35);
-      this.popup(u, 'DEFLECTED', '#9fd3ff', false, -30);
-      if (u.resolve <= 0) this.stagger(u);
+    target.status.marked = false;
+    if (clash?.result === 'best') {
+      u.resolve = Math.max(0, u.resolve - 45);
+      this.popup(u, 'CLASH WON', '#f2c14e', true, -30);
+      if (u.resolve <= 0 && !u.status.staggered) this.stagger(u);
     }
     await p;
     await this.retreat(u);
+    if (clash?.choice === 'counter' && !target.dead && !u.dead) {
+      this.showBanner('Counter!', '#ffe9c2');
+      await this.lunge(target, u, 170);
+      const cp = this.playOnce(target, 'attack');
+      await sleep(this, 250);
+      await this.hit(target, u, { power: clash.result === 'best' ? 1.4 : 0.8, break: 20, element: 'ember' });
+      await cp;
+      await this.retreat(target);
+    }
+    this.focus();
     // Pale Return counter
     if (target.status.counter && !target.dead && !u.dead) {
       target.status.counter = false;
@@ -861,6 +919,24 @@ export class BattleScene extends Phaser.Scene {
       await cp;
       await this.retreat(target);
     }
+  }
+
+  // Clash duel: the targeted hero answers a committed attack (Parry / Evade / Counter).
+  async runClash(enemy, hero, type) {
+    audio.sfx('encounter');
+    this.stage.wash(0xff3040, 0.25);
+    await this.tip('clash');
+    const canCounter = hero.focus >= 4;
+    const choice = await clashPrompt(this, this.controls, { hero, enemy, type, canCounter });
+    if (choice === 'counter') hero.focus -= 4;
+    const result = CLASH_TABLE[type][choice];
+    const msg = { best: `${hero.name} reads it perfectly!`, ok: `${hero.name} takes the edge off the blow.`, bad: `${hero.name} guessed wrong!` }[result];
+    this.say_(msg);
+    this.showBanner(result === 'best' ? 'PERFECT READ' : result === 'ok' ? 'HELD' : 'BROKEN THROUGH', result === 'best' ? '#f2c14e' : result === 'ok' ? '#9fd3ff' : '#ff8a80');
+    if (result === 'best' && choice === 'evade') {
+      this.tweens.add({ targets: hero.sprite, x: hero.home.x - 70, duration: 160, yoyo: true, hold: 300 });
+    }
+    return { choice, result };
   }
 
   // ---------------------------------------------------------------- events & end
@@ -972,6 +1048,7 @@ export class BattleScene extends Phaser.Scene {
   }
 
   finish(result) {
+    this.hudCam.fadeOut(400);
     this.cameras.main.fadeOut(400);
     this.cameras.main.once('camerafadeoutcomplete', () => {
       const cb = this.onEnd;
@@ -1085,6 +1162,7 @@ export class BattleScene extends Phaser.Scene {
 
   async awakenCinematic() {
     this.dialogue.close();
+    this.stage.setMood('seal', 700);
     const kai = this.units.find(u => u.key === 'kai');
     audio.play('awakening');
     const dark = this.add.rectangle(0, 0, GAME_W, GAME_H, 0x05000c, 0).setOrigin(0).setDepth(1200);
@@ -1116,6 +1194,7 @@ export class BattleScene extends Phaser.Scene {
     this.time.delayedCall(1500, () => parts.destroy());
     // Kai's battle sprite surges with violet light; regeneration stops.
     this.tweens.add({ targets: dark, fillAlpha: 0, duration: 600, onComplete: () => dark.destroy() });
+    this.stage.setMood('sealfaint', 1000);
     this.flashScreen(0xa970ff, 0.55);
     if (kai) {
       kai.sprite.setTint(0xd8c0ff);
@@ -1140,6 +1219,7 @@ export class BattleScene extends Phaser.Scene {
 
   async elaraArrives() {
     this.dialogue.close();
+    this.stage.setMood('flame', 900);
     audio.sfx('flame');
     this.flashScreen(0xffffff, 0.6);
     const ring = this.add.particles(0, 0, 'mote', {

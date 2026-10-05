@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { GAME_W, GAME_H, WORLD_ZOOM } from '../config.js';
+import { fitCamera } from '../systems/display.js';
 import { Controls, keyNameFor } from '../systems/input.js';
 import { state } from '../systems/state.js';
 import { DialogueBox } from '../ui/dialogue.js';
@@ -14,6 +15,7 @@ export class UIScene extends Phaser.Scene {
   constructor() { super('UI'); }
 
   create() {
+    fitCamera(this);
     this.controls = new Controls(this);
     this.dialogue = new DialogueBox(this, 1000);
 

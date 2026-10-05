@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { GAME_W, GAME_H } from '../config.js';
+import { fitCamera } from '../systems/display.js';
 import { Controls } from '../systems/input.js';
 import { newGame } from '../systems/state.js';
 import { latestSave, loadFrom } from '../systems/save.js';
@@ -12,6 +13,7 @@ export class TitleScene extends Phaser.Scene {
   constructor() { super('Title'); }
 
   create() {
+    fitCamera(this);
     this.controls = new Controls(this);
     this.cameras.main.fadeIn(900);
 
@@ -27,7 +29,7 @@ export class TitleScene extends Phaser.Scene {
       scale: { start: 1.4, end: 0.3 }, alpha: { start: 0.8, end: 0 }, tint: [0xffc070, 0xff9a40, 0xb48cff], frequency: 120, blendMode: 'ADD',
     });
 
-    const logo = this.add.image(GAME_W / 2, 210, 'logo:veil_of_dawn');
+    const logo = this.add.image(GAME_W / 2, 210, 'logo:vampire_hunters');
     logo.setScale(560 / logo.width);
     logo.setAlpha(0);
     this.tweens.add({ targets: logo, alpha: 1, y: 200, duration: 1600, ease: 'Sine.easeOut' });
@@ -49,7 +51,7 @@ export class TitleScene extends Phaser.Scene {
     text(this, 24, GAME_H - 26, 'v0.1', { size: 13, color: '#6d6758', origin: [0, 0.5] });
     this.modal = null;
     audio.play('title');
-    window.__VOD = Object.assign(window.__VOD || {}, { title: this });
+    window.__VH = Object.assign(window.__VH || {}, { title: this });
   }
 
   select(id) {

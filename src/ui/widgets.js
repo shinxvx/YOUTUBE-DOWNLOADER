@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import { COLORS, FONT_UI, FONT_TITLE } from '../config.js';
+import { textResolution } from '../systems/display.js';
 
-export const TEXT_RES = Math.min(2, Math.max(1, window.devicePixelRatio || 1)) * 1.5;
 
 export function text(scene, x, y, str, opts = {}) {
   const t = scene.add.text(x, y, str, {
@@ -16,7 +16,7 @@ export function text(scene, x, y, str, opts = {}) {
     strokeThickness: opts.stroke ? (opts.strokeThickness || 3) : 0,
     shadow: opts.shadow === false ? undefined : { offsetX: 0, offsetY: 2, color: '#000', blur: 3, fill: true, stroke: false },
   });
-  t.setResolution(TEXT_RES);
+  t.setResolution(textResolution());
   if (opts.origin !== undefined) t.setOrigin(...[].concat(opts.origin));
   return t;
 }

@@ -13,7 +13,7 @@ export class DialogueBox {
     this.root = scene.add.container(0, 0).setDepth(depth).setVisible(false);
     const bx = 40, by = GAME_H - 196, bw = GAME_W - 80, bh = 176;
     this.box = { bx, by, bw, bh };
-    this.bg = panel(scene, bx, by, bw, bh, { alpha: 0.95 });
+    this.bg = panel(scene, bx, by, bw, bh, { alpha: 1 });
     this.portraitFrame = scene.add.graphics();
     this.portrait = scene.add.image(bx + 24 + 72, by + 16 + 72, '__DEFAULT').setDisplaySize(144, 144);
     this.markOverlay = scene.add.image(this.portrait.x, this.portrait.y, '__DEFAULT').setDisplaySize(144, 144).setBlendMode(Phaser.BlendModes.ADD).setVisible(false);

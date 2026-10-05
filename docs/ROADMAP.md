@@ -1,6 +1,6 @@
 # Roadmap
 
-Campaign canon: [`Veil_of_Dawn_Claude_Prompt.md`](Veil_of_Dawn_Claude_Prompt.md) and
+Campaign canon: [`Vampire_Hunters_Claude_Prompt.md`](Vampire_Hunters_Claude_Prompt.md) and
 [`LEIA_PRIMEIRO_CLAUDE.md`](LEIA_PRIMEIRO_CLAUDE.md) (latest art and guest rules). This file tracks
 what exists and what is next. Nothing below counts as done until it has been exercised in play.
 
@@ -10,10 +10,12 @@ what exists and what is next. Nothing below counts as done until it has been exe
   `app://` protocol with a strict CSP; saves/settings as JSON files in the user data folder;
   fullscreen (F11 / Alt+Enter / Settings); Windows NSIS installer + portable exe.
 - Engine: Phaser 3.90 + Vite, ES modules, no backend. 1280×720 canvas, FIT scaling.
-- Exploration: painted backdrop + authored walkable polygons, blockers, occluders and light map
-  (multiply light buffer, additive halos, fog, particles). Characters y-sorted with contact shadows.
-- Battles: CTB initiative (speed-based, visible forecast), Resolve/Stagger, vampiric regeneration
-  with blood anchors, Veil Strain, telegraphed enemy actions, guest allies, mid-battle scripts.
+- Display: selectable render resolution (Match screen … 3840×2160); layouts at 1280×720 scaled.
+- Exploration: top-down tile maps (pack tiles + generated props), grid collision, y-sorted props and
+  characters, light map (lanterns are light sources), fog and particles.
+- Battles: CTB initiative, Resolve/Stagger, regeneration with blood anchors, Veil Strain, Clash duels
+  on telegraphed attacks (Evade/Parry/Counter), technique cut-ins, stage with painted backdrop +
+  perspective floor whose mood changes during the fight, separate stage/HUD cameras.
 - Content as data: chapters (`src/data/chapters`), maps, encounters, enemies, skills, items.
 - Saves: 3 manual slots + 2 rotating autosaves, versioned (JSON files on desktop).
 
@@ -40,7 +42,6 @@ what exists and what is next. Nothing below counts as done until it has been exe
 - Aurora Bonds shared meter (team attack / rescue).
 - Quest log with chapter objectives and lore entries; profiles unlock without spoilers.
 - Key remapping UI.
-- Swap to the new character sprite set when it arrives.
 - Auto-update for the desktop build (same pattern as the other desktop apps), if wanted.
 - Remaining Chapter 1 encounters (6 standard in the plan).
 

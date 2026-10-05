@@ -9,47 +9,47 @@ const lanternsFixed = () => ['lantern_plaza', 'lantern_southeast', 'lantern_brid
 export const CH1 = {
   // ---------------------------------------------------------------- interactables
   interactables: [
-    { id: 'lantern_plaza', x: 742, y: 712, r: 34, when: s => s.phase === 'dusk' && !flag('lantern_plaza'), script: 'fixLantern', arg: 'lantern_plaza' },
-    { id: 'lantern_southeast', x: 1186, y: 808, r: 34, when: s => s.phase === 'dusk' && !flag('lantern_southeast'), script: 'fixLantern', arg: 'lantern_southeast' },
-    { id: 'lantern_bridge', x: 420, y: 500, r: 34, when: s => s.phase === 'dusk' && !flag('lantern_bridge'), script: 'fixLantern', arg: 'lantern_bridge' },
-    { id: 'clinic', x: 1300, y: 632, r: 36, when: s => s.phase === 'dusk', script: 'hanaDusk', marker: () => !flag('met_hana') },
-    { id: 'clinic_dark', x: 1300, y: 632, r: 36, when: s => s.phase === 'dark', script: 'clinicDark', marker: () => false },
-    { id: 'kids_dusk', x: 902, y: 528, r: 34, when: s => s.phase === 'dusk', script: 'kidsDusk', marker: () => !flag('kids_dusk') },
-    { id: 'stall', x: 980, y: 516, r: 30, when: s => s.phase === 'dusk', script: 'stallDusk', marker: () => false },
-    { id: 'shrine_blade', x: 868, y: 520, r: 34, when: s => s.phase === 'dark' && !flag('has_blade'), script: 'takeBlade' },
-    { id: 'kids_dark', x: 700, y: 968, r: 38, when: s => s.phase === 'dark' && flag('has_blade') && !flag('kids_safe'), script: 'kidsDark' },
-    { id: 'river', x: 300, y: 512, r: 36, when: s => s.phase !== 'dawn', script: 'riverLook', marker: () => false },
-    { id: 'shelter_door', x: 1376, y: 140, r: 34, when: s => s.phase === 'dark' && flag('has_blade'), script: 'shelterDoor' },
-    { id: 'clinic_dawn', x: 1300, y: 632, r: 36, when: s => s.phase === 'dawn' && !flag('dawn_talk'), script: 'dawnClinic' },
+    { id: 'lantern_plaza', x: 403, y: 830, r: 34, when: s => s.phase === 'dusk' && !flag('lantern_plaza'), script: 'fixLantern', arg: 'lantern_plaza' },
+    { id: 'lantern_southeast', x: 1005, y: 830, r: 34, when: s => s.phase === 'dusk' && !flag('lantern_southeast'), script: 'fixLantern', arg: 'lantern_southeast' },
+    { id: 'lantern_bridge', x: 1120, y: 570, r: 34, when: s => s.phase === 'dusk' && !flag('lantern_bridge'), script: 'fixLantern', arg: 'lantern_bridge' },
+    { id: 'clinic', x: 240, y: 362, r: 36, when: s => s.phase === 'dusk', script: 'hanaDusk', marker: () => !flag('met_hana') },
+    { id: 'clinic_dark', x: 240, y: 362, r: 36, when: s => s.phase === 'dark', script: 'clinicDark', marker: () => false },
+    { id: 'kids_dusk', x: 420, y: 548, r: 34, when: s => s.phase === 'dusk', script: 'kidsDusk', marker: () => !flag('kids_dusk') },
+    { id: 'stall', x: 864, y: 540, r: 32, when: s => s.phase === 'dusk', script: 'stallDusk', marker: () => false },
+    { id: 'shrine_blade', x: 864, y: 540, r: 34, when: s => s.phase === 'dark' && !flag('has_blade'), script: 'takeBlade' },
+    { id: 'kids_dark', x: 622, y: 1072, r: 36, when: s => s.phase === 'dark' && flag('has_blade') && !flag('kids_safe'), script: 'kidsDark' },
+    { id: 'river', x: 1138, y: 740, r: 30, when: s => s.phase !== 'dawn', script: 'riverLook', marker: () => false },
+    { id: 'shelter_door', x: 1504, y: 266, r: 34, when: s => s.phase === 'dark' && flag('has_blade'), script: 'shelterDoor' },
+    { id: 'clinic_dawn', x: 240, y: 362, r: 36, when: s => s.phase === 'dawn' && !flag('dawn_talk'), script: 'dawnClinic' },
   ],
 
   // Walk-in triggers (circle). once: run only one time (stored as flag `trig_<id>`).
   triggers: [
-    { id: 'garran_reveal', x: 880, y: 660, r: 120, once: true, when: s => s.phase === 'dark' && flag('hana_shelter'), script: 'garranReveal' },
-    { id: 'stairs_block', x: 1180, y: 520, r: 40, when: s => s.phase === 'dusk' && !flag('stairs_hint'), once: true, script: 'stairsHint' },
+    { id: 'garran_reveal', x: 704, y: 720, r: 110, once: true, when: s => s.phase === 'dark' && flag('hana_shelter'), script: 'garranReveal' },
+    { id: 'stairs_block', x: 1070, y: 620, r: 40, when: s => s.phase === 'dusk' && !flag('stairs_hint'), once: true, script: 'stairsHint' },
   ],
 
   // Enemies visible in exploration; contact starts the encounter.
   enemies: [
-    { id: 'hound_bridge', sprite: 'blood_hound_overworld', x: 330, y: 490, patrol: [[250, 490], [460, 500]], encounter: 'ch1_hound_bridge', when: s => s.phase === 'dark' && flag('has_blade') },
-    { id: 'pair_lower_a', sprite: 'ash_thrall_overworld', x: 740, y: 940, patrol: [[680, 950], [880, 930]], encounter: 'ch1_pair_lower', link: 'pair_lower', when: s => s.phase === 'dark' && flag('has_blade') },
-    { id: 'pair_lower_b', sprite: 'blood_hound_overworld', x: 850, y: 960, patrol: [[820, 980], [920, 950]], encounter: 'ch1_pair_lower', link: 'pair_lower', when: s => s.phase === 'dark' && flag('has_blade') },
-    { id: 'stalker_stairs', sprite: 'gloom_stalker_overworld', x: 1250, y: 380, patrol: [[1230, 420], [1300, 300]], encounter: 'ch1_stalker_stairs', guard: true, when: s => s.phase === 'dark' && flag('has_blade') },
+    { id: 'hound_bridge', sprite: 'blood_hound_overworld', x: 1240, y: 612, patrol: [[1170, 612], [1310, 612]], encounter: 'ch1_hound_bridge', when: s => s.phase === 'dark' && flag('has_blade') },
+    { id: 'pair_lower_a', sprite: 'ash_thrall_overworld', x: 760, y: 1000, patrol: [[680, 1000], [900, 990]], encounter: 'ch1_pair_lower', link: 'pair_lower', when: s => s.phase === 'dark' && flag('has_blade') },
+    { id: 'pair_lower_b', sprite: 'blood_hound_overworld', x: 900, y: 1110, patrol: [[820, 1120], [990, 1080]], encounter: 'ch1_pair_lower', link: 'pair_lower', when: s => s.phase === 'dark' && flag('has_blade') },
+    { id: 'stalker_stairs', sprite: 'gloom_stalker_overworld', x: 1490, y: 560, patrol: [[1450, 590], [1530, 530]], encounter: 'ch1_stalker_stairs', guard: true, when: s => s.phase === 'dark' && flag('has_blade') },
   ],
 
   // Static/scripted NPCs. Only characters with walking art are placed as sprites;
   // villagers without art are voiced through doors and stalls (see ASSETS.md).
   npcs: [
-    { id: 'mira', sprite: 'mira_thorn_overworld', x: 830, y: 600, facing: 'left', when: s => s.phase === 'dusk', script: 'miraDusk' },
-    { id: 'elara', sprite: 'elara_ashen_overworld', x: 1260, y: 668, facing: 'right', when: s => s.phase === 'dawn', script: 'elaraDawn' },
-    { id: 'lyra', sprite: 'lyra_fen_overworld', x: 1010, y: 640, facing: 'left', when: s => s.phase === 'dawn', script: 'lyraDawn' },
+    { id: 'mira', sprite: 'mira_thorn_overworld', x: 760, y: 690, facing: 'left', when: s => s.phase === 'dusk', script: 'miraDusk' },
+    { id: 'elara', sprite: 'elara_ashen_overworld', x: 300, y: 404, facing: 'right', when: s => s.phase === 'dawn', script: 'elaraDawn' },
+    { id: 'lyra', sprite: 'lyra_fen_overworld', x: 520, y: 410, facing: 'left', when: s => s.phase === 'dawn', script: 'lyraDawn' },
   ],
 
   // Movement limits by story state (returns a message if the move should be blocked).
   gates: [
-    { id: 'stairs_dusk', poly: [[1150, 400], [1420, 120], [1420, 470], [1200, 520]], when: s => s.phase === 'dusk', message: 'The shelter terrace is locked until the festival bells. Better finish the lanterns.' },
-    { id: 'stairs_dark', poly: [[1150, 400], [1420, 120], [1420, 470], [1200, 520]], when: s => s.phase === 'dark' && !flag('has_blade'), message: 'Thralls are on the stairs. You need something to fight with.' },
-    { id: 'lower_dawn', poly: [[560, 860], [1010, 840], [1000, 1024], [560, 1024]], when: s => s.phase === 'dawn', message: 'Survivors are gathering by the clinic. Elara is waiting there.' },
+    { id: 'bridge_dusk', poly: [[1150, 560], [1344, 560], [1344, 690], [1150, 690]], when: s => s.phase === 'dusk', message: 'The bridge to Shrine Hill is roped off until the festival bells. Better finish the lanterns.' },
+    { id: 'bridge_dark', poly: [[1150, 560], [1344, 560], [1344, 690], [1150, 690]], when: s => s.phase === 'dark' && !flag('has_blade'), message: 'Thralls are on the stairs. You need something to fight with.' },
+    { id: 'lower_dawn', poly: [[448, 900], [1088, 900], [1088, 1240], [448, 1240]], when: s => s.phase === 'dawn', message: 'Survivors are gathering by the clinic. Elara is waiting there.' },
   ],
 
   objectives: {
@@ -71,7 +71,7 @@ export const CH1 = {
       await S.wait(300);
       await S.say('mira', 'Kai. Kai. You\'ve been glaring at that bracket for a full minute.');
       await S.say('kai', 'I\'m judging it. It knows what it did.');
-      await S.say('mira', 'It\'s a lantern hook, not a vampire. Three fittings are still loose — the plaza post, the one below the clinic stairs, and the bridge lamp. Hana wants them lit before the bells.');
+      await S.say('mira', 'It\'s a lantern hook, not a vampire. Three fittings are still loose — the two lamp posts at the bottom of the square and the one by the bridge. Hana wants them lit before the bells.');
       S.face('player', 'left');
       await S.emote('player', '…');
       await S.say('kai', '…Right. Three fittings.');
@@ -88,7 +88,7 @@ export const CH1 = {
       const n = lanternsFixed();
       if (n >= 3 && flag('met_hana')) return CH1.scripts.festivalStart(S);
       const lines = [
-        ['mira', n === 0 ? 'Plaza post, clinic stairs, bridge lamp. I\'d write it on your hand, but you\'d smudge it.' : `${n} down. The square already looks warmer.`],
+        ['mira', n === 0 ? 'Two square posts and the bridge lamp. I\'d write it on your hand, but you\'d smudge it.' : `${n} down. The square already looks warmer.`],
       ];
       if (!flag('met_hana')) lines.push(['mira', 'And don\'t skip Hana. She\'ll know.']);
       for (const [s, t] of lines) await S.say(s, t);
@@ -101,7 +101,7 @@ export const CH1 = {
       const n = lanternsFixed();
       const flavor = {
         lantern_plaza: 'You tighten the bracket on the plaza post. The flame steadies and paints the banner gold.',
-        lantern_southeast: 'The fitting below the clinic stairs had a cracked pin. You wedge a new one in place and the lamp brightens.',
+        lantern_southeast: 'The south-east post had a cracked pin. You wedge a new one in place and the lamp brightens.',
         lantern_bridge: 'The bridge lamp hisses as you clear the soot. Down below, the river catches the light like scattered coins.',
       }[id];
       await S.say('narrator', `${flavor} (${n}/3)`);
@@ -152,15 +152,15 @@ export const CH1 = {
 
     async stairsHint(S) {
       setFlag('stairs_hint');
-      await S.say('kai', '(The shelter terrace. Nobody goes up there unless the bells ring twice.)');
+      await S.say('kai', '(Shrine Hill. Nobody crosses the bridge after dark unless the bells ring twice.)');
     },
 
     async festivalStart(S) {
       await S.say('mira', 'That\'s all three? Look at it, Kai — the whole square\'s glowing.');
       await S.fade('out', 700);
       S.phase('festival');
-      S.place('player', 860, 640, 'up');
-      S.spawnNpc('mira', 'mira_thorn_overworld', 920, 636, 'left');
+      S.place('player', 704, 700, 'right');
+      S.spawnNpc('mira', 'mira_thorn_overworld', 760, 700, 'left');
       S.music('festival');
       await S.fade('in', 1200);
       await S.say('narrator', 'The festival bells ring out over Emberfall. Lantern light spills across the square, and for one evening nobody looks at the dark beyond the river.');
@@ -181,12 +181,12 @@ export const CH1 = {
       await S.say('kai', 'There\'s no wind.');
       S.sfx('scream');
       S.shake(400, 0.004);
-      await S.say('villager', 'Thralls! Thralls on the bridge! Get to the shelter — up the stairs!', { name: 'Distant voice' });
+      await S.say('villager', 'Thralls! Thralls in the square! Get to the shrine — across the bridge!', { name: 'Distant voice' });
       S.phase('dark');
       S.music('danger');
       await S.say('mira', 'Nell and Corin went down to the lower square — I\'ll get them to the shelter.');
       await S.say('kai', 'Mira, wait—');
-      await S.move('mira', 760, 780, 150);
+      await S.move('mira', 720, 1010, 150);
       S.despawn('mira');
       await S.say('kai', 'I can\'t fight with lantern pins. The festival stall — the ceremonial blade.');
       setFlag('festival_done');
@@ -201,14 +201,14 @@ export const CH1 = {
       setFlag('has_blade');
       state.weapon = 'Ceremonial Blade';
       S.sfx('confirm');
-      S.spawnEnemyActor('tutorial_thrall', 'ash_thrall_overworld', 960, 600, 'left');
-      await S.move('tutorial_thrall', 920, 590, 70);
+      S.spawnEnemyActor('tutorial_thrall', 'ash_thrall_overworld', 1000, 640, 'left');
+      await S.move('tutorial_thrall', 900, 600, 70);
       await S.say('kai', 'Stay back!');
       const result = await S.battle('ch1_tutorial');
       S.despawn('tutorial_thrall');
       if (result !== 'win') return;
       await S.say('kai', '(It was wearing Old Teodor\'s scarf.) …Focus. Mira went to the lower square.');
-      S.objective('Find Nell and Corin in the lower square and get everyone up to the shelter.');
+      S.objective('Find Nell and Corin in the lower square and get everyone to the shrine hall.');
       S.refresh();
       S.autosave('Ceremonial Blade');
     },
@@ -222,9 +222,9 @@ export const CH1 = {
       await S.say('corin', 'You\'re not anyone. You\'re Kai.');
       await S.say('kai', 'Where is she?');
       await S.say('nell', 'She went back for old Berrin — he can\'t climb stairs. She said she\'d be right behind us.');
-      await S.say('kai', 'Then let\'s make sure she has somewhere to come back to. Up to the shelter. Stay close to the wall.');
+      await S.say('kai', 'Then let\'s make sure she has somewhere to come back to. Across the bridge to the shrine. Stay close to me.');
       setFlag('kids_safe');
-      S.objective('Escort Nell and Corin up the stairs to the shelter terrace.');
+      S.objective('Get Nell and Corin across the bridge to the shrine hall on Shrine Hill.');
       S.refresh();
     },
 
@@ -258,22 +258,23 @@ export const CH1 = {
     async garranReveal(S) {
       S.music(null);
       S.lockInput(true);
-      S.spawnNpc('garran', 'garran_overworld', 960, 700, 'left');
-      S.spawnNpc('mira', 'mira_thorn_overworld', 1030, 690, 'left');
-      S.spawnEnemyActor('captor', 'ash_thrall_overworld', 1066, 700, 'left');
-      await S.camPan(980, 680, 900);
+      S.spawnNpc('garran', 'garran_overworld', 640, 680, 'right');
+      S.spawnNpc('mira', 'mira_thorn_overworld', 580, 668, 'right');
+      S.spawnEnemyActor('captor', 'ash_thrall_overworld', 548, 690, 'right');
+      await S.camPan(660, 660, 900);
       S.music('danger');
       await S.say('garran', 'Shh. Listen. Every lantern in this village sighed when it went out. Such a lovely sound.');
       await S.say('mira', 'Kai, don\'t— run!');
-      S.face('garran', 'left');
+      S.face('garran', 'right');
       await S.say('garran', 'And there it is. I could smell it from the river.');
       await S.say('garran', 'The vessel. Walking out into the dark on its own two feet.');
       await S.say('kai', 'I\'m not anyone\'s vessel. Let her go.');
       await S.say('garran', 'You don\'t even know what you\'re carrying. How delicious.');
       await S.say('garran', 'Take the healer\'s girl north. Her memories will tell us everything about him. Gently — the king wants her whole.');
       await S.say('mira', 'Let go of me! Kai— Kai!');
-      S.move('captor', 1500, 760, 180);
-      await S.move('mira', 1480, 740, 180);
+      S.face('captor', 'left');
+      S.move('captor', 40, 690, 180);
+      await S.move('mira', 60, 668, 180);
       S.despawn('mira');
       S.despawn('captor');
       await S.say('kai', 'MIRA!');
@@ -288,7 +289,7 @@ export const CH1 = {
     async dawnTransition(S) {
       await S.fade('out', 1200);
       S.phase('dawn');
-      S.place('player', 1240, 700, 'right');
+      S.place('player', 260, 420, 'right');
       S.music('dawn');
       const sky = S.skyCinematic();
       await S.wait(2600);

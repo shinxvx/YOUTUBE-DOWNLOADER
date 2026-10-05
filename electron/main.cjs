@@ -1,4 +1,4 @@
-// Veil of Dawn — desktop shell (Electron).
+// Vampire Hunters — desktop shell (Electron).
 // Serves the built game from dist/ through a private app:// protocol, stores saves and
 // settings as JSON files in the user's data folder, and owns window/fullscreen state.
 const { app, BrowserWindow, protocol, net, ipcMain, Menu, shell } = require('electron');
@@ -6,7 +6,7 @@ const path = require('path');
 const fs = require('fs');
 const { pathToFileURL } = require('url');
 
-app.setName('Veil of Dawn');
+app.setName('Vampire Hunters');
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { standard: true, secure: true, supportFetchAPI: true, corsEnabled: true } },
 ]);
@@ -56,20 +56,39 @@ ipcMain.on('window:setFullscreen', (e, on) => {
   writeWindowState({ ...readWindowState(), fullscreen: !!on });
   e.returnValue = true;
 });
+ipcMain.on('window:setSize', (e, w, h) => {
+  if (!win || win.isFullScreen()) return;
+  const { workAreaSize } = require('electron').screen.getPrimaryDisplay();
+  win.setContentSize(Math.min(w, workAreaSize.width), Math.min(h, workAreaSize.height));
+  win.center();
+});
 ipcMain.on('app:quit', () => app.quit());
 ipcMain.on('app:info', e => { e.returnValue = { version: app.getVersion(), platform: process.platform, savesDir: dataDir() }; });
 ipcMain.on('app:openSaves', () => { fs.mkdirSync(dataDir(), { recursive: true }); shell.openPath(dataDir()); });
 
+// Window size from the game's saved resolution setting (saves/vampirehunters.settings.json).
+function savedResolution() {
+  try {
+    const s = JSON.parse(fs.readFileSync(fileFor('vampirehunters.settings'), 'utf8'));
+    if (s.resolution && s.resolution !== 'auto') return s.resolution.split('x').map(Number);
+  } catch { /* first run */ }
+  return null;
+}
+
 function createWindow() {
   const st = readWindowState();
+  const { workAreaSize } = require('electron').screen.getPrimaryDisplay();
+  const res = savedResolution();
+  const ww = res ? Math.min(res[0], workAreaSize.width) : Math.min(1600, Math.round(workAreaSize.width * 0.85));
+  const wh = res ? Math.min(res[1], workAreaSize.height) : Math.round(ww * 9 / 16);
   win = new BrowserWindow({
-    width: 1280,
-    height: 720,
+    width: ww,
+    height: wh,
     minWidth: 960,
     minHeight: 540,
     useContentSize: true,
     backgroundColor: '#07070d',
-    title: 'Veil of Dawn',
+    title: 'Vampire Hunters',
     icon: path.join(__dirname, '..', 'build', 'icon.png'),
     fullscreen: !!st.fullscreen,
     show: false,
@@ -97,7 +116,7 @@ function createWindow() {
   // The game never navigates away or opens windows.
   win.webContents.on('will-navigate', e => e.preventDefault());
   win.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
-  const q = process.env.VOD_QUERY || '';
+  const q = process.env.VH_QUERY || '';
   win.loadURL(`app://game/index.html${q}`);
 }
 

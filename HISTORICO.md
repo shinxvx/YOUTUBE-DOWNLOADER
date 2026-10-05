@@ -1,4 +1,19 @@
-# Histórico — Veil of Dawn
+# Histórico — Vampire Hunters (antes Veil of Dawn)
+
+## 2026-10-05 — Vampire Hunters: arte nova e jogo refeito (mapas de cima, resolução, batalha nova)
+
+- Pacote novo "Vampire Hunters Anime Pack" (3 ZIPs, 800 arquivos conferidos por SHA-256) substituiu toda
+  a arte. Nome do jogo, logo, app, instalador e saves passaram a Vampire Hunters.
+- Animações: `tools/prepare_sprites.py` realinha a caminhada (pés numa linha, cabeça centrada, mesma
+  escala) e recorta de novo as folhas de combate juntando pedaços que vazavam para o quadro vizinho.
+- Resolução: opção "Resolution" (Match screen, 720p … 4K) com renderização real; janela do app segue.
+- Mapas: agora vistos de cima, feitos por nós com os tiles do pacote + objetos gerados (casas, torii,
+  lanternas, árvores, ponte, barracas, torre do festival). Emberfall refeita; conteúdo do Cap. 1 reposicionado.
+- Batalha estilo Inazuma Eleven: cut-ins das técnicas, duelo Clash (Evade/Parry/Counter) nos ataques
+  anunciados, palco com fundo pintado + chão em perspectiva que muda durante a luta (lanternas,
+  dentro do selo, chamas brancas, lua vermelha), câmera do palco separada da interface.
+- HDRI: segue na cinemática do nascer do sol e nas cores da luz; a névoa presa ao cenário antigo saiu.
+- Teste completo no app Electron passou sem erros (inclui 2 Clashes e o chefe).
 
 ## 2026-10-05 — Instalador publicado no servidor de atualizações
 

@@ -1,6 +1,6 @@
 /** Supply the parsed manifest and your public-directory URL prefix. No dependencies here. */
 const url = (base, path) => `${base.replace(/\/$/, '')}/${path}`;
-export function preloadAssetPack(scene, manifest, base = 'assets/Veil_of_Dawn_Claude_Expanded') {
+export function preloadAssetPack(scene, manifest, base = 'assets/Vampire_Hunters_Anime_Pack') {
   for (const asset of manifest.sprites) {
     if (asset.loadMethod === 'atlas') {
       scene.load.atlas(asset.id, url(base, asset.path), url(base, asset.atlasPath));

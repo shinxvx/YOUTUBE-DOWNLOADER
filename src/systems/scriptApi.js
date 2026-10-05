@@ -167,7 +167,7 @@ export function makeScriptApi(w) {
         const cam = w.cameras.main;
         audio.sfx('encounter');
         w.player.idle();
-        cam.zoomTo(WORLD_ZOOM * 1.35, 420, 'Cubic.easeIn');
+        cam.zoomTo(WORLD_ZOOM * w.uiScale * 1.35, 420, 'Cubic.easeIn');
         cam.fadeOut(420, 10, 4, 20);
         cam.once('camerafadeoutcomplete', () => {
           w.scene.sleep('UI');
@@ -177,7 +177,7 @@ export function makeScriptApi(w) {
             onEnd: (result) => {
               w.scene.wake('UI');
               w.scene.wake();
-              cam.setZoom(WORLD_ZOOM);
+              cam.setZoom(WORLD_ZOOM * w.uiScale);
               cam.fadeIn(500);
               audio.play(w.musicForPhase());
               resolve(result);

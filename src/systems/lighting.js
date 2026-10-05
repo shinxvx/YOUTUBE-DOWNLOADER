@@ -9,7 +9,7 @@ import { settings } from './settings.js';
 export const LIGHT_PRESETS = {
   dusk: { ambient: 0xb9a6ae, lamps: 0.85, personal: 0, fog: 0.08, wash: 0, particles: 'fireflies' },
   festival: { ambient: 0x9a92c0, lamps: 1.0, personal: 0, fog: 0.05, wash: 0, particles: 'embers' },
-  dark: { ambient: 0x222a52, lamps: 0, personal: 0.6, fog: 0.15, wash: 0, particles: 'ash' },
+  dark: { ambient: 0x323e70, lamps: 0, personal: 0.7, fog: 0.15, wash: 0, particles: 'ash' },
   dawn: { ambient: 0xffe9d2, lamps: 0, personal: 0, fog: 0.06, wash: 0.7, haze: 1, sun: 0.75, particles: 'motes' },
 };
 
@@ -186,7 +186,7 @@ export class Lighting {
     }
     // Low dawn sun from the east, behind the mountains.
     if (this.target.sun) {
-      rt.stamp('light', null, 1250 * R, 60 * R, { scale: R * 9, tint: this.target.sunColor || 0xffc890, alpha: this.target.sun * Math.min(1, this.wash.alpha / Math.max(0.01, this.target.wash)), blendMode: Phaser.BlendModes.ADD });
+      rt.stamp('light', null, this.map.width * 0.8 * R, 0, { scale: R * 9, tint: this.target.sunColor || 0xffc890, alpha: this.target.sun * Math.min(1, this.wash.alpha / Math.max(0.01, this.target.wash)), blendMode: Phaser.BlendModes.ADD });
     }
     // Faint cold moonlight wash over the whole upper map when it is dark.
     if (this.presetName === 'dark' && this.map.moon) {

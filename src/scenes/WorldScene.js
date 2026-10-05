@@ -4,10 +4,12 @@ import { MAPS } from '../data/maps/index.js';
 import { CHAPTERS } from '../data/chapters/index.js';
 import { state, flag, setFlag, grantXp } from '../systems/state.js';
 import { settings } from '../systems/settings.js';
+import { fitCamera } from '../systems/display.js';
 import { Controls } from '../systems/input.js';
 import { Actor, dirFromVector } from '../systems/actor.js';
 import { Lighting } from '../systems/lighting.js';
 import { makeScriptApi } from '../systems/scriptApi.js';
+import { buildMap } from '../systems/mapBuilder.js';
 import { audio } from '../audio/audio.js';
 
 const WALK_SPEED = 84;   // logical px / second
@@ -27,25 +29,25 @@ export class WorldScene extends Phaser.Scene {
     this.actors = new Map();
     this.dataActors = new Set();
     this.enemyState = new Map();
-    this.walkPolys = this.map.walkable.map(p => new Phaser.Geom.Polygon(p.flat()));
     this.gatePolys = new Map();
     this.locPolys = (this.map.locations || []).map(l => ({ name: l.name, poly: new Phaser.Geom.Polygon(l.poly.flat()) }));
     this.gateCooldown = 0;
     this.clickTarget = null;
 
-    this.add.image(0, 0, this.map.backdrop).setOrigin(0).setDepth(0);
-    this.buildOccluders();
+    // Top-down tile map with props, collision and lights.
+    this.built = buildMap(this, this.map);
+    this.mapPx = { width: this.built.width, height: this.built.height, lights: this.built.lights, moon: this.map.moon };
 
     const p = state.pos;
     this.player = new Actor(this, 'player', 'kai_overworld', p.x, p.y, p.facing);
     this.player.updateMark();
 
-    this.lighting = new Lighting(this, this.map);
+    this.lighting = new Lighting(this, this.mapPx);
     this.lighting.setPreset(state.phase, true);
 
     const cam = this.cameras.main;
-    cam.setBounds(0, 0, this.map.width, this.map.height);
-    cam.setZoom(WORLD_ZOOM);
+    cam.setBounds(0, 0, this.mapPx.width, this.mapPx.height);
+    fitCamera(this, 'world');
     cam.setRoundPixels(true);
     cam.startFollow(this.player.sprite, true, 0.15, 0.15, 0, 24);
     cam.centerOn(p.x, p.y - 24);
@@ -68,12 +70,12 @@ export class WorldScene extends Phaser.Scene {
     if (params.has('debug')) this.drawDebug();
     if (params.has('test')) {
       // Test hooks for the automated playthrough (tools/playthrough.mjs).
-      window.__VOD.debug = {
+      window.__VH.debug = {
         teleport: (x, y, facing) => { this.player.setPos(x, y); if (facing) this.player.face(facing); this.cameras.main.centerOn(x, y - 24); },
       };
     }
     this.events.on('wake', () => { this.controls.rebuild(); this.player.updateMark(); });
-    window.__VOD = Object.assign(window.__VOD || {}, { world: this });
+    window.__VH = Object.assign(window.__VH || {}, { world: this });
   }
 
   onUiReady() {
@@ -90,25 +92,9 @@ export class WorldScene extends Phaser.Scene {
     }
   }
 
-  buildOccluders() {
-    for (const o of this.map.occluders || []) {
-      const img = this.add.image(0, 0, this.map.backdrop).setOrigin(0).setCrop(o.x, o.y, o.w, o.h).setDepth(o.baseline);
-      if (o.poly) {
-        const g = this.make.graphics({ add: false });
-        g.fillStyle(0xffffff).fillPoints(o.poly.map(([x, y]) => new Phaser.Math.Vector2(x, y)), true);
-        img.setMask(g.createGeometryMask());
-      }
-    }
-  }
-
   drawDebug() {
     const g = this.add.graphics().setDepth(20000);
-    g.lineStyle(1, 0x00ff00, 0.9);
-    for (const p of this.walkPolys) g.strokePoints(p.points, true);
-    g.lineStyle(1, 0xff0000, 0.9);
-    for (const [x, y, r] of this.map.blockers || []) g.strokeCircle(x, y, r);
-    g.lineStyle(1, 0x00ffff, 0.9);
-    for (const o of this.map.occluders || []) g.strokeRect(o.x, o.y, o.w, o.h);
+    this.built.debugDraw(g);
     this.debugG = g;
   }
 
@@ -170,10 +156,8 @@ export class WorldScene extends Phaser.Scene {
 
   // ------------------------------------------------------------ movement
   canStand(x, y) {
-    let inside = false;
-    for (const p of this.walkPolys) if (p.contains(x, y)) { inside = true; break; }
-    if (!inside) return false;
-    for (const [bx, by, r] of this.map.blockers || []) if ((x - bx) ** 2 + (y - by) ** 2 < r * r) return false;
+    // Feet are a small box, so the character never clips into walls or tree trunks.
+    for (const [ox, oy] of [[-7, 0], [7, 0], [-7, -5], [7, -5]]) if (this.built.collides(x + ox, y + oy)) return false;
     for (const a of this.actors.values()) {
       if (a.def?.kind === 'npc' || (!a.def && a.blocking)) {
         if ((x - a.x) ** 2 + ((y - a.y) * 1.6) ** 2 < 14 * 14) return false;
@@ -322,9 +306,7 @@ export class WorldScene extends Phaser.Scene {
       const dx = tx - a.x, dy = ty - a.y, d = Math.hypot(dx, dy) || 1;
       const step = speed * Math.min(delta, 50) / 1000;
       const nx = a.x + (dx / d) * step, ny = a.y + (dy / d) * step;
-      let ok = false;
-      for (const p of this.walkPolys) if (p.contains(nx, ny)) { ok = true; break; }
-      if (ok) { a.x = nx; a.y = ny; }
+      if (!this.built.collides(nx, ny)) { a.x = nx; a.y = ny; }
       a.walk(dirFromVector(dx, dy, a.facing));
     }
   }

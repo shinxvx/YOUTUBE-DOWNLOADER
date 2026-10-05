@@ -13,11 +13,11 @@ if (process.env.WEB) {
   page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
   await page.goto(process.env.URL || 'http://localhost:4173/?test');
 } else {
-  const userData = fs.mkdtempSync(path.join(os.tmpdir(), 'vod-test-'));
+  const userData = fs.mkdtempSync(path.join(os.tmpdir(), 'vh-test-'));
   browser = await _electron.launch({
     executablePath: path.resolve('node_modules/electron/dist/electron'),
     args: ['.', '--no-sandbox', `--user-data-dir=${userData}`],
-    env: { ...process.env, VOD_QUERY: '?test' },
+    env: { ...process.env, VH_QUERY: '?test' },
   });
   page = await browser.firstWindow();
   console.log('electron userData:', userData);
@@ -25,7 +25,7 @@ if (process.env.WEB) {
 const errors = [];
 page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
 page.on('pageerror', e => errors.push(`[pageerror] ${e.message} ${e.stack?.split('\n')[1] || ''}`));
-await page.waitForFunction(() => window.__VOD?.game?.scene.getScene('Title')?.sys.isActive(), null, { timeout: 60000 });
+await page.waitForFunction(() => window.__VH?.game?.scene.getScene('Title')?.sys.isActive(), null, { timeout: 60000 });
 await page.waitForTimeout(1500);
 await page.mouse.click(4, 4);
 await page.evaluate(() => window.dispatchEvent(new Event('focus')));
@@ -35,10 +35,18 @@ const ev = (fn, arg) => page.evaluate(fn, arg);
 const log = (...a) => console.log(new Date().toISOString().slice(11, 19), ...a);
 
 const POLICY = () => {
-  const V = window.__VOD;
+  const V = window.__VH;
   const b = V.battle;
   const bActive = b && b.sys.isActive();
   if (bActive) {
+    if (b.clashOpen) {
+      const table = { thrust: 'evade', pounce: 'parry', sweep: 'counter' };
+      let want = table[b.clashOpen.type];
+      let i = b.clashOpen.opts.findIndex(o => o.id === want && !o.disabled);
+      if (i < 0) i = b.clashOpen.opts.findIndex(o => o.id === 'parry');
+      b.clashOpen.pick(i);
+      return { acted: `clash_${b.clashOpen ? want : want}` };
+    }
     if (b.modalWait || b.dialogue.active || b.resultMenu) return { key: 'z', where: 'battle-ui' };
     if (b.choiceResolve && b.currentUnit) {
       const u = b.currentUnit;
@@ -85,11 +93,11 @@ async function pump(cond, label, timeout = 240000) {
 }
 
 
-const cond = (extra) => `(() => { const w = window.__VOD.world; const ok = !!(w && w.sys.isActive() && w.started && !w.busy && !window.__VOD.game.scene.getScene('UI').dialogue.active); return ok && !!(${extra}); })()`;
+const cond = (extra) => `(() => { const w = window.__VH.world; const ok = !!(w && w.sys.isActive() && w.started && !w.busy && !window.__VH.game.scene.getScene('UI').dialogue.active); return ok && !!(${extra}); })()`;
 
 async function interact(x, y, facing, label) {
-  const reach = await ev(([x, y]) => window.__VOD.world.canStand(x, y), [x, y]);
-  await ev(([x, y, f]) => window.__VOD.debug.teleport(x, y, f), [x, y, facing]);
+  const reach = await ev(([x, y]) => window.__VH.world.canStand(x, y), [x, y]);
+  await ev(([x, y, f]) => window.__VH.debug.teleport(x, y, f), [x, y, facing]);
   await page.waitForTimeout(300);
   await page.keyboard.press('z');
   await page.waitForTimeout(300);
@@ -99,86 +107,86 @@ async function interact(x, y, facing, label) {
 // ---------------------------------------------------------------- run
 log('Title → New Game');
 await page.keyboard.press('z');
-await pump(() => window.__VOD.world?.started, 'world-start', 30000);
+await pump(() => window.__VH.world?.started, 'world-start', 30000);
 await shot('intro');
-await pump(cond("window.__VOD_flags().intro_done"), 'intro');
+await pump(cond("window.__VH_flags().intro_done"), 'intro');
 await shot('dusk_free');
 
 // Movement + collision check
-const p0 = await ev(() => ({ x: window.__VOD.world.player.x, y: window.__VOD.world.player.y }));
+const p0 = await ev(() => ({ x: window.__VH.world.player.x, y: window.__VH.world.player.y }));
 await page.keyboard.down('ArrowRight'); await page.waitForTimeout(800); await page.keyboard.up('ArrowRight');
 await page.keyboard.down('ArrowDown'); await page.waitForTimeout(600); await page.keyboard.up('ArrowDown');
-const p1 = await ev(() => ({ x: window.__VOD.world.player.x, y: window.__VOD.world.player.y }));
+const p1 = await ev(() => ({ x: window.__VH.world.player.x, y: window.__VH.world.player.y }));
 log('walk', JSON.stringify(p0), '→', JSON.stringify(p1));
 
-for (const [id, x, y, f] of [['lantern_plaza', 760, 726], ['lantern_southeast', 1180, 795, 'down'], ['lantern_bridge', 420, 512]]) {
+for (const [id, x, y, f] of [['lantern_plaza', 403, 846], ['lantern_southeast', 1005, 846], ['lantern_bridge', 1120, 590]]) {
   await interact(x, y, f || 'up', id);
-  await pump(cond(`window.__VOD_flags()['${id}']`), id, 60000);
+  await pump(cond(`window.__VH_flags()['${id}']`), id, 60000);
 }
 await shot('lanterns_done');
-await interact(1300, 646, 'up', 'hana');
-await pump(cond("window.__VOD_flags().met_hana"), 'hana', 60000);
-await interact(902, 542, 'up', 'kids');
-await pump(cond("window.__VOD_flags().kids_dusk"), 'kids', 60000);
+await interact(240, 380, 'up', 'hana');
+await pump(cond("window.__VH_flags().met_hana"), 'hana', 60000);
+await interact(420, 566, 'up', 'kids');
+await pump(cond("window.__VH_flags().kids_dusk"), 'kids', 60000);
 
 // Save into slot 1 through the pause menu.
 await page.keyboard.press('Escape');
 await page.waitForTimeout(600);
 await shot('menu');
-for (let i = 0; i < 3; i++) { await page.keyboard.press('ArrowDown'); await page.waitForTimeout(250); log('menu idx', await ev(() => window.__VOD.game.scene.getScene('Menu').list.index)); }
+for (let i = 0; i < 3; i++) { await page.keyboard.press('ArrowDown'); await page.waitForTimeout(250); log('menu idx', await ev(() => window.__VH.game.scene.getScene('Menu').list.index)); }
 await page.keyboard.press('z'); await page.waitForTimeout(500);
 await page.keyboard.press('z'); await page.waitForTimeout(600);
 await shot('saved');
-const saved = await ev(() => !!(window.vodNative ? window.vodNative.storage.getItem('veilofdawn.save.slot1') : localStorage.getItem('veilofdawn.save.slot1')));
+const saved = await ev(() => !!(window.vhNative ? window.vhNative.storage.getItem('vampirehunters.save.slot1') : localStorage.getItem('vampirehunters.save.slot1')));
 log('manual save slot1 present:', saved);
 await page.keyboard.press('x'); await page.waitForTimeout(300);
 await page.keyboard.press('x'); await page.waitForTimeout(500);
 
-await interact(830, 628, 'up', 'mira');
-await pump(cond("window.__VOD.stateNow().phase === 'dark' && window.__VOD_flags().festival_done"), 'festival', 120000);
+await interact(760, 716, 'up', 'mira');
+await pump(cond("window.__VH.stateNow().phase === 'dark' && window.__VH_flags().festival_done"), 'festival', 120000);
 await shot('lanterns_dead');
-await interact(868, 536, 'up', 'blade');
-await pump(cond("window.__VOD_flags().has_blade && window.__VOD.stateNow().objective.startsWith('Find Nell')"), 'tutorial-battle', 180000);
+await interact(864, 558, 'up', 'blade');
+await pump(cond("window.__VH_flags().has_blade && window.__VH.stateNow().objective.startsWith('Find Nell')"), 'tutorial-battle', 180000);
 await shot('after_tutorial');
 
 // Optional bridge hound
-await ev(() => window.__VOD.debug.teleport(360, 492, 'left'));
-await pump(cond("window.__VOD.stateNow().defeated.hound_bridge"), 'hound', 180000);
+await ev(() => window.__VH.debug.teleport(1150, 612, 'right'));
+await pump(cond("window.__VH.stateNow().defeated.hound_bridge"), 'hound', 180000);
 // Lower square pair
-await ev(() => window.__VOD.debug.teleport(780, 940, 'down'));
-await pump(cond("window.__VOD_flags().pair_lower_cleared"), 'pair', 180000);
-await interact(700, 980, 'up', 'kids-dark');
-await pump(cond("window.__VOD_flags().kids_safe"), 'kids-dark', 60000);
+await ev(() => window.__VH.debug.teleport(760, 1040, 'up'));
+await pump(cond("window.__VH_flags().pair_lower_cleared"), 'pair', 180000);
+await interact(640, 1072, 'left', 'kids-dark');
+await pump(cond("window.__VH_flags().kids_safe"), 'kids-dark', 60000);
 // Stalker on the stairs
-await ev(() => window.__VOD.debug.teleport(1240, 420, 'up'));
-await pump(cond("window.__VOD_flags().stairs_cleared"), 'stalker', 180000);
-await interact(1376, 156, 'up', 'shelter');
-await pump(cond("window.__VOD_flags().hana_shelter"), 'shelter', 60000);
+await ev(() => window.__VH.debug.teleport(1480, 610, 'up'));
+await pump(cond("window.__VH_flags().stairs_cleared"), 'stalker', 180000);
+await interact(1504, 284, 'up', 'shelter');
+await pump(cond("window.__VH_flags().hana_shelter"), 'shelter', 60000);
 await shot('shelter_done');
 // Garran
-await ev(() => window.__VOD.debug.teleport(880, 640, 'down'));
-await pump(() => window.__VOD.battle?.sys.isActive(), 'garran-start', 120000);
+await ev(() => window.__VH.debug.teleport(760, 760, 'left'));
+await pump(() => window.__VH.battle?.sys.isActive(), 'garran-start', 120000);
 await page.waitForTimeout(1500);
 await shot('garran_battle');
-await pump(() => window.__VOD.stateNow().sealStage >= 1 && window.__VOD.battle?.units.some(u => u.key === 'elara_ashen'), 'awakening', 240000);
+await pump(() => window.__VH.stateNow().sealStage >= 1 && window.__VH.battle?.units.some(u => u.key === 'elara_ashen'), 'awakening', 240000);
 await shot('awakened');
-await pump(cond("window.__VOD.stateNow().phase === 'dawn'"), 'garran-defeat', 300000);
+await pump(cond("window.__VH.stateNow().phase === 'dawn'"), 'garran-defeat', 300000);
 await shot('dawn');
-await interact(1290, 668, 'left', 'elara');
-await pump(cond("window.__VOD_flags().dawn_talk"), 'dawn-talk', 120000);
-await interact(1290, 668, 'left', 'elara-depart');
-await pump(() => window.__VOD.game.scene.getScene('Title')?.sys.isActive(), 'end', 60000);
+await interact(330, 404, 'left', 'elara');
+await pump(cond("window.__VH_flags().dawn_talk"), 'dawn-talk', 120000);
+await interact(330, 404, 'left', 'elara-depart');
+await pump(() => window.__VH.game.scene.getScene('Title')?.sys.isActive(), 'end', 60000);
 await page.waitForTimeout(1200);
 await shot('back_to_title');
 
-const final = await ev(() => ({ desktop: !!window.vodNative, saves: (window.vodNative ? window.vodNative.storage.keys() : Object.keys(localStorage)).filter(k => k.startsWith('veilofdawn.save')), stage: window.__VOD.stateNow().sealStage, level: window.__VOD.stateNow().party[0].level, playtime: Math.round(window.__VOD.stateNow().playtime) }));
+const final = await ev(() => ({ desktop: !!window.vhNative, saves: (window.vhNative ? window.vhNative.storage.keys() : Object.keys(localStorage)).filter(k => k.startsWith('vampirehunters.save')), stage: window.__VH.stateNow().sealStage, level: window.__VH.stateNow().party[0].level, playtime: Math.round(window.__VH.stateNow().playtime) }));
 log('final', JSON.stringify(final));
 // Continue → should land on the pre-departure autosave at dawn.
 await page.keyboard.press('ArrowDown'); await page.waitForTimeout(200);
 await page.keyboard.press('ArrowUp'); await page.waitForTimeout(200);
 await page.keyboard.press('z');
-await pump(() => window.__VOD.world?.started && window.__VOD.world.sys.isActive(), 'continue', 30000);
-const cont = await ev(() => ({ phase: window.__VOD.stateNow().phase, objective: window.__VOD.stateNow().objective }));
+await pump(() => window.__VH.world?.started && window.__VH.world.sys.isActive(), 'continue', 30000);
+const cont = await ev(() => ({ phase: window.__VH.stateNow().phase, objective: window.__VH.stateNow().objective }));
 log('continue →', JSON.stringify(cont));
 await page.waitForTimeout(1500);
 await shot('continued');

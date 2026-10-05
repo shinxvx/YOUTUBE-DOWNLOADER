@@ -1,12 +1,12 @@
-# Veil of Dawn
+# Vampire Hunters (ヴァンパイアハンターズ)
 
-An original single-player JRPG for desktop (Windows, via Electron): turn-based battles, exploration over painted
-pixel-art environments, cinematic portrait dialogue, and a five-chapter campaign about Kai, a
-nineteen-year-old with a sealed mark, and the vampire king Veyr.
+An original single-player JRPG for desktop (Windows, via Electron) in a Japanese dark-anime style:
+top-down exploration over tile maps, turn-based battles with Clash duels and technique cut-ins,
+cinematic portrait dialogue, and a five-chapter campaign about Kai, a nineteen-year-old with a
+sealed mark, and the vampire king Veyr.
 
-This repository currently holds **Milestone 1 — the vertical slice** (Chapter 1 opening in
-Emberfall, from the festival eve to the dawn departure). The full campaign brief and roadmap are in
-[`docs/`](docs/).
+This repository currently holds **Milestone 1 — the vertical slice** (Chapter 1 in Emberfall, from
+the festival eve to the dawn departure). The campaign brief and roadmap are in [`docs/`](docs/).
 
 ## Run it
 
@@ -19,9 +19,14 @@ npm run dist:win       # Windows installer + portable .exe in release/ (on Linux
 npm run dev            # engine-only dev server for fast iteration (not shipped)
 ```
 
-Fully offline: no backend, accounts or network calls. On desktop, saves and settings are JSON
-files in the user data folder (`%APPDATA%\Veil of Dawn\saves` on Windows; Settings → Open saves
-folder). F11 or Alt+Enter toggles fullscreen.
+Fully offline. Saves and settings are JSON files in the user data folder
+(`%APPDATA%\Vampire Hunters\saves` on Windows; Settings → Open saves folder).
+
+### Display
+
+Settings → **Resolution**: Match screen, 1280×720, 1600×900, 1920×1080, 2560×1440, 3840×2160. The
+canvas really renders at that size (sharp text and art); layouts are authored at 1280×720 and scaled.
+Settings → **Display** or F11 / Alt+Enter toggles fullscreen.
 
 ### Controls
 
@@ -31,53 +36,42 @@ folder). F11 or Alt+Enter toggles fullscreen.
 | Confirm / talk / interact | Z, Enter, Space, or click |
 | Cancel / back | X, Backspace |
 | Menu (party, items, journal, save, load, settings) | Esc, M |
+| Clash answers | ← → and Z, or 1 / 2 / 3, or click |
 
 ### Developer switches
 
-Pass them as a query string: `VOD_QUERY='?debug' npm run desktop` (or append to the dev URL).
+`VH_QUERY='?debug' npm run desktop` (or append to the dev URL):
+`?gallery` (asset gallery), `?debug` (collision overlay), `?test&battle=<encounterId>` (jump into a fight).
 
-- `?gallery` – asset gallery (all walking atlases and battle sheets with their animations).
-- `?debug` – draws walkable areas, blockers and occluders over the exploration map.
-- `?test&battle=<encounterId>` – jump straight into an encounter (e.g. `ch1_garran`).
+## How it plays
+
+- **Exploration:** top-down maps built from the pack's tiles plus generated Japanese props (houses,
+  torii, stone and paper lanterns, pines, maples, red bridge, festival stalls). Lanterns are real light
+  sources; the village changes from dusk to festival, to the night the lanterns die, to dawn.
+- **Battles:** speed-based turn order shown at the top; Resolve/Stagger; vampire regeneration fed by
+  blood anchors; Kai's Veil Strain. Techniques play a cut-in. When an enemy commits to a telegraphed
+  attack the target gets a **Clash**: Evade straight lunges, Parry pounces, Counter wide sweeps — a
+  perfect read cancels the hit and cracks the attacker's Resolve. The stage changes with the fight:
+  lanterns, the violet inside of the seal, white flame, a blood-red moon.
 
 ## Project layout
 
 ```
-src/
-  main.js               Phaser game config and scene list
-  config.js             resolution, zoom, palette, fonts
-  scenes/               Boot, Title, World (exploration), UI (HUD + dialogue), Menu, Battle, Gallery
-  systems/              state, saves, settings, input, lighting, actors, cutscene script API
-  data/                 characters, skills, items, enemies, encounters, battle scripts
-  data/maps/            authored map data (walkable areas, occluders, lights, spawns)
-  data/chapters/        chapter content: interactables, triggers, NPCs, enemies, scene scripts
-  gfx/                  manifest-driven asset loading, generated effect textures
-  audio/                procedural WebAudio score and sound effects
-  ui/                   panels, menus, dialogue box
-public/assets/vod/      art package (manifest.json is authoritative)
-docs/                   campaign brief, roadmap, encounter/roster design data
-tools/                  headless playthrough and screenshot drivers
+electron/               desktop shell (window, app:// protocol, file saves)
+src/scenes/             Boot, Title, World (exploration), UI (HUD + dialogue), Menu, Battle, Gallery
+src/battle/             battle stage (backdrop + perspective floor + moods), cut-ins, Clash
+src/systems/            state, saves, settings, display/resolution, input, lighting, map builder, actors
+src/data/               characters, skills, items, enemies, encounters, battle scripts
+src/data/maps/          top-down map definitions (ground kinds + props, in tiles)
+src/data/chapters/      chapter content: interactables, triggers, NPCs, enemies, scene scripts
+src/gfx/                asset loading, generated props and effect textures
+public/assets/vh/       art pack (manifest.json authoritative) + gen/ runtime sheets
+tools/                  sprite preparation, HDRI bake, headless playthrough
 ```
 
-All narrative, quests, dialogue, enemies, skills, items and maps are data with stable identifiers.
+## Tools
 
-## Testing
-
-`tools/playthrough.mjs` plays the whole vertical slice inside the Electron app through the real game
-(keyboard input for exploration and dialogue; battle commands are issued through the same
-`commit()` path the menus use). It checks every main beat, a manual save, autosaves and Continue.
-
-```bash
-npm run build
-xvfb-run -a node tools/playthrough.mjs     # without a display; plain `node` on a desktop
-```
-
-## HDRI sky
-
-`assets-src/hdri/citrus_orchard_puresky_2k.exr` is baked by `python3 tools/bake_hdri.py`
-(needs `pip install openexr numpy pillow`) into `public/assets/sky/`: the sunrise panorama, the
-dawn haze over Emberfall's mountains, and the image-based dawn light colours.
-
-## Art
-
-See [ASSETS.md](ASSETS.md) for every asset, its source and which items are temporary.
+- `python3 tools/prepare_sprites.py` — builds `public/assets/vh/gen/` from the pack: re-aligned walking
+  sheets (no jitter) and re-cut battle sheets (no clipped poses). Needs pillow, numpy, scipy.
+- `python3 tools/bake_hdri.py` — bakes the HDRI into the sunrise panorama and dawn light colours.
+- `xvfb-run -a node tools/playthrough.mjs` — plays the whole slice inside the Electron app.

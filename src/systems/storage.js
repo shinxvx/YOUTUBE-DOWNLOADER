@@ -1,6 +1,6 @@
 // Persistent key/value storage. In the desktop app saves are JSON files in the user's
 // data folder (via the Electron preload); during development it falls back to localStorage.
-const native = typeof window !== 'undefined' ? window.vodNative : null;
+const native = typeof window !== 'undefined' ? window.vhNative : null;
 
 export const isDesktop = !!native;
 

@@ -1,6 +1,7 @@
 import { GAME_W, GAME_H } from '../config.js';
 import { settings, saveSettings, TEXT_SPEEDS, resetKeys, setFullscreen, isFullscreen } from '../systems/settings.js';
 import { isDesktop, desktop } from '../systems/storage.js';
+import { RESOLUTIONS, RESOLUTION_LABEL, applyResolution } from '../systems/display.js';
 import { listSaves, describeSave, saveTo, loadFrom, MANUAL_SLOTS } from '../systems/save.js';
 import { panel, text, MenuList } from './widgets.js';
 
@@ -21,6 +22,7 @@ export class SettingsPanel {
     this.x = x; this.y = y; this.w = w;
     this.rows = [
       ...(isDesktop ? [{ key: '_fullscreen', label: 'Display', values: [false, true], get: () => isFullscreen(), set: v => setFullscreen(v), fmt: v => (v ? 'Fullscreen' : 'Windowed'), desc: 'Windowed or fullscreen. F11 or Alt+Enter also toggles it.' }] : []),
+      { key: 'resolution', label: 'Resolution', values: RESOLUTIONS, fmt: RESOLUTION_LABEL, set: v => { settings.resolution = v; saveSettings(); applyResolution(this.scene.game); }, desc: 'Render resolution. "Match screen" follows your window or monitor. Higher values are sharper; the layout stays the same.' },
       { key: 'textSpeed', label: 'Text speed', values: Object.keys(TEXT_SPEEDS), desc: 'How quickly dialogue appears. Instant shows the whole line at once.' },
       { key: 'battleSpeed', label: 'Battle speed', values: [1, 1.5, 2, 3], fmt: v => `${v}×`, desc: 'Speeds up battle animations and effects.' },
       { key: 'musicVolume', label: 'Music volume', values: [0, 0.2, 0.4, 0.6, 0.8, 1], fmt: v => `${Math.round(v * 100)}%`, desc: 'Procedural score volume.' },

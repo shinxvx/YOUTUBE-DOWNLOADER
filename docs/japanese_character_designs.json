@@ -1,0 +1,252 @@
+{
+  "cast": [
+    {
+      "id": "kai",
+      "side": "hero",
+      "name": "Kai",
+      "desc": "19-year-old male, pale skin, tousled white hair, violet eyes, violet seal tattoo on LEFT shoulder across upper chest, fitted charcoal stand-collar uniform open slightly at chest, ivory haori with restrained violet eclipse stitching, black hakama, violet obi",
+      "weapon": "one slender katana Dawnbreak, violet-white edge, circular black tsuba, black saya"
+    },
+    {
+      "id": "lyra_fen",
+      "side": "hero",
+      "name": "Lyra Fen",
+      "desc": "20-year-old athletic woman, tawny skin, curly dark-brown high ponytail, amber eyes, navy-gray haori with restrained copper lightning seam motifs over fitted black uniform, practical black hakama, copper obi",
+      "weapon": "one slim katana Skylark, copper circular tsuba, blue-gray saya"
+    },
+    {
+      "id": "eren_sol",
+      "side": "hero",
+      "name": "Eren Sol",
+      "desc": "22-year-old slim man, medium-brown skin, dark green-black hair, thin round glasses, teal haori with subtle concentric echo patterns over black uniform, bell charms at obi, black hakama",
+      "weapon": "one ritual katana Keepsake, teal tsuka wrapping, round bell-like tsuba"
+    },
+    {
+      "id": "mira_thorn",
+      "side": "hero",
+      "name": "Mira Thorn",
+      "desc": "adult young woman, warm light skin, auburn-brown ponytail, brown eyes, short crimson haori with understated blossom stitches, cream-black hunter uniform, practical dark hakama, compact herbal medical pouches at obi",
+      "weapon": "one wakizashi, crimson tsuka wrapping, simple round steel tsuba; herbal medical kit for skill"
+    },
+    {
+      "id": "rowan_voss",
+      "side": "hero",
+      "name": "Rowan Voss",
+      "desc": "43-year-old tall commanding man, light skin, silver-streaked black hair, tired authoritative gaze, charcoal haori with muted-gold hem and eclipse crest, black stand-collar uniform, cracked Dawnstone ring",
+      "weapon": "one long nodachi Last Horizon with subtle dark blade channel and simple gold round tsuba"
+    },
+    {
+      "id": "elara_ashen",
+      "side": "hero",
+      "name": "Elara Ashen",
+      "desc": "34-year-old strong woman, light skin, dark hair in short braid, old burn scars on forearm, ash-white haori with restrained pale ember seam motif, practical black uniform and hakama, warm blunt face",
+      "weapon": "one katana Cinder Vow, pale steel edge and ivory tsuka; contained white flame skill"
+    },
+    {
+      "id": "daigo_ren",
+      "side": "hero",
+      "name": "Daigo Ren",
+      "desc": "29-year-old broad muscular man, warm-brown skin, cropped dark hair, scarred hands, sleeveless storm-blue haori over open black uniform, black hakama, rope obi, generous fierce grin",
+      "weapon": "two short Japanese wakizashi Northwake and Southwake with blue wraps, each ONE continuous gently curved blade"
+    },
+    {
+      "id": "nyra_vale",
+      "side": "hero",
+      "name": "Nyra Vale",
+      "desc": "27-year-old reserved woman, deep-brown skin, silver-gray hair tied back, muted ice-blue haori with fine frost-wave trim, black uniform and hakama, precise composed expression",
+      "weapon": "one slender katana Winterglass with pale cyan mineral spine and round silver tsuba"
+    },
+    {
+      "id": "soren_mire",
+      "side": "hero",
+      "name": "Soren Mire",
+      "desc": "31-year-old slim man, copper-brown hair, dark-teal haori and ritual Japanese robes, small bell charms, dark blindfold tied at forehead rather than covering eyes except in skill poses, gentle serious face",
+      "weapon": "one ritual katana Requiem with round resonant bell tsuba"
+    },
+    {
+      "id": "cassian_reed",
+      "side": "hero",
+      "name": "Cassian Reed",
+      "desc": "adult sturdy male, warm-brown skin, short curled black hair, hazel eyes, moss-green haori with brass accents, black hunter uniform and hakama, compact bronze-rimmed round wooden buckler, personable determined face",
+      "weapon": "one short wakizashi, bronze round tsuba; small round buckler for protection skill"
+    },
+    {
+      "id": "ayla_moon",
+      "side": "hero",
+      "name": "Ayla Moon",
+      "desc": "adult young female physician, light warm skin, navy hair in high bun with ivory pin, amber eyes, off-white and lilac short haori over practical Japanese shrine layers, herb satchel, calm resolute face",
+      "weapon": "bell-tipped straight staff for healing; one sheathed wakizashi at obi, no bent staff"
+    },
+    {
+      "id": "nox_varen",
+      "side": "hero",
+      "name": "Nox Varen",
+      "desc": "adult male vampire scout, cool pale skin, silver-gray hair in low tie, amber-gold eyes, small fang, wine-brown scarf, charcoal short haori with blue-gray lining, black fitted uniform, weary expression",
+      "weapon": "two short Japanese tanto with continuous straight blades, wine tsuka wraps"
+    },
+    {
+      "id": "ash_thrall",
+      "side": "enemy",
+      "name": "Ash Thrall",
+      "desc": "compact humanoid hungry vampire thrall, ashen pale skin, messy black hair, red eyes, torn charcoal Japanese work kimono, frayed sash, clawed hands, soot stains",
+      "weapon": "natural claws; no sword"
+    },
+    {
+      "id": "blood_hound",
+      "side": "enemy",
+      "name": "Blood Hound",
+      "desc": "four-legged crimson-black nocturnal hound yokai, skeletal red ridges, sharp fangs, red luminous eyes, long tail, compact canine body",
+      "weapon": "natural teeth and claws; no sword, no human anatomy"
+    },
+    {
+      "id": "memory_moth",
+      "side": "enemy",
+      "name": "Memory Moth",
+      "desc": "floating spectral moth yokai with delicate lavender-teal wings, eye-like luminous wing patterns and fine antennae, elegant small insect body",
+      "weapon": "contained memory dust; no sword or humanoid parts"
+    },
+    {
+      "id": "court_sentry",
+      "side": "enemy",
+      "name": "Court Sentry",
+      "desc": "adult armored vampire sentry in black-red lacquered Japanese lamellar cuirass and short crimson haori, angular simple kabuto mask, red eye slit, black hakama",
+      "weapon": "one dark katana with red edge, black tsuka, round tsuba; no European plate armor"
+    },
+    {
+      "id": "garran",
+      "side": "enemy",
+      "name": "Garran",
+      "desc": "gaunt male vampire, pallid gray skin, deeply lined face, long dark-gray hair, tattered black ochre monk kimono and haori, stooped stalking posture, two small Japanese paper lanterns on belt, ominous golden eyes",
+      "weapon": "clawed hand and one straight lantern staff; no European robe or curved staff"
+    },
+    {
+      "id": "maelis",
+      "side": "enemy",
+      "name": "Maelis",
+      "desc": "adult female vampire physician, pale skin, long deep-purple hair with modest traditional pin, crimson eyes, flowing dark-violet Japanese physician kimono with muted rose lining, silver obi, cold maternal expression",
+      "weapon": "one slender Japanese tanto, a pale memory orb skill, no western rapier"
+    },
+    {
+      "id": "sevrin",
+      "side": "enemy",
+      "name": "Sevrin",
+      "desc": "adult slim male vampire theater master, pale skin, rich red hair, sly face, burgundy theatrical haori with understated noh-mask crest, black-white kimono layers, crimson obi, one tiny noh mask at belt",
+      "weapon": "one katana with red saya and round ivory tsuba; contained crimson theatrical thread effects"
+    },
+    {
+      "id": "orin_ren",
+      "side": "enemy",
+      "name": "Orin Ren",
+      "desc": "adult male vampire duelist, warm-brown skin, cropped dark hair resembling Daigo, amber-red eyes, torn midnight-blue sleeveless haori, dark uniform and hakama, scarred hands, bitter proud expression",
+      "weapon": "two Japanese wakizashi with restrained blue electric blade edges"
+    },
+    {
+      "id": "valka",
+      "side": "enemy",
+      "name": "Valka",
+      "desc": "adult female vampire false bride, porcelain pale skin, very long white hair, crimson eyes, weathered white bridal kimono and thin uchikake with blood-red lining, dark obi, small silver bridal comb, eerie expression",
+      "weapon": "one short wakizashi with ivory tsuka and contained red puppet threads; no European wedding dress"
+    },
+    {
+      "id": "veyr",
+      "side": "enemy",
+      "name": "Veyr",
+      "desc": "tall regal adult male vampire king, pale skin with subtle bloodstone cracks, very long midnight-black hair, crimson eyes, black-gold formal Japanese layered kimono and imposing long haori, restrained eclipse crest, a narrow ceremonial kanmuri-like eclipsed-sun headpiece, composed cruel face",
+      "weapon": "one long katana Night Testament with blood-red edge and round gold tsuba; no medieval crown or European royal coat"
+    },
+    {
+      "id": "crypt_lancer",
+      "side": "enemy",
+      "name": "Crypt Lancer",
+      "desc": "skeletal animated thrall, ivory skull and cyan empty eyes, corroded gray-green Japanese lamellar ashigaru armor, torn olive sash, simple jingasa helmet",
+      "weapon": "one Japanese yari with perfectly straight wooden shaft and straight narrow spear tip, no bent pole"
+    },
+    {
+      "id": "scarlet_acolyte",
+      "side": "enemy",
+      "name": "Scarlet Acolyte",
+      "desc": "adult female vampire blood priest, pale skin, long white hair, ruby eyes, scarlet Japanese ritual hood, layered burgundy shrine kimono, muted gold obi, sinister serene face",
+      "weapon": "one straight Japanese tanto; restrained red palm sigil"
+    },
+    {
+      "id": "gloom_stalker",
+      "side": "enemy",
+      "name": "Gloom Stalker",
+      "desc": "lean four-legged dark-blue panther yokai, turquoise eyes, pale bone shoulder ridges, long segmented tail with SINGLE small curved tip, sleek stalking feline body",
+      "weapon": "natural claws; no swords or humanoid parts"
+    },
+    {
+      "id": "grave_weaver",
+      "side": "enemy",
+      "name": "Grave Weaver",
+      "desc": "six-legged purple-black spider yokai, silver bone-like leg plates, three lavender eyes, pale hourglass marking on round abdomen, all six consistent arthropod legs",
+      "weapon": "fangs and contained violet web strands; no humanoid anatomy or swords"
+    },
+    {
+      "id": "raven_knight",
+      "side": "enemy",
+      "name": "Raven Knight",
+      "desc": "tall faceless elite vampire executioner, black-indigo Japanese lamellar armor under raven-feather short mantle, simple sharp kabuto helmet with narrow ice-blue slit, broad silhouette and black hakama",
+      "weapon": "one long nodachi with restrained blue edge and round silver tsuba; no European greatsword or plate armor"
+    },
+    {
+      "id": "selene_dusk",
+      "side": "enemy",
+      "name": "Selene Dusk",
+      "desc": "adult elegant female vampire duelist, pale skin, very long midnight-blue hair, one crimson eye behind small silver half noh-mask, black-violet fitted kimono and flowing short haori with silver moon-seal stitch",
+      "weapon": "one slim katana with silver round tsuba; no rapier"
+    }
+  ],
+  "npcs": [
+    {
+      "id": "hana_thorn",
+      "name": "Hana Thorn",
+      "desc": "mature kind female healer, auburn hair with a few gray strands tied low, warm brown eyes, modest cream and muted rose Japanese town kimono, herbal satchel; Mira's aunt and Kai's guardian"
+    },
+    {
+      "id": "ivo_renn",
+      "name": "Ivo Renn",
+      "desc": "middle-aged broad male swordsmith, tan skin, dark hair with gray temples, thick eyebrows, short stubble, indigo Japanese work kimono and soot-stained apron, one metalworking glove, warm tired grin"
+    },
+    {
+      "id": "tessa_wren",
+      "name": "Tessa Wren",
+      "desc": "teenage female civilian courier, dark short hair, lively brown eyes, ochre Japanese work jacket and dark practical trousers, small delivery satchel; age-appropriate modest clothes"
+    },
+    {
+      "id": "tomas_fen",
+      "name": "Tomas Fen",
+      "desc": "adult male civilian courier, tawny skin, dark curly hair resembling Lyra, amber eyes, blue-gray Japanese work coat, practical scarf and medical parcel strap"
+    },
+    {
+      "id": "odel_marr",
+      "name": "Odel Marr",
+      "desc": "middle-aged stern male Warden captain, medium-brown skin, cropped dark hair, black stand-collar uniform, dark slate haori with subtle brass shoulder braid, restrained serious expression"
+    },
+    {
+      "id": "abbess_seren",
+      "name": "Abbess Seren",
+      "desc": "elderly wise female monastery keeper, light warm skin, gray hair tightly pinned, kind lined face, muted lilac and off-white Japanese Buddhist-style robes, wooden prayer beads"
+    },
+    {
+      "id": "nell",
+      "name": "Nell",
+      "desc": "young civilian girl, brown skin, dark curly bob, soft brown eyes, simple pale-orange Japanese village kimono and small cloth tie; gentle hopeful expression"
+    },
+    {
+      "id": "corin",
+      "name": "Corin",
+      "desc": "young civilian boy, brown skin, short dark curly hair, brown eyes, simple muted-teal village work kimono, small patched collar; hopeful cautious expression"
+    },
+    {
+      "id": "vesper_rook",
+      "name": "Vesper Rook",
+      "desc": "adult female vampire apothecary, very pale skin, black-purple hair with small violet comb, gold-red eyes, dusty plum Japanese kimono and herb pouch at obi, restrained small fang, morally ambiguous calm expression"
+    },
+    {
+      "id": "aurel_veyr",
+      "name": "Aurel Veyr",
+      "desc": "historical HUMAN male astronomer, warm light skin without blood cracks, long dark hair tied simply, gentle brown eyes, indigo Japanese scholar kimono with fine gold star stitches, no crown and no vampire fangs"
+    }
+  ]
+}

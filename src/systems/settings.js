@@ -4,6 +4,7 @@ import { storage, desktop } from './storage.js';
 export const TEXT_SPEEDS = { slow: 22, normal: 45, fast: 90, instant: 0 };
 
 const DEFAULTS = {
+  resolution: 'auto',
   textSpeed: 'normal',
   battleSpeed: 1,
   musicVolume: 0.6,

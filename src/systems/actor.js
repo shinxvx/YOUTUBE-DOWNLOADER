@@ -13,7 +13,7 @@ export class Actor {
     this.key = spriteKey;
     this.asset = spriteAsset(spriteKey);
     this.shadow = scene.add.image(x, y, 'shadow').setScale(0.8, 0.8).setAlpha(0.9);
-    this.sprite = scene.add.sprite(x, y, spriteKey, '0').setOrigin(0.5, 1);
+    this.sprite = scene.add.sprite(x, y, spriteKey, 0).setOrigin(this.asset.gen.originX, this.asset.gen.originY);
     this.sprite.setScale(this.asset.runtimeScale);
     this.facing = facing;
     this.moving = false;

@@ -2,8 +2,6 @@
 
 Outputs (public/assets/sky/):
   dawn_panorama.png        tone-mapped sky band (upper hemisphere to just below the horizon)
-  emberfall_dawn_haze.png  RGBA layer: HDRI sky colour projected over Emberfall's distant
-                           mountains and mist, alpha = soft "far haze" mask from the backdrop
   dawn_light.json          image-based lighting values (sun/sky/horizon colours, sun position)
 
 Requires: pip install openexr numpy pillow
@@ -14,11 +12,10 @@ import os
 
 import numpy as np
 import OpenEXR
-from PIL import Image, ImageFilter
+from PIL import Image
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, 'assets-src/hdri/citrus_orchard_puresky_2k.exr')
-BACKDROP = os.path.join(ROOT, 'public/assets/vod/environments/emberfall_night_backdrop.png')
 OUT = os.path.join(ROOT, 'public/assets/sky')
 os.makedirs(OUT, exist_ok=True)
 
@@ -50,28 +47,6 @@ ldr = to_srgb(aces(hdr * exposure * grade))
 top, bottom = int(H * 0.12), int(horizon + H * 0.05)
 pano = (ldr[top:bottom] * 255).astype(np.uint8)
 Image.fromarray(pano).save(os.path.join(OUT, 'dawn_panorama.png'), optimize=True)
-
-# 2) Haze layer over Emberfall's distant scenery.
-bd = np.asarray(Image.open(BACKDROP).convert('RGB')).astype(np.float32)
-BH = 330
-band = bd[:BH]
-b_lum = band @ np.array([0.2126, 0.7152, 0.0722], np.float32)
-blueness = band[..., 2] - band[..., 0]
-haze = np.clip((blueness - 18) / 30, 0, 1) * np.clip((b_lum - 25) / 30, 0, 1)
-yy = np.arange(BH)[:, None] / BH
-haze *= np.clip((0.75 - yy) / 0.25, 0, 1)
-xx = np.arange(band.shape[1])[None, :]
-haze *= np.clip((1180 - xx) / 80, 0, 1)  # the shelter terrace on the right is foreground
-haze = np.asarray(Image.fromarray((haze * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(2))) / 255.0
-
-# Project the HDRI so the sun sits behind the big mountains (x≈720) and the horizon
-# meets the distant lake (y≈215).
-scale = (horizon - int(H * 0.20)) / 215.0
-cols = (sun_x + (np.arange(band.shape[1]) - 720) * scale).astype(int) % W
-rws = np.clip((int(H * 0.20) + np.arange(BH) * scale).astype(int), 0, H - 1)
-proj = ldr[rws][:, cols]
-rgba = np.dstack([proj * 255, haze * 255 * 0.85]).astype(np.uint8)
-Image.fromarray(rgba, 'RGBA').save(os.path.join(OUT, 'emberfall_dawn_haze.png'), optimize=True)
 
 # 3) Image-based lighting values.
 def avg(region):

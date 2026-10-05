@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { GAME_W, GAME_H } from '../config.js';
 import { manifest } from '../gfx/assets.js';
+import { fitCamera } from '../systems/display.js';
 import { Controls } from '../systems/input.js';
 import { text } from '../ui/widgets.js';
 
@@ -10,6 +11,7 @@ export class GalleryScene extends Phaser.Scene {
   constructor() { super('Gallery'); }
 
   create() {
+    fitCamera(this);
     this.controls = new Controls(this);
     this.add.rectangle(0, 0, GAME_W, GAME_H, 0x0d1020).setOrigin(0);
     this.page = 0;
@@ -40,7 +42,7 @@ export class GalleryScene extends Phaser.Scene {
       const g = this.add.graphics();
       g.fillStyle(0x161a30, 1).fillRect(cx - cw / 2 + 4, cy - (big ? 220 : 100), cw - 8, ch - 12);
       this.objs.push(g);
-      const sp = this.add.sprite(cx, cy, a.id, a.loadMethod === 'atlas' ? '0' : 0).setOrigin(0.5, 1);
+      const sp = this.add.sprite(cx, cy, a.id, 0).setOrigin(a.gen.originX, a.gen.originY);
       if (a.loadMethod === 'atlas') sp.setScale(a.runtimeScale * 2);
       else sp.setScale(big ? 1.5 : 1);
       this.sprites.push({ sp, a });

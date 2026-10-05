@@ -1,21 +1,22 @@
 // Enemy definitions. `sheet` keys match manifest battle sprites.
 // `ai(self, ctx)` returns the next action. ctx exposes: heroes (alive), rng(), turn (self action count).
-// Telegraphed attacks announce themselves one turn ahead so the player can Guard.
+// Telegraphed attacks announce themselves one turn ahead; when they land the target gets a Clash.
 
 const pick = (ctx, list) => list[Math.floor(ctx.rng() * list.length)];
 
 export const ENEMY_ACTIONS = {
   claw: { name: 'Ashen Claw', power: 1.0 },
-  lunge: { name: 'Hollow Lunge', power: 1.9, break: 0 },
+  lunge: { name: 'Hollow Lunge', power: 1.9, clash: 'thrust' },
   bite: { name: 'Blood Bite', power: 0.85, status: { bleed: 3 } },
   howl: { name: 'Hunting Howl', power: 0, buff: 'speed' },
   hunt: { name: 'Marks Its Prey', power: 0, mark: true },
-  pounce: { name: 'Shadow Pounce', power: 2.2, punishGuard: true },
+  pounce: { name: 'Shadow Pounce', power: 2.2, clash: 'pounce' },
   rake: { name: 'Night Rake', power: 1.0 },
   snuff: { name: 'Snuff the Wick', power: 1.25, drain: 0.5 },
   ash_lash: { name: 'Lantern Lash', power: 1.1 },
   cinder_rain: { name: 'Cinder Rain', power: 0.7, all: true },
   mend: { name: 'Rekindle Anchor', power: 0, reviveAnchor: true },
+  lantern_sweep: { name: 'Lantern Sweep', power: 1.7, clash: 'sweep' },
 };
 
 export const ENEMIES = {
@@ -23,12 +24,12 @@ export const ENEMIES = {
     name: 'Ash Thrall', sheet: 'ash_thrall_enemy', scale: 2,
     hp: 58, atk: 13, def: 5, spd: 9, res: 3, resolve: 40, regen: 0, xp: 14,
     weak: ['ember'],
-    note: 'A villager\'s shape hollowed out by Court blood. Slow, but it winds up a heavy lunge — Guard when it does.',
+    note: 'A villager\'s shape hollowed out by Court blood. Slow, but it lines up a straight lunge — answer the Clash with EVADE.',
     ai(self, ctx) {
       if (self.windup) return { action: 'lunge', target: self.windupTarget };
       if (ctx.turn % 3 === 2) {
         const t = pick(ctx, ctx.heroes);
-        return { telegraph: true, action: 'lunge', target: t, text: `${self.name} draws back for a heavy lunge at ${t.name}!` };
+        return { telegraph: true, action: 'lunge', target: t, text: `${self.name} lines up a straight lunge at ${t.name}!` };
       }
       return { action: 'claw', target: pick(ctx, ctx.heroes) };
     },
@@ -46,13 +47,13 @@ export const ENEMIES = {
     name: 'Gloom Stalker', sheet: 'gloom_stalker_enemy', scale: 1.75,
     hp: 80, atk: 15, def: 5, spd: 13, res: 4, resolve: 45, regen: 0, xp: 26,
     weak: ['ember'],
-    note: 'A panther-shaped ambusher. It marks its prey, then pounces. Guarding the marked ally makes the pounce fail and breaks its Resolve.',
+    note: 'A panther-shaped ambusher. It marks its prey, then pounces. Answer the Clash with PARRY to shatter its Resolve.',
     ai(self, ctx) {
       const marked = ctx.heroes.find(h => h.status.marked);
       if (marked) return { action: 'pounce', target: marked };
       if (ctx.turn % 2 === 0) {
         const t = pick(ctx, ctx.heroes);
-        return { action: 'hunt', target: t, text: `${self.name} fixes its eyes on ${t.name}. (Guard before it pounces!)` };
+        return { action: 'hunt', target: t, text: `${self.name} crouches low and fixes its eyes on ${t.name}. It will pounce next.` };
       }
       return { action: 'rake', target: pick(ctx, ctx.heroes) };
     },
@@ -63,8 +64,13 @@ export const ENEMIES = {
     boss: true, vampire: true,
     note: 'A Court vampire who hides his blood anchors in hanging lanterns. While anchors burn, his wounds close. Break the anchors, then press him.',
     ai(self, ctx) {
+      if (self.windup) return { action: 'lantern_sweep', target: self.windupTarget };
+      if (ctx.turn % 4 === 3) {
+        const t = pick(ctx, ctx.heroes);
+        return { telegraph: true, action: 'lantern_sweep', target: t, text: `Garran raises his lantern staff for a wide sweep at ${t.name}!` };
+      }
       const anchorsDown = ctx.enemies.filter(e => e.anchor && e.dead && !e.sealed);
-      if (anchorsDown.length && ctx.turn % 4 === 3 && !ctx.fieldSealed) return { action: 'mend', target: anchorsDown[0] };
+      if (anchorsDown.length && ctx.turn % 4 === 2 && !ctx.fieldSealed) return { action: 'mend', target: anchorsDown[0] };
       if (ctx.turn % 3 === 1) return { action: 'cinder_rain', target: null };
       if (ctx.turn % 3 === 2) return { action: 'snuff', target: pick(ctx, ctx.heroes) };
       return { action: 'ash_lash', target: pick(ctx, ctx.heroes) };

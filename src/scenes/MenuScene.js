@@ -3,6 +3,7 @@ import { GAME_W, GAME_H } from '../config.js';
 import { CHARACTERS } from '../data/characters.js';
 import { ITEMS } from '../data/items.js';
 import { SKILLS } from '../data/skills.js';
+import { fitCamera } from '../systems/display.js';
 import { Controls } from '../systems/input.js';
 import { state, memberStats, SEAL_STAGES, formatPlaytime, addItem } from '../systems/state.js';
 import { XP_CURVE } from '../data/characters.js';
@@ -27,6 +28,7 @@ export class MenuScene extends Phaser.Scene {
 
   create(data) {
     this.from = data.from || 'World';
+    fitCamera(this);
     this.controls = new Controls(this);
     this.add.rectangle(0, 0, GAME_W, GAME_H, 0x05060c, 0.72).setOrigin(0);
     panel(this, 30, 30, 250, GAME_H - 60);

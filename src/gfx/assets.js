@@ -1,22 +1,21 @@
-import { VOD, WORLD_ZOOM } from '../config.js';
+import Phaser from 'phaser';
+import { ART } from '../config.js';
 
-// Asset loading built on the package manifest (public/assets/vod/manifest.json).
-// Exploration: original high-resolution atlases. At runtime we derive a high-quality
-// downscaled copy in memory (the source PNG on disk is untouched), sized so that one
-// texel maps to one screen pixel at WORLD_ZOOM. This keeps the logical 48x48 footprint
-// crisp instead of shimmering from a 7x nearest-neighbour downsample.
-// Combat: prepared battle sheets loaded as fixed-grid spritesheets.
+// Asset loading built on the art pack manifest (public/assets/vh/manifest.json) plus the
+// runtime sheets generated from it by tools/prepare_sprites.py (public/assets/vh/gen/):
+//  - walking: every atlas frame re-aligned (feet on one baseline, head centred) into uniform
+//    192 px cells, so animations no longer jitter; drawn at the logical 48x48 footprint.
+//  - combat: prepared battle sheets re-cut so poses and sword arcs that spilled past their
+//    cell are reunited with their own frame.
 
-const url = p => `${VOD}/${p}`;
+const url = p => `${ART}/${p}`;
+let MANIFEST = null;
+let GEN = null;
 
-export function queueManifestAssets(scene, manifest) {
+export function queueManifestAssets(scene, manifest, gen) {
   for (const a of manifest.sprites) {
-    if (a.loadMethod === 'atlas') {
-      scene.load.image(`src:${a.id}`, url(a.path));
-      scene.load.json(`atlasjson:${a.id}`, url(a.atlasPath));
-    } else {
-      scene.load.spritesheet(a.id, url(a.path), { frameWidth: a.frameWidth, frameHeight: a.frameHeight });
-    }
+    const g = a.loadMethod === 'atlas' ? gen.walk[a.id] : gen.battle[a.id];
+    scene.load.spritesheet(a.id, url(g.path), { frameWidth: g.frameWidth, frameHeight: g.frameHeight });
   }
   for (const p of manifest.portraits) scene.load.image(`portrait:${p.id}`, url(p.path));
   for (const e of manifest.environments) scene.load.image(`environment:${e.id}`, url(e.path));
@@ -24,57 +23,16 @@ export function queueManifestAssets(scene, manifest) {
   scene.load.spritesheet('tiles', url(manifest.tiles.path), { frameWidth: 32, frameHeight: 32 });
 }
 
-function downscale(img, tw, th) {
-  let src = img;
-  let w = img.width, h = img.height;
-  // Progressive halving keeps the box-filter quality high.
-  while (w / 2 >= tw * 1.0001 && h / 2 >= th) {
-    const c = document.createElement('canvas');
-    c.width = Math.max(1, Math.round(w / 2));
-    c.height = Math.max(1, Math.round(h / 2));
-    const g = c.getContext('2d');
-    g.imageSmoothingEnabled = true;
-    g.imageSmoothingQuality = 'high';
-    g.drawImage(src, 0, 0, c.width, c.height);
-    src = c; w = c.width; h = c.height;
-  }
-  const out = document.createElement('canvas');
-  out.width = tw; out.height = th;
-  const g = out.getContext('2d');
-  g.imageSmoothingEnabled = true;
-  g.imageSmoothingQuality = 'high';
-  g.drawImage(src, 0, 0, tw, th);
-  return out;
-}
-
-export function buildOverworldTextures(scene, manifest) {
+export function finishSprites(scene, manifest, gen) {
   for (const a of manifest.sprites) {
-    if (a.loadMethod !== 'atlas') continue;
-    const img = scene.textures.get(`src:${a.id}`).getSourceImage();
-    const json = scene.cache.json.get(`atlasjson:${a.id}`);
-    const target = a.displayScale * WORLD_ZOOM;
-    const tw = Math.round(img.width * target);
-    const th = Math.round(img.height * target);
-    const sx = tw / img.width;
-    const sy = th / img.height;
-    const canvas = downscale(img, tw, th);
-    const frames = {};
-    for (const [name, f] of Object.entries(json.frames)) {
-      const x = Math.floor(f.frame.x * sx), y = Math.floor(f.frame.y * sy);
-      const w = Math.ceil((f.frame.x + f.frame.w) * sx) - x;
-      const h = Math.ceil((f.frame.y + f.frame.h) * sy) - y;
-      frames[name] = {
-        frame: { x, y, w, h },
-        rotated: false,
-        trimmed: true,
-        spriteSourceSize: { x: Math.round(f.spriteSourceSize.x * sx), y: Math.round(f.spriteSourceSize.y * sy), w, h },
-        sourceSize: { w: Math.round(f.sourceSize.w * sx), h: Math.round(f.sourceSize.h * sy) },
-      };
+    const walk = a.loadMethod === 'atlas';
+    const g = walk ? gen.walk[a.id] : gen.battle[a.id];
+    a.gen = g;
+    if (walk) {
+      // World units: the cell is 4x the logical footprint.
+      a.runtimeScale = g.logical / g.frameWidth;
+      scene.textures.get(a.id).setFilter(Phaser.Textures.FilterMode.LINEAR);
     }
-    scene.textures.addAtlasJSONHash(a.id, canvas, { frames, meta: { scale: 1 } });
-    // Sprite scale that converts derived texels back to the logical footprint.
-    a.runtimeScale = a.displayScale / sx;
-    scene.textures.remove(`src:${a.id}`);
   }
 }
 
@@ -85,7 +43,7 @@ export function registerAnimations(scene, manifest) {
       if (scene.anims.exists(key)) continue;
       scene.anims.create({
         key,
-        frames: clip.frames.map(f => ({ key: a.id, frame: a.loadMethod === 'atlas' ? String(f) : f })),
+        frames: clip.frames.map(f => ({ key: a.id, frame: f })),
         frameRate: clip.fps,
         repeat: clip.repeat,
       });
@@ -93,7 +51,7 @@ export function registerAnimations(scene, manifest) {
   }
 }
 
-let MANIFEST = null;
-export const setManifest = m => { MANIFEST = m; };
+export const setManifest = (m, g) => { MANIFEST = m; GEN = g; };
 export const manifest = () => MANIFEST;
+export const genManifest = () => GEN;
 export const spriteAsset = id => MANIFEST.sprites.find(s => s.id === id);

@@ -1,0 +1,594 @@
+{
+ "battle": {
+  "kai_battle": {
+   "path": "gen/kai_battle.png",
+   "frameWidth": 128,
+   "frameHeight": 128,
+   "originX": 0.5,
+   "originY": 1.0,
+   "pad": {
+    "x": 0,
+    "top": 0
+   },
+   "columns": 4,
+   "rows": 4
+  },
+  "court_sentry_enemy": {
+   "path": "gen/court_sentry_enemy.png",
+   "frameWidth": 96,
+   "frameHeight": 96,
+   "originX": 0.5,
+   "originY": 1.0,
+   "pad": {
+    "x": 0,
+    "top": 0
+   },
+   "columns": 4,
+   "rows": 3
+  },
+  "garran_enemy": {
+   "path": "gen/garran_enemy.png",
+   "frameWidth": 128,
+   "frameHeight": 128,
+   "originX": 0.5,
+   "originY": 1.0,
+   "pad": {
+    "x": 0,
+    "top": 0
+   },
+   "columns": 4,
+   "rows": 3
+  },
+  "maelis_enemy": {
+   "path": "gen/maelis_enemy.png",
+   "frameWidth": 160,
+   "frameHeight": 128,
+   "originX": 0.5,
+   "originY": 1.0,
+   "pad": {
+    "x": 16,
+    "top": 0
+   },
+   "columns": 4,
+   "rows": 3
+  },
+  "sevrin_enemy": {
+   "path": "gen/sevrin_enemy.png",
+   "frameWidth": 176,
+   "frameHeight": 128,
+   "originX": 0.5,
+   "originY": 1.0,
+   "pad": {
+    "x": 24,
+    "top": 0
+   },
+   "columns": 4,
+   "rows": 3
+  },
+  "orin_ren_enemy": {
+   "path": "gen/orin_ren_enemy.png",
+   "frameWidth": 176,
+   "frameHeight": 128,
+   "originX": 0.5,
+   "originY": 1.0,
+   "pad": {
+    "x": 24,
+    "top": 0
+   },
+   "columns": 4,
+   "rows": 3
+  },
+  "valka_enemy": {
+   "path": "gen/valka_enemy.png",
+   "frameWidth": 160,
+   "frameHeight": 128,
+   "originX": 0.5,
+   "originY": 1.0,
+   "pad": {
+    "x": 16,
+    "top": 0
+   },
+   "columns": 4,
+   "rows": 3
+  },
+  "veyr_enemy": {
+   "path": "gen/veyr_enemy.png",
+   "frameWidth": 144,
+   "frameHeight": 128,
+   "originX": 0.5,
+   "originY": 1.0,
+   "pad": {
+    "x": 8,
+    "top": 0
+   },
+   "columns": 4,
+   "rows": 3
+  },
+  "lyra_fen_battle": {
+   "path": "gen/lyra_fen_battle.png",
+   "frameWidth": 192,
+   "frameHeight": 128,
+   "originX": 0.5,
+   "originY": 1.0,
+   "pad": {
+    "x": 32,
+    "top": 0
+   },
+   "columns": 4,
+   "rows": 4
+  },
+  "eren_sol_battle": {
+   "path": "gen/eren_sol_battle.png",
+   "frameWidth": 128,
+   "frameHeight": 128,
+   "originX": 0.5,
+   "originY": 1.0,
+   "pad": {
+    "x": 0,
+    "top": 0
+   },
+   "columns": 4,
+   "rows": 4
+  },
+  "mira_thorn_battle": {
+   "path": "gen/mira_thorn_battle.png",
+   "frameWidth": 128,
+   "frameHeight": 128,
+   "originX": 0.5,
+   "originY": 1.0,
+   "pad": {
+    "x": 0,
+    "top": 0
+   },
+   "columns": 4,
+   "rows": 4
+  },
+  "rowan_voss_battle": {
+   "path": "gen/rowan_voss_battle.png",
+   "frameWidth": 160,
+   "frameHeight": 128,
+   "originX": 0.5,
+   "originY": 1.0,
+   "pad": {
+    "x": 16,
+    "top": 0
+   },
+   "columns": 4,
+   "rows": 4
+  },
+  "elara_ashen_battle": {
+   "path": "gen/elara_ashen_battle.png",
+   "frameWidth": 128,
+   "frameHeight": 128,
+   "originX": 0.5,
+   "originY": 1.0,
+   "pad": {
+    "x": 0,
+    "top": 0
+   },
+   "columns": 4,
+   "rows": 4
+  },
+  "daigo_ren_battle": {
+   "path": "gen/daigo_ren_battle.png",
+   "frameWidth": 160,
+   "frameHeight": 128,
+   "originX": 0.5,
+   "originY": 1.0,
+   "pad": {
+    "x": 16,
+    "top": 0
+   },
+   "columns": 4,
+   "rows": 4
+  },
+  "nyra_vale_battle": {
+   "path": "gen/nyra_vale_battle.png",
+   "frameWidth": 144,
+   "frameHeight": 128,
+   "originX": 0.5,
+   "originY": 1.0,
+   "pad": {
+    "x": 8,
+    "top": 0
+   },
+   "columns": 4,
+   "rows": 4
+  },
+  "soren_mire_battle": {
+   "path": "gen/soren_mire_battle.png",
+   "frameWidth": 144,
+   "frameHeight": 128,
+   "originX": 0.5,
+   "originY": 1.0,
+   "pad": {
+    "x": 8,
+    "top": 0
+   },
+   "columns": 4,
+   "rows": 4
+  },
+  "cassian_reed_battle": {
+   "path": "gen/cassian_reed_battle.png",
+   "frameWidth": 208,
+   "frameHeight": 128,
+   "originX": 0.5,
+   "originY": 1.0,
+   "pad": {
+    "x": 40,
+    "top": 0
+   },
+   "columns": 4,
+   "rows": 4
+  },
+  "ayla_moon_battle": {
+   "path": "gen/ayla_moon_battle.png",
+   "frameWidth": 160,
+   "frameHeight": 128,
+   "originX": 0.5,
+   "originY": 1.0,
+   "pad": {
+    "x": 16,
+    "top": 0
+   },
+   "columns": 4,
+   "rows": 4
+  },
+  "nox_varen_battle": {
+   "path": "gen/nox_varen_battle.png",
+   "frameWidth": 128,
+   "frameHeight": 128,
+   "originX": 0.5,
+   "originY": 1.0,
+   "pad": {
+    "x": 0,
+    "top": 0
+   },
+   "columns": 4,
+   "rows": 4
+  },
+  "ash_thrall_enemy": {
+   "path": "gen/ash_thrall_enemy.png",
+   "frameWidth": 96,
+   "frameHeight": 96,
+   "originX": 0.5,
+   "originY": 1.0,
+   "pad": {
+    "x": 0,
+    "top": 0
+   },
+   "columns": 4,
+   "rows": 3
+  },
+  "blood_hound_enemy": {
+   "path": "gen/blood_hound_enemy.png",
+   "frameWidth": 128,
+   "frameHeight": 96,
+   "originX": 0.5,
+   "originY": 1.0,
+   "pad": {
+    "x": 16,
+    "top": 0
+   },
+   "columns": 4,
+   "rows": 3
+  },
+  "memory_moth_enemy": {
+   "path": "gen/memory_moth_enemy.png",
+   "frameWidth": 144,
+   "frameHeight": 96,
+   "originX": 0.5,
+   "originY": 1.0,
+   "pad": {
+    "x": 24,
+    "top": 0
+   },
+   "columns": 4,
+   "rows": 3
+  },
+  "crypt_lancer_enemy": {
+   "path": "gen/crypt_lancer_enemy.png",
+   "frameWidth": 208,
+   "frameHeight": 128,
+   "originX": 0.5,
+   "originY": 1.0,
+   "pad": {
+    "x": 40,
+    "top": 0
+   },
+   "columns": 4,
+   "rows": 3
+  },
+  "scarlet_acolyte_enemy": {
+   "path": "gen/scarlet_acolyte_enemy.png",
+   "frameWidth": 128,
+   "frameHeight": 128,
+   "originX": 0.5,
+   "originY": 1.0,
+   "pad": {
+    "x": 0,
+    "top": 0
+   },
+   "columns": 4,
+   "rows": 3
+  },
+  "gloom_stalker_enemy": {
+   "path": "gen/gloom_stalker_enemy.png",
+   "frameWidth": 160,
+   "frameHeight": 128,
+   "originX": 0.5,
+   "originY": 1.0,
+   "pad": {
+    "x": 16,
+    "top": 0
+   },
+   "columns": 4,
+   "rows": 3
+  },
+  "grave_weaver_enemy": {
+   "path": "gen/grave_weaver_enemy.png",
+   "frameWidth": 128,
+   "frameHeight": 128,
+   "originX": 0.5,
+   "originY": 1.0,
+   "pad": {
+    "x": 0,
+    "top": 0
+   },
+   "columns": 4,
+   "rows": 3
+  },
+  "raven_knight_enemy": {
+   "path": "gen/raven_knight_enemy.png",
+   "frameWidth": 208,
+   "frameHeight": 128,
+   "originX": 0.5,
+   "originY": 1.0,
+   "pad": {
+    "x": 40,
+    "top": 0
+   },
+   "columns": 4,
+   "rows": 3
+  },
+  "selene_dusk_enemy": {
+   "path": "gen/selene_dusk_enemy.png",
+   "frameWidth": 144,
+   "frameHeight": 128,
+   "originX": 0.5,
+   "originY": 1.0,
+   "pad": {
+    "x": 8,
+    "top": 0
+   },
+   "columns": 4,
+   "rows": 3
+  }
+ },
+ "walk": {
+  "kai_overworld": {
+   "path": "gen/kai_overworld.png",
+   "frameWidth": 192,
+   "frameHeight": 192,
+   "originX": 0.5,
+   "originY": 0.9583333333333334,
+   "logical": 48
+  },
+  "court_sentry_overworld": {
+   "path": "gen/court_sentry_overworld.png",
+   "frameWidth": 192,
+   "frameHeight": 192,
+   "originX": 0.5,
+   "originY": 0.9583333333333334,
+   "logical": 48
+  },
+  "garran_overworld": {
+   "path": "gen/garran_overworld.png",
+   "frameWidth": 192,
+   "frameHeight": 192,
+   "originX": 0.5,
+   "originY": 0.9583333333333334,
+   "logical": 48
+  },
+  "maelis_overworld": {
+   "path": "gen/maelis_overworld.png",
+   "frameWidth": 192,
+   "frameHeight": 192,
+   "originX": 0.5,
+   "originY": 0.9583333333333334,
+   "logical": 48
+  },
+  "sevrin_overworld": {
+   "path": "gen/sevrin_overworld.png",
+   "frameWidth": 192,
+   "frameHeight": 192,
+   "originX": 0.5,
+   "originY": 0.9583333333333334,
+   "logical": 48
+  },
+  "orin_ren_overworld": {
+   "path": "gen/orin_ren_overworld.png",
+   "frameWidth": 192,
+   "frameHeight": 192,
+   "originX": 0.5,
+   "originY": 0.9583333333333334,
+   "logical": 48
+  },
+  "valka_overworld": {
+   "path": "gen/valka_overworld.png",
+   "frameWidth": 192,
+   "frameHeight": 192,
+   "originX": 0.5,
+   "originY": 0.9583333333333334,
+   "logical": 48
+  },
+  "crypt_lancer_overworld": {
+   "path": "gen/crypt_lancer_overworld.png",
+   "frameWidth": 192,
+   "frameHeight": 192,
+   "originX": 0.5,
+   "originY": 0.9583333333333334,
+   "logical": 48
+  },
+  "lyra_fen_overworld": {
+   "path": "gen/lyra_fen_overworld.png",
+   "frameWidth": 192,
+   "frameHeight": 192,
+   "originX": 0.5,
+   "originY": 0.9583333333333334,
+   "logical": 48
+  },
+  "eren_sol_overworld": {
+   "path": "gen/eren_sol_overworld.png",
+   "frameWidth": 192,
+   "frameHeight": 192,
+   "originX": 0.5,
+   "originY": 0.9583333333333334,
+   "logical": 48
+  },
+  "mira_thorn_overworld": {
+   "path": "gen/mira_thorn_overworld.png",
+   "frameWidth": 192,
+   "frameHeight": 192,
+   "originX": 0.5,
+   "originY": 0.9583333333333334,
+   "logical": 48
+  },
+  "rowan_voss_overworld": {
+   "path": "gen/rowan_voss_overworld.png",
+   "frameWidth": 192,
+   "frameHeight": 192,
+   "originX": 0.5,
+   "originY": 0.9583333333333334,
+   "logical": 48
+  },
+  "elara_ashen_overworld": {
+   "path": "gen/elara_ashen_overworld.png",
+   "frameWidth": 192,
+   "frameHeight": 192,
+   "originX": 0.5,
+   "originY": 0.9583333333333334,
+   "logical": 48
+  },
+  "daigo_ren_overworld": {
+   "path": "gen/daigo_ren_overworld.png",
+   "frameWidth": 192,
+   "frameHeight": 192,
+   "originX": 0.5,
+   "originY": 0.9583333333333334,
+   "logical": 48
+  },
+  "nyra_vale_overworld": {
+   "path": "gen/nyra_vale_overworld.png",
+   "frameWidth": 192,
+   "frameHeight": 192,
+   "originX": 0.5,
+   "originY": 0.9583333333333334,
+   "logical": 48
+  },
+  "soren_mire_overworld": {
+   "path": "gen/soren_mire_overworld.png",
+   "frameWidth": 192,
+   "frameHeight": 192,
+   "originX": 0.5,
+   "originY": 0.9583333333333334,
+   "logical": 48
+  },
+  "cassian_reed_overworld": {
+   "path": "gen/cassian_reed_overworld.png",
+   "frameWidth": 192,
+   "frameHeight": 192,
+   "originX": 0.5,
+   "originY": 0.9583333333333334,
+   "logical": 48
+  },
+  "ayla_moon_overworld": {
+   "path": "gen/ayla_moon_overworld.png",
+   "frameWidth": 192,
+   "frameHeight": 192,
+   "originX": 0.5,
+   "originY": 0.9583333333333334,
+   "logical": 48
+  },
+  "nox_varen_overworld": {
+   "path": "gen/nox_varen_overworld.png",
+   "frameWidth": 192,
+   "frameHeight": 192,
+   "originX": 0.5,
+   "originY": 0.9583333333333334,
+   "logical": 48
+  },
+  "ash_thrall_overworld": {
+   "path": "gen/ash_thrall_overworld.png",
+   "frameWidth": 192,
+   "frameHeight": 192,
+   "originX": 0.5,
+   "originY": 0.9583333333333334,
+   "logical": 48
+  },
+  "blood_hound_overworld": {
+   "path": "gen/blood_hound_overworld.png",
+   "frameWidth": 192,
+   "frameHeight": 192,
+   "originX": 0.5,
+   "originY": 0.9583333333333334,
+   "logical": 48
+  },
+  "memory_moth_overworld": {
+   "path": "gen/memory_moth_overworld.png",
+   "frameWidth": 192,
+   "frameHeight": 192,
+   "originX": 0.5,
+   "originY": 0.9583333333333334,
+   "logical": 48
+  },
+  "veyr_overworld": {
+   "path": "gen/veyr_overworld.png",
+   "frameWidth": 192,
+   "frameHeight": 192,
+   "originX": 0.5,
+   "originY": 0.9583333333333334,
+   "logical": 48
+  },
+  "scarlet_acolyte_overworld": {
+   "path": "gen/scarlet_acolyte_overworld.png",
+   "frameWidth": 192,
+   "frameHeight": 192,
+   "originX": 0.5,
+   "originY": 0.9583333333333334,
+   "logical": 48
+  },
+  "gloom_stalker_overworld": {
+   "path": "gen/gloom_stalker_overworld.png",
+   "frameWidth": 192,
+   "frameHeight": 192,
+   "originX": 0.5,
+   "originY": 0.9583333333333334,
+   "logical": 48
+  },
+  "grave_weaver_overworld": {
+   "path": "gen/grave_weaver_overworld.png",
+   "frameWidth": 192,
+   "frameHeight": 192,
+   "originX": 0.5,
+   "originY": 0.9583333333333334,
+   "logical": 48
+  },
+  "raven_knight_overworld": {
+   "path": "gen/raven_knight_overworld.png",
+   "frameWidth": 192,
+   "frameHeight": 192,
+   "originX": 0.5,
+   "originY": 0.9583333333333334,
+   "logical": 48
+  },
+  "selene_dusk_overworld": {
+   "path": "gen/selene_dusk_overworld.png",
+   "frameWidth": 192,
+   "frameHeight": 192,
+   "originX": 0.5,
+   "originY": 0.9583333333333334,
+   "logical": 48
+  }
+ }
+}

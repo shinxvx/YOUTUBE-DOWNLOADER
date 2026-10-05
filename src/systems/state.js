@@ -26,7 +26,7 @@ function fresh() {
     chapter: 1,
     phase: 'dusk',
     map: 'emberfall',
-    pos: { x: 790, y: 640, facing: 'down' },
+    pos: { x: 704, y: 704, facing: 'up' },
     party: [makeMember('kai')],
     active: ['kai'],
     inventory: { tonic: 3, focus_draught: 1 },

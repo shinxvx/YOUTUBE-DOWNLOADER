@@ -1,33 +1,34 @@
-# Veil of Dawn — contexto do projeto
+# Vampire Hunters (ヴァンパイアハンターズ) — contexto do projeto
 
-Jogo JRPG original (em inglês para o jogador) para DESKTOP: app Electron 38 (pasta `electron/`)
-com o motor em Phaser 3 + Vite por baixo. O dono NÃO quer o jogador rodando no navegador: o
-produto é o app (instalador Windows em `release/` via `npm run dist:win`). Tudo offline. O dono do projeto é brasileiro: converse com ele em português; todo texto do jogo
-(diálogos, menus, itens, tutoriais) fica em inglês.
+Jogo JRPG original para DESKTOP (antes chamado Veil of Dawn): app Electron 38 (`electron/`) com o
+motor em Phaser 3 + Vite por baixo. O dono NÃO quer o jogador rodando no navegador: o produto é o
+app (instalador Windows). Tudo offline. Converse com o dono em português; todo texto do jogo fica
+em inglês. Estética: anime japonês sombrio (haori, hakama, katanas), mundo fictício Asterra.
 
 ## Onde está cada coisa
 
-- Repositório: `shinxvx/youtube-downloader`, branch `claude/laughing-mccarthy-ekayva` (o nome do repo
-  é herdado; o conteúdo é o jogo).
-- Roteiro canônico: `docs/Veil_of_Dawn_Claude_Prompt.md` e `docs/LEIA_PRIMEIRO_CLAUDE.md`. Não mudar
-  revelações, final ou regras do mundo.
-- Andamento por milestone: `docs/ROADMAP.md`. Histórico de mudanças: `HISTORICO.md`.
-- Arte: `public/assets/vod/` (o `manifest.json` manda). O que é temporário está em `ASSETS.md`.
+- Repositório: `shinxvx/youtube-downloader`, branch `claude/laughing-mccarthy-ekayva` (nome herdado).
+- Roteiro canônico: `docs/Vampire_Hunters_Claude_Prompt.md`, `docs/LEIA_PRIMEIRO_CLAUDE.md` e
+  `docs/japanese_character_designs.json` (visual de cada personagem). Não mudar história/final/regras.
+- Andamento: `docs/ROADMAP.md`. Histórico: `HISTORICO.md` (registrar cada mudança no topo).
+- Arte: `public/assets/vh/` (o `manifest.json` manda). `public/assets/vh/gen/` é gerado por
+  `tools/prepare_sprites.py` (caminhada realinhada, combate recortado sem cortes). Temporários: `ASSETS.md`.
+
+## Decisões do dono (não desfazer)
+
+- Mapas vistos de CIMA, feitos por nós com os tiles do pacote + objetos gerados (`src/gfx/props.js`,
+  `src/systems/mapBuilder.js`, mapas em `src/data/maps`). Não usar os cenários pintados como mapa:
+  eles servem de fundo de batalha e de tela de título.
+- Resolução escolhível (Configurações → Resolution) com renderização real na resolução escolhida.
+- Batalha inspirada em Inazuma Eleven: cut-ins de técnica, duelo Clash, cenário que muda na luta.
+- Animações: sempre conferir alinhamento/cortes (rodar o prepare_sprites e olhar as folhas).
 
 ## Regras técnicas
 
-- Caminhada: atlas originais em `originals/` com o JSON de recorte; nunca cortar em grade de 48 px.
-  Tamanho lógico 48×48; zoom do mundo 2×. Combate: folhas prontas de `sprites/`.
-- Conteúdo é dado: capítulos em `src/data/chapters`, mapas em `src/data/maps`, encontros, inimigos,
-  habilidades e itens em `src/data`. IDs estáveis (os saves dependem deles).
-- Seal Stage é narrativo (só avança em cenas); Veil Strain é recurso de batalha recuperável.
-- Os sprites de personagem vão ser trocados por outro conjunto (o dono vai explicar). Tudo é
-  carregado pelo manifest; não acoplar código a detalhes da arte atual.
-- HDRI: `assets-src/hdri/*.exr` → `python3 tools/bake_hdri.py` gera `public/assets/sky/`.
-- Depois de mudar algo: `npm run build` e `xvfb-run -a node tools/playthrough.mjs`
-  (joga a fatia inteira dentro do app Electron). Não dizer que algo foi testado sem ter rodado.
-- Publicar uma versão para os jogadores: no servidor Umbrel, projeto
-  `/Home/Documents/umbrel-apps/veil-of-dawn` (leia o CLAUDE.md de lá). Faça push aqui primeiro; o
-  `ferramentas/publicar.mjs` de lá baixa este branch, monta o instalador e publica em
-  https://updates.brgirlslive.com/veilofdawn/VeilOfDawn-Setup.exe. Suba `version` no package.json.
-- Registrar cada alteração no topo do `HISTORICO.md`.
+- Conteúdo é dado: capítulos em `src/data/chapters`, mapas em `src/data/maps`; IDs estáveis (saves).
+- Seal Stage é narrativo; Veil Strain é recurso de batalha recuperável.
+- Depois de mudar algo: `npm run build` e `xvfb-run -a node tools/playthrough.mjs`. Não dizer que
+  algo foi testado sem ter rodado.
+- Publicar: no servidor Umbrel, projeto `/Home/Documents/umbrel-apps/vampire-hunters` (leia o
+  CLAUDE.md de lá). Push aqui primeiro; o `ferramentas/publicar.mjs` de lá monta e publica em
+  https://updates.brgirlslive.com/vampirehunters/VampireHunters-Setup.exe. Suba `version` no package.json.

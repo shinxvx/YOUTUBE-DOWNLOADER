@@ -7,7 +7,7 @@ export const GAME_H = 720;
 export const WORLD_ZOOM = 2;
 export const LOGICAL_SPRITE = 48;
 
-export const VOD = 'assets/vod';
+export const ART = 'assets/vh';
 
 export const FONT_UI = '"Trebuchet MS", "Segoe UI", Verdana, sans-serif';
 export const FONT_TITLE = 'Georgia, "Palatino Linotype", "Times New Roman", serif';
@@ -35,5 +35,5 @@ export const COLORS = {
 };
 
 export const SAVE_VERSION = 1;
-export const SAVE_PREFIX = 'veilofdawn.save.';
-export const SETTINGS_KEY = 'veilofdawn.settings';
+export const SAVE_PREFIX = 'vampirehunters.save.';
+export const SETTINGS_KEY = 'vampirehunters.settings';

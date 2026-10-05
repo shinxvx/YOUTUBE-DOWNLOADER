@@ -1,16 +1,28 @@
-# VEIL OF DAWN — READ FIRST: EXPANDED THREE-PART PACKAGE
+# VAMPIRE HUNTERS — current Japanese anime art contract
 
-This document is addressed to Claude. Read it before integrating any images. The user explicitly selected **original artwork for exploration/walking** and **prepared preview sprites for combat**. This selection overrides older art-loading instructions.
+This section overrides earlier visual instructions throughout the document. Preserve the five-chapter original story and character identities; change the presentation to Japanese dark anime. The title is Vampire Hunters (plural). The Japanese logo text is ヴァンパイアハンターズ, a katakana rendering of the English title.
+
+Walking and combat were generated as separate sheets per character to give faces and sword blades more space. Do not use mixed walking/combat draft boards. Use originals/*_overworld_master.png with the exact matching atlas JSON and displayScale: the game footprint is logically 48×48 while the selected artwork stays at native source resolution. Combat uses prepared sheets in sprites/, with numeric frame indices. The preview must use these same assets.
+
+Haori, hakama, obi, tabi footwear and Japanese hunter uniforms replace European medieval clothing. Katanas, wakizashi, nodachi and tanto replace European swords. Dawnstone and Alvor remain original fictional weapon terminology. Asterra remains a fictional world rather than historical Japan. Creature enemies retain their own anatomy. Weapons remain one continuous blade with a smooth shallow curve, or a straight polearm shaft. The compact title logo keeps the approved katana, with close English title lines and a nearby Japanese subtitle.
+
+The authoritative individual designs are docs/japanese_character_designs.json. They control hair, eyes, costume, weapon silhouette and color. These designs take priority over incidental older appearance wording below. Kai remains pale, white-haired, violet-eyed, with the seal on his left shoulder spreading across the chest. The five Dawncrowned retain their names, titles, powers and story roles. There are 12 hero/allied sprite characters and 16 enemies, plus profiles for 10 story NPCs: 38 profiles total.
+
+This edition replaces every earlier visual asset: walking, combat, profiles, three scenery backgrounds, 36 starter tiles and the title logo. Do not mix old European clothing or old branding into it. Backgrounds are flattened paintings, not authored playable maps. The five-hour duration remains a pacing target requiring implementation and playtesting.
+
+# VAMPIRE HUNTERS — READ FIRST: EXPANDED THREE-PART PACKAGE
+
+This document is addressed to Claude. Read it before integrating any images. All three ZIPs are mandatory; PARTS.json lists exact file ownership if balancing places complementary files in another part. The user explicitly selected **original artwork for exploration/walking** and **prepared preview sprites for combat**. This selection overrides older art-loading instructions.
 
 ## 1. Your task and document precedence
 
-Build the original English-language turn-based JRPG **VEIL OF DAWN**, alternate branding **Vampire Hunter**. Preserve Kai, the four core companions, the five Dawncrowned, the established supernatural rules, the five-chapter story and the vampire king Veyr as the final boss.
+Build the original English-language turn-based JRPG **VAMPIRE HUNTERS**, Japanese subtitle **ヴァンパイアハンターズ**. Preserve Kai, the four core companions, the five Dawncrowned, the established supernatural rules, the five-chapter story and the vampire king Veyr as the final boss.
 
 Read in this order:
 
 1. This document: latest asset choices, expanded cast, pacing and integration rules.
 2. `manifest.json`: authoritative filenames, frame rectangles, logical dimensions, indices and timing.
-3. `docs/Veil_of_Dawn_Claude_Prompt.md`: complete original story and implementation brief. Its beginning, middle, ending and character arcs remain canon.
+3. `docs/Vampire_Hunters_Claude_Prompt.md`: complete original story and implementation brief. Its beginning, middle, ending and character arcs remain canon.
 4. `docs/expanded_roster.json` and `docs/campaign_encounters.json`: proposed encounter and guest data; tune through playtesting.
 5. `README_FOR_CLAUDE.md`: loading reference.
 
@@ -20,11 +32,11 @@ This package contains artwork and implementation instructions, not an already pl
 
 | Archive | Contents | Role |
 | --- | --- | --- |
-| `Veil_of_Dawn_Part_1_Heroes_Allies.zip` | 12 hero/ally exploration originals and their atlas JSONs; 12 prepared hero battle sheets; battle frames; their GIF previews | Kai, party, five Dawncrowned and three new guests |
-| `Veil_of_Dawn_Part_2_Enemies_Profiles.zip` | 16 enemy exploration originals and their atlas JSONs; 16 prepared enemy battle sheets; all 38 profiles | Mobs, named vampires and character dialogue/bestiary |
-| `Veil_of_Dawn_Part_3_World_Docs.zip` | Three backdrops, 36 tiles and tile atlas, two logos, enemy GIF previews and individual enemy battle frames, offline viewer, manifest, integration modules, story and instructions | World presentation, complementary enemy previews and complete project reference |
+| `Vampire_Hunters_Part_1_Heroes_Allies.zip` | 12 hero/ally exploration originals and their atlas JSONs; 12 prepared hero battle sheets; battle frames; their GIF previews | Kai, party, five Dawncrowned and three new guests |
+| `Vampire_Hunters_Part_2_Enemies.zip` | 15 enemy exploration originals; 16 enemy atlas JSONs; 16 prepared enemy battle sheets | Mobs and named vampires; complementary exploration source in part 3 |
+| `Vampire_Hunters_Part_3_World_Profiles_Docs.zip` | All 38 profiles; one complementary enemy exploration original; three backdrops, 36 tiles and tile atlas, compact anime logo, enemy GIF previews and individual battle frames, offline viewer, story and instructions | World, dialogue/bestiary portraits, complementary enemy source/previews and project reference |
 
-These are three independent normal ZIP archives, not split binary volumes. Extract ALL THREE into the same parent directory. They share the root folder `Veil_of_Dawn_Claude_Expanded`; merge this folder rather than creating three nested copies. Identical shared metadata may overwrite itself safely. After merging, open `Veil_of_Dawn_Claude_Expanded/preview.html` locally.
+These are three independent normal ZIP archives, not split binary volumes. Extract ALL THREE into the same parent directory. They share the root folder `Vampire_Hunters_Anime_Pack`; merge this folder rather than creating three nested copies. Identical shared metadata may overwrite itself safely. After merging, open `Vampire_Hunters_Anime_Pack/preview.html` locally.
 
 Do not assume an attachment has been extracted or inspected. If your Claude environment cannot open a ZIP, tell the user which archive is blocked and request the extracted files you need. Do not fabricate analysis of unavailable assets.
 
@@ -38,7 +50,7 @@ The originals are irregularly spaced source atlases. **Do not cut them into a gu
 
 The exploration entity still has a **logical 48×48 footprint** for display and map movement. The source texture is higher resolution. `frameWidth` and `frameHeight` describe the reconstructed source-resolution frame; `logicalFrameWidth` and `logicalFrameHeight` are 48. Apply `displayScale = 48 / frameWidth` to the trimmed atlas sprite. This keeps original detailed art available for zooming and avoids destructive downsampling. Collision bodies must follow map rules and logical dimensions, not the width of the entire texture.
 
-Frame names inside the atlas are strings `"0"` through `"11"`. Order is down, left, right, up; each direction has idle, step A, step B. Walking sequence: `[stepA, idle, stepB, idle]`, 8 fps. Use stable keys such as `kai_overworld:walk_down`. Directional rows of the Scarlet Acolyte have been mapped to the correct directions in the atlas metadata.
+Nyra’s erroneous opposite-facing left-walk pose is omitted in the atlas mapping; the valid left-facing step is reused so she keeps the correct direction. Frame names inside the atlas are strings `"0"` through `"11"`. Order is down, left, right, up; each direction has idle, step A, step B. Walking sequence: `[stepA, idle, stepB, idle]`, 8 fps. Use stable keys such as `kai_overworld:walk_down`. Direction mappings and frame selection come from the current atlas metadata.
 
 ### Combat
 
@@ -61,11 +73,11 @@ The original ten enemies remain: Ash Thrall, Blood Hound, Memory Moth, Court Sen
 | ID / Name | First use | Tactical identity | Readable counter |
 | --- | --- | --- | --- |
 | `gloom_stalker` / Gloom Stalker | Chapter 1, sheltered forest route | Fast panther-like ambusher; telegraphed Pounce targets an exposed ally | Guard the marked ally; initiative control cancels its advantage |
-| `crypt_lancer` / Crypt Lancer | Chapter 2, foundry vaults | Armored skeletal thrall carrying a halberd; guards an ally before a committed thrust | Break Resolve with Shock and flank pressure; attack during recovery |
+| `crypt_lancer` / Crypt Lancer | Chapter 2, foundry vaults | Armored skeletal thrall carrying a straight yari; guards an ally before a committed thrust | Break Resolve with Shock and flank pressure; attack during recovery |
 | `scarlet_acolyte` / Scarlet Acolyte | Chapter 2, abandoned clinic | Vampire support unit; heals a damaged partner, otherwise channels a curse | Interrupt the visible channel or defeat the support first |
 | `grave_weaver` / Grave Weaver | Chapter 3, archive tunnels | Spider creature; roots one hero and places a web trap on the initiative queue | Burn a web anchor, cleanse Root, then exploit its exposed abdomen |
-| `raven_knight` / Raven Knight | Chapter 4, outer fortress assault | Elite Court knight; announces a counter stance, then a sweeping greatsword attack | Guard or use support during the stance; stagger its recovery |
-| `selene_dusk` / Selene Dusk | Chapter 5, optional observatory wing | Named vampire miniboss; rapier feints and alternating moon seals | Track the displayed seal and attack its open window; avoid brute-force regeneration races |
+| `raven_knight` / Raven Knight | Chapter 4, outer fortress assault | Elite Court knight; announces a counter stance, then a sweeping nodachi attack | Guard or use support during the stance; stagger its recovery |
+| `selene_dusk` / Selene Dusk | Chapter 5, optional observatory wing | Named vampire miniboss; katana feints and alternating moon seals | Track the displayed seal and attack its open window; avoid brute-force regeneration races |
 
 The skeletal lancer is a reanimated thrall bound by a stolen blood anchor, not a new immortal species. The beasts are Court-created nocturnal creatures. Keep the established vampire memory/blood rules. Selene serves the Court but is not an eighth final-boss phase or a replacement for Valka.
 
@@ -77,7 +89,7 @@ The core roster remains Kai, Lyra Fen, Eren Sol and Mira Thorn. The original com
 
 ### Cassian Reed — THE LAST SHIELD
 
-Warden defender from Brassveil, warm brown skin, short curled black hair, moss-green/brass uniform, bronze shield and short Alvor sword. He is careful, personable and frustrated that evacuation work earns less glory than sword duels.
+Warden defender from Brassveil, warm brown skin, short curled black hair, moss-green haori over a black hunter uniform, small wooden-and-bronze buckler and short Alvor wakizashi. He is careful, personable and frustrated that evacuation work earns less glory than sword duels.
 
 Meet him securing a clinic doorway in chapter two. Kai helps retrieve trapped civilians; Cassian then assists the foundry escape. His **Cadence of the Steadfast Gate** protects a marked ally and reduces incoming damage for one bounded window. Support command **Hold the Line** costs an existing party action and has a cooldown; it is not a free infinite shield.
 
@@ -93,7 +105,7 @@ After Soren's death, Ayla helps Eren organize a memorial rather than promising t
 
 ### Nox Varen — THE OATH WITHOUT A DAWN
 
-Defected vampire scout, pale skin, silver-gray tied-back hair, amber eyes, wine-brown scarf and paired daggers. He knows Court routes but has no authority over the royal engine and initially knows nothing about Kai's seal.
+Defected vampire scout, pale skin, silver-gray tied-back hair, amber eyes, wine-brown scarf and paired straight tanto. He knows Court routes but has no authority over the royal engine and initially knows nothing about Kai's seal.
 
 Meet him in a sheltered chapter-four outpost while he protects captives from a Raven Knight. Lyra distrusts him; the player judges his actions in a short rescue sequence. His vampirism still carries hunger, guilt and daylight vulnerability. He rejects predation and depends on voluntary, bounded support from the refuge; do not present this as a universal cure or erase the world's memory-consumption problem.
 
@@ -125,7 +137,7 @@ Suggested encounters: Acolyte + Lancer teaches target priority; Weaver + Stalker
 
 ## 7. Exact asset coverage and limits
 
-Included: 28 original walking atlases with matching crop JSONs, 28 prepared combat sheets, 384 individual battle frames, 236 animated GIF previews, 38 profiles, three static backdrops, 36 starter tiles plus atlas, two logos, story and integration metadata.
+Included: 28 original walking atlases with matching crop JSONs, 28 prepared combat sheets, 384 individual battle frames, 236 animated GIF previews, 38 profiles, three static backdrops, 36 starter tiles plus atlas, one compact anime logo, story and integration metadata.
 
 Walking source art is preserved at native resolution in `originals/`. High-resolution battle masters are omitted because the user chose the preview combat art and requested smaller uploads. No obsolete reduced 48-pixel walking sheets are used by this edition. `manifest.json` is authoritative.
 
@@ -146,7 +158,7 @@ Report what was implemented, what was tested and what art/content is still missi
 
 ## 9. Message the user can paste into Claude
 
-Read this document first. I am uploading three ZIPs for VEIL OF DAWN. Merge their common root folder, inspect the manifest and complete story, and use ORIGINALS for exploration/walking with a logical 48x48 footprint and PREVIEW battle sheets for combat. Preserve the four core companions, five Dawncrowned and existing ending. Add the six new enemies and three temporary allies as specified. Start with working asset loading, an updated gallery, Kai exploration and a tactical battle, then build the five-hour campaign in verified milestones. Do not claim inaccessible attachments were inspected, and do not replace the selected art with placeholders.
+Read this document first. I am uploading three ZIPs for VAMPIRE HUNTERS. Merge their common root folder, inspect the manifest and complete story, and use ORIGINALS for exploration/walking with a logical 48x48 footprint and PREVIEW battle sheets for combat. Preserve the four core companions, five Dawncrowned and existing ending. Add the six new enemies and three temporary allies as specified. Start with working asset loading, an updated gallery, Kai exploration and a tactical battle, then build the five-hour campaign in verified milestones. Do not claim inaccessible attachments were inspected, and do not replace the selected art with placeholders.
 
 
 ---
@@ -155,13 +167,13 @@ Read this document first. I am uploading three ZIPs for VEIL OF DAWN. Merge thei
 
 The latest artwork and guest rules above override older asset-loading and cast-coverage instructions in this appendix. Story continuity remains unchanged.
 
-# VEIL OF DAWN — Complete Claude Development Prompt
+# VAMPIRE HUNTERS — Complete Claude Development Prompt
 
 Copy this document into Claude as a project brief. All content below is addressed to Claude. This is a complete campaign blueprint and implementation brief; expand it into scene scripts and a playable game without changing the established revelations or ending.
 
 ## 1. Your assignment
 
-Act as a game director, narrative designer, pixel-art art director, and JavaScript game developer. Build an original single-player JRPG called **VEIL OF DAWN**, with turn-based battles, exploration, cinematic dialogue, and a complete approximately five-hour main campaign.
+Act as a game director, narrative designer, pixel-art art director, and JavaScript game developer. Build an original single-player JRPG called **VAMPIRE HUNTERS**, with turn-based battles, exploration, cinematic dialogue, and a complete approximately five-hour main campaign.
 
 The emotional and aesthetic starting point is supernatural sword-hunting fiction such as Demon Slayer: dangerous nights, disciplined sword fighters, expressive combat techniques, tragic monsters, and an exceptional protagonist. Create an independent world. Do not reuse existing characters, plots, uniforms, terminology, signature attack sequences, or one-to-one counterparts. Cadences, Alvor Blades, the Dawncrowned, vampiric memory consumption, and Kai's seal have their own rules.
 
@@ -230,7 +242,7 @@ The Dawncrowned are the five active guardians with the highest mastery and respo
 Age 43. Commander of the Aurora Wardens. Tall, silver-streaked black hair, a charcoal coat lined in muted gold, and a cracked Dawnstone ring. Calm and intimidating, with an exhausted expression rather than constant arrogance.
 
 - Discipline: **Cadence of the Eclipse**. Absorbs an incoming charged attack into his blade, then releases the stored energy in a precisely timed counter. It is a Dawnstone technique, not vampirism.
-- Weapon: **Last Horizon**, a heavy straight Alvor sword with a dark central channel.
+- Weapon: **Last Horizon**, a long Alvor nodachi with a smooth shallow curve and dark central channel.
 - Signature: **Horizon Zero**, a brilliant horizontal cut preceded by a moment of complete darkness.
 - Limitation: cannot absorb unlimited energy; opponents can force him to discharge early or overwhelm him with staggered attacks.
 - Story: authorized Kai's sealing. He believes leadership means accepting unforgivable decisions so others can live. He attempts to confine Kai for a dangerous containment ritual after the truth emerges.
@@ -239,10 +251,10 @@ Age 43. Commander of the Aurora Wardens. Tall, silver-streaked black hair, a cha
 
 ### Second Seat — Elara Ashen, THE WHITE INFERNO
 
-Age 34. Kai's mentor and the Warden who rescues him. Dark hair in a short braid, ash-white mantle, burn scars on one forearm, and weathered practical armor. She is blunt, warm in private, and angry at her own years of silence.
+Age 34. Kai's mentor and the Warden who rescues him. Dark hair in a short braid, ash-white haori, burn scars on one forearm, and a practical charcoal hunter uniform and black hakama. She is blunt, warm in private, and angry at her own years of silence.
 
 - Discipline: **Cadence of the Ashen Sun**. White flame strips away regeneration and burns hostile blood constructs. Control matters more than spectacle.
-- Weapon: **Cinder Vow**, a broad, slightly curved Alvor sword.
+- Weapon: **Cinder Vow**, a slender Alvor katana.
 - Signature: **White Funeral**, a ring of pale flame that seals a battlefield against escaping vampire fragments.
 - Limitation: sustained flame overheats her weapon and strains old injuries.
 - Story: teaches Kai restraint, admits her complicity, then rejects Rowan's plan to decide Kai's fate without him.
@@ -254,7 +266,7 @@ Age 34. Kai's mentor and the Warden who rescues him. Dark hair in a short braid,
 Age 29. Broad-shouldered, warm-brown skin, cropped dark hair, a sleeveless storm-blue coat, and scarred hands. Loud, competitive, and generous. His jokes disguise grief over his younger brother's disappearance.
 
 - Discipline: **Cadence of the Stormforge**. Stores kinetic energy across deliberate movements and discharges it through paired blades and the ground. He is not merely a fighter who runs fast.
-- Weapons: **Northwake** and **Southwake**, paired short Alvor blades.
+- Weapons: **Northwake** and **Southwake**, paired Alvor wakizashi.
 - Signature: **Thousand-Bell Descent**, a chained discharge across several marked targets.
 - Limitation: needs preparation and conductive paths; interruption can waste his stored charge.
 - Story: mentors Lyra and rescues refugees from Brassveil. Discovers that his brother Orin became one of Veyr's enforcers.
@@ -266,7 +278,7 @@ Age 29. Broad-shouldered, warm-brown skin, cropped dark hair, a sleeveless storm
 Age 27. Deep-brown skin, silver-gray hair, a muted blue coat, and fine frost patterns on her weapon. Reserved and exacting, with a dry sense of humor. She judges people by what they do under pressure.
 
 - Discipline: **Cadence of the Stillwater Frost**. Slows hostile energy flow, creates fragile protective structures, and redirects momentum. Her ice does not effortlessly freeze every opponent.
-- Weapon: **Winterglass**, a narrow Alvor sword with a translucent mineral spine.
+- Weapon: **Winterglass**, a slender Alvor katana with a cyan mineral spine.
 - Signature: **Still World**, a field of floating frost shards that briefly locks the enemy's next charged action.
 - Limitation: brittle barriers break under repeated heavy strikes; large control fields demand concentration.
 - Story: initially escorts Kai under arrest. Seeing him protect civilians while the leadership argues changes her allegiance.
@@ -278,7 +290,7 @@ Age 27. Deep-brown skin, silver-gray hair, a muted blue coat, and fine frost pat
 Age 31. Slim build, copper-brown hair, dark teal traveling robes, a blindfold worn during rituals, and small bell charms. He can see normally; the blindfold reduces distracting visual input during memory work. Gentle, unsettling, and funny at unexpected moments.
 
 - Discipline: **Cadence of the Hollow Bell**. Reads lingering memory echoes and turns rhythmic vibrations into defenses against illusions.
-- Weapon: **Requiem**, an Alvor blade with a resonant bell-shaped guard.
+- Weapon: **Requiem**, an Alvor katana with a resonant bell-shaped tsuba.
 - Signature: **Last Reverberation**, a pulse that separates a victim's surviving memory from a vampire's projection.
 - Limitation: cannot read minds, recreate erased memories, or return the dead. Deep contact with an old vampire is dangerous.
 - Story: recognizes Kai's mark as a prison rather than an infection and mentors Eren.
@@ -293,11 +305,11 @@ The complete playable party has four members. Use three active combatants and on
 
 **Kai — sealbreaker / flexible damage.** Appears from the prologue. Pale Ember attacks, Veil Arts, blood-anchor disruption, and controlled counters.
 
-**Lyra Fen — storm duelist / initiative control.** Age 20, tawny skin, dark curly hair tied back, amber eyes, and a blue-gray uniform with copper clasps. Energetic and blunt. She is Daigo's apprentice, ambitious to earn a Dawncrowned seat, and embarrassed by mistakes. Her brother **Tomas** is alive and works as a civilian courier; do not kill every companion's family. Her **Cadence of the Stormstep** marks targets and shifts turn order. She uses the slender blade **Skylark**. Arc: learns that command is about whom she protects, not how impressive her victories look. Joins in chapter one.
+**Lyra Fen — storm duelist / initiative control.** Age 20, tawny skin, dark curly hair tied back, amber eyes, and a navy-gray haori with copper lightning seams over a black hunter uniform and hakama. Energetic and blunt. She is Daigo's apprentice, ambitious to earn a Dawncrowned seat, and embarrassed by mistakes. Her brother **Tomas** is alive and works as a civilian courier; do not kill every companion's family. Her **Cadence of the Stormstep** marks targets and shifts turn order. She uses the slender katana **Skylark**. Arc: learns that command is about whom she protects, not how impressive her victories look. Joins in chapter one.
 
 **Eren Sol — memory exorcist / support and illusion removal.** Age 22, medium-brown skin, dark green-black hair, thin spectacles, and a weathered teal robe. Soren's apprentice. Anxious, observant, unexpectedly stubborn. Uses **Cadence of the Echo Thread**, a ritual dagger called **Keepsake**, and bell talismans. His small **Echo Ledger** records chosen memories and is an optional journal feature, not an unrestricted supernatural archive. Arc: stops hiding behind his teacher's certainty and completes the counter-ritual. Joins in chapter two.
 
-**Mira Thorn — field medic / barriers and precise ranged attacks.** Age 19, light-brown skin, chestnut hair, hazel eyes, a burgundy scarf, and a practical healer's satchel. Kai's childhood friend and Hana's apprentice. Taken alive during the festival because her memories can be used to locate Kai and manipulate him. She actively organizes captives and helps undermine the prison from inside. Rescued midway through chapter two, then chooses to join. Uses Dawnstone needles, a compact crossbow called **Kindle**, and learned **Cadence of the Lantern Thread** support forms. She has no exceptional inherited power. Arc: insists that protecting someone includes respecting their choices.
+**Mira Thorn — field medic / barriers and precise ranged attacks.** Age 19, light-brown skin, chestnut hair, hazel eyes, a crimson blossom-patterned haori, cream-and-black uniform, and practical healer's pouches at her obi. Kai's childhood friend and Hana's apprentice. Taken alive during the festival because her memories can be used to locate Kai and manipulate him. She actively organizes captives and helps undermine the prison from inside. Rescued midway through chapter two, then chooses to join. Uses Dawnstone needles, a compact wakizashi called **Kindle**, and learned **Cadence of the Lantern Thread** support forms. She has no exceptional inherited power. Arc: insists that protecting someone includes respecting their choices.
 
 Additional named characters with actual scenes or quest functions:
 
@@ -317,7 +329,7 @@ Additional named characters with actual scenes or quest functions:
 
 His motive explains his behavior without excusing it. His promise of resurrection is false: he can construct convincing memory replicas, not restore real people. Foreshadow this through replicas repeating phrases and failing to respond naturally.
 
-Appearance: elegant, aged black-gold coat, pale skin with subtle bloodstone cracks, long dark hair, a crown like an eclipsed sun, and a ceremonial sword called **Night Testament**. He should initially look controlled and almost human; monstrous transformations arrive later.
+Appearance: elegant black-gold ceremonial kimono and long haori, pale skin with subtle bloodstone cracks, long dark hair, a Japanese ceremonial kanmuri headpiece with an eclipse emblem, and a ceremonial katana called **Night Testament**. He should initially look controlled and almost human; monstrous transformations arrive later.
 
 His inner circle is called **The Nightbound Court**. It is not a numbered group that mirrors an existing anime hierarchy. Each member is an agent with a specific task:
 
