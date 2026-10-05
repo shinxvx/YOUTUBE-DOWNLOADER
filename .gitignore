@@ -4,3 +4,4 @@ out/
 playtest-shots/
 *.log
 .DS_Store
+release/

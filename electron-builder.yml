@@ -1,0 +1,20 @@
+# Windows installer (NSIS) + portable .exe built from the Electron Forge
+# package (out/EidraNexusAcademy-win32-x64). Used by the server publisher,
+# because Forge's Squirrel maker needs Windows (or Wine + Mono).
+#   npm run package:win && npx electron-builder --win --prepackaged out/EidraNexusAcademy-win32-x64
+appId: com.eidra.nexusacademy
+productName: Eidra Nexus Academy
+directories:
+  output: release
+  buildResources: build
+win:
+  icon: build/icon.ico
+  target: [nsis, portable]
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  shortcutName: Eidra Nexus Academy
+  artifactName: EidraNexusAcademy-Setup-${version}.${ext}
+portable:
+  artifactName: EidraNexusAcademy-Portable-${version}.${ext}
