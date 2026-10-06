@@ -1,5 +1,12 @@
 # Histórico
 
+## 2026-10-06 — v0.1.1: corrigido "o jogo não abre"
+
+- Causa: o Forge gerava `EidraNexusAcademy.exe`, mas o instalador NSIS e o portátil (electron-builder)
+  abrem `<productName>.exe` = `Eidra Nexus Academy.exe`, que não existia; atalho e portátil não abriam nada.
+- Correção: `executableName: 'Eidra Nexus Academy'` no forge.config.cjs. Versão 0.1.1.
+- Testado: build Linux empacotado abre com o nome novo (electron-check), `npm test` ok.
+
 ## 2026-10-05 — v0.1.0 publicada no servidor
 
 - Código mudou de lugar: `shinxvx/YOUTUBE-DOWNLOADER`, branch `claude/trusting-keller-kgiotm`

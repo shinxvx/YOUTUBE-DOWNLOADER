@@ -30,7 +30,7 @@ and music are provisional (see `ASSETS.md`).
 The Squirrel installer must be built on Windows, or on Linux/macOS with Wine
 and Mono installed. The app folder and the zip build anywhere.
 
-The game opens through its own executable (`EidraNexusAcademy.exe`). The player
+The game opens through its own executable (`Eidra Nexus Academy.exe`). The player
 does not need Node.js, a browser, a terminal or a dev server. The `.exe` ships
 with its support files (DLLs, `.pak`, `resources/app.asar`), which is normal
 for Electron and fine for Steam.

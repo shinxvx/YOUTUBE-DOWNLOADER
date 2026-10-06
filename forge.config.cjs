@@ -5,7 +5,9 @@ const path = require('path');
 module.exports = {
   packagerConfig: {
     name: 'EidraNexusAcademy',
-    executableName: 'EidraNexusAcademy',
+    // must match electron-builder's productFilename: the NSIS installer and the
+    // portable launcher start "<productName>.exe"
+    executableName: 'Eidra Nexus Academy',
     appBundleId: 'com.eidra.nexusacademy',
     icon: path.join(__dirname, 'build', 'icon'),
     asar: true,

@@ -26,4 +26,4 @@ come from Steamworks.
 5. **Achievements**: create them in Steamworks with the IDs from `ACHIEVEMENTS`, then call
    `steam.unlock` where the matching flags are set (partner chosen, admission won, license earned…).
 6. **Depot**: upload the contents of `out/EidraNexusAcademy-win32-x64/` (from `npm run package:win`).
-   The launch option is `EidraNexusAcademy.exe`.
+   The launch option is `Eidra Nexus Academy.exe`.
