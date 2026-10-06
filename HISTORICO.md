@@ -5,6 +5,7 @@
 - Modelo de loja virtual em JavaScript puro (sem build): catálogo, carrinho, checkout com cupom e Pix,
   e painel admin (dashboard, produtos, pedidos, cupons e configurações). Dados no localStorage.
   O jogo não foi alterado. Veja `loja-modelo/README.md`.
+- Faixa "Loja de demonstração" no topo; demonstração publicada em https://claude.ai/artifact/JyTmDYBXvyXDcibdzW7rq6.
 
 ## 2026-10-05 — Vampire Hunters: arte nova e jogo refeito (mapas de cima, resolução, batalha nova)
 

@@ -107,8 +107,9 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
 .check input { accent-color: var(--accent); width: 18px; height: 18px; }
 
 /* ===================== Header ===================== */
+.demo-bar { padding: 8px 16px; text-align: center; font-size: .8rem; font-weight: 600; background: var(--accent-soft); color: var(--text); }
 .topbar {
-  position: sticky; top: 0; z-index: 30; height: var(--header);
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30; height: var(--header);
   background: color-mix(in srgb, var(--bg) 78%, transparent); backdrop-filter: saturate(180%) blur(16px);
   border-bottom: 1px solid var(--line);
 }
