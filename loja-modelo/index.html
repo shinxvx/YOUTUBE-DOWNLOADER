@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Loja Modelo</title>
+  <meta name="description" content="Modelo de loja virtual em JavaScript puro: catálogo, carrinho, checkout e painel admin.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar__inner">
+      <a href="#/" class="brand" id="brand">
+        <span class="brand__logo" id="brandLogo">◆</span>
+        <span class="brand__name" id="brandName">Loja</span>
+      </a>
+
+      <label class="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="searchInput" type="search" placeholder="Buscar produtos…" autocomplete="off">
+      </label>
+
+      <nav class="topbar__actions">
+        <button class="icon-btn" id="themeBtn" title="Alternar tema" aria-label="Alternar tema">
+          <svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+        <a class="icon-btn" href="#/admin" title="Painel admin" aria-label="Painel admin">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        </a>
+        <button class="icon-btn cart-btn" id="cartBtn" title="Carrinho" aria-label="Carrinho">
+          <svg viewBox="0 0 24 24"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6 5 3H2"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg>
+          <span class="badge" id="cartCount">0</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="app" class="app"></main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div>
+        <strong id="footerName">Loja</strong>
+        <p class="muted" id="footerTagline"></p>
+      </div>
+      <p class="muted small">© <span id="year"></span> · Modelo de loja em JavaScript puro</p>
+    </div>
+  </footer>
+
+  <!-- Gaveta do carrinho -->
+  <div class="overlay" id="overlay" hidden></div>
+  <aside class="drawer" id="cartDrawer" aria-label="Carrinho" aria-hidden="true">
+    <div class="drawer__head">
+      <h3>Seu carrinho</h3>
+      <button class="icon-btn" data-close-drawer aria-label="Fechar">✕</button>
+    </div>
+    <div class="drawer__body" id="cartItems"></div>
+    <div class="drawer__foot" id="cartFoot"></div>
+  </aside>
+
+  <div class="toasts" id="toasts"></div>
+
+  <script src="js/store.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/shop.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

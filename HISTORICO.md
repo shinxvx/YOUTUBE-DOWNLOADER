@@ -1,5 +1,11 @@
 # Histórico — Vampire Hunters (antes Veil of Dawn)
 
+## 2026-10-06 — Loja Modelo (projeto à parte, pasta `loja-modelo/`)
+
+- Modelo de loja virtual em JavaScript puro (sem build): catálogo, carrinho, checkout com cupom e Pix,
+  e painel admin (dashboard, produtos, pedidos, cupons e configurações). Dados no localStorage.
+  O jogo não foi alterado. Veja `loja-modelo/README.md`.
+
 ## 2026-10-05 — Vampire Hunters: arte nova e jogo refeito (mapas de cima, resolução, batalha nova)
 
 - Pacote novo "Vampire Hunters Anime Pack" (3 ZIPs, 800 arquivos conferidos por SHA-256) substituiu toda
