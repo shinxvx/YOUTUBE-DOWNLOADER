@@ -1,0 +1,21 @@
+{
+  "_leia": "Texto da narração. 'legenda' = o que aparece escrito; 'voz' = grafia que o Piper pronuncia certo (nomes em inglês). 'em' = segundo em que a frase começa no vídeo (o roteiro.js usa estes tempos; ajuste aqui e gere de novo).",
+  "frases": [
+    { "id": "n01", "em": 0.55, "legenda": "Seu negócio precisa de um sistema?", "voz": "Seu negócio precisa de um sistema?" },
+    { "id": "n02", "em": 4.25, "legenda": "A Speed desenvolve.", "voz": "A Speed desenvolve." },
+    { "id": "n03", "em": 5.75, "legenda": "Criamos soluções sob medida e resolvemos problemas nos sistemas que você já usa.", "voz": "Criamos soluções sob medida, e resolvemos problemas nos sistemas que você já usa." },
+    { "id": "n04", "em": 10.15, "legenda": "Conheça alguns dos nossos projetos:", "voz": "Conheça alguns dos nossos projetos:" },
+    { "id": "p1", "em": 12.1, "legenda": "TikSpeed,", "voz": "TikSpeed." },
+    { "id": "p2", "em": 16.8, "legenda": "Creator X,", "voz": "Criêitor Écs." },
+    { "id": "p3", "em": 21.5, "legenda": "ZapBot,", "voz": "Zap Bót." },
+    { "id": "p4", "em": 26.2, "legenda": "Painel de RH,", "voz": "Painel de erre agá." },
+    { "id": "p5", "em": 30.9, "legenda": "Loja Speed", "voz": "Loja Speed." },
+    { "id": "p6", "em": 35.6, "legenda": "e Aurora Store.", "voz": "e Aurora Istór." },
+    { "id": "n05", "em": 40.35, "legenda": "Cada negócio tem uma necessidade.", "voz": "Cada negócio tem uma necessidade." },
+    { "id": "n06", "em": 42.65, "legenda": "A sua empresa também pode ter um sistema feito para ela,", "voz": "A sua empresa também pode ter um sistema feito para ela," },
+    { "id": "n07", "em": 45.55, "legenda": "com um preço que cabe no bolso.", "voz": "com um preço que cabe no bolso." },
+    { "id": "n08", "em": 48.4, "legenda": "Conte sua ideia.", "voz": "Conte sua ideia." },
+    { "id": "n09", "em": 49.75, "legenda": "A Speed desenvolve.", "voz": "A Speed desenvolve." },
+    { "id": "n10", "em": 51.15, "legenda": "Fale com a gente pelo WhatsApp.", "voz": "Fale com a gente pelo uótsapi." }
+  ]
+}

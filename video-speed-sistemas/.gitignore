@@ -1,0 +1,6 @@
+# fica só no servidor (capturas das telas, logo, narração gerada, Piper, saída e temporários)
+assets/
+narracao/*/
+saida/
+.trabalho/
+ferramentas/piper/

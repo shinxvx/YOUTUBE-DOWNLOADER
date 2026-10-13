@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Speed — A Speed desenvolve (Reels/TikTok)</title>
+<!--
+  Vídeo publicitário da SPEED (serviço de desenvolvimento de sistemas). Quadro 1080x1920, 30 fps, 56 s.
+  render(t) desenha o segundo t de forma determinística (o render.mjs tira um print por quadro).
+  No navegador: ?t=12.5 mostra o quadro parado; ?play=1 toca em tempo real (sem áudio).
+  Textos, tempos e passos das demonstrações: roteiro.js. Áudio (trilha, efeitos, narração e mixagem): audio.js.
+  Fontes (SIL OFL, Google Fonts): Unbounded (títulos) e Manrope (textos). Identidade: speedco.com.br.
+-->
+<style>
+@font-face { font-family: 'Unbounded'; src: url(fonts/Unbounded-latin.woff2) format('woff2'); font-weight: 200 900; }
+@font-face { font-family: 'Manrope'; src: url(fonts/Manrope-latin.woff2) format('woff2'); font-weight: 200 800; }
+:root { --bg: #0A0A0A; --branco: #FAFAFA; --cinza: #9A9A9A; --cinza2: #4A4A4A; --card: #121212; --linha: rgba(250,250,250,.12); }
+* { box-sizing: border-box; }
+html, body { margin: 0; background: #000; }
+#st { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: var(--bg); color: var(--branco);
+  font-family: 'Manrope', sans-serif; -webkit-font-smoothing: antialiased; text-rendering: geometricPrecision; }
+.abs { position: absolute; left: 0; top: 0; }
+.cena { position: absolute; inset: 0; display: none; }
+.tit { font-family: 'Unbounded', sans-serif; font-weight: 800; letter-spacing: -0.01em; line-height: 1.04; white-space: nowrap; }
+.lin { position: absolute; left: 0; width: 1080px; text-align: center; }
+.lin > span { display: inline-block; }
+.mask { overflow: hidden; padding: 0 8px; }
+.eyebrow { font-family: 'Manrope'; font-weight: 700; font-size: 30px; letter-spacing: .14em; color: var(--cinza); text-transform: uppercase; }
+
+/* fundo: brilho + setas grandes bem apagadas (como o topo do site) */
+#glow { position: absolute; width: 1400px; height: 1400px; left: -160px; top: 260px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,.075) 0%, rgba(255,255,255,0) 68%); }
+.chev { position: absolute; left: 0; top: 0; overflow: visible; }
+
+/* mockup de computador */
+.pc { position: absolute; width: 1000px; }
+.pc .tampa { position: absolute; left: 0; top: 0; width: 1000px; height: 645px; border-radius: 30px; background: #151515;
+  border: 2px solid rgba(250,250,250,.14); }
+.pc .vp { position: absolute; left: 20px; top: 20px; width: 960px; height: 600px; overflow: hidden; border-radius: 12px; background: #000; }
+.pc .base { position: absolute; left: -40px; top: 643px; width: 1080px; height: 30px; border-radius: 0 0 26px 26px;
+  background: linear-gradient(#2b2b2b, #161616); border: 2px solid rgba(250,250,250,.10); border-top: none; }
+.pc .base::after { content: ''; position: absolute; left: 470px; top: 0; width: 140px; height: 10px; border-radius: 0 0 10px 10px; background: #0d0d0d; }
+/* mockup de celular */
+.cel { position: absolute; width: 404px; height: 856px; border-radius: 64px; background: #151515; border: 2px solid rgba(250,250,250,.16); }
+.cel .vp { position: absolute; left: 12px; top: 12px; width: 376px; height: 828px; overflow: hidden; border-radius: 52px; background: #000; }
+.cel .barra { position: absolute; left: 0; top: 0; width: 376px; height: 40px; background: #000; z-index: 3; font: 700 15px 'Manrope'; color: #fff; }
+.cel .barra b { position: absolute; left: 34px; top: 12px; font-weight: 700; }
+.cel .barra i { position: absolute; left: 133px; top: 9px; width: 110px; height: 28px; border-radius: 16px; background: #000; box-shadow: 0 0 0 1px #1d1d1d; }
+.cel .barra u { position: absolute; right: 30px; top: 15px; width: 26px; height: 12px; border-radius: 3px; border: 2px solid #fff; text-decoration: none; }
+.cel .barra u::after { content: ''; position: absolute; left: 2px; top: 2px; width: 15px; height: 4px; background: #fff; border-radius: 1px; }
+.tela { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+.tela img { position: absolute; left: 0; top: 0; display: block; }
+.cursor { position: absolute; left: 0; top: 0; width: 40px; height: 40px; z-index: 5; }
+.toque { position: absolute; left: 0; top: 0; width: 64px; height: 64px; margin: -32px 0 0 -32px; border-radius: 50%; z-index: 5;
+  border: 4px solid rgba(255,255,255,.95); background: rgba(255,255,255,.22); }
+.onda { position: absolute; left: 0; top: 0; width: 64px; height: 64px; margin: -32px 0 0 -32px; border-radius: 50%; z-index: 4; border: 3px solid #fff; }
+.presente { position: absolute; border-radius: 18px; overflow: hidden; border: 2px solid rgba(255,255,255,.22); z-index: 4; }
+
+.nome { font-family: 'Unbounded'; font-weight: 800; color: var(--branco); white-space: nowrap; }
+.benef { position: absolute; left: 130px; width: 800px; font: 600 44px/1.28 'Manrope'; color: var(--branco); text-align: center; }
+
+/* cena 2 */
+.mini { position: absolute; border-radius: 18px; overflow: hidden; border: 2px solid var(--linha); background: #111; }
+.mini img { width: 100%; height: 100%; object-fit: cover; object-position: top left; display: block; }
+.cardx { position: absolute; width: 400px; height: 540px; border-radius: 28px; background: var(--card); border: 2px solid var(--linha); overflow: hidden; }
+.blk { position: absolute; border-radius: 10px; background: #2a2a2a; }
+.rot { position: absolute; width: 400px; text-align: center; font: 700 31px/1.25 'Manrope'; color: var(--branco); }
+.chip { position: absolute; padding: 8px 18px; border-radius: 999px; font: 800 26px 'Manrope'; white-space: nowrap; }
+.compl { position: absolute; left: 0; width: 1080px; text-align: center; font: 700 48px/1.3 'Manrope'; }
+
+/* cena 4 */
+#branco { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: var(--branco); }
+
+/* cena 5 */
+.ctacard { position: absolute; left: 110px; width: 860px; border-radius: 32px; background: #121212; border: 2px solid rgba(250,250,250,.14); }
+.ctal { position: absolute; left: 0; width: 860px; text-align: center; white-space: nowrap; }
+.ico { display: inline-block; vertical-align: -6px; margin-right: 16px; }
+
+/* legendas */
+#leg { position: absolute; left: 70px; width: 940px; bottom: 405px; text-align: center; z-index: 50; }
+#leg .pill { display: inline-block; max-width: 940px; padding: 12px 26px 14px; border-radius: 22px; background: rgba(10,10,10,.82);
+  font: 700 44px/1.28 'Manrope'; color: var(--branco); }
+#leg .w { opacity: .42; }
+#leg .w.on { opacity: 1; }
+#prog { position: absolute; left: 110px; top: 236px; height: 6px; width: 860px; z-index: 30; }
+#prog i { position: absolute; top: 0; height: 6px; border-radius: 3px; background: rgba(250,250,250,.16); overflow: hidden; }
+#prog i b { position: absolute; left: 0; top: 0; height: 6px; background: var(--branco); }
+</style>
+</head>
+<body>
+<div id="st">
+  <div id="glow"></div>
+  <svg id="fundo" class="chev" width="1080" height="1920"></svg>
+  <div id="c1" class="cena"></div>
+  <div id="c2" class="cena"></div>
+  <div id="c3" class="cena"></div>
+  <div id="cp" class="cena"></div>
+  <div id="c4" class="cena"><div id="branco"></div></div>
+  <div id="c5" class="cena"></div>
+  <div id="prog"></div>
+  <svg id="wipe" class="chev" width="1080" height="1920" style="z-index:40"></svg>
+  <div id="leg"></div>
+</div>
+<script src="roteiro.js"></script>
+<script>
+'use strict';
+const R = window.ROTEIRO;
+const $ = (s, el = document) => el.querySelector(s);
+const mk = (tag, cls, par, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; if (par) par.appendChild(e); return e; };
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const lerp = (a, b, k) => a + (b - a) * k;
+const pr = (t, a, b) => clamp((t - a) / (b - a));
+const eo = k => 1 - Math.pow(1 - k, 3);              // ease-out cúbico
+const eio = k => k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+const eexp = k => k >= 1 ? 1 : 1 - Math.pow(2, -10 * k);
+const eback = k => { const c = 1.45; return 1 + (c + 1) * Math.pow(k - 1, 3) + c * Math.pow(k - 1, 2); };
+// aplica transformações (só o que mudou, para o navegador não refazer tudo)
+function S(el, { x = 0, y = 0, s = 1, sx, sy, r = 0, o = 1, blur = 0, ox, oy } = {}) {
+  const tr = `translate(${x.toFixed(2)}px,${y.toFixed(2)}px) scale(${(sx ?? s).toFixed(4)},${(sy ?? s).toFixed(4)})${r ? ` rotate(${r.toFixed(2)}deg)` : ''}`;
+  if (el._tr !== tr) { el.style.transform = tr; el._tr = tr; }
+  const op = o.toFixed(3); if (el._o !== op) { el.style.opacity = op; el._o = op; }
+  const vis = o > 0.001 ? 'visible' : 'hidden'; if (el._v !== vis) { el.style.visibility = vis; el._v = vis; }
+  const f = blur > 0.05 ? `blur(${blur.toFixed(2)}px)` : 'none'; if (el._f !== f) { el.style.filter = f; el._f = f; }
+  if (ox != null && el._or !== ox + oy) { el.style.transformOrigin = `${ox}px ${oy}px`; el._or = ox + oy; }
+}
+const show = (el, on) => { const v = on ? 'block' : 'none'; if (el._sv !== v) { el.style.display = v; el._sv = v; } };
+
+// ---------- as três setas (mesmo desenho da logo oficial: viewBox 900x771, traço arredondado)
+const CHEV = ['M50 150 L252 385 L50 620', 'M300 95 L561 385 L300 675', 'M546 50 L850 385 L546 720'];
+const TONS = ['#4A4A4A', '#9A9A9A', '#FAFAFA'];
+function setas(svg, tons = TONS, larg = 96) {
+  const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  const ps = CHEV.map((d, i) => { const p = document.createElementNS('http://www.w3.org/2000/svg', 'path'); p.setAttribute('d', d); p.setAttribute('fill', 'none');
+    p.setAttribute('stroke', tons[i]); p.setAttribute('stroke-width', larg); p.setAttribute('stroke-linecap', 'round'); p.setAttribute('stroke-linejoin', 'round'); g.appendChild(p); return p; });
+  svg.appendChild(g); return { g, ps };
+}
+const setG = (g, x, y, s, o = 1) => { const v = `translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${s.toFixed(4)})`; if (g._v !== v) { g.setAttribute('transform', v); g._v = v; } const op = o.toFixed(3); if (g._o !== op) { g.setAttribute('opacity', op); g._o = op; } };
+
+// ---------- texto que cabe na largura (mede com a fonte já carregada)
+const medidor = mk('span', 'tit', document.body); medidor.style.cssText = 'position:absolute;visibility:hidden;left:-9999px';
+function caber(txt, max, tam, peso = 800, fam = 'Unbounded') { medidor.style.fontFamily = fam; medidor.style.fontWeight = peso; medidor.style.fontSize = tam + 'px'; medidor.textContent = txt; const w = medidor.getBoundingClientRect().width; return w > max ? Math.floor(tam * max / w) : tam; }
+// título em linhas, cada linha com máscara (o texto sobe de dentro da máscara)
+function titulo(par, linhas, { y, tam, max = 750, cor = 'var(--branco)', gap = 1.06, mesmo = true, cores } = {}) {
+  let tams = linhas.map(l => caber(l, max, tam)); if (mesmo) { const m = Math.min(...tams); tams = tams.map(() => m); }
+  let yy = y; return linhas.map((l, i) => {
+    const box = mk('div', 'lin mask', par); box.style.top = yy + 'px'; box.style.height = Math.ceil(tams[i] * 1.2) + 'px';
+    const sp = mk('span', 'tit', box, l); sp.style.fontSize = tams[i] + 'px'; sp.style.color = cores ? cores[i] : cor; sp.style.lineHeight = '1.2';
+    yy += tams[i] * gap * 1.1; return { box, sp, tam: tams[i] };
+  });
+}
+
+// ---------- narração / legendas
+let FR = [], DUR = {};
+function frase(id) { return FR.find(f => f.id === id); }
+function falaIni(id) { const f = frase(id); const d = DUR[id] || {}; return f.em + (d.fala_ini || 0); }
+function falaFim(id) { const f = frase(id); const d = DUR[id] || {}; return f.em + (d.fala_fim || estimar(f.legenda)); }
+const estimar = s => 0.075 * s.length + 0.2;
+// instante em que cada palavra é falada (proporcional às letras, dentro do trecho com fala)
+function palavras(id) {
+  const f = frase(id), a = falaIni(id), b = falaFim(id), ws = f.legenda.split(' '); const tot = ws.reduce((s, w) => s + w.length + 1, 0);
+  let acc = 0; return ws.map(w => { const t = a + (b - a) * acc / tot; acc += w.length + 1; return { w, t }; });
+}
+
+// ================== MONTAGEM ==================
+const st = $('#st');
+let PROJ = [], CX = {}, IMGS = [];
+const PF = R.cenas.portfolio[0], PD = (R.cenas.portfolio[1] - R.cenas.portfolio[0]) / R.projetos.length;
+const src = (pasta, f) => `assets/capturas/${pasta}/${f}`;
+
+function montar() {
+  // fundo: setas enormes e apagadas
+  const fundo = $('#fundo'); window.F1 = setas(fundo, ['#FAFAFA', '#FAFAFA', '#FAFAFA']);
+  // cortina de setas (transição)
+  window.W = setas($('#wipe'));
+
+  // ---- cena 1: gancho
+  const c1 = $('#c1');
+  const s1 = mk('div', 'abs', c1); const sv1 = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); sv1.setAttribute('width', 1080); sv1.setAttribute('height', 1920); sv1.setAttribute('class', 'chev'); s1.appendChild(sv1);
+  window.C1 = { setas: setas(sv1), linhas: titulo(c1, R.gancho.linhas, { y: 820, tam: 120 }) };
+  // palavras do gancho, uma a uma com a fala
+  const pw = palavras(R.gancho.frase); let k = 0;
+  C1.palavras = [];
+  C1.linhas.forEach(L => { const ws = L.sp.textContent.split(' '); L.sp.textContent = ''; ws.forEach((w, i) => { const sp = mk('span', '', L.sp, w + (i < ws.length - 1 ? '&nbsp;' : '')); sp.style.display = 'inline-block'; C1.palavras.push({ el: sp, t: (pw[k++] || pw[pw.length - 1]).t }); }); });
+
+  // ---- cena 2: solução
+  const c2 = $('#c2');
+  C2.tit = titulo(c2, ['A SPEED', 'DESENVOLVE.'], { y: 262, tam: 118 });
+  C2.minis = R.projetos.map((p, i) => { const m = mk('div', 'mini', c2); const im = mk('img', '', m); im.src = src(p.pasta, p.passos[0].img); IMGS.push(im); return { el: m, cel: p.tela === 'cel' }; });
+  // dois cartões: criar do zero / melhorar o que já existe
+  C2.cA = mk('div', 'cardx', c2); C2.cB = mk('div', 'cardx', c2);
+  C2.cA.style.left = '120px'; C2.cB.style.left = '560px'; C2.cA.style.top = C2.cB.style.top = '600px';
+  // cartão A: tela nascendo (blocos)
+  C2.blA = [[24, 24, 352, 52, '#232323'], [24, 96, 96, 420, '#1d1d1d'], [136, 96, 240, 96, '#2c2c2c'], [136, 206, 114, 96, '#2c2c2c'], [262, 206, 114, 96, '#2c2c2c'],
+    [136, 316, 240, 200, '#1d1d1d']].map(([x, y, w, h, c]) => { const b = mk('div', 'blk', C2.cA); Object.assign(b.style, { left: x + 'px', top: y + 'px', width: w + 'px', height: h + 'px', background: c }); return b; });
+  C2.barras = [0, 1, 2, 3, 4, 5].map(i => { const b = mk('div', 'blk', C2.cA); Object.assign(b.style, { left: 156 + i * 36 + 'px', width: '24px', top: '0px', height: '0px', background: i === 4 ? '#FAFAFA' : '#9A9A9A', borderRadius: '6px' }); return b; });
+  C2.kpi = [148, 274].map((x, i) => { const b = mk('div', 'tit', C2.cA, i ? '+38%' : '1.240'); Object.assign(b.style, { position: 'absolute', left: x + 'px', top: '238px', fontSize: '28px', color: '#FAFAFA' }); return b; });
+  C2.lbA = mk('div', 'blk', C2.cA); Object.assign(C2.lbA.style, { left: '150px', top: '120px', width: '150px', height: '18px', background: '#FAFAFA' });
+  C2.lbA2 = mk('div', 'blk', C2.cA); Object.assign(C2.lbA2.style, { left: '150px', top: '150px', width: '96px', height: '14px', background: '#5a5a5a' });
+  C2.trA = mk('div', '', C2.cA); Object.assign(C2.trA.style, { position: 'absolute', inset: '0', border: '3px dashed rgba(250,250,250,.28)', borderRadius: '26px' });
+  // cartão B: sistema que já existe, com erro -> resolvido
+  C2.blB = [[24, 24, 352, 52], [24, 96, 352, 70], [24, 180, 352, 70], [24, 264, 352, 70], [24, 348, 352, 70], [24, 432, 352, 70]].map(([x, y, w, h], i) => {
+    const b = mk('div', 'blk', C2.cB); Object.assign(b.style, { left: x + 'px', top: y + 'px', width: w + 'px', height: h + 'px', background: i ? '#1f1f1f' : '#232323' });
+    if (i) { const a = mk('div', 'blk', b); Object.assign(a.style, { left: '18px', top: '20px', width: '30px', height: '30px', borderRadius: '50%', background: '#3a3a3a' }); const c = mk('div', 'blk', b); Object.assign(c.style, { left: '64px', top: '22px', width: (120 + (i * 37) % 90) + 'px', height: '12px', background: '#4a4a4a' }); const d = mk('div', 'blk', b); Object.assign(d.style, { left: '64px', top: '42px', width: '80px', height: '10px', background: '#333' }); }
+    return b; });
+  C2.err = mk('div', 'chip', C2.cB, '⚠ Erro no sistema'); Object.assign(C2.err.style, { left: '64px', top: '196px', background: '#3a1414', color: '#ff8a80', border: '2px solid #6b2020' });
+  C2.ok = mk('div', 'chip', C2.cB, '✓ Resolvido'); Object.assign(C2.ok.style, { left: '104px', top: '196px', background: '#10301c', color: '#7ee2a0', border: '2px solid #1e5a35' });
+  C2.scan = mk('div', '', C2.cB); Object.assign(C2.scan.style, { position: 'absolute', left: '0', top: '0', width: '400px', height: '90px', background: 'linear-gradient(rgba(250,250,250,0), rgba(250,250,250,.16), rgba(250,250,250,0))' });
+  C2.rA = mk('div', 'rot', c2, R.solucao.criar); C2.rB = mk('div', 'rot', c2, R.solucao.melhorar);
+  C2.rA.style.left = '120px'; C2.rB.style.left = '560px'; C2.rA.style.top = C2.rB.style.top = '1160px';
+  C2.p1 = mk('div', 'compl', c2, R.solucao.complemento[0]); C2.p2 = mk('div', 'compl', c2, R.solucao.complemento[1]);
+  C2.p1.style.top = '1226px'; C2.p2.style.top = '1288px'; C2.p2.style.color = 'var(--cinza)';
+
+  // ---- cena 3: introdução do portfólio
+  const c3 = $('#c3'); window.C3 = { linhas: titulo(c3, R.intro.linhas, { y: 700, tam: 104 }) };
+  C3.n = mk('div', 'eyebrow', c3, '6 projetos'); Object.assign(C3.n.style, { position: 'absolute', left: '0', width: '1080px', textAlign: 'center', top: '1080px' });
+
+  // ---- projetos
+  const cp = $('#cp');
+  const prog = $('#prog'); window.PROG = R.projetos.map((p, i) => { const it = mk('i', '', prog); it.style.left = i * (860 / 6) + 'px'; it.style.width = (860 / 6 - 10) + 'px'; return mk('b', '', it); });
+  PROJ = R.projetos.map((p, i) => {
+    const g = mk('div', 'abs', cp); g.style.width = '1080px'; g.style.height = '1920px';
+    const ey = mk('div', 'eyebrow', g, `Projeto ${String(i + 1).padStart(2, '0')} / 06`); Object.assign(ey.style, { position: 'absolute', left: '0', width: '1080px', textAlign: 'center', top: '268px' });
+    const nm = mk('div', 'lin mask', g); nm.style.top = '312px'; const nmT = mk('span', 'nome', nm, p.nome); const tam = caber(p.nome, 770, 104); nmT.style.fontSize = tam + 'px'; nmT.style.lineHeight = '1.2'; nm.style.height = Math.ceil(tam * 1.25) + 'px';
+    const bf = mk('div', 'benef', g, p.beneficio); bf.style.top = '1268px';
+    let dev, vp;
+    if (p.tela === 'pc') { dev = mk('div', 'pc', g); mk('div', 'tampa', dev); vp = mk('div', 'vp', dev); mk('div', 'base', dev); dev.style.left = '40px'; dev.style.top = '520px'; }
+    else { dev = mk('div', 'cel', g); vp = mk('div', 'vp', dev); const br = mk('div', 'barra', vp, '<b>9:41</b><i></i><u></u>'); dev.style.left = '338px'; dev.style.top = '410px'; }
+    const VW = p.tela === 'pc' ? 960 : 376, VH = p.tela === 'pc' ? 600 : 828, TOP = p.tela === 'pc' ? 0 : 40;
+    const tela = mk('div', 'tela', vp); const [W0, H0] = p.tamanho; tela.style.width = W0 + 'px'; tela.style.height = H0 + 'px';
+    const imA = mk('img', '', tela), imB = mk('img', '', tela); [imA, imB].forEach(im => { im.style.width = W0 + 'px'; im.style.height = H0 + 'px'; });
+    // peça extra do TikSpeed: o efeito de presente aparece por cima do app
+    let extra = null; const pe = p.passos.find(s => s.extra); if (pe) { extra = mk('div', 'presente', vp); const im = mk('img', '', extra); im.src = src(p.pasta, pe.img2); im.style.width = '100%'; im.style.display = 'block'; IMGS.push(im); }
+    const cur = p.tela === 'pc' ? mk('div', 'cursor', vp, '<svg viewBox="0 0 40 40" width="40" height="40"><path d="M6 3 L6 33 L13.5 26 L18.5 37.5 L24 35 L19 23.8 L29 23.8 Z" fill="#fff" stroke="#111" stroke-width="2.4" stroke-linejoin="round"/></svg>') : mk('div', 'toque', vp);
+    const onda = mk('div', 'onda', vp);
+    // passos: imagens, toques e zoom
+    const imgs = [], toques = [], zooms = []; let cxs = null;
+    p.passos.forEach(s => { if (s.img) imgs.push({ t: s.t, f: s.img, rolar: s.rolar }); if (s.toque) toques.push({ t: s.t, c: s.toque }); if (s.zoom) zooms.push({ t: s.t, z: s.zoom }); });
+    imgs.forEach(m => { const im = new Image(); im.src = src(p.pasta, m.f); IMGS.push(im); m.src = im.src; });
+    return { p, i, g, ey, nm, nmT, bf, dev, vp, tela, imA, imB, cur, onda, extra, imgs, toques, zooms, VW, VH, TOP, W0, H0, t0: PF + i * PD };
+  });
+
+  // ---- cena 4: proposta
+  const c4 = $('#c4');
+  C4.minis = R.projetos.map(p => { const m = mk('div', 'mini', c4); const im = mk('img', '', m); im.src = src(p.pasta, p.passos[0].img); IMGS.push(im); return m; });
+  C4.a = titulo(c4, ['FEITO PARA', 'A SUA', 'NECESSIDADE.'], { y: 640, tam: 132, mesmo: false, cores: ['var(--cinza)', 'var(--branco)', 'var(--branco)'] });
+  C4.a[0].sp.style.fontSize = Math.min(C4.a[0].tam, 92) + 'px';
+  C4.b = titulo(c4, ['COM UM PREÇO', 'QUE CABE', 'NO BOLSO.'], { y: 640, tam: 132, mesmo: false, cor: '#0A0A0A' });
+  C4.b[0].sp.style.fontSize = Math.min(C4.b[0].tam, 96) + 'px';
+
+  // ---- cena 5: chamada para ação
+  const c5 = $('#c5');
+  C5.logo = mk('img', '', c5); C5.logo.src = 'assets/speed-logo.png'; IMGS.push(C5.logo); Object.assign(C5.logo.style, { position: 'absolute', left: '435px', top: '286px', width: '210px' });
+  C5.marca = mk('div', 'lin', c5, '<span class="tit" style="font-size:62px">SPEED</span>'); C5.marca.style.top = '488px';
+  C5.marca2 = mk('div', 'lin', c5, '<span style="font:400 30px Unbounded;opacity:.55;letter-spacing:.02em">Entertainment</span>'); C5.marca2.style.top = '566px';
+  C5.t = titulo(c5, R.cta.titulo, { y: 676, tam: 80, mesmo: false });
+  const cc = mk('div', 'ctacard', c5); cc.style.top = '900px'; cc.style.height = '372px'; C5.card = cc;
+  C5.l1 = mk('div', 'ctal', cc, R.cta.fale); Object.assign(C5.l1.style, { top: '44px', font: '700 40px Manrope', color: 'var(--cinza)' });
+  const wa = '<svg class="ico" width="52" height="52" viewBox="0 0 32 32"><path fill="#FAFAFA" d="M16 3C8.8 3 3 8.7 3 15.8c0 2.3.6 4.5 1.8 6.4L3 29l7-1.8c1.8 1 3.9 1.5 6 1.5 7.2 0 13-5.7 13-12.8S23.2 3 16 3zm0 23.4c-1.9 0-3.8-.5-5.4-1.5l-.4-.2-4.2 1.1 1.1-4-.3-.4c-1.1-1.7-1.6-3.6-1.6-5.6C5.2 9.9 10 5.2 16 5.2s10.8 4.7 10.8 10.6S22 26.4 16 26.4zm5.9-7.9c-.3-.2-1.9-1-2.2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-1.9-1.8-2.2-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.4.3-.6.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 3.5c.2.2 2.4 3.6 5.8 5 .8.4 1.4.6 1.9.7.8.3 1.5.2 2.1.1.6-.1 1.9-.8 2.2-1.5.3-.7.3-1.3.2-1.5-.1-.1-.3-.2-.6-.3z"/></svg>';
+  C5.l2 = mk('div', 'ctal', cc, wa + R.cta.whatsapp); Object.assign(C5.l2.style, { top: '120px', font: '800 50px Manrope', color: 'var(--branco)' });
+  const glob = '<svg class="ico" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#9A9A9A" stroke-width="1.8"><circle cx="12" cy="12" r="9.5"/><path d="M2.5 12h19M12 2.5c2.6 2.8 3.9 6 3.9 9.5S14.6 18.7 12 21.5M12 2.5C9.4 5.3 8.1 8.5 8.1 12s1.3 6.7 3.9 9.5"/></svg>';
+  C5.l3 = mk('div', 'ctal', cc, glob + R.cta.site); Object.assign(C5.l3.style, { top: '238px', font: '700 44px Manrope', color: 'var(--cinza)' });
+  [C5.l1, C5.l2, C5.l3].forEach(l => { const s = caber(l.textContent, 790, parseInt(l.style.font.match(/\d+(?=px)/)[0]), 800, 'Manrope'); l.style.fontSize = s + 'px'; });
+
+  // ---- legendas
+  // cada frase vira blocos de até ~34 letras (no máximo 2 linhas no celular), mostrados em sequência com a fala
+  window.LEG = [];
+  FR.forEach(f => {
+    const pw = palavras(f.id), blocos = [[]]; let n = 0;
+    pw.forEach(x => { if (n + x.w.length > 34 && blocos[blocos.length - 1].length) { blocos.push([]); n = 0; } blocos[blocos.length - 1].push(x); n += x.w.length + 1; });
+    blocos.forEach((bl, j) => { const el = mk('span', 'pill'); const ws = bl.map(({ w, t }) => { const s = mk('span', 'w', el, w); el.appendChild(document.createTextNode(' ')); return { s, t }; });
+      const a = (j ? bl[0].t : falaIni(f.id)) - 0.08; const b = j < blocos.length - 1 ? blocos[j + 1][0].t - 0.08 : Math.max(falaFim(f.id) + 0.45, falaIni(f.id) + 1.1);
+      LEG.push({ id: f.id, el, ws, a, b }); });
+  });
+  // frase seguinte encosta na anterior: a anterior sai quando a nova entra
+  LEG.forEach((l, i) => { const n = LEG[i + 1]; if (n && l.b > n.a) l.b = n.a; });
+}
+const C2 = {}, C4 = {}, C5 = {};
+
+// ================== DESENHO ==================
+const CENAS = ['c1', 'c2', 'c3', 'cp', 'c4', 'c5'].map(id => document.getElementById(id));
+const T = R.cenas;
+// instantes das cortinas de setas (passam da esquerda para a direita)
+const WIPES = [T.solucao[0] - 0.22, T.intro[0] - 0.22, ...R.projetos.map((p, i) => PF + i * PD - 0.22), T.cta[0] - 0.24];
+window.WIPES = WIPES;
+
+function fundo(t) {
+  // setas grandes, quase invisíveis, derivando devagar (profundidade)
+  const k = t / R.duracao; setG(F1.g, -260 + 120 * Math.sin(t * 0.11), 520 + 60 * Math.cos(t * 0.09), 1.55 + 0.08 * Math.sin(t * 0.05), 0.03);
+  S($('#glow'), { x: 80 * Math.sin(t * 0.13), y: 120 * Math.cos(t * 0.1) - 200 * k });
+}
+function cortina(t) {
+  let w = null; for (const a of WIPES) if (t >= a && t < a + 0.62) w = a;
+  if (w == null) { setG(W.g, 0, 0, 1, 0); return; }
+  const k = (t - w) / 0.62, e = eio(k);
+  // setas grandes atravessando a tela em diagonal leve, cada uma com seu atraso (profundidade)
+  W.ps.forEach((p, i) => { const d = (i - 1) * 0.06; const kk = eio(clamp((k - 0.1 + d) / 0.8)); p.setAttribute('transform', `translate(${lerp(-1400, 1500, kk) - (i - 1) * 40} 0)`); });
+  setG(W.g, -40, 560, 1.12, k < 0.92 ? 1 : (1 - k) / 0.08);
+}
+
+function legendas(t) {
+  const leg = $('#leg'); let atual = null;
+  for (const l of LEG) if (t >= l.a && t < l.b) atual = l;
+  if (leg._cur !== atual) { leg.innerHTML = ''; if (atual) leg.appendChild(atual.el); leg._cur = atual; }
+  if (atual) { atual.ws.forEach(w => { const on = t >= w.t - 0.02; if (w.s._on !== on) { w.s.classList.toggle('on', on); w.s._on = on; } });
+    const k = pr(t, atual.a, atual.a + 0.16); S(atual.el, { y: (1 - eo(k)) * 14, o: eo(k) * (t > atual.b - 0.1 ? (atual.b - t) / 0.1 : 1) }); }
+}
+
+function cena1(t) {
+  const [a, b] = T.gancho; if (t >= b + 0.05) return false;
+  // setas entram rápido e elegantes: da esquerda, uma depois da outra, com leve escala
+  C1.setas.ps.forEach((p, i) => { const k = eexp(pr(t, 0.05 + i * 0.09, 0.62 + i * 0.09)); p.setAttribute('transform', `translate(${lerp(-700, 0, k)} 0)`); p.setAttribute('opacity', clamp(k * 1.4)); });
+  const sai = eio(pr(t, b - 0.42, b));
+  setG(C1.setas.g, 300 - sai * 260, 360 - sai * 40, 0.53 + sai * 0.35, 1 - sai);
+  // palavras com a narração
+  C1.palavras.forEach(w => { const k = eo(pr(t, w.t - 0.06, w.t + 0.24)); S(w.el, { y: (1 - k) * 90, o: k }); });
+  C1.linhas.forEach((L, i) => S(L.box, { x: -sai * (260 + i * 60), o: 1 - sai, s: 1 + 0.03 * pr(t, 0, b) }));
+  return true;
+}
+
+function cena2(t) {
+  const [a, b] = T.solucao; if (t < a - 0.25 || t >= b + 0.05) return false;
+  const sai = eio(pr(t, b - 0.35, b));
+  C2.tit.forEach((L, i) => { const k = eo(pr(t, a + 0.18 + i * 0.12, a + 0.62 + i * 0.12)); S(L.sp, { y: (1 - k) * 150 }); S(L.box, { x: -sai * 300, o: 1 - sai }); });
+  // cartões de interface: chegam da profundidade e se organizam em grade, depois dão lugar aos dois cartões
+  const sumir = eio(pr(t, a + 1.55, a + 1.95));
+  C2.minis.forEach((m, i) => {
+    const col = i % 2, lin = Math.floor(i / 2);
+    const gx = 120 + col * 440, gy = 600 + lin * 230, w = 400, h = 210;
+    const k = eexp(pr(t, a + 0.2 + i * 0.09, a + 0.95 + i * 0.09));
+    const sx = 540 + (i - 2.5) * 260 * (1 - k), sy = 980 + Math.sin(i * 2.1) * 520 * (1 - k);
+    m.el.style.width = w + 'px'; m.el.style.height = h + 'px';
+    const cx = col ? 340 + 20 : 120; // onde o cartão vai virar (A ou B)
+    const x = lerp(lerp(sx - w / 2, gx, k), col ? 560 : 120, sumir), y = lerp(lerp(sy - h / 2, gy, k), 600 + lin * 60, sumir);
+    S(m.el, { x, y, s: lerp(lerp(1.9, 1, k), 0.92, sumir), r: (1 - k) * (i % 2 ? 9 : -9), o: k * (1 - sumir), blur: (1 - k) * 10, ox: w / 2, oy: h / 2 });
+  });
+  // os dois cartões
+  const kA = eexp(pr(t, a + 1.7, a + 2.25)), kB = eexp(pr(t, a + 1.82, a + 2.37));
+  S(C2.cA, { y: (1 - kA) * 120, s: 0.92 + 0.08 * kA, o: kA * (1 - sai), ox: 200, oy: 270, x: -sai * 200 });
+  S(C2.cB, { y: (1 - kB) * 120, s: 0.92 + 0.08 * kB, o: kB * (1 - sai), ox: 200, oy: 270, x: sai * 200 });
+  // A: a tela nasce
+  const kt = pr(t, a + 2.0, a + 3.5);
+  S(C2.trA, { o: 1 - eo(pr(t, a + 2.9, a + 3.4)) });
+  C2.blA.forEach((bl, i) => { const k = eback(pr(t, a + 2.05 + i * 0.16, a + 2.45 + i * 0.16)); S(bl, { s: 0.6 + 0.4 * k, o: clamp(k), ox: 20, oy: 20 }); });
+  C2.barras.forEach((bl, i) => { const h = [70, 110, 90, 140, 170, 120][i] * eo(pr(t, a + 3.0 + i * 0.07, a + 3.45 + i * 0.07)); bl.style.height = h + 'px'; bl.style.top = (500 - h) + 'px'; });
+  C2.kpi.forEach((e, i) => S(e, { o: eo(pr(t, a + 2.75 + i * 0.12, a + 3.05 + i * 0.12)) }));
+  S(C2.lbA, { o: eo(pr(t, a + 2.6, a + 2.9)), sx: eo(pr(t, a + 2.6, a + 2.9)), sy: 1, ox: 0, oy: 0 });
+  S(C2.lbA2, { o: eo(pr(t, a + 2.7, a + 3.0)) });
+  // B: erro aparece, uma varredura passa, vira "Resolvido" e as linhas se alinham
+  const ke = eback(pr(t, a + 3.15, a + 3.45)), kf = pr(t, a + 4.0, a + 4.25), ks = pr(t, a + 3.55, a + 4.15);
+  S(C2.err, { s: lerp(0.7, 1, ke) * (1 - kf * 0.3), o: clamp(ke) * (1 - kf), ox: 120, oy: 24 });
+  S(C2.ok, { s: lerp(0.7, 1, eback(kf)), o: clamp(kf * 1.5), ox: 90, oy: 24 });
+  S(C2.scan, { y: lerp(-90, 540, ks), o: ks > 0 && ks < 1 ? 1 : 0 });
+  C2.blB.forEach((bl, i) => { if (!i) return; const des = [0, 26, -18, 34, -12, 20][i] * (1 - eio(pr(t, a + 3.7 + i * 0.04, a + 4.2 + i * 0.04))); S(bl, { x: des, r: des * 0.04 }); });
+  [C2.rA, C2.rB].forEach((r, i) => { const k = eo(pr(t, a + 2.1 + i * 0.12, a + 2.5 + i * 0.12)); S(r, { y: (1 - k) * 30, o: k * (1 - sai) }); });
+  [C2.p1, C2.p2].forEach((p, i) => { const k = eo(pr(t, a + 2.2 + i * 0.35, a + 2.65 + i * 0.35)); S(p, { y: (1 - k) * 40, o: k * (1 - sai) }); });
+  return true;
+}
+
+function cena3(t) {
+  const [a, b] = T.intro; if (t < a - 0.25 || t >= b + 0.05) return false;
+  const sai = eio(pr(t, b - 0.32, b));
+  C3.linhas.forEach((L, i) => { const k = eo(pr(t, a + 0.12 + i * 0.28, a + 0.55 + i * 0.28)); S(L.sp, { y: (1 - k) * 140 }); S(L.box, { o: 1 - sai, s: 1 + sai * 0.25, ox: 540, oy: 1000 - L.box.offsetTop }); });
+  S(C3.n, { o: eo(pr(t, a + 0.8, a + 1.1)) * (1 - sai) });
+  return true;
+}
+
+// ---- projeto: imagem, cursor, zoom
+function camera(P, tt) {
+  // zoom: interpola entre os pontos do roteiro (0,6 s de movimento suave a partir de cada ponto)
+  let z = P.zooms[0].z;
+  for (let i = 1; i < P.zooms.length; i++) { const zz = P.zooms[i]; if (tt >= zz.t) { const k = eio(pr(tt, zz.t, zz.t + 0.6)); z = z.map((v, j) => lerp(v, zz.z[j], k)); } }
+  const base = P.VW / P.W0, s = base * z[2];
+  const viewH = P.VH - P.TOP;
+  let x = P.VW / 2 - z[0] * s, y = P.TOP + viewH / 2 - z[1] * s;
+  // não deixa sair da imagem
+  x = clamp(x, P.VW - P.W0 * s, 0); y = clamp(y, P.TOP + viewH - P.H0 * s, P.TOP);
+  return { s, x, y };
+}
+function imagem(P, tt) {
+  let cur = P.imgs[0], prev = null, i0 = 0;
+  for (let i = 0; i < P.imgs.length; i++) if (tt >= P.imgs[i].t) { cur = P.imgs[i]; prev = P.imgs[i - 1] || null; i0 = i; }
+  const curto = prev && (cur.t - prev.t) < 0.15; const dur = cur.rolar ? 0.38 : curto ? 0.05 : 0.14;
+  const k = prev ? pr(tt, cur.t, cur.t + dur) : 1;
+  if (P.imA._src !== cur.src) { P.imA.src = cur.src; P.imA._src = cur.src; }
+  if (prev && k < 1) { if (P.imB._src !== prev.src) { P.imB.src = prev.src; P.imB._src = prev.src; } }
+  if (cur.rolar && prev) { const e = eio(k); S(P.imA, { y: (1 - e) * 260, o: clamp(k * 3) }); S(P.imB, { y: -e * 260, o: k < 1 ? 1 - e : 0 }); }
+  else { S(P.imA, { o: 1 }); S(P.imB, { o: k < 1 ? 1 - k : 0 }); }
+  P.imB.style.zIndex = 2; P.imA.style.zIndex = 1;
+}
+function caixa(P, nome) { if (typeof nome === 'object') return nome; const c = (CX[P.p.pasta] || {})[nome]; if (!c) return { x: P.W0 / 2, y: P.H0 / 2, w: 0, h: 0 }; return c; }
+function cursor(P, tt, cam) {
+  const pts = P.toques.map(q => { const c = caixa(P, q.c); return { t: q.t, x: c.x + c.w / 2, y: c.y + c.h / 2 }; });
+  if (!pts.length) { S(P.cur, { o: 0 }); S(P.onda, { o: 0 }); return; }
+  const cel = P.p.tela === 'cel';
+  // posição: parado no último toque; viaja para o próximo nos 0,42 s antes dele
+  let x, y, o = 1, aperto = 0;
+  const ini = { x: P.W0 * 0.62, y: P.H0 * 0.78 };
+  let ant = ini, prox = pts[0];
+  for (let i = 0; i < pts.length; i++) { if (tt >= pts[i].t) { ant = pts[i]; prox = pts[i + 1] || null; } }
+  if (prox) { const k = eio(pr(tt, prox.t - 0.42, prox.t)); x = lerp(ant.x, prox.x, k); y = lerp(ant.y, prox.y, k); } else { x = ant.x; y = ant.y; }
+  // aparece pouco antes do primeiro toque e some depois do último
+  o = eo(pr(tt, pts[0].t - 0.75, pts[0].t - 0.45)) * (1 - eo(pr(tt, pts[pts.length - 1].t + 0.45, pts[pts.length - 1].t + 0.7)));
+  let onda = 0, ok = 0; for (const q of pts) { const d = tt - q.t; if (d >= -0.08 && d < 0.1) aperto = 1 - Math.abs(d) / 0.1; if (d >= 0 && d < 0.5) { onda = d / 0.5; ok = 1; } }
+  const sx = cam.x + x * cam.s, sy = cam.y + y * cam.s;
+  if (cel) { S(P.cur, { x: sx, y: sy, s: 1 - aperto * 0.18, o: o * (0.25 + 0.75 * aperto) }); }
+  else S(P.cur, { x: sx - 6, y: sy - 3, s: 1.15 - aperto * 0.12, o, ox: 6, oy: 3 });
+  S(P.onda, { x: sx, y: sy, s: 0.4 + eo(onda) * 1.6, o: ok ? (1 - onda) * 0.9 : 0 });
+}
+
+function projetos(t) {
+  const [a, b] = T.portfolio; if (t < a - 0.3 || t >= b + 0.8) { PROJ.forEach(P => show(P.g, false)); S($('#prog'), { o: 0 }); return false; }
+  S($('#prog'), { o: eo(pr(t, a, a + 0.4)) * (1 - eo(pr(t, b - 0.3, b))) });
+  PROJ.forEach((P, i) => {
+    const t0 = P.t0, t1 = t0 + PD; const tt = t - t0;
+    PROG[i].style.width = (clamp(tt / PD) * 100).toFixed(2) + '%';
+    const ativo = t >= t0 - 0.3 && t < t1 + (i === 5 ? 0.8 : 0.05); show(P.g, ativo); if (!ativo) return;
+    const ent = eexp(pr(tt, -0.12, 0.55)), sai = i < 5 ? eio(pr(tt, PD - 0.34, PD)) : 0;
+    const fim = i === 5 ? eio(pr(t, b - 0.1, b + 0.6)) : 0; // último: recolhe para a cena 4
+    S(P.ey, { o: eo(pr(tt, 0.05, 0.4)) * (1 - sai) * (1 - fim) });
+    S(P.nmT, { y: (1 - eo(pr(tt, 0.08, 0.5))) * 150 }); S(P.nm, { x: -sai * 260, o: (1 - sai) * (1 - fim) });
+    const kb = eo(pr(tt, 0.7, 1.15)); S(P.bf, { y: (1 - kb) * 36, o: kb * (1 - sai) * (1 - fim) });
+    // aparelho: sobe da profundidade
+    const dw = P.p.tela === 'pc' ? 1000 : 404, dh = P.p.tela === 'pc' ? 673 : 856;
+    S(P.dev, { y: (1 - ent) * 220 + fim * -60, s: (0.86 + 0.14 * ent) * (1 - sai * 0.1) * (1 - fim * 0.78), x: -sai * 420, o: clamp(ent * 1.6) * (1 - sai) * (1 - fim), blur: (1 - ent) * 6 + fim * 8, ox: dw / 2, oy: dh / 2 });
+    const cam = camera(P, tt); S(P.tela, { x: cam.x, y: cam.y, s: cam.s, ox: 0, oy: 0 });
+    imagem(P, tt); cursor(P, tt, cam);
+    if (P.extra) {
+      const pe = P.p.passos.find(s => s.extra); const k1 = eback(pr(tt, pe.t, pe.t + 0.45)), k2 = eio(pr(tt, pe.t + 1.35, pe.t + 1.7));
+      const w = 640, h = 360; P.extra.style.width = w + 'px'; P.extra.style.left = (P.VW - w) / 2 + 'px'; P.extra.style.top = (P.VH - h) / 2 + 'px';
+      S(P.extra, { s: lerp(0.4, 1, k1) * (1 - k2 * 0.15), o: clamp(k1 * 2) * (1 - k2), ox: w / 2, oy: h / 2 });
+    }
+  });
+  return true;
+}
+
+function cena4(t) {
+  const [a, b] = T.proposta; if (t < a - 0.35 || t >= b + 0.05) return false;
+  // os mockups se recolhem para o fundo (profundidade)
+  C4.minis.forEach((m, i) => {
+    const ang = i / 6 * Math.PI * 2 - Math.PI / 2, k = eio(pr(t, a - 0.3 + i * 0.03, a + 0.55 + i * 0.03));
+    m.style.width = '300px'; m.style.height = '188px';
+    S(m, { x: 540 - 150 + Math.cos(ang) * 420 * (1 - k), y: 960 - 94 + Math.sin(ang) * 620 * (1 - k), s: lerp(1, 0.1, k), o: (1 - k) * clamp((t - a + 0.35) / 0.15), blur: k * 6, ox: 150, oy: 94 });
+  });
+  const tb = R.proposta.bEm;
+  // A: FEITO PARA A SUA NECESSIDADE (escala lenta)
+  const saiA = eio(pr(t, tb - 0.35, tb + 0.05));
+  C4.a.forEach((L, i) => { const k = eo(pr(t, R.proposta.aEm + 0.05 + i * 0.22, R.proposta.aEm + 0.5 + i * 0.22)); S(L.sp, { y: (1 - k) * 160 }); S(L.box, { s: 1 + 0.03 * pr(t, a, tb), o: 1 - saiA, y: -saiA * 120, ox: 540, oy: 300 }); });
+  // B: painel branco sobe e o preço entra com impacto
+  const kw = eio(pr(t, tb - 0.3, tb + 0.1)), kws = eio(pr(t, b - 0.42, b - 0.05));
+  S($('#branco'), { y: (1 - kw) * 1920 - kws * 1920, o: 1 });
+  C4.b.forEach((L, i) => { const k = eback(pr(t, tb + 0.05 + i * 0.16, tb + 0.42 + i * 0.16)); S(L.sp, { s: lerp(1.14, 1, k), o: clamp(k * 2), ox: L.sp.offsetWidth / 2, oy: 60 }); S(L.box, { y: -kws * 1920, s: 1 + 0.02 * pr(t, tb, b), ox: 540, oy: 300 }); });
+  return true;
+}
+
+function cena5(t) {
+  const [a] = T.cta; if (t < a - 0.1) return false;
+  const kl = eexp(pr(t, a + 0.05, a + 0.6));
+  S(C5.logo, { s: lerp(0.6, 1, kl), o: kl, x: (1 - kl) * -80, ox: 105, oy: 90 });
+  const km = eo(pr(t, a + 0.25, a + 0.7)); S(C5.marca, { y: (1 - km) * 30, o: km }); S(C5.marca2, { y: (1 - km) * 30, o: km * eo(pr(t, a + 0.35, a + 0.8)) });
+  const tt = [frase('n08').em, frase('n09').em];
+  C5.t.forEach((L, i) => { const k = eo(pr(t, tt[i] - 0.05, tt[i] + 0.4)); S(L.sp, { y: (1 - k) * 110 }); });
+  const kc = eexp(pr(t, frase('n10').em - 0.3, frase('n10').em + 0.35)); S(C5.card, { y: (1 - kc) * 90, s: 0.94 + 0.06 * kc, o: kc, ox: 430, oy: 186 });
+  [C5.l1, C5.l2, C5.l3].forEach((l, i) => { const k = eo(pr(t, frase('n10').em - 0.1 + i * 0.16, frase('n10').em + 0.35 + i * 0.16)); S(l, { y: (1 - k) * 24, o: k }); });
+  return true;
+}
+
+function render(t) {
+  fundo(t); cortina(t); legendas(t);
+  const vis = [cena1(t), cena2(t), cena3(t), projetos(t), cena4(t), cena5(t)];
+  CENAS.forEach((c, i) => show(c, vis[i]));
+}
+window.render = render;
+
+// auditoria: texto fora da área segura ou cortado (render.mjs chama com AUDIT=1)
+window.audit = function () {
+  const z = R.seguro, out = [];
+  for (const el of document.querySelectorAll('.tit, .nome, .benef, .rot, .compl, .eyebrow, .ctal, #leg .pill')) {
+    let v = el; let ok = true; while (v && v !== document.body) { const cs = getComputedStyle(v); if (cs.visibility === 'hidden' || +cs.opacity < 0.5) { ok = false; break; } v = v.parentElement; }
+    if (!ok) continue; const rg = document.createRange(); rg.selectNodeContents(el); const r = rg.getBoundingClientRect(); if (r.width < 2) continue;
+    const nome = (el.textContent || '').trim().slice(0, 28);
+    if (r.left < z.x0 - 1 || r.right > z.x1 + 1 || r.top < z.y0 - 1 || r.bottom > z.y1 + 1) out.push(`fora da área segura: "${nome}" [${Math.round(r.left)},${Math.round(r.top)} – ${Math.round(r.right)},${Math.round(r.bottom)}]`);
+  }
+  return out;
+};
+
+window.carregar = async function () {
+  const q = new URLSearchParams(location.search);
+  const fr = await (await fetch('narracao/frases.json')).json(); FR = fr.frases;
+  try { DUR = await (await fetch(`narracao/${q.get('voz') || R.voz}/duracoes.json`)).json(); } catch { DUR = {}; }
+  await Promise.all(R.projetos.map(async p => { try { CX[p.pasta] = (await (await fetch(`assets/capturas/${p.pasta}/caixas.json`)).json()).caixas; } catch { CX[p.pasta] = {}; } }));
+  await document.fonts.load('800 100px Unbounded'); await document.fonts.load('400 30px Unbounded'); await document.fonts.load('700 40px Manrope'); await document.fonts.load('800 40px Manrope'); await document.fonts.load('600 40px Manrope');
+  montar();
+  await Promise.all(IMGS.map(im => im.decode().catch(() => console.warn('imagem faltando', im.src))));
+  // pré-decodifica todas as capturas usadas nos passos
+  await Promise.all(PROJ.flatMap(P => P.imgs.map(m => { const im = new Image(); im.src = m.src; return im.decode().catch(() => console.warn('imagem faltando', m.src)); })));
+  render(0); return true;
+};
+(async () => {
+  const q = new URLSearchParams(location.search);
+  if (q.has('t') || q.has('play')) {
+    await window.carregar();
+    if (q.has('t')) render(+q.get('t'));
+    if (q.has('play')) { const t0 = performance.now() - (+q.get('play') > 1 ? +q.get('play') * 1000 : 0); const f = () => { const t = (performance.now() - t0) / 1000; render(t % R.duracao); requestAnimationFrame(f); }; f(); }
+  }
+})();
+</script>
+<script src="audio.js"></script>
+</body>
+</html>
