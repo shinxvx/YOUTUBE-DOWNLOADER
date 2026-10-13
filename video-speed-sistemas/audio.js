@@ -36,25 +36,25 @@ window.gerarAudio = async function (opc = {}) {
   }
   // "respiração" do pad a cada tempo (sidechain) a partir da cena 2, e abre o filtro no portfólio
   for (let t = 4; t < DURA; t += BEAT) { padG.gain.setValueAtTime(0.02, t); padG.gain.linearRampToValueAtTime(0.045, t + BEAT * 0.8); }
-  padF.frequency.setValueAtTime(900, 0); padF.frequency.linearRampToValueAtTime(1500, 4); padF.frequency.linearRampToValueAtTime(2600, 11.8); padF.frequency.setValueAtTime(2600, 39.6);
+  padF.frequency.setValueAtTime(1300, 0); padF.frequency.linearRampToValueAtTime(1500, 4); padF.frequency.linearRampToValueAtTime(2600, 11.8); padF.frequency.setValueAtTime(2600, 39.6);
   padF.frequency.linearRampToValueAtTime(1100, 40.2); padF.frequency.linearRampToValueAtTime(2000, 48);
   // baixo
-  for (let t = 4; t < DURA - 0.5; t += BEAT / 2) {
+  for (let t = 1; t < DURA - 0.5; t += BEAT / 2) {
     if (em(t, [40, 45.4])) continue;
     const bar = Math.floor(t / BAR), n = RAIZ[bar % 4] - 12 + ((Math.round(t / (BEAT / 2)) % 4 === 3) ? 12 : 0);
-    const o = ctx.createOscillator(); o.type = 'triangle'; o.frequency.value = hz(n); const g = ctx.createGain(); env(g, t, 0.008, em(t, sec.sol) ? 0.14 : 0.2, BEAT * 0.42);
+    const o = ctx.createOscillator(); o.type = 'triangle'; o.frequency.value = hz(n); const g = ctx.createGain(); env(g, t, 0.008, em(t, sec.sol) || em(t, sec.intro) ? 0.14 : 0.2, BEAT * 0.42);
     o.connect(g); g.connect(musica); o.start(t); o.stop(t + BEAT);
   }
   // bumbo
   const bumbo = (t, v = 1) => { const o = ctx.createOscillator(); o.frequency.setValueAtTime(130, t); o.frequency.exponentialRampToValueAtTime(42, t + 0.16); const g = ctx.createGain(); env(g, t, 0.004, 0.55 * v, 0.34); o.connect(g); g.connect(musica); o.start(t); o.stop(t + 0.45); };
-  for (let t = 4; t < DURA - 1; t += BEAT) { const b = Math.round(t / BEAT) % 4; if (em(t, sec.sol) && b % 2) continue; if (em(t, [40, 45.4])) continue; bumbo(t, em(t, sec.cta) ? 0.8 : 1); }
+  for (let t = 0; t < DURA - 1; t += BEAT) { const b = Math.round(t / BEAT) % 4; if (em(t, sec.sol) && b % 2) continue; if (em(t, [40, 45.4])) continue; bumbo(t, em(t, sec.cta) ? 0.8 : em(t, sec.intro) ? 0.75 : 1); }
   // chimbal e palma (portfólio e final)
   const chimbal = (t, v) => { const s = ctx.createBufferSource(); s.buffer = ruido; const f = ctx.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 8000; const g = ctx.createGain(); env(g, t, 0.002, v, 0.05); s.connect(f); f.connect(g); pan(g, 0.25).connect(musica); s.start(t, Math.random() * 1); s.stop(t + 0.08); };
   const palma = t => { const s = ctx.createBufferSource(); s.buffer = ruido; const f = ctx.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 1600; f.Q.value = 0.8; const g = ctx.createGain(); env(g, t, 0.003, 0.22, 0.16); s.connect(f); f.connect(g); g.connect(musica); s.start(t, 0.3); s.stop(t + 0.25); };
   for (let t = 4; t < DURA - 1; t += BEAT / 2) {
     const i = Math.round(t / (BEAT / 2));
     if (em(t, sec.port) || em(t, [45.4, 48]) || em(t, [48, DURA - 2])) { chimbal(t, i % 2 ? 0.06 : 0.03); if (i % 4 === 2) palma(t); }
-    else if (em(t, sec.sol) && i % 2) chimbal(t, 0.035);
+    else if ((em(t, sec.sol) || em(t, [1, 4])) && i % 2) chimbal(t, 0.035);
   }
   // arpejo (pluck) no portfólio: dá ritmo às demonstrações
   for (let t = 11.8; t < 40; t += BEAT / 4) {
