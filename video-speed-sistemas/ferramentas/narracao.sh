@@ -14,7 +14,7 @@ const fs=require(\"fs\"),{execFileSync}=require(\"child_process\");
 const F=JSON.parse(fs.readFileSync(\"narracao/frases.json\",\"utf8\")).frases, d={};
 for (const f of F) {
   const out=\"narracao/$VOZ/\"+f.id+\".wav\";
-  execFileSync(\"ferramentas/piper/bin/piper\",[\"--model\",\"ferramentas/piper/$VOZ.onnx\",\"--length_scale\",\"$RITMO\",\"--sentence_silence\",\"0\",\"--output_file\",out],{input:f.voz,env:{...process.env,LD_LIBRARY_PATH:\"ferramentas/piper/bin\"},stdio:[\"pipe\",\"ignore\",\"ignore\"]});
+  execFileSync(\"ferramentas/piper/bin/piper\",[\"--model\",\"ferramentas/piper/$VOZ.onnx\",\"--length_scale\",String(f.ritmo||$RITMO),\"--sentence_silence\",\"0\",\"--output_file\",out],{input:f.voz,env:{...process.env,LD_LIBRARY_PATH:\"ferramentas/piper/bin\"},stdio:[\"pipe\",\"ignore\",\"ignore\"]});
   const b=fs.readFileSync(out); const sr=b.readUInt32LE(24), n=b.readUInt32LE(40)/2;
   // mede a fala de verdade (tira o silêncio do começo e do fim)
   let a=0,z=n-1; const s=i=>Math.abs(b.readInt16LE(44+i*2)); while(a<n&&s(a)<500)a++; while(z>a&&s(z)<500)z--;
