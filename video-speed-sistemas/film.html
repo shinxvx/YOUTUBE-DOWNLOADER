@@ -489,9 +489,15 @@ window.carregar = async function () {
   await Promise.all(R.projetos.map(async p => { try { CX[p.pasta] = (await (await fetch(`assets/capturas/${p.pasta}/caixas.json`)).json()).caixas; } catch { CX[p.pasta] = {}; } }));
   await document.fonts.load('800 100px Unbounded'); await document.fonts.load('400 30px Unbounded'); await document.fonts.load('700 40px Manrope'); await document.fonts.load('800 40px Manrope'); await document.fonts.load('600 40px Manrope');
   montar();
-  await Promise.all(IMGS.map(im => im.decode().catch(() => console.warn('imagem faltando', im.src))));
-  // pré-decodifica todas as capturas usadas nos passos
-  await Promise.all(PROJ.flatMap(P => P.imgs.map(m => { const im = new Image(); im.src = m.src; return im.decode().catch(() => console.warn('imagem faltando', m.src)); })));
+  // carrega uma por vez (várias decodificações ao mesmo tempo às vezes falham no Chromium sem tela) e confere o tamanho
+  const urls = [...new Set([...IMGS.map(im => im.src), ...PROJ.flatMap(P => P.imgs.map(m => m.src))])];
+  window.CACHE = [];
+  for (const u of urls) {
+    let ok = false;
+    for (let k = 0; k < 4 && !ok; k++) { const im = new Image(); im.src = u; try { await im.decode(); ok = im.naturalWidth > 0; } catch { await new Promise(r => setTimeout(r, 150)); } if (ok) CACHE.push(im); }
+    if (!ok) console.warn('imagem faltando', u);
+  }
+  for (const im of IMGS) if (!im.complete || !im.naturalWidth) await new Promise(r => { im.onload = im.onerror = r; setTimeout(r, 3000); });
   render(0); return true;
 };
 (async () => {
