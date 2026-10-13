@@ -482,6 +482,13 @@ window.audit = function () {
   return out;
 };
 
+// confere se cada toque cai dentro da parte visível da tela, com o zoom daquele instante
+window.auditToques = function () {
+  const out = [];
+  PROJ.forEach(P => P.toques.forEach(q => { const c = caixa(P, q.c), cam = camera(P, q.t); const x = cam.x + (c.x + c.w / 2) * cam.s, y = cam.y + (c.y + c.h / 2) * cam.s;
+    const dentro = x > 8 && x < P.VW - 8 && y > P.TOP + 8 && y < P.VH - 8; out.push(`${dentro ? 'ok  ' : 'FORA'} ${P.p.nome} ${q.c} @${q.t}s -> (${Math.round(x)}, ${Math.round(y)}) zoom ${cam.s.toFixed(2)}`); }));
+  return out;
+};
 window.carregar = async function () {
   const q = new URLSearchParams(location.search);
   const fr = await (await fetch('narracao/frases.json')).json(); FR = fr.frases;

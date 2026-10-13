@@ -72,7 +72,7 @@ window.ROTEIRO = {
       tamanho: [1440, 900],
       passos: [
         { t: 0, img: 'z00.jpg', zoom: [720, 450, 1] },
-        { t: 0.55, zoom: [470, 470, 1.75] },
+        { t: 0.55, zoom: [470, 520, 1.6] },
         { t: 0.95, img: 'z01.jpg' }, { t: 1.08, img: 'z02.jpg' },
         { t: 1.3, toque: 'enviar' },
         { t: 1.5, img: 'z10.jpg' },
