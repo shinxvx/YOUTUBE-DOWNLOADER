@@ -1,5 +1,5 @@
 // Câmera virtual: escreve os quadros (NV12) direto na memória compartilhada que o driver
-// "OBS Virtual Camera" lê (vem com o OBS Studio instalado; o OBS não precisa estar aberto).
+// "OBS Virtual Camera" lê (o instalador do Speed Cam registra esse driver; se o OBS Studio já estiver instalado, usa o dele).
 // Mesmo formato do obs-studio/plugins/win-dshow/shared-memory-queue.c.
 'use strict';
 
@@ -35,6 +35,10 @@ function abrir(cx, cy, fps) {
   const off = [];
   let tam = alinha(CABECALHO);
   for (let i = 0; i < 3; i++) { off.push(tam); tam = alinha(tam + tamQuadro + QUADRO_CAB); }
+
+  // o driver lê este arquivo quando um programa abre a câmera antes dela ligar: assim já começa no tamanho certo
+  // (o OBS grava o mesmo arquivo do mesmo jeito em plugins/win-dshow/virtualcam.c)
+  try { require('node:fs').writeFileSync(require('node:path').join(process.env.APPDATA, 'obs-virtualcam.txt'), `${cx}x${cy}x${Math.round(10000000 / fps)}`); } catch {}
 
   const ja = k.OpenFileMappingW(0x0004 /* FILE_MAP_READ */, 0, NOME);
   if (ja) { k.CloseHandle(ja); throw new Error('A câmera virtual já está sendo usada por outro programa (feche a câmera virtual do OBS).'); }

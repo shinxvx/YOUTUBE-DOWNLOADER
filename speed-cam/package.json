@@ -1,7 +1,7 @@
 {
   "name": "speed-cam",
   "productName": "Speed Cam",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Speed Cam: fontes + câmera virtual, leve, para o TikTok Live Studio",
   "main": "main.js",
   "author": "Speed",

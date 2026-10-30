@@ -399,7 +399,7 @@ function esconderAviso() { $('aviso').hidden = true; }
 async function conferirDriver() {
   if (process.platform !== 'win32') return;
   const cams = (await navigator.mediaDevices.enumerateDevices()).filter((d) => d.kind === 'videoinput');
-  if (!cams.some((d) => /OBS Virtual Camera/i.test(d.label))) mostrarAviso('Não achei a "OBS Virtual Camera" neste PC. Instale o OBS Studio (só precisa estar instalado, não aberto). Se já está instalado, abra o OBS uma vez e clique em "Iniciar câmera virtual" para ele registrar a câmera.');
+  if (!cams.some((d) => /OBS Virtual Camera/i.test(d.label))) mostrarAviso('Não achei a câmera virtual ("OBS Virtual Camera") neste PC. Instale o Speed Cam de novo e, quando o Windows pedir, clique em Sim para ele registrar a câmera.');
 }
 
 // ---------- janela de adicionar ----------
