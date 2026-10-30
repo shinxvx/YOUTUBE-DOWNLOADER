@@ -302,10 +302,10 @@ void main(){
   const saida = gl.createTexture();
   const fbo = gl.createFramebuffer();
   const uH = gl.getUniformLocation(prog, 'H');
-  // leitura em segundo plano (2 buffers): devolve o quadro anterior sem travar a placa esperando
+  // leitura em segundo plano (2 buffers, um pedido por vez): devolve o quadro anterior sem travar a placa
+  // esperando; se a placa ainda não terminou o anterior, pula este tique em vez de pedir outro
   const pbos = [gl.createBuffer(), gl.createBuffer()];
-  const fences = [null, null];
-  let k = 0;
+  let fence = null, lendo = 0, k = 0;
   let ow = 0, oh = 0, dados = null;
   return (fonte, w, h) => {
     if (w !== ow * 4 || h * 1.5 !== oh) {
@@ -316,11 +316,23 @@ void main(){
       gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
       gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, saida, 0);
       gl.uniform1i(uH, h);
-      for (let i = 0; i < 2; i++) {
-        if (fences[i]) { gl.deleteSync(fences[i]); fences[i] = null; }
-        gl.bindBuffer(gl.PIXEL_PACK_BUFFER, pbos[i]);
+      if (fence) { gl.deleteSync(fence); fence = null; }
+      for (const p of pbos) {
+        gl.bindBuffer(gl.PIXEL_PACK_BUFFER, p);
         gl.bufferData(gl.PIXEL_PACK_BUFFER, dados.byteLength, gl.STREAM_READ);
       }
+      gl.bindBuffer(gl.PIXEL_PACK_BUFFER, null);
+    }
+    let pronto = null;
+    if (fence) {
+      const st = gl.clientWaitSync(fence, 0, 0);
+      if (st !== gl.ALREADY_SIGNALED && st !== gl.CONDITION_SATISFIED) return null;
+      gl.deleteSync(fence);
+      fence = null;
+      gl.bindBuffer(gl.PIXEL_PACK_BUFFER, pbos[lendo]);
+      gl.getBufferSubData(gl.PIXEL_PACK_BUFFER, 0, dados);
+      gl.bindBuffer(gl.PIXEL_PACK_BUFFER, null);
+      pronto = dados;
     }
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, tex);
@@ -328,25 +340,13 @@ void main(){
     gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
     gl.viewport(0, 0, ow, oh);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
-    if (fences[k]) gl.deleteSync(fences[k]);
     gl.bindBuffer(gl.PIXEL_PACK_BUFFER, pbos[k]);
     gl.readPixels(0, 0, ow, oh, gl.RGBA, gl.UNSIGNED_BYTE, 0);
-    fences[k] = gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE, 0);
-    gl.flush();
-    const j = k ^ 1;
-    let pronto = null;
-    if (fences[j]) {
-      const st = gl.clientWaitSync(fences[j], 0, 0);
-      if (st === gl.ALREADY_SIGNALED || st === gl.CONDITION_SATISFIED) {
-        gl.bindBuffer(gl.PIXEL_PACK_BUFFER, pbos[j]);
-        gl.getBufferSubData(gl.PIXEL_PACK_BUFFER, 0, dados);
-        gl.deleteSync(fences[j]);
-        fences[j] = null;
-        pronto = dados;
-      }
-    }
     gl.bindBuffer(gl.PIXEL_PACK_BUFFER, null);
-    k = j;
+    fence = gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE, 0);
+    gl.flush();
+    lendo = k;
+    k ^= 1;
     return pronto;
   };
 }
