@@ -1,0 +1,13 @@
+{
+  "name": "speed-cam",
+  "productName": "Speed Cam",
+  "version": "0.1.0",
+  "description": "Speed Cam: fontes + câmera virtual, leve, para o TikTok Live Studio",
+  "main": "main.js",
+  "author": "Speed",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": { "start": "electron ." },
+  "dependencies": { "koffi": "2.16.3" },
+  "devDependencies": { "electron": "38.8.6" }
+}

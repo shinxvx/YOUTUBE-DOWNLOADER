@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' file: data: blob: https: http:; script-src 'self'; style-src 'self' 'unsafe-inline'; media-src * file: blob: data:; img-src * file: blob: data:">
+<title>Speed Cam</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="marca"><span class="ponto"></span>Speed <b>Cam</b></div>
+  <div class="topo-dir">
+    <label class="campo">Tamanho
+      <select id="res">
+        <option value="1920x1080">1920 × 1080 (deitado)</option>
+        <option value="1280x720">1280 × 720 (deitado, mais leve)</option>
+        <option value="1080x1920">1080 × 1920 (em pé)</option>
+        <option value="720x1280">720 × 1280 (em pé, mais leve)</option>
+      </select>
+    </label>
+    <button id="cam" class="cam">Iniciar câmera virtual</button>
+  </div>
+</header>
+
+<div id="aviso" class="aviso" hidden></div>
+
+<main>
+  <section class="tela">
+    <div class="moldura"><canvas id="preview"></canvas><div id="vazio" class="vazio">Adicione uma fonte<br><small>ou cole (Ctrl+V) um link ou arquivo aqui</small></div></div>
+  </section>
+
+  <aside>
+    <div class="bloco fontes">
+      <div class="titulo">Fontes <button id="add" class="add">+ Adicionar fonte</button></div>
+      <ul id="lista"></ul>
+    </div>
+    <div class="bloco som">
+      <div class="titulo">Som</div>
+      <label class="campo col">Enviar o som para
+        <select id="saida"></select>
+      </label>
+      <label class="check" id="ouvirBox"><input type="checkbox" id="ouvir"> Ouvir também no alto-falante padrão</label>
+      <div class="medidor"><div id="nivel"></div></div>
+      <p class="dica">Para o TikTok Live Studio receber o som: instale o <a href="#" id="vbcable">VB-CABLE</a>, escolha <b>CABLE Input</b> aqui e, no TikTok, adicione o microfone <b>CABLE Output</b>.</p>
+    </div>
+  </aside>
+</main>
+
+<div id="modal" class="modal" hidden>
+  <div class="caixa">
+    <div class="caixa-topo"><span id="modalTitulo">Adicionar fonte</span><button class="fechar" id="modalFechar" aria-label="Fechar">×</button></div>
+    <div id="modalCorpo"></div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
