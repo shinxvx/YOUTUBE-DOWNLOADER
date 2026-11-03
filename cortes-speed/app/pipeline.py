@@ -605,7 +605,11 @@ def detector(w, h):
                 dist = max(4.0, abs(lx - rx))
                 cx, cy = (rx + lx) / 2, (ry + ly) / 2
                 boca = (cx - dist * 0.8, cy - dist * 0.45, cx + dist * 0.8, cy + dist * 0.6)
-                out.append((fx, fy, fw, fh, float(x[-1]), boca))
+                ex0, ey0, ex1, ey1 = float(x[4]), float(x[5]), float(x[6]), float(x[7])  # olhos
+                de = max(4.0, abs(ex1 - ex0))
+                ecx, ecy = (ex0 + ex1) / 2, (ey0 + ey1) / 2
+                olhos = (ecx - de * 0.8, ecy - de * 0.3, ecx + de * 0.8, ecy + de * 0.3)
+                out.append((fx, fy, fw, fh, float(x[-1]), boca, olhos))
             return out
         return achar
     casc = _DET.get("haar")
@@ -616,8 +620,8 @@ def detector(w, h):
     def achar2(img):
         g = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         f = casc.detectMultiScale(g, 1.15, 5, minSize=(24, 24))
-        return [(float(x), float(y), float(a), float(b), 0.8, (x + a * 0.25, y + b * 0.68, x + a * 0.75, y + b * 0.95))
-                for (x, y, a, b) in f]
+        return [(float(x), float(y), float(a), float(b), 0.8, (x + a * 0.25, y + b * 0.68, x + a * 0.75, y + b * 0.95),
+                 (x + a * 0.15, y + b * 0.25, x + a * 0.85, y + b * 0.45)) for (x, y, a, b) in f]
     return achar2
 
 
@@ -625,7 +629,7 @@ def trilha_rosto(video, trechos, W, H, fps_am=6.0):
     """Amostra o vídeo (6 por segundo) e devolve os rostos de cada amostra com a "atividade da boca"
     (quanto a região da boca mudou desde a amostra anterior = quem está falando) e os cortes de cena."""
     import numpy as np, cv2
-    LW = 640
+    LW = min(W, 800)
     LH = int(round(H * LW / W / 2) * 2)
     achar = detector(LW, LH)
     pontos, com_rosto, com_dois, total, base = [], 0, 0, 0, 0.0
@@ -649,17 +653,24 @@ def trilha_rosto(video, trechos, W, H, fps_am=6.0):
             corte = ant is not None and dif_geral > 28
             ant = peq
             faces = []
-            for (fx, fy, fw, fh, sc, boca) in achar(img):
+            def mud(box):
+                x0, y0 = max(0, int(box[0])), max(0, int(box[1]))
+                x1, y1 = min(LW, int(box[2]) + 1), min(LH, int(box[3]) + 1)
+                if x1 - x0 < 3 or y1 - y0 < 3:
+                    return None
+                a1 = cv2.resize(g[y0:y1, x0:x1], (24, 16)).astype(np.float32)
+                a0 = cv2.resize(ant_g[y0:y1, x0:x1], (24, 16)).astype(np.float32)
+                return float(np.mean(np.abs(a1 - a0)))
+
+            for (fx, fy, fw, fh, sc, boca, olhos) in achar(img):
                 if fw * fh < (LW * LH) * 0.003:
                     continue
                 act = 0.0
                 if ant_g is not None and not corte:
-                    x0, y0 = max(0, int(boca[0])), max(0, int(boca[1]))
-                    x1, y1 = min(LW, int(boca[2]) + 1), min(LH, int(boca[3]) + 1)
-                    if x1 - x0 >= 3 and y1 - y0 >= 3:
-                        a1 = cv2.resize(g[y0:y1, x0:x1], (24, 16)).astype(np.float32)
-                        a0 = cv2.resize(ant_g[y0:y1, x0:x1], (24, 16)).astype(np.float32)
-                        act = max(0.0, float(np.mean(np.abs(a1 - a0))) - dif_geral * 0.8)
+                    mb, mo = mud(boca), mud(olhos)
+                    if mb is not None:
+                        # boca mexendo MAIS que o resto do rosto (tira o efeito de cabeça mexendo, luz e câmera)
+                        act = max(0.0, mb - max(mo or 0.0, dif_geral) * 0.9)
                 faces.append({"x": (fx + fw / 2) / LW, "y": (fy + fh / 2) / LH, "a": fw * fh / (LW * LH), "h": fh / LH, "act": act})
             ant_g = g
             if faces:
