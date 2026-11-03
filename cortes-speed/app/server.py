@@ -27,6 +27,7 @@ GUARDA_H = int(os.environ.get("GUARDA_HORAS", "48"))
 app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
 trava = threading.Lock()
 fila = []          # ids esperando
+fila_ed = []       # (tid, n) cortes editados para refazer: passam na frente (são rápidos)
 rodando = {"id": None}
 sinal = threading.Event()
 
@@ -162,7 +163,8 @@ async def logo(req: Request):
 OPCOES = {
     "duracao": (int, (30, 60, 120, 300), 60),
     "qtd": (int, (0, 3, 5, 10), 0),
-    "enquadramento": (str, ("auto", "rosto", "desfocado", "centro"), "auto"),
+    "enquadramento": (str, ("auto", "rosto", "dividida", "desfocado", "centro"), "auto"),
+    "genero": (str, tuple(P.GENEROS), "auto"),
     "legenda": (bool, None, True),
     "estilo_legenda": (str, tuple(P.ESTILOS), "amarelo"),
     "posicao_legenda": (str, ("baixo", "meio", "alto"), "baixo"),
@@ -187,6 +189,7 @@ async def criar(req: Request):
             v = padrao
         opc[k] = v if (validos is None or v in validos) else padrao
     opc["marca_texto"] = str(b.get("marca_texto") or "")[:40]
+    opc["instrucoes"] = re.sub(r"\s+", " ", str(b.get("instrucoes") or "")).strip()[:300]
     try:
         opc["marca_opacidade"] = max(0.1, min(1.0, float(b.get("marca_opacidade", 0.7))))
     except (TypeError, ValueError):
@@ -245,8 +248,10 @@ def publico(t):
     cortes = []
     for c in t.get("cortes", []):
         base = f"/api/tarefas/{tid}/arquivo/{c['nome']}"
-        cortes.append({**{k: c[k] for k in ("n", "titulo", "gancho", "post", "nota", "motivo", "dur", "ini", "fim")},
-                       "video": base + ".mp4", "capa": base + ".jpg", "srt": base + ".srt"})
+        v = f"?v={c.get('versao', 1)}"
+        cortes.append({**{k: c.get(k) for k in ("n", "titulo", "gancho", "post", "nota", "motivo", "dur", "ini", "fim", "a", "b", "h", "versao")},
+                       "edicoes": c.get("edicoes", {}), "estado": c.get("estado", "pronto"),
+                       "video": base + ".mp4" + v, "capa": base + ".jpg" + v, "srt": base + ".srt" + v})
     return {"id": tid, "estado": t["estado"], "etapa": t["etapa"], "progresso": round(t.get("progresso", 0), 1),
             "posicao": pos, "titulo": t.get("titulo", ""), "duracao_video": t.get("duracao_video"),
             "total_cortes": t.get("total_cortes", 0), "cortes": cortes, "erro": t.get("erro"), "opc": t["opc"],
@@ -256,6 +261,80 @@ def publico(t):
 @app.get("/api/tarefas/{tid}")
 def ver(tid: str):
     return publico(ler(tid))
+
+
+@app.get("/api/tarefas/{tid}/frases")
+def frases_da_tarefa(tid: str):
+    try:
+        fr = json.loads((caminho(tid) / "transcricao.json").read_text(encoding="utf-8"))["frases"]
+    except FileNotFoundError:
+        raise HTTPException(404)
+    return {"frases": [{"i": i, "s": round(f["s"], 2), "e": round(f["e"], 2), "t": f["t"]} for i, f in enumerate(fr)]}
+
+
+@app.post("/api/tarefas/{tid}/cortes")
+async def novo_corte(tid: str, req: Request):
+    return await editar(tid, 0, req)
+
+
+@app.post("/api/tarefas/{tid}/cortes/{n}")
+async def editar(tid: str, n: int, req: Request):
+    """Editor: trecho (frase inicial/final/prévia), título, gancho, legenda do post e texto da legenda por frase. n=0 = corte novo."""
+    b = await req.json()
+    pasta = caminho(tid)
+    try:
+        fr = json.loads((pasta / "transcricao.json").read_text(encoding="utf-8"))["frases"]
+    except FileNotFoundError:
+        raise HTTPException(404)
+    try:
+        a, z = int(b["a"]), int(b["b"])
+        h = b.get("h")
+        h = int(h) if h not in (None, "", -1, "-1") else None
+    except (KeyError, TypeError, ValueError):
+        return JSONResponse({"erro": "trecho"}, 400)
+    if not (0 <= a <= z < len(fr)) or (h is not None and not a <= h <= z):
+        return JSONResponse({"erro": "trecho"}, 400)
+    dur = fr[z]["e"] - fr[a]["s"]
+    if dur < 3 or dur > 400:
+        return JSONResponse({"erro": "duracao_trecho"}, 400)
+    edicoes = {}
+    for k, v in (b.get("edicoes") or {}).items():
+        try:
+            i = int(k)
+        except ValueError:
+            continue
+        txt = re.sub(r"\s+", " ", str(v)).strip()[:600]
+        if a <= i <= z and txt != fr[i]["t"]:
+            edicoes[str(i)] = txt
+    with trava:
+        t = ler(tid)
+        if t["estado"] != "pronto":
+            return JSONResponse({"erro": "naopronto"}, 409)
+        if not t.get("video") or not (pasta / t["video"]).exists():
+            return JSONResponse({"erro": "semoriginal"}, 409)
+        if any(tt == tid for tt, _ in fila_ed) and sum(1 for tt, _ in fila_ed if tt == tid) >= 5:
+            return JSONResponse({"erro": "fila"}, 429)
+        if n == 0:
+            if len(t["cortes"]) >= 30:
+                return JSONResponse({"erro": "muitos"}, 400)
+            n = max([c["n"] for c in t["cortes"]] + [0]) + 1
+            reg = {"n": n, "nome": f"corte{n:02d}", "nota": 0, "motivo": "", "versao": 0, "dur": round(dur, 1),
+                   "ini": round(fr[a]["s"], 1), "fim": round(fr[z]["e"], 1)}
+            t["cortes"].append(reg)
+        else:
+            reg = next((c for c in t["cortes"] if c["n"] == n), None)
+            if reg is None:
+                raise HTTPException(404)
+            if reg.get("estado") == "fila":
+                return JSONResponse({"erro": "refazendo"}, 409)
+        reg.update(a=a, b=z, h=h if h != a else None, edicoes=edicoes, estado="fila",
+                   titulo=str(b.get("titulo", reg.get("titulo", "")))[:100], gancho=str(b.get("gancho", reg.get("gancho", "")))[:60],
+                   post=str(b.get("post", reg.get("post", "")))[:800])
+        t["atualizado"] = time.time()
+        gravar(tid, t)
+        fila_ed.append((tid, n))
+    sinal.set()
+    return {"n": n}
 
 
 @app.api_route("/api/tarefas/{tid}/arquivo/{nome}", methods=["GET", "HEAD"])
@@ -381,34 +460,86 @@ def processar(tid):
 
     # 3) IA escolhe os cortes
     etapa("escolhendo", 46)
-    cortes = P.escolher_cortes(frases, info["dur"], opc["duracao"], opc["qtd"], t.get("titulo", ""), aviso)
+    cortes = P.escolher_cortes(frases, info["dur"], opc["duracao"], opc["qtd"], t.get("titulo", ""), aviso,
+                               opc.get("genero", "auto"), opc.get("instrucoes", ""))
     if not cortes:
         raise P.Erro("semcortes")
     mudar(tid, total_cortes=len(cortes))
 
     # 4) render
-    logo = (LOGOS / t["logo"]) if t.get("logo") else None
+    (pasta / "palavras.json").write_text(json.dumps(tr["palavras"], ensure_ascii=False), encoding="utf-8")
+    mudar(tid, video=video.name)
     feitos = []
     for k, c in enumerate(cortes):
         etapa("renderizando", 50 + 50 * k / len(cortes), corte_atual=k + 1)
-        trechos = P.trechos_do_corte(frases, c, opc["gancho_inicio"], info["dur"])
-        a, b = c["start"], c["end"]
-        palavras = tr["palavras"][frases[a]["i0"]:frases[b]["i1"] + 1]
-        nome = f"corte{k + 1:02d}"
-        gancho = (c.get("hook") or "").strip()
+        reg = {"n": k + 1, "nome": f"corte{k + 1:02d}", "a": c["start"], "b": c["end"],
+               "h": c.get("hook_line") if opc["gancho_inicio"] else None, "titulo": c.get("title") or "",
+               "gancho": (c.get("hook") or "").strip(), "post": c.get("caption") or "", "nota": int(round(float(c.get("score") or 0))),
+               "motivo": c.get("why") or "", "edicoes": {}, "versao": 1}
         try:
-            dur = P.renderizar(video, info, trechos, opc, pasta, nome, palavras, gancho, logo)
+            render_corte(t, pasta, video, info, frases, tr["palavras"], reg)
         except Exception as e:
-            print("render falhou", tid, nome, e, flush=True)
+            print("render falhou", tid, reg["nome"], e, flush=True)
             aviso("render")
             continue
-        feitos.append({"n": k + 1, "nome": nome, "titulo": c.get("title") or "", "gancho": gancho, "post": c.get("caption") or "",
-                       "nota": int(round(float(c.get("score") or 0))), "motivo": c.get("why") or "", "dur": round(dur, 1),
-                       "ini": round(frases[a]["s"], 1), "fim": round(frases[b]["e"], 1)})
+        feitos.append(reg)
         mudar(tid, cortes=feitos)
     if not feitos:
         raise P.Erro("render")
     mudar(tid, estado="pronto", etapa="pronto", progresso=100, terminado=time.time())
+
+
+def palavras_editadas(frases, palavras, a, b, edicoes):
+    """Palavras do trecho a..b com o texto que o cliente corrigiu. Mesma quantidade de palavras = mantém o tempo de cada uma;
+    quantidade diferente = espalha o tempo da frase entre as palavras novas."""
+    out = []
+    for i in range(a, b + 1):
+        f = frases[i]
+        orig = palavras[f["i0"]:f["i1"] + 1]
+        txt = (edicoes or {}).get(str(i))
+        if txt is None:
+            out += orig
+            continue
+        toks = txt.split()
+        if not toks:
+            continue  # frase apagada da legenda (o áudio continua)
+        if len(toks) == len(orig):
+            out += [{**w, "w": tk, "p": tk} for w, tk in zip(orig, toks)]
+        else:
+            passo = (f["e"] - f["s"]) / len(toks)
+            out += [{"w": tk, "p": tk, "s": f["s"] + j * passo, "e": f["s"] + (j + 1) * passo - 0.02} for j, tk in enumerate(toks)]
+    return out
+
+
+def render_corte(t, pasta, video, info, frases, palavras, reg):
+    c = {"start": reg["a"], "end": reg["b"], "hook_line": reg["h"] if reg.get("h") is not None else reg["a"]}
+    trechos = P.trechos_do_corte(frases, c, reg.get("h") is not None, info["dur"])
+    pal = palavras_editadas(frases, palavras, reg["a"], reg["b"], reg.get("edicoes"))
+    logo = (LOGOS / t["logo"]) if t.get("logo") and (LOGOS / t["logo"]).exists() else None
+    dur = P.renderizar(video, info, trechos, t["opc"], pasta, reg["nome"], pal, reg.get("gancho", ""), logo)
+    reg.update(dur=round(dur, 1), ini=round(frases[reg["a"]]["s"], 1), fim=round(frases[reg["b"]]["e"], 1), estado="pronto")
+
+
+def refazer(tid, n):
+    t = ler(tid)
+    pasta = caminho(tid)
+    reg = next(c for c in t["cortes"] if c["n"] == n)
+    video = pasta / (t.get("video") or "")
+    if not t.get("video") or not video.exists():
+        raise P.Erro("semoriginal")
+    frases = json.loads((pasta / "transcricao.json").read_text(encoding="utf-8"))["frases"]
+    palavras = json.loads((pasta / "palavras.json").read_text(encoding="utf-8"))
+    info = P.sondar(video)
+    render_corte(t, pasta, video, info, frases, palavras, reg)
+    with trava:
+        t2 = ler(tid)
+        for i, c in enumerate(t2["cortes"]):
+            if c["n"] == n:
+                reg["versao"] = c.get("versao", 1) + 1
+                reg["edicoes"], reg["titulo"], reg["post"] = c.get("edicoes", {}), c.get("titulo", ""), c.get("post", "")
+                t2["cortes"][i] = reg
+        t2["atualizado"] = time.time()
+        gravar(tid, t2)
 
 
 def trabalhador():
@@ -417,11 +548,35 @@ def trabalhador():
         sinal.clear()
         while True:
             with trava:
-                if not fila:
+                if fila_ed:
+                    tid, n = fila_ed.pop(0)
+                    rodando["id"] = tid
+                    tipo = "editar"
+                elif fila:
+                    tid = fila.pop(0)
+                    rodando["id"] = tid
+                    tipo = "tarefa"
+                else:
                     break
-                tid = fila.pop(0)
-                rodando["id"] = tid
             ini = time.time()
+            if tipo == "editar":
+                try:
+                    refazer(tid, n)
+                except Exception as e:
+                    traceback.print_exc()
+                    with trava:
+                        try:
+                            t2 = ler(tid)
+                            for c in t2["cortes"]:
+                                if c["n"] == n:
+                                    c["estado"] = "erro"
+                            gravar(tid, t2)
+                        except HTTPException:
+                            pass
+                finally:
+                    with trava:
+                        rodando["id"] = None
+                continue
             try:
                 processar(tid)
             except P.Erro as e:
@@ -430,11 +585,15 @@ def trabalhador():
                 traceback.print_exc()
                 mudar(tid, estado="erro", etapa="erro", erro="falhou", detalhe=str(e)[-500:])
             finally:
-                for lixo in ("original.mp4", "original.webm", "original.mkv", "original.bin", "audio16k.wav"):
-                    (caminho(tid) / lixo).unlink(missing_ok=True)
-                for lixo in caminho(tid).glob("original.*"):
-                    lixo.unlink(missing_ok=True)
+                # o original FICA (para o editor refazer cortes) e some junto com a tarefa em GUARDA_HORAS
+                (caminho(tid) / "audio16k.wav").unlink(missing_ok=True)
                 shutil.rmtree(caminho(tid) / "audio", ignore_errors=True)
+                try:
+                    if ler(tid)["estado"] == "erro":
+                        for lixo in caminho(tid).glob("original.*"):
+                            lixo.unlink(missing_ok=True)
+                except HTTPException:
+                    pass
                 print(f"tarefa {tid[:8]} terminou em {time.time() - ini:.0f}s", flush=True)
                 with trava:
                     rodando["id"] = None
@@ -448,6 +607,9 @@ def retomar():
             t = json.loads((p / "tarefa.json").read_text(encoding="utf-8"))
         except Exception:
             continue
+        for c in t.get("cortes", []):
+            if c.get("estado") == "fila":
+                fila_ed.append((t["id"], c["n"]))
         if t.get("estado") in ("fila", "rodando"):
             if t["fonte"]["tipo"] == "arquivo" and not (ENVIOS / t["fonte"]["envio"]).exists():
                 t.update(estado="erro", etapa="erro", erro="reinicio")

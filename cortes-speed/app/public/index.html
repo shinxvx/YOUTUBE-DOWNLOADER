@@ -17,7 +17,7 @@
 <link rel="icon" href="icone.svg?v=1" type="image/svg+xml">
 <link rel="manifest" href="manifest.json?v=1">
 <link rel="preload" href="fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="estilo.css?v=3">
+<link rel="stylesheet" href="estilo.css?v=4">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"SPEED Cortes","alternateName":["SPEED Clips","Speed Cortes"],"url":"https://cortes.speedco.com.br/","applicationCategory":"MultimediaApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","description":"Cortes verticais automáticos com IA: gancho, legenda palavra por palavra e marca d'água para TikTok, Reels e Shorts.","offers":{"@type":"Offer","price":"0","priceCurrency":"BRL"},"publisher":{"@type":"Organization","name":"Speed","url":"https://speedco.com.br/"},"inLanguage":["pt-BR","en"]}
 </script>
@@ -74,6 +74,23 @@
     </div>
 
     <fieldset class="grupo">
+      <legend data-i18n="g_genero">Tipo de vídeo</legend>
+      <div class="chips" data-campo="genero">
+        <button type="button" data-v="auto" aria-pressed="true" data-i18n="ge_auto">Automático</button>
+        <button type="button" data-v="podcast" data-i18n="ge_podcast">Podcast / entrevista</button>
+        <button type="button" data-v="comedia" data-i18n="ge_comedia">Comédia</button>
+        <button type="button" data-v="educativo" data-i18n="ge_educativo">Aula / dicas</button>
+        <button type="button" data-v="motivacional" data-i18n="ge_motivacional">Motivacional / palestra</button>
+        <button type="button" data-v="historia" data-i18n="ge_historia">Storytime / vlog</button>
+        <button type="button" data-v="noticias" data-i18n="ge_noticias">Notícias / debate</button>
+        <button type="button" data-v="vendas" data-i18n="ge_vendas">Vendas / produto</button>
+        <button type="button" data-v="react" data-i18n="ge_react">React / gameplay / live</button>
+      </div>
+      <p class="dica" id="genero-dica"></p>
+      <textarea id="instrucoes" class="campo" rows="2" maxlength="300" data-i18n-ph="ph_instr" placeholder="Opcional: diga para a IA o que procurar (ex.: só as partes sobre futebol, as brigas, as histórias de infância…)"></textarea>
+    </fieldset>
+
+    <fieldset class="grupo">
       <legend data-i18n="g_dur">Duração de cada corte</legend>
       <div class="chips" data-campo="duracao">
         <button type="button" data-v="30">30 s</button>
@@ -96,11 +113,12 @@
     <fieldset class="grupo">
       <legend data-i18n="g_enq">Enquadramento vertical</legend>
       <div class="chips" data-campo="enquadramento">
-        <button type="button" data-v="auto" aria-pressed="true" data-i18n="enq_auto">Segue o rosto</button>
+        <button type="button" data-v="auto" aria-pressed="true" data-i18n="enq_auto">Segue quem fala</button>
+        <button type="button" data-v="dividida" data-i18n="enq_div">Tela dividida (2 pessoas)</button>
         <button type="button" data-v="desfocado" data-i18n="enq_desf">Fundo desfocado</button>
         <button type="button" data-v="centro" data-i18n="enq_centro">Centro fixo</button>
       </div>
-      <p class="dica" data-i18n="enq_dica">"Segue o rosto" mantém quem fala no centro; sem rosto na tela ele usa o fundo desfocado sozinho.</p>
+      <p class="dica" data-i18n="enq_dica">"Segue quem fala" acha a pessoa que está falando (pelo movimento da boca) e corta para ela; sem rosto na tela usa o fundo desfocado. "Tela dividida" põe duas pessoas uma em cima da outra.</p>
     </fieldset>
 
     <fieldset class="grupo">
@@ -186,6 +204,7 @@
       <h2 data-i18n="seus">Seus cortes</h2>
       <div class="res-acoes">
         <a class="btn-sec" id="zip" href="#" data-i18n="zip">Baixar todos (.zip)</a>
+        <button type="button" class="btn-sec" id="novo-corte" data-i18n="novo_corte">+ Criar corte do meu jeito</button>
         <button type="button" class="btn-sec" id="novo" data-i18n="novo">Fazer outro</button>
       </div>
     </div>
@@ -202,7 +221,33 @@
   </section>
 </main>
 
-<script src="app.js?v=2"></script>
+<dialog id="editor" class="editor" aria-labelledby="ed-tit">
+  <form method="dialog" class="ed-caixa" id="ed-form">
+    <header class="ed-topo">
+      <h2 id="ed-tit"></h2>
+      <button type="button" class="ed-x" id="ed-fechar" aria-label="Fechar">×</button>
+    </header>
+    <div class="ed-corpo">
+      <div class="ed-campos">
+        <label><span data-i18n="ed_titulo">Título</span><input id="ed-titulo" class="campo" maxlength="100"></label>
+        <label><span data-i18n="ed_gancho">Texto do gancho (aparece no topo no começo)</span><input id="ed-gancho" class="campo" maxlength="60"></label>
+        <label><span data-i18n="ed_post">Legenda do post</span><textarea id="ed-post" class="campo" rows="2" maxlength="800"></textarea></label>
+      </div>
+      <div class="ed-trecho">
+        <p class="ed-resumo" id="ed-resumo"></p>
+        <p class="dica" data-i18n="ed_dica">Toque em "Início" e "Fim" para escolher o trecho. "Prévia" = frase que aparece antes, como gancho. Dentro do trecho você pode corrigir o texto da legenda.</p>
+        <ol class="ed-frases" id="ed-frases"></ol>
+      </div>
+    </div>
+    <footer class="ed-rodape">
+      <p class="erro" id="ed-erro" hidden></p>
+      <button type="button" class="btn-sec" id="ed-cancelar" data-i18n="cancelar">Cancelar</button>
+      <button type="button" class="btn" id="ed-salvar"></button>
+    </footer>
+  </form>
+</dialog>
+
+<script src="app.js?v=3"></script>
 <!-- rodape-speed:inicio -->
 <footer class="rs rs--centro"><div class="rs-in">
 <div class="rs-a"><p class="rs-nome">SPEED SISTEMAS DE PRODUCAO ENTRETENIMENTO E EXPERIENCIAS DIGITAIS LTDA</p><p>CNPJ 29.932.620/0001-40</p></div>

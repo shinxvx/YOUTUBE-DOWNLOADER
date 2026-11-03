@@ -13,9 +13,17 @@
       sub: "Paste a YouTube link or upload your video. AI finds the best moments, cuts them with a beginning, middle and end, opens each clip with a hook and adds captions. Ready for TikTok, Reels and Shorts.",
       aba_link: "YouTube link", aba_arquivo: "Upload video", ph: "Paste the YouTube link here", colar: "Paste",
       soltar: "Tap to choose or drop the video here", soltar_lim: "MP4, MOV, MKV or WEBM · up to 3 GB · up to 2 hours",
+      g_genero: "Type of video", ge_auto: "Automatic", ge_podcast: "Podcast / interview", ge_comedia: "Comedy",
+      ge_educativo: "Class / tips", ge_motivacional: "Motivational / talk", ge_historia: "Storytime / vlog",
+      ge_noticias: "News / debate", ge_vendas: "Sales / product", ge_react: "React / gameplay / live",
+      ph_instr: "Optional: tell the AI what to look for (e.g. only the parts about football, the arguments, childhood stories…)",
+      enq_div: "Split screen (2 people)", novo_corte: "+ Make my own clip",
+      ed_titulo: "Title", ed_gancho: "Hook text (shown on top at the start)", ed_post: "Post caption",
+      ed_dica: 'Tap "Start" and "End" to pick the part. "Teaser" = line shown first, as a hook. Inside the part you can fix the caption text.',
+      cancelar: "Cancel",
       g_dur: "Clip length", g_qtd: "How many clips", auto: "Automatic", g_enq: "Vertical framing",
-      enq_auto: "Follow the face", enq_desf: "Blurred background", enq_centro: "Fixed center",
-      enq_dica: '"Follow the face" keeps the speaker centered; with no face on screen it switches to blurred background.',
+      enq_auto: "Follow the speaker", enq_desf: "Blurred background", enq_centro: "Fixed center",
+      enq_dica: '"Follow the speaker" finds who is talking (by mouth movement) and cuts to them; with no face it uses blurred background. "Split screen" stacks two people.',
       g_leg: "Captions", posicao: "Position", p_baixo: "Bottom", p_meio: "Middle", p_alto: "Top",
       g_gancho: "Hook", gt_tit: "Hook title on top", gt_sub: "Short line that grabs attention in the first seconds",
       gi_tit: "Open with the strongest line", gi_sub: "If the best moment is in the middle, it plays first as a teaser",
@@ -43,6 +51,15 @@
       escolha_arq: "Escolha um vídeo.", cole: "Cole um link do YouTube, TikTok ou Instagram.", min: "min",
       aviso_ia: "A IA ficou fora do ar em parte do vídeo; alguns cortes foram escolhidos pelo plano B (sem IA).",
       aviso_render: "Algum corte falhou ao montar e foi pulado.", sem_logo: "Escolha a imagem da marca d'água.",
+      editar: "Editar", refazendo: "Refazendo o corte…", falhou_corte: "Não consegui refazer esse corte.",
+      ed_tit: (n) => `Editar corte #${n}`, ed_novo: "Criar corte do meu jeito", ed_salvar: "Refazer corte", ed_criar: "Criar corte",
+      ini: "Início", fim: "Fim", previa: "Prévia", resumo: (a, b, d) => `Trecho: ${a} → ${b} · ${d} s`,
+      escolha: "Escolha a frase de início e a de fim.", carregando: "Carregando a transcrição…",
+      gen: { auto: "A IA descobre sozinha o tipo de vídeo.", podcast: "Divide a conversa por histórias e assuntos: cada corte é uma história completa com gancho.",
+        comedia: "Pega as partes mais engraçadas, com a preparação e a piada inteira (não corta a risada).",
+        educativo: "Cada corte ensina uma ideia ou dica completa.", motivacional: "Os trechos mais fortes e marcantes, com uma mensagem clara.",
+        historia: "Mini-histórias com começo, reviravolta e final.", noticias: "Um assunto ou argumento por corte; prefere polêmica e fatos chocantes.",
+        vendas: "Dor, benefício, demonstração, resultado e oferta.", react: "Os picos de emoção: reações, jogadas, falhas e surpresas." },
     },
     en: {
       fila: (n) => `In queue: #${n}`, fila_sub: "It starts automatically when it's your turn.",
@@ -55,6 +72,15 @@
       escolha_arq: "Choose a video.", cole: "Paste a YouTube, TikTok or Instagram link.", min: "min",
       aviso_ia: "The AI was down for part of the video; some clips were picked by the fallback (no AI).",
       aviso_render: "A clip failed to build and was skipped.", sem_logo: "Choose the watermark image.",
+      editar: "Edit", refazendo: "Rebuilding the clip…", falhou_corte: "Couldn't rebuild this clip.",
+      ed_tit: (n) => `Edit clip #${n}`, ed_novo: "Make my own clip", ed_salvar: "Rebuild clip", ed_criar: "Create clip",
+      ini: "Start", fim: "End", previa: "Teaser", resumo: (a, b, d) => `Part: ${a} → ${b} · ${d} s`,
+      escolha: "Pick the start and the end line.", carregando: "Loading the transcript…",
+      gen: { auto: "AI figures out the type of video.", podcast: "Splits the conversation into stories and topics: each clip is one complete story with a hook.",
+        comedia: "Grabs the funniest parts, with the full setup and punchline (never cuts the laugh).",
+        educativo: "Each clip teaches one complete idea or tip.", motivacional: "The strongest, most quotable passages with one clear message.",
+        historia: "Mini stories with a beginning, twist and ending.", noticias: "One topic or argument per clip; prefers controversy and shocking facts.",
+        vendas: "Pain, benefit, demo, result and offer.", react: "Emotional peaks: reactions, plays, fails and surprises." },
     },
   };
   const ERROS = {
@@ -69,6 +95,9 @@
       semcortes: "Não achei trechos bons para cortar nesse vídeo.", render: "Falhou ao montar os cortes.",
       logo: "Imagem da marca d'água inválida (use PNG, JPG ou WEBP até 4 MB).", reinicio: "O servidor reiniciou durante o envio. Envie de novo.",
       falhou: "Falhou. Tente de novo.", rede: "Sem conexão com o servidor. Confira a internet.",
+      trecho: "Trecho inválido.", duracao_trecho: "O trecho precisa ter entre 3 segundos e 6 minutos e meio.",
+      naopronto: "Espere os cortes ficarem prontos.", semoriginal: "O vídeo original já foi apagado (passou de 48 h). Faça de novo.",
+      muitos: "Limite de 30 cortes por vídeo.", refazendo: "Esse corte já está sendo refeito.",
     },
     en: {
       link: "Paste a YouTube, TikTok or Instagram link.", privado: "This video is private.",
@@ -81,6 +110,9 @@
       semcortes: "Couldn't find good moments to clip.", render: "Failed to build the clips.",
       logo: "Invalid watermark image (PNG, JPG or WEBP up to 4 MB).", reinicio: "The server restarted during upload. Please upload again.",
       falhou: "Failed. Please try again.", rede: "No connection to the server. Check your internet.",
+      trecho: "Invalid part.", duracao_trecho: "The part must be between 3 seconds and 6.5 minutes.",
+      naopronto: "Wait for the clips to be ready.", semoriginal: "The original video was already deleted (over 48 h). Please start again.",
+      muitos: "Limit of 30 clips per video.", refazendo: "This clip is already being rebuilt.",
     },
   };
 
@@ -102,6 +134,7 @@
       el.placeholder = lang === "pt" ? ORIG.get(el) : (TXT.en[el.dataset.i18nPh] || ORIG.get(el));
     });
     $$(".idioma button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
+    generoDica();
     if (ultimo) mostrar(ultimo);
   }
   $$(".idioma button").forEach((b) => b.addEventListener("click", () => {
@@ -113,7 +146,7 @@
   const erroTxt = (c) => ERROS[lang][c] || ERROS[lang].falhou;
 
   // ------------------------------------------------------------------ formulário
-  const opc = { duracao: 60, qtd: 0, enquadramento: "auto", estilo_legenda: "amarelo", posicao_legenda: "baixo", marca_tipo: "nenhuma", marca_pos: "sd" };
+  const opc = { genero: "auto", duracao: 60, qtd: 0, enquadramento: "auto", estilo_legenda: "amarelo", posicao_legenda: "baixo", marca_tipo: "nenhuma", marca_pos: "sd" };
   $$("[data-campo]").forEach((g) => {
     g.addEventListener("click", (ev) => {
       const b = ev.target.closest("button[data-v]");
@@ -122,8 +155,10 @@
       const v = b.dataset.v;
       opc[g.dataset.campo] = /^\d+$/.test(v) ? Number(v) : v;
       if (g.dataset.campo === "marca_tipo") marcaUI();
+      if (g.dataset.campo === "genero") generoDica();
     });
   });
+  function generoDica() { const e = $("#genero-dica"); if (e) e.textContent = (DIN[lang].gen || {})[opc.genero] || ""; }
   function marcaUI() {
     $("#marca-opcoes").hidden = opc.marca_tipo === "nenhuma";
     $("#marca_texto").hidden = opc.marca_tipo !== "texto";
@@ -229,7 +264,8 @@
     esconderErro();
     const corpo = { ...opc, legenda: $("#legenda").checked, titulo_gancho: $("#titulo_gancho").checked,
       gancho_inicio: $("#gancho_inicio").checked, marca_texto: $("#marca_texto").value.trim(),
-      marca_opacidade: Number($("#marca_opacidade").value) / 100, lingua: $("#lingua").value };
+      marca_opacidade: Number($("#marca_opacidade").value) / 100, lingua: $("#lingua").value,
+      instrucoes: $("#instrucoes").value.trim() };
     if (aba === "link") {
       corpo.url = $("#url").value.trim();
       if (!/^https?:\/\//i.test(corpo.url)) { mostrarErro(d().cole); return; }
@@ -272,7 +308,8 @@
       if (r.status === 404) { voltar(); return; }
       ultimo = await r.json();
       mostrar(ultimo);
-      if (ultimo.estado === "pronto" || ultimo.estado === "erro") return;
+      const refazendo = (ultimo.cortes || []).some((c) => c.estado === "fila");
+      if ((ultimo.estado === "pronto" && !refazendo) || ultimo.estado === "erro") return;
     } catch (e) { /* tenta de novo */ }
     timer = setTimeout(olhar, 2500);
   }
@@ -313,7 +350,8 @@
     $("#resultados").hidden = !t.cortes.length;
     $("#zip").href = `/api/tarefas/${t.id}/zip`;
     $("#zip").hidden = !pronto || t.cortes.length < 2;
-    const chave = lang + "|" + t.cortes.map((c) => c.n).join(",");
+    $("#novo-corte").hidden = !pronto;
+    const chave = lang + "|" + t.cortes.map((c) => c.n + c.video + c.estado).join(",");
     if (chave !== renderizados) {
       renderizados = chave;
       $("#cortes").replaceChildren(...t.cortes.map(cartao));
@@ -325,10 +363,16 @@
   function cartao(c) {
     const card = el("article", "corte");
     const tela = el("div", "tela");
-    const v = document.createElement("video");
-    v.src = c.video; v.poster = c.capa; v.controls = true; v.preload = "none"; v.playsInline = true;
-    tela.append(v, el("span", "nota", `${c.nota}`));
-    tela.querySelector(".nota").title = d().nota;
+    if (c.estado === "fila" || c.estado === "erro") {
+      tela.append(el("div", "tela-aviso", c.estado === "fila" ? d().refazendo : d().falhou_corte));
+      if (c.estado === "fila") tela.classList.add("girando");
+    }
+    if (c.estado !== "fila" || c.versao !== 0) {
+      const v = document.createElement("video");
+      v.src = c.video; v.poster = c.capa; v.controls = true; v.preload = "none"; v.playsInline = true;
+      if (c.estado !== "fila") tela.prepend(v);
+    }
+    if (c.nota) { const nt = el("span", "nota", `${c.nota}`); nt.title = d().nota; tela.append(nt); }
     const corpo = el("div", "corte-corpo");
     corpo.append(el("p", "corte-meta", `#${c.n} · ${d().duracao(c.dur)} · ${d().de_ate(fmt(c.ini), fmt(c.fim))}`));
     corpo.append(el("h3", "corte-tit", c.titulo || "—"));
@@ -344,13 +388,93 @@
       corpo.append(ta, cp);
     }
     const acoes = el("div", "corte-acoes");
-    const a1 = el("a", "btn btn-peq", d().baixar); a1.href = c.video.replace(/$/, "?baixar=1");
-    const a2 = el("a", "btn-sec btn-peq", d().srt); a2.href = c.srt + "?baixar=1";
-    acoes.append(a1, a2);
+    const a1 = el("a", "btn btn-peq", d().baixar); a1.href = c.video + "&baixar=1";
+    const a2 = el("a", "btn-sec btn-peq", d().srt); a2.href = c.srt + "&baixar=1";
+    const ed = el("button", "btn-sec btn-peq", d().editar); ed.type = "button";
+    ed.addEventListener("click", () => abrirEditor(c));
+    if (c.estado === "fila") { a1.hidden = a2.hidden = ed.hidden = true; }
+    acoes.append(a1, a2, ed);
     corpo.append(acoes);
     card.append(tela, corpo);
     return card;
   }
+
+  // ------------------------------------------------------------------ editor de corte
+  let frasesCache = null, ed = null;
+  async function abrirEditor(c) {
+    const dlg = $("#editor");
+    ed = { n: c ? c.n : 0, a: c ? c.a : null, b: c ? c.b : null, h: c && c.h != null ? c.h : null, edicoes: { ...(c ? c.edicoes || {} : {}) } };
+    $("#ed-tit").textContent = c ? d().ed_tit(c.n) : d().ed_novo;
+    $("#ed-salvar").textContent = c ? d().ed_salvar : d().ed_criar;
+    $("#ed-titulo").value = c ? c.titulo || "" : "";
+    $("#ed-gancho").value = c ? c.gancho || "" : "";
+    $("#ed-post").value = c ? c.post || "" : "";
+    $("#ed-erro").hidden = true;
+    $("#ed-frases").replaceChildren(el("li", "dica", d().carregando));
+    if (typeof dlg.showModal === "function") dlg.showModal(); else dlg.setAttribute("open", "");
+    if (!frasesCache || frasesCache.id !== tarefa) {
+      try { const r = await fetch(`/api/tarefas/${tarefa}/frases`); frasesCache = { id: tarefa, lista: (await r.json()).frases }; }
+      catch (e) { $("#ed-erro").textContent = erroTxt("rede"); $("#ed-erro").hidden = false; return; }
+    }
+    desenharFrases(true);
+  }
+  function lerEdicoes() {
+    $$("#ed-frases textarea").forEach((ta) => { ed.edicoes[ta.dataset.i] = ta.value; });
+  }
+  function desenharFrases(rolar) {
+    const lista = frasesCache.lista;
+    const dentro = (i) => ed.a != null && ed.b != null && i >= ed.a && i <= ed.b;
+    const itens = lista.map((f) => {
+      const li = el("li", "ed-frase" + (dentro(f.i) ? " dentro" : "") + (ed.h === f.i ? " previa" : "") + (f.i === ed.a ? " ini" : "") + (f.i === ed.b ? " fim" : ""));
+      li.append(el("span", "ed-tempo", fmt(f.s)));
+      if (dentro(f.i)) {
+        const ta = el("textarea", "ed-txt"); ta.rows = 1; ta.dataset.i = f.i;
+        ta.value = ed.edicoes[f.i] != null ? ed.edicoes[f.i] : f.t;
+        li.append(ta);
+      } else li.append(el("span", "ed-txt", ed.edicoes[f.i] != null ? ed.edicoes[f.i] : f.t));
+      const bt = el("span", "ed-bts");
+      [["ini", () => { ed.a = f.i; if (ed.b == null || ed.b < f.i) ed.b = f.i; }],
+       ["fim", () => { ed.b = f.i; if (ed.a == null || ed.a > f.i) ed.a = f.i; }],
+       ["previa", () => { ed.h = ed.h === f.i ? null : f.i; }]].forEach(([k, fn]) => {
+        if (k === "previa" && !dentro(f.i)) return;
+        const b = el("button", "ed-bt ed-bt-" + k + ((k === "ini" && f.i === ed.a) || (k === "fim" && f.i === ed.b) || (k === "previa" && ed.h === f.i) ? " on" : ""), d()[k]);
+        b.type = "button";
+        b.addEventListener("click", () => { lerEdicoes(); fn(); if (ed.h != null && !dentro(ed.h)) ed.h = null; desenharFrases(false); });
+        bt.append(b);
+      });
+      li.append(bt);
+      return li;
+    });
+    const box = $("#ed-frases"), topo = box.scrollTop;
+    box.replaceChildren(...itens);
+    if (ed.a != null && ed.b != null) {
+      const s = lista[ed.a].s, e = lista[ed.b].e;
+      $("#ed-resumo").textContent = d().resumo(fmt(s), fmt(e), Math.round(e - s));
+    } else $("#ed-resumo").textContent = d().escolha;
+    if (rolar && ed.a != null) { const alvo = box.children[Math.max(0, ed.a - 2)]; if (alvo) box.scrollTop = alvo.offsetTop - box.offsetTop; }
+    else box.scrollTop = topo;
+  }
+  function fecharEditor() { const dlg = $("#editor"); if (dlg.open) { if (dlg.close) dlg.close(); else dlg.removeAttribute("open"); } }
+  $("#ed-fechar").addEventListener("click", fecharEditor);
+  $("#ed-cancelar").addEventListener("click", fecharEditor);
+  $("#novo-corte").addEventListener("click", () => abrirEditor(null));
+  $("#ed-salvar").addEventListener("click", async () => {
+    if (ed.a == null || ed.b == null) { $("#ed-erro").textContent = d().escolha; $("#ed-erro").hidden = false; return; }
+    lerEdicoes();
+    const edicoes = {};
+    Object.entries(ed.edicoes).forEach(([i, v]) => { i = Number(i); if (i >= ed.a && i <= ed.b) edicoes[i] = v; });
+    const btn = $("#ed-salvar"); btn.disabled = true;
+    try {
+      await api(`/api/tarefas/${tarefa}/cortes` + (ed.n ? "/" + ed.n : ""), { a: ed.a, b: ed.b, h: ed.h, edicoes,
+        titulo: $("#ed-titulo").value, gancho: $("#ed-gancho").value, post: $("#ed-post").value });
+      fecharEditor();
+      renderizados = "";
+      olhar();
+    } catch (err) {
+      $("#ed-erro").textContent = err.message === "Failed to fetch" ? erroTxt("rede") : erroTxt(err.message);
+      $("#ed-erro").hidden = false;
+    } finally { btn.disabled = false; }
+  });
 
   function voltar() {
     clearTimeout(timer);

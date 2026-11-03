@@ -375,10 +375,40 @@ Hard rules for EVERY clip:
 Write title, hook and caption in the SAME LANGUAGE as the transcript. Answer with JSON only."""
 
 
-def pedir_cortes(frases, ini, fim, qtd, lo, hi, alvo, titulo):
+# Tipo de vídeo escolhido pelo cliente: muda o que a IA procura (cada um com a sua ideia de "bom corte" e de gancho).
+GENEROS = {
+    "auto": "First figure out what kind of video this is (podcast, comedy, class, speech, story, news, sales, react...) and apply the best strategy for that kind.",
+    "podcast": ("PODCAST / INTERVIEW / TALK SHOW. Map the conversation into its separate STORIES, topics and arguments first. "
+                "Each clip = ONE complete story or topic (setup -> development -> payoff: punchline, lesson, revelation or opinion). "
+                "For long clips (2-5 min) keep the whole story arc; for short clips (30 s - 1 min) take the sharpest moment of a story "
+                "(confession, strong opinion, revelation, funny line, disagreement) but still with its context. "
+                "Prefer personal stories, controversial opinions, secrets/revelations, advice and moments where the guests react. "
+                "Hook: the most intriguing sentence of that story (a question, a confession, a bold claim)."),
+    "comedia": ("COMEDY (stand-up, sketch, funny podcast, pranks, roasts). Pick the FUNNIEST moments. Each clip needs the full setup AND "
+                "the punchline, and must end AFTER the laugh/reaction lands (never cut the laugh). Prefer absurd situations, comebacks, "
+                "roasts, awkward moments and running jokes that pay off inside the clip. Hook: the funniest/most absurd line or the premise "
+                "(use hook_line to show the punchline first as a teaser when it makes people want to see how it happened)."),
+    "educativo": ("EDUCATIONAL / CLASS / TUTORIAL. Each clip teaches ONE complete idea, tip, step or concept with its explanation and "
+                  "conclusion (the viewer must learn something whole). Prefer practical tips, myths debunked, numbers, mistakes to avoid, "
+                  "before/after. Hook: the problem, a surprising fact or a promise (\"the mistake that...\", \"nobody tells you...\")."),
+    "motivacional": ("MOTIVATIONAL / SPEECH / PREACHING. Pick the most emotional, quotable passages with one clear message and a strong "
+                     "ending line. Prefer personal struggle, turning points and calls to action. Hook: the most quotable sentence."),
+    "historia": ("STORYTIME / VLOG. Each clip = a complete mini story with beginning, twist/conflict and ending. Prefer surprising, "
+                 "emotional or embarrassing stories. Hook: the most intriguing moment of the story (what happened), as a teaser if needed."),
+    "noticias": ("NEWS / COMMENTARY / DEBATE. Each clip = one complete topic or argument. Prefer controversial takes, clashes between "
+                 "people, shocking facts and clear conclusions. Hook: the controversy or the most shocking fact."),
+    "vendas": ("SALES / PRODUCT / REVIEW / BUSINESS. Pick moments with a clear pain point, benefit, demonstration, result/before-after, "
+               "objection answered or offer. Hook: the pain or the result."),
+    "react": ("REACT / GAMEPLAY / LIVE STREAM. Pick the emotional peaks: big reactions, plays, fails, rage, surprises, with the build-up "
+              "right before the peak. Hook: the peak itself (use hook_line to tease it first)."),
+}
+
+
+def pedir_cortes(frases, ini, fim, qtd, lo, hi, alvo, titulo, genero="auto", extra=""):
     linhas = [f"[{i}] {mmss(f['s'])}-{mmss(f['e'])} | {f['t']}" for i, f in enumerate(frases) if f["s"] >= ini and f["e"] <= fim]
     pedido = f"""Video title: {titulo or "(unknown)"}
-Pick up to {qtd} clips. Each clip must last between {lo} and {hi} seconds (ideal ~{alvo} s).
+Type of video and strategy: {GENEROS.get(genero, GENEROS["auto"])}
+""" + (f"Extra wishes from the client (follow them if possible, but never break the hard rules): {extra}\n" if extra else "") + f"""Pick up to {qtd} clips. Each clip must last between {lo} and {hi} seconds (ideal ~{alvo} s).
 Return: {{"clips":[{{"start": first line number, "end": last line number, "hook_line": line number of the strongest hook inside the clip,
 "title": "catchy title, max 60 chars", "hook": "on-screen hook text, max 45 chars, makes people keep watching",
 "caption": "post caption with 3-5 hashtags", "score": 0-100 virality, "why": "one short sentence"}}]}}
@@ -443,7 +473,7 @@ def escolher_sem_sobrepor(frases, cands, qtd):
     return out
 
 
-def escolher_cortes(frases, dur_video, alvo, qtd, titulo, aviso):
+def escolher_cortes(frases, dur_video, alvo, qtd, titulo, aviso, genero="auto", extra=""):
     lo, hi = ALVOS[alvo]
     if not frases:
         raise Erro("semfala")
@@ -453,6 +483,8 @@ def escolher_cortes(frases, dur_video, alvo, qtd, titulo, aviso):
                  "score": 60, "why": ""}]
     if not qtd:
         qtd = max(1, min(10, int(total / (alvo * 2.5)) or 1))
+        if genero == "podcast":  # podcast: um corte por história; mais cortes no automático
+            qtd = max(1, min(15, int(total / (alvo * 1.6)) or 1))
     # janelas de ~25 min (texto cabe folgado em qualquer IA) com sobreposição de um corte
     JAN = 1500
     janelas, t = [], frases[0]["s"]
@@ -463,7 +495,7 @@ def escolher_cortes(frases, dur_video, alvo, qtd, titulo, aviso):
     for (ini, fim) in janelas:
         q = max(2, math.ceil(qtd * min(1.0, (fim - ini) / max(total, 1)) * 1.6))
         try:
-            brutos = pedir_cortes(frases, ini, fim, q, lo, hi, alvo, titulo)
+            brutos = pedir_cortes(frases, ini, fim, q, lo, hi, alvo, titulo, genero, extra)
         except Exception as e:
             print("IA falhou na janela", ini, e, flush=True)
             aviso("ia")
@@ -536,6 +568,7 @@ _DET = {}
 
 
 def detector(w, h):
+    """Devolve achar(img) -> [(x, y, w, h, score, (mx0, my0, mx1, my1) = região da boca)]."""
     import cv2
     if os.path.exists(YUNET):
         d = _DET.get("yunet")
@@ -548,7 +581,15 @@ def detector(w, h):
             _, f = d.detect(img)
             if f is None:
                 return []
-            return [(float(x[0]), float(x[1]), float(x[2]), float(x[3]), float(x[-1])) for x in f]
+            out = []
+            for x in f:
+                fx, fy, fw, fh = (float(v) for v in x[:4])
+                rx, ry, lx, ly = float(x[10]), float(x[11]), float(x[12]), float(x[13])  # cantos da boca
+                dist = max(4.0, abs(lx - rx))
+                cx, cy = (rx + lx) / 2, (ry + ly) / 2
+                boca = (cx - dist * 0.8, cy - dist * 0.45, cx + dist * 0.8, cy + dist * 0.6)
+                out.append((fx, fy, fw, fh, float(x[-1]), boca))
+            return out
         return achar
     casc = _DET.get("haar")
     if casc is None:
@@ -558,77 +599,71 @@ def detector(w, h):
     def achar2(img):
         g = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         f = casc.detectMultiScale(g, 1.15, 5, minSize=(24, 24))
-        return [(float(x), float(y), float(a), float(b), 0.8) for (x, y, a, b) in f]
+        return [(float(x), float(y), float(a), float(b), 0.8, (x + a * 0.25, y + b * 0.68, x + a * 0.75, y + b * 0.95))
+                for (x, y, a, b) in f]
     return achar2
 
 
-def trilha_rosto(video, trechos, W, H, fps_am=4.0):
-    """Amostra o vídeo e devolve [(t_saida, centro_x_normalizado)], fração de amostras com rosto e cortes de cena."""
+def trilha_rosto(video, trechos, W, H, fps_am=6.0):
+    """Amostra o vídeo (6 por segundo) e devolve os rostos de cada amostra com a "atividade da boca"
+    (quanto a região da boca mudou desde a amostra anterior = quem está falando) e os cortes de cena."""
     import numpy as np, cv2
-    LW = 480
+    LW = 640
     LH = int(round(H * LW / W / 2) * 2)
     achar = detector(LW, LH)
-    pontos, com_rosto, total, base = [], 0, 0, 0.0
+    pontos, com_rosto, com_dois, total, base = [], 0, 0, 0, 0.0
     for (s, e) in trechos:
         cmd = ["ffmpeg", "-v", "error", "-ss", f"{s:.3f}", "-t", f"{e - s:.3f}", "-i", str(video),
                "-vf", f"fps={fps_am},scale={LW}:{LH}", "-f", "rawvideo", "-pix_fmt", "bgr24", "-"]
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
         tam = LW * LH * 3
-        k, ant = 0, None
+        k, ant, ant_g = 0, None, None
         while True:
             buf = p.stdout.read(tam)
             if len(buf) < tam:
                 break
             img = np.frombuffer(buf, np.uint8).reshape(LH, LW, 3)
+            g = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             t = base + k / fps_am
             k += 1
             total += 1
-            peq = cv2.resize(cv2.cvtColor(img, cv2.COLOR_BGR2GRAY), (64, 36)).astype(np.float32)
-            corte = ant is not None and float(np.mean(np.abs(peq - ant))) > 28
+            peq = cv2.resize(g, (64, 36)).astype(np.float32)
+            dif_geral = float(np.mean(np.abs(peq - ant))) if ant is not None else 0.0
+            corte = ant is not None and dif_geral > 28
             ant = peq
-            faces = [f for f in achar(img) if f[2] * f[3] > (LW * LH) * 0.004]
+            faces = []
+            for (fx, fy, fw, fh, sc, boca) in achar(img):
+                if fw * fh < (LW * LH) * 0.003:
+                    continue
+                act = 0.0
+                if ant_g is not None and not corte:
+                    x0, y0 = max(0, int(boca[0])), max(0, int(boca[1]))
+                    x1, y1 = min(LW, int(boca[2]) + 1), min(LH, int(boca[3]) + 1)
+                    if x1 - x0 >= 3 and y1 - y0 >= 3:
+                        a1 = cv2.resize(g[y0:y1, x0:x1], (24, 16)).astype(np.float32)
+                        a0 = cv2.resize(ant_g[y0:y1, x0:x1], (24, 16)).astype(np.float32)
+                        act = max(0.0, float(np.mean(np.abs(a1 - a0))) - dif_geral * 0.8)
+                faces.append({"x": (fx + fw / 2) / LW, "y": (fy + fh / 2) / LH, "a": fw * fh / (LW * LH), "h": fh / LH, "act": act})
+            ant_g = g
             if faces:
                 com_rosto += 1
-            pontos.append({"t": t, "faces": [((f[0] + f[2] / 2) / LW, f[2] * f[3], f[4]) for f in faces], "corte": corte})
+                grandes = [f for f in faces if f["a"] >= max(x["a"] for x in faces) * 0.3]
+                if len(grandes) >= 2:
+                    com_dois += 1
+            pontos.append({"t": t, "faces": faces, "corte": corte})
         p.wait()
         if pontos:
             pontos[-1]["fim_trecho"] = True
         base += e - s
-    return pontos, (com_rosto / total if total else 0.0)
+    return pontos, (com_rosto / total if total else 0.0), (com_dois / total if total else 0.0)
 
 
-def caminho_camera(pontos, W, H):
-    """Escolhe o rosto principal (maior, com preferência para quem já estava na tela) e suaviza o movimento.
-    Cortes de cena e troca de trecho = a câmera pula; dentro da mesma cena ela anda suave e só quando o rosto sai da zona central."""
-    cw = H * 9 / 16
-    meio = cw / 2 / W  # meia largura do recorte em fração da largura
-    alvo, saida = None, []
-    cam = None
-    for i, p in enumerate(pontos):
-        pulo = p["corte"] or (i > 0 and pontos[i - 1].get("fim_trecho"))
-        if p["faces"]:
-            maior = max(p["faces"], key=lambda f: f[1])
-            escolha = maior
-            if alvo is not None and not pulo:
-                perto = min(p["faces"], key=lambda f: abs(f[0] - alvo))
-                if abs(perto[0] - alvo) < 0.12 and perto[1] >= maior[1] * 0.45:
-                    escolha = perto
-            alvo = escolha[0]
-        elif alvo is None:
-            alvo = 0.5
-        if cam is None or pulo:
-            cam = alvo
-        else:
-            dif = alvo - cam
-            if abs(dif) > meio * 0.35:  # zona morta: rosto ainda bem enquadrado = câmera parada
-                cam += dif * 0.35
-        cam = min(max(cam, meio), 1 - meio)
-        saida.append((p["t"], cam, pulo))
-    # suaviza (média móvel de ~1 s) sem atravessar pulos
+def suavizar(saida):
+    """Média móvel curta que não atravessa pulos (corte de cena / troca de quem fala)."""
     lisa = []
     for i, (t, x, pulo) in enumerate(saida):
-        viz = [saida[i][1]]
-        for d in (1, 2):
+        viz = [x]
+        for d in (1, 2, 3):
             for j in (i - d, i + d):
                 if 0 <= j < len(saida):
                     entre = range(min(i, j) + 1, max(i, j) + 1)
@@ -638,8 +673,95 @@ def caminho_camera(pontos, W, H):
     return lisa
 
 
-def comandos_crop(lisa, W, H, cw):
-    """Arquivo do sendcmd com a posição x do crop ao longo do tempo (interpolado a 10 vezes por segundo)."""
+def caminho_camera(pontos, W, H):
+    """Câmera que segue QUEM ESTÁ FALANDO: cada rosto vira uma "trilha"; com 2+ pessoas na tela, vence a trilha com mais
+    movimento de boca (média), com folga para não ficar pulando; troca de pessoa = corte seco (como editor faz).
+    Mesma pessoa: anda suave e só quando o rosto sai da zona central."""
+    cw = H * 9 / 16
+    meio = cw / 2 / W
+    trilhas, falante, cam, alvo, saida = [], None, None, None, []
+    for i, p in enumerate(pontos):
+        pulo = p["corte"] or (i > 0 and pontos[i - 1].get("fim_trecho"))
+        if pulo:
+            trilhas, falante = [], None
+        faces = p["faces"]
+        if faces:
+            maior = max(f["a"] for f in faces)
+            faces = [f for f in faces if f["a"] >= maior * 0.3]  # ignora plateia/rosto pequeno no fundo
+        usadas = set()
+        for f in sorted(faces, key=lambda f: -f["a"]):
+            livres = [tr for tr in trilhas if id(tr) not in usadas and abs(tr["x"] - f["x"]) < 0.09]
+            tr = min(livres, key=lambda tr: abs(tr["x"] - f["x"])) if livres else None
+            if tr is None:
+                tr = {"x": f["x"], "ema": f["act"], "seq": 0}
+                trilhas.append(tr)
+            else:
+                tr["x"] = tr["x"] * 0.5 + f["x"] * 0.5
+                tr["ema"] = tr["ema"] * 0.75 + f["act"] * 0.25
+            tr["ult"] = i
+            usadas.add(id(tr))
+        trilhas = [tr for tr in trilhas if i - tr.get("ult", i) <= 12]
+        vis = [tr for tr in trilhas if tr.get("ult") == i]
+        troca = False
+        if len(vis) == 1:
+            if falante is not None and falante is not vis[0] and falante in trilhas:
+                pass  # o falante sumiu só neste quadro (virou o rosto): segura
+            else:
+                troca = falante is not None and falante is not vis[0]
+                falante = vis[0]
+        elif len(vis) >= 2:
+            if falante not in vis:
+                falante = max(vis, key=lambda tr: tr["ema"])
+            else:
+                cand = max(vis, key=lambda tr: tr["ema"])
+                if cand is not falante and cand["ema"] > falante["ema"] * 1.4 + 0.8:
+                    cand["seq"] += 1
+                    if cand["seq"] >= 5:  # ~0,8 s falando mais que o atual
+                        falante, troca = cand, True
+                        for tr in vis:
+                            tr["seq"] = 0
+                else:
+                    for tr in vis:
+                        tr["seq"] = 0
+        if falante is not None:
+            alvo = falante["x"]
+        elif alvo is None:
+            alvo = 0.5
+        if cam is None or pulo or (troca and abs(alvo - cam) > meio * 0.6):
+            cam, pulo = alvo, True if cam is not None else pulo
+        else:
+            dif = alvo - cam
+            if abs(dif) > meio * 0.35:
+                cam += dif * 0.3
+        cam = min(max(cam, meio), 1 - meio)
+        saida.append((p["t"], cam, bool(pulo)))
+    return suavizar(saida)
+
+
+def caminho_dividido(pontos):
+    """Tela dividida: as duas pessoas maiores, a da esquerda em cima e a da direita embaixo (cada uma com a sua trilha)."""
+    esq, dir_, ys_e, ys_d, hs, sa_e, sa_d = None, None, [], [], [], [], []
+    for i, p in enumerate(pontos):
+        pulo = p["corte"] or (i > 0 and pontos[i - 1].get("fim_trecho"))
+        fs = sorted(p["faces"], key=lambda f: -f["a"])[:2]
+        if len(fs) == 2 and fs[1]["a"] >= fs[0]["a"] * 0.3:
+            l, r = sorted(fs, key=lambda f: f["x"])
+            esq = l["x"] if (esq is None or pulo) else esq * 0.6 + l["x"] * 0.4
+            dir_ = r["x"] if (dir_ is None or pulo) else dir_ * 0.6 + r["x"] * 0.4
+            ys_e.append(l["y"]); ys_d.append(r["y"]); hs += [l["h"], r["h"]]
+        sa_e.append((p["t"], esq if esq is not None else 0.3, bool(pulo)))
+        sa_d.append((p["t"], dir_ if dir_ is not None else 0.7, bool(pulo)))
+    # o começo (antes de achar as duas) herda a primeira posição boa
+    pe = next((x for _, x, _ in sa_e if x != 0.3), 0.3)
+    pd = next((x for _, x, _ in sa_d if x != 0.7), 0.7)
+    sa_e = [(t, x if x != 0.3 else pe, pu) for t, x, pu in sa_e]
+    sa_d = [(t, x if x != 0.7 else pd, pu) for t, x, pu in sa_d]
+    med = lambda v, d: sorted(v)[len(v) // 2] if v else d
+    return suavizar(sa_e), suavizar(sa_d), med(ys_e, 0.4), med(ys_d, 0.4), med(hs, 0.2)
+
+
+def comandos_crop(lisa, W, H, cw, alvo="crop", eixo="x"):
+    """Linhas do sendcmd com a posição do crop ao longo do tempo (interpolado ~18 vezes por segundo)."""
     linhas, ult = [], None
     maxx = W - cw
     for i, (t, x, pulo) in enumerate(lisa):
@@ -653,9 +775,14 @@ def comandos_crop(lisa, W, H, cw):
                 xx, tt = x + (prox[1] - x) * f, t + (prox[0] - t) * f
             px = int(round(min(max(xx * W - cw / 2, 0), maxx) / 2) * 2)
             if px != ult:
-                linhas.append(f"{tt:.3f} crop x {px};")
+                linhas.append((tt, f"{alvo} {eixo} {px}"))
                 ult = px
-    return "\n".join(linhas) + "\n"
+    return linhas
+
+
+def juntar_cmds(*listas):
+    tudo = sorted((t, c) for l in listas for (t, c) in l)
+    return "\n".join(f"{t:.3f} {c};" for t, c in tudo) + "\n"
 
 
 # ----------------------------------------------------------------------------------------------- legenda (ASS)
@@ -789,17 +916,27 @@ def renderizar(video, info, trechos, opc, pasta, nome, palavras, gancho_txt, log
     modo = opc.get("enquadramento", "auto")
     vertical_ja = W / H <= 9 / 16 + 0.02
     cw = int(H * 9 / 16) // 2 * 2
-    usar_crop = False
+    usar_crop, dividir = False, None
     cmdfile = pasta / f"{nome}.cmd"
-    if not vertical_ja and modo in ("auto", "rosto"):
+    if not vertical_ja and modo in ("auto", "rosto", "dividida"):
         try:
-            pontos, frac = trilha_rosto(video, trechos, W, H)
+            pontos, frac, frac2 = trilha_rosto(video, trechos, W, H)
         except Exception as e:
             print("rosto falhou:", e, flush=True)
-            pontos, frac = [], 0.0
-        if modo == "rosto" or frac >= 0.35:
+            pontos, frac, frac2 = [], 0.0, 0.0
+        if modo == "dividida" and frac2 >= 0.4:
+            # duas pessoas: cada painel 1080x960 (proporção 9:8), recorte do tamanho que deixa o rosto grande
+            le, ld, ye, yd, hf = caminho_dividido(pontos)
+            ch = int(min(H, max(H * 0.42, hf * H * 3.6)) // 2 * 2)
+            pw = int(min(W, ch * 9 / 8) // 2 * 2)
+            ch = int(min(ch, pw * 8 / 9) // 2 * 2)
+            y_e = int(min(max(ye * H - ch * 0.42, 0), H - ch) // 2 * 2)
+            y_d = int(min(max(yd * H - ch * 0.42, 0), H - ch) // 2 * 2)
+            cmdfile.write_text(juntar_cmds(comandos_crop(le, W, H, pw, "crop@a"), comandos_crop(ld, W, H, pw, "crop@b")), encoding="utf-8")
+            dividir = (pw, ch, y_e, y_d)
+        elif modo in ("rosto", "dividida") or frac >= 0.35:
             lisa = caminho_camera(pontos, W, H) if pontos else [(0.0, 0.5, True)]
-            cmdfile.write_text(comandos_crop(lisa, W, H, cw), encoding="utf-8")
+            cmdfile.write_text(juntar_cmds(comandos_crop(lisa, W, H, cw)), encoding="utf-8")
             usar_crop = True
     if not vertical_ja and modo == "centro":
         cmdfile.write_text(f"0.000 crop x {int((W - cw) / 2) // 2 * 2};\n", encoding="utf-8")
@@ -830,6 +967,12 @@ def renderizar(video, info, trechos, opc, pasta, nome, palavras, gancho_txt, log
             f.append("[a0]anull[ac]")
     if vertical_ja:
         f.append(f"[vc]scale={W_OUT}:{H_OUT}:force_original_aspect_ratio=increase,crop={W_OUT}:{H_OUT},setsar=1[vr]")
+    elif dividir:
+        pw, ch, y_e, y_d = dividir
+        f.append(f"[vc]sendcmd=f={cmdfile.name},split[da][db];"
+                 f"[da]crop@a=w={pw}:h={ch}:x=0:y={y_e},scale={W_OUT}:{H_OUT // 2}:flags=lanczos,setsar=1[pa];"
+                 f"[db]crop@b=w={pw}:h={ch}:x={W - pw}:y={y_d},scale={W_OUT}:{H_OUT // 2}:flags=lanczos,setsar=1[pb];"
+                 f"[pa][pb]vstack=inputs=2,drawbox=x=0:y={H_OUT // 2 - 3}:w={W_OUT}:h=6:color=black@0.9:t=fill[vr]")
     elif usar_crop:
         x0 = int((W - cw) / 2) // 2 * 2
         f.append(f"[vc]sendcmd=f={cmdfile.name},crop=w={cw}:h={H}:x={x0}:y=0,scale={W_OUT}:{H_OUT}:flags=lanczos,setsar=1[vr]")
