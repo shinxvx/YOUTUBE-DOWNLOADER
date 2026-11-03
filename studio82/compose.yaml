@@ -1,0 +1,24 @@
+# Studio 82 Training: aulas de dança online do estúdio (professor OLLY).
+# Porta 4120 -> link studio82.speedco.com.br pelo túnel "umbrel". Login próprio (admin no .env).
+services:
+  studio82:
+    build: .
+    container_name: studio82
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "4120:4120"
+    environment:
+      - TZ=America/Sao_Paulo
+      - PORT=4120
+      - DATA_DIR=/data
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    volumes:
+      - ./data:/data
+    networks: [umbrel_main_network]
+networks:
+  umbrel_main_network:
+    external: true
