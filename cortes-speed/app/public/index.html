@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SPEED Cortes – Cortes virais automáticos com IA para TikTok, Reels e Shorts</title>
+<meta name="description" content="SPEED Cortes: cole um link do YouTube ou envie um vídeo e a IA cria cortes verticais com gancho, legenda automática e marca d'água, prontos para TikTok, Instagram Reels e YouTube Shorts. Cortes de 30 s, 1, 2 ou 5 minutos.">
+<meta name="keywords" content="cortes automáticos, cortador de vídeo, cortes com ia, opus clip, cortes para tiktok, cortes para reels, youtube shorts, legenda automática, clipes virais, video clipper, ai clips">
+<link rel="canonical" href="https://cortes.speedco.com.br/">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0B0C0E">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SPEED Cortes">
+<meta property="og:title" content="SPEED Cortes – cortes virais automáticos com IA">
+<meta property="og:description" content="Link do YouTube ou vídeo enviado vira cortes verticais com gancho, legenda e marca d'água para TikTok, Reels e Shorts.">
+<meta property="og:url" content="https://cortes.speedco.com.br/">
+<link rel="icon" href="icone.svg?v=1" type="image/svg+xml">
+<link rel="manifest" href="manifest.json?v=1">
+<link rel="preload" href="fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="estilo.css?v=1">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"SPEED Cortes","alternateName":["SPEED Clips","Speed Cortes"],"url":"https://cortes.speedco.com.br/","applicationCategory":"MultimediaApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","description":"Cortes verticais automáticos com IA: gancho, legenda palavra por palavra e marca d'água para TikTok, Reels e Shorts.","offers":{"@type":"Offer","price":"0","priceCurrency":"BRL"},"publisher":{"@type":"Organization","name":"Speed","url":"https://speedco.com.br/"},"inLanguage":["pt-BR","en"]}
+</script>
+</head>
+<body>
+<div class="fundo" aria-hidden="true"><span class="luz l1"></span><span class="luz l2"></span><span class="luz l3"></span><span class="grade"></span></div>
+
+<header class="topo">
+  <a class="marca" href="/" aria-label="SPEED Cortes">
+    <img src="icone.svg?v=1" alt="" width="36" height="36">
+    <span class="marca-txt"><b>SPEED</b> Cortes</span>
+  </a>
+  <div class="topo-dir">
+    <a class="topo-link" href="https://downloader.speedco.com.br/" target="_blank" rel="noopener">Downloader <span aria-hidden="true">↗</span></a>
+    <div class="idioma" role="group" aria-label="Idioma">
+      <button type="button" data-lang="pt">PT</button>
+      <button type="button" data-lang="en">EN</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="hero">
+    <p class="selo"><span class="ponto"></span><span data-i18n="selo">IA · Gancho em todo corte · Legenda automática</span></p>
+    <h1 data-i18n-html="h1">Vídeo longo vira <span class="grad">cortes virais</span> em pé</h1>
+    <p class="sub" data-i18n="sub">Cole um link do YouTube ou envie seu vídeo. A IA acha os melhores momentos, corta com começo, meio e fim, abre cada corte com um gancho e coloca legenda. Pronto para TikTok, Reels e Shorts.</p>
+  </section>
+
+  <form id="form" class="painel" autocomplete="off" novalidate>
+    <div class="abas" role="tablist">
+      <button type="button" role="tab" class="aba" data-aba="link" aria-selected="true" data-i18n="aba_link">Link do YouTube</button>
+      <button type="button" role="tab" class="aba" data-aba="arquivo" aria-selected="false" data-i18n="aba_arquivo">Enviar vídeo</button>
+    </div>
+
+    <div class="fonte" id="fonte-link">
+      <div class="campo-link">
+        <svg class="link-icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5"/><path d="M14 10a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"/></svg>
+        <input id="url" type="url" inputmode="url" placeholder="Cole o link do YouTube aqui" data-i18n-ph="ph" aria-label="Link do vídeo">
+        <button type="button" class="btn-sec" id="colar" data-i18n="colar">Colar</button>
+      </div>
+      <div class="previa" id="previa" hidden>
+        <img id="previa-img" alt="" width="160" height="90">
+        <div><p class="previa-tit" id="previa-tit"></p><p class="previa-sub" id="previa-sub"></p></div>
+      </div>
+    </div>
+
+    <div class="fonte" id="fonte-arquivo" hidden>
+      <label class="soltar" id="soltar">
+        <input id="arquivo" type="file" accept="video/*,.mp4,.mov,.mkv,.webm" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+        <span id="soltar-txt" data-i18n="soltar">Toque para escolher ou arraste o vídeo aqui</span>
+        <small data-i18n="soltar_lim">MP4, MOV, MKV ou WEBM · até 3 GB · até 2 horas</small>
+      </label>
+    </div>
+
+    <fieldset class="grupo">
+      <legend data-i18n="g_dur">Duração de cada corte</legend>
+      <div class="chips" data-campo="duracao">
+        <button type="button" data-v="30">30 s</button>
+        <button type="button" data-v="60" aria-pressed="true">1 min</button>
+        <button type="button" data-v="120">2 min</button>
+        <button type="button" data-v="300">5 min</button>
+      </div>
+    </fieldset>
+
+    <fieldset class="grupo">
+      <legend data-i18n="g_qtd">Quantos cortes</legend>
+      <div class="chips" data-campo="qtd">
+        <button type="button" data-v="0" aria-pressed="true" data-i18n="auto">Automático</button>
+        <button type="button" data-v="3">3</button>
+        <button type="button" data-v="5">5</button>
+        <button type="button" data-v="10">10</button>
+      </div>
+    </fieldset>
+
+    <fieldset class="grupo">
+      <legend data-i18n="g_enq">Enquadramento vertical</legend>
+      <div class="chips" data-campo="enquadramento">
+        <button type="button" data-v="auto" aria-pressed="true" data-i18n="enq_auto">Segue o rosto</button>
+        <button type="button" data-v="desfocado" data-i18n="enq_desf">Fundo desfocado</button>
+        <button type="button" data-v="centro" data-i18n="enq_centro">Centro fixo</button>
+      </div>
+      <p class="dica" data-i18n="enq_dica">"Segue o rosto" mantém quem fala no centro; sem rosto na tela ele usa o fundo desfocado sozinho.</p>
+    </fieldset>
+
+    <fieldset class="grupo">
+      <legend class="leg-linha"><span data-i18n="g_leg">Legenda</span>
+        <label class="chave"><input type="checkbox" id="legenda" checked><span></span></label></legend>
+      <div id="leg-opcoes">
+        <div class="estilos" data-campo="estilo_legenda">
+          <button type="button" data-v="amarelo" aria-pressed="true" class="est est-amarelo"><span>ESSE É O <i>SEGREDO</i></span></button>
+          <button type="button" data-v="verde" class="est est-verde"><span>ESSE É O <i>SEGREDO</i></span></button>
+          <button type="button" data-v="branco" class="est est-branco"><span>Esse é o <i>segredo</i></span></button>
+          <button type="button" data-v="caixa" class="est est-caixa"><span>Esse é o <i>segredo</i></span></button>
+        </div>
+        <div class="chips peq" data-campo="posicao_legenda">
+          <span class="chips-rot" data-i18n="posicao">Posição</span>
+          <button type="button" data-v="baixo" aria-pressed="true" data-i18n="p_baixo">Embaixo</button>
+          <button type="button" data-v="meio" data-i18n="p_meio">Meio</button>
+          <button type="button" data-v="alto" data-i18n="p_alto">Em cima</button>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset class="grupo">
+      <legend data-i18n="g_gancho">Gancho</legend>
+      <label class="linha-chave"><span><b data-i18n="gt_tit">Título do gancho no topo</b><small data-i18n="gt_sub">Frase curta que prende nos primeiros segundos</small></span>
+        <span class="chave"><input type="checkbox" id="titulo_gancho" checked><span></span></span></label>
+      <label class="linha-chave"><span><b data-i18n="gi_tit">Abrir com a frase mais forte</b><small data-i18n="gi_sub">Se o melhor momento está no meio, ele aparece antes como prévia</small></span>
+        <span class="chave"><input type="checkbox" id="gancho_inicio" checked><span></span></span></label>
+    </fieldset>
+
+    <fieldset class="grupo">
+      <legend data-i18n="g_marca">Marca d'água</legend>
+      <div class="chips" data-campo="marca_tipo">
+        <button type="button" data-v="nenhuma" aria-pressed="true" data-i18n="m_nenhuma">Nenhuma</button>
+        <button type="button" data-v="texto" data-i18n="m_texto">Texto</button>
+        <button type="button" data-v="imagem" data-i18n="m_imagem">Imagem / logo</button>
+      </div>
+      <div id="marca-opcoes" hidden>
+        <input id="marca_texto" class="campo" maxlength="40" placeholder="@seuperfil" aria-label="Texto da marca d'água">
+        <label class="campo campo-arq" id="logo-rot"><input id="logo" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+          <span id="logo-txt" data-i18n="logo">Escolher imagem (PNG transparente fica melhor)</span></label>
+        <div class="marca-linha">
+          <div class="posicoes" data-campo="marca_pos" aria-label="Posição">
+            <button type="button" data-v="se" title="↖">↖</button><button type="button" data-v="sd" aria-pressed="true" title="↗">↗</button>
+            <button type="button" data-v="centro" title="•">•</button>
+            <button type="button" data-v="ie" title="↙">↙</button><button type="button" data-v="id" title="↘">↘</button>
+          </div>
+          <label class="opac"><span data-i18n="opac">Opacidade</span> <input type="range" id="marca_opacidade" min="20" max="100" value="70"></label>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset class="grupo">
+      <legend data-i18n="g_lingua">Idioma falado no vídeo</legend>
+      <select id="lingua" class="campo">
+        <option value="auto" data-i18n="l_auto">Detectar sozinho</option>
+        <option value="pt">Português</option><option value="en">English</option><option value="es">Español</option>
+        <option value="fr">Français</option><option value="it">Italiano</option><option value="de">Deutsch</option>
+      </select>
+    </fieldset>
+
+    <button type="submit" class="btn" id="gerar"><span data-i18n="gerar">Gerar cortes</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 6-12 6z"/></svg></button>
+    <p class="erro" id="erro" role="alert" hidden></p>
+  </form>
+
+  <section class="painel status" id="status" hidden aria-live="polite">
+    <div class="status-topo">
+      <div><p class="status-tit" id="st-tit"></p><p class="status-sub" id="st-sub"></p></div>
+      <span class="pct" id="st-pct">0%</span>
+    </div>
+    <div class="barra"><span id="st-barra"></span></div>
+    <ol class="passos" id="passos">
+      <li data-p="baixando" data-i18n="ps_baixar">Pegando o vídeo</li>
+      <li data-p="transcrevendo" data-i18n="ps_trans">Transcrevendo cada palavra</li>
+      <li data-p="escolhendo" data-i18n="ps_ia">IA escolhendo os melhores momentos e ganchos</li>
+      <li data-p="renderizando" data-i18n="ps_render">Montando os cortes em pé com legenda</li>
+    </ol>
+    <p class="dica" data-i18n="pode_sair">Pode deixar esta página aberta ou voltar depois por este mesmo link: os cortes ficam guardados por 48 horas.</p>
+  </section>
+
+  <section id="resultados" hidden>
+    <div class="res-topo">
+      <h2 data-i18n="seus">Seus cortes</h2>
+      <div class="res-acoes">
+        <a class="btn-sec" id="zip" href="#" data-i18n="zip">Baixar todos (.zip)</a>
+        <button type="button" class="btn-sec" id="novo" data-i18n="novo">Fazer outro</button>
+      </div>
+    </div>
+    <div class="cortes" id="cortes"></div>
+  </section>
+
+  <section class="como" id="como">
+    <h2 data-i18n="como">Como os cortes são feitos</h2>
+    <div class="cards">
+      <div class="card"><b>1</b><h3 data-i18n="c1t">Cada palavra com tempo</h3><p data-i18n="c1">O áudio é transcrito palavra por palavra, então nenhum corte começa ou termina no meio da fala.</p></div>
+      <div class="card"><b>2</b><h3 data-i18n="c2t">Ideia completa + gancho</h3><p data-i18n="c2">A IA lê o vídeo inteiro e escolhe trechos que se entendem sozinhos, começam prendendo a atenção e terminam com conclusão.</p></div>
+      <div class="card"><b>3</b><h3 data-i18n="c3t">Vertical, legenda e marca</h3><p data-i18n="c3">O vídeo vira 9:16 seguindo o rosto, ganha legenda animada palavra por palavra e a sua marca d'água.</p></div>
+    </div>
+  </section>
+</main>
+
+<script src="app.js?v=1"></script>
+</body>
+</html>

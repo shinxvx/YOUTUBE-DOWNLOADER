@@ -1,0 +1,10 @@
+{
+  "name": "SPEED Cortes",
+  "short_name": "Cortes",
+  "description": "Cortes virais automáticos com IA para TikTok, Reels e Shorts",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B0C0E",
+  "theme_color": "#0B0C0E",
+  "icons": [{ "src": "icone.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

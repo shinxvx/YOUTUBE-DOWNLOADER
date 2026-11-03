@@ -1,0 +1,26 @@
+# SPEED Cortes: vídeo longo (link do YouTube/TikTok/Instagram ou arquivo) vira cortes verticais com gancho, legenda e marca d'água.
+# NÃO publica porta: só o túnel da Cloudflare (rede umbrel_main_network) chega em http://cortes-speed:4110 (cortes.speedco.com.br).
+# Usa o baixador-pot (PO token do YouTube) do projeto baixador e o Whisper small já baixado pelo projeto reuniao (só leitura).
+services:
+  cortes-speed:
+    build: .
+    image: cortes-speed:v1
+    container_name: cortes-speed
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - TZ=America/Sao_Paulo
+      - DADOS=/data
+      - POT_URL=http://baixador-pot:4416
+      - FFMPEG_THREADS=4
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 3g
+    cpus: 5
+    volumes:
+      - ./data:/data
+      - ../reuniao/data/modelos/faster-whisper-small:/modelos/faster-whisper-small:ro
+    networks: [umbrel_main_network]
+networks:
+  umbrel_main_network:
+    external: true
