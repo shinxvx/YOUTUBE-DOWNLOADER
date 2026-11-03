@@ -788,7 +788,7 @@ def caminho_dividido(pontos):
     return suavizar(sa_e), suavizar(sa_d), med(ys_e, 0.4), med(ys_d, 0.4), med(hs, 0.2)
 
 
-def comandos_crop(lisa, W, H, cw, alvo="crop", eixo="x"):
+def comandos_crop(lisa, W, H, cw, alvo="crop@s", eixo="x"):
     """Linhas do sendcmd com a posição do crop ao longo do tempo (interpolado ~18 vezes por segundo)."""
     linhas, ult = [], None
     maxx = W - cw
@@ -806,6 +806,28 @@ def comandos_crop(lisa, W, H, cw, alvo="crop", eixo="x"):
                 linhas.append((tt, f"{alvo} {eixo} {px}"))
                 ult = px
     return linhas
+
+
+def cenas_divididas(pontos, minimo=0.5):
+    """Trechos (t0, t1) do corte em que a cena tem as duas pessoas na tela (>= minimo das amostras da cena)."""
+    cenas, ini = [], 0
+    for i in range(1, len(pontos) + 1):
+        fim = i == len(pontos) or pontos[i]["corte"] or pontos[i - 1].get("fim_trecho")
+        if fim:
+            cenas.append((ini, i))
+            ini = i
+    out = []
+    for a, b in cenas:
+        dois = 0
+        for p in pontos[a:b]:
+            fs = sorted(p["faces"], key=lambda f: -f["a"])[:2]
+            if len(fs) == 2 and fs[1]["a"] >= fs[0]["a"] * 0.3:
+                dois += 1
+        if b > a and dois / (b - a) >= minimo:
+            t0 = pontos[a]["t"]
+            t1 = pontos[b]["t"] if b < len(pontos) else pontos[b - 1]["t"] + 0.5
+            out.append((round(t0, 3), round(t1, 3)))
+    return out
 
 
 def juntar_cmds(*listas):
@@ -952,22 +974,25 @@ def renderizar(video, info, trechos, opc, pasta, nome, palavras, gancho_txt, log
         except Exception as e:
             print("rosto falhou:", e, flush=True)
             pontos, frac, frac2 = [], 0.0, 0.0
-        if modo == "dividida" and frac2 >= float(os.environ.get("DIVIDIR_MIN", "0.4")):
-            # duas pessoas: cada painel 1080x960 (proporção 9:8), recorte do tamanho que deixa o rosto grande
+        cenas = cenas_divididas(pontos) if (modo == "dividida" and pontos) else []
+        if cenas:
+            # tela dividida SÓ nas cenas com as duas pessoas; nas outras (close de um só) segue quem fala
             le, ld, ye, yd, hf = caminho_dividido(pontos)
             ch = int(min(H, max(H * 0.42, hf * H * 3.6)) // 2 * 2)
             pw = int(min(W, ch * 9 / 8) // 2 * 2)
             ch = int(min(ch, pw * 8 / 9) // 2 * 2)
             y_e = int(min(max(ye * H - ch * 0.42, 0), H - ch) // 2 * 2)
             y_d = int(min(max(yd * H - ch * 0.42, 0), H - ch) // 2 * 2)
-            cmdfile.write_text(juntar_cmds(comandos_crop(le, W, H, pw, "crop@a"), comandos_crop(ld, W, H, pw, "crop@b")), encoding="utf-8")
-            dividir = (pw, ch, y_e, y_d)
+            lisa = caminho_camera(pontos, W, H)
+            cmdfile.write_text(juntar_cmds(comandos_crop(lisa, W, H, cw), comandos_crop(le, W, H, pw, "crop@a"),
+                                           comandos_crop(ld, W, H, pw, "crop@b")), encoding="utf-8")
+            dividir = (pw, ch, y_e, y_d, cenas)
         elif modo in ("rosto", "dividida") or frac >= 0.35:
             lisa = caminho_camera(pontos, W, H) if pontos else [(0.0, 0.5, True)]
             cmdfile.write_text(juntar_cmds(comandos_crop(lisa, W, H, cw)), encoding="utf-8")
             usar_crop = True
     if not vertical_ja and modo == "centro":
-        cmdfile.write_text(f"0.000 crop x {int((W - cw) / 2) // 2 * 2};\n", encoding="utf-8")
+        cmdfile.write_text(f"0.000 crop@s x {int((W - cw) / 2) // 2 * 2};\n", encoding="utf-8")
         usar_crop = True
     ass = pasta / f"{nome}.ass"
     ass.write_text(gerar_ass(palavras, trechos, opc, gancho_txt, total), encoding="utf-8")
@@ -996,14 +1021,18 @@ def renderizar(video, info, trechos, opc, pasta, nome, palavras, gancho_txt, log
     if vertical_ja:
         f.append(f"[vc]scale={W_OUT}:{H_OUT}:force_original_aspect_ratio=increase,crop={W_OUT}:{H_OUT},setsar=1[vr]")
     elif dividir:
-        pw, ch, y_e, y_d = dividir
-        f.append(f"[vc]sendcmd=f={cmdfile.name},split[da][db];"
+        pw, ch, y_e, y_d, cenas = dividir
+        x0 = int((W - cw) / 2) // 2 * 2
+        quando = "+".join(f"between(t,{a:.3f},{b:.3f})" for a, b in cenas)
+        f.append(f"[vc]sendcmd=f={cmdfile.name},split=3[ds][da][db];"
+                 f"[ds]crop@s=w={cw}:h={H}:x={x0}:y=0,scale={W_OUT}:{H_OUT}:flags=lanczos,setsar=1[um];"
                  f"[da]crop@a=w={pw}:h={ch}:x=0:y={y_e},scale={W_OUT}:{H_OUT // 2}:flags=lanczos,setsar=1[pa];"
                  f"[db]crop@b=w={pw}:h={ch}:x={W - pw}:y={y_d},scale={W_OUT}:{H_OUT // 2}:flags=lanczos,setsar=1[pb];"
-                 f"[pa][pb]vstack=inputs=2,drawbox=x=0:y={H_OUT // 2 - 3}:w={W_OUT}:h=6:color=black@0.9:t=fill[vr]")
+                 f"[pa][pb]vstack=inputs=2,drawbox=x=0:y={H_OUT // 2 - 3}:w={W_OUT}:h=6:color=black@0.9:t=fill[dv];"
+                 f"[um][dv]overlay=0:0:enable='{quando}'[vr]")
     elif usar_crop:
         x0 = int((W - cw) / 2) // 2 * 2
-        f.append(f"[vc]sendcmd=f={cmdfile.name},crop=w={cw}:h={H}:x={x0}:y=0,scale={W_OUT}:{H_OUT}:flags=lanczos,setsar=1[vr]")
+        f.append(f"[vc]sendcmd=f={cmdfile.name},crop@s=w={cw}:h={H}:x={x0}:y=0,scale={W_OUT}:{H_OUT}:flags=lanczos,setsar=1[vr]")
     else:  # fundo desfocado: o vídeo inteiro no meio, cópia ampliada e borrada atrás
         f.append(f"[vc]split[b1][b2];[b1]scale=270:480:force_original_aspect_ratio=increase,crop=270:480,boxblur=10:3,"
                  f"eq=brightness=-0.10:saturation=1.15,scale={W_OUT}:{H_OUT}[bg];"
