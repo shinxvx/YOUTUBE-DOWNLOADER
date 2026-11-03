@@ -32,7 +32,10 @@
       l_auto: "Detect automatically", gerar: "Create clips",
       ps_baixar: "Getting the video", ps_trans: "Transcribing every word", ps_ia: "AI picking the best moments and hooks",
       ps_render: "Building vertical clips with captions",
-      pode_sair: "You can keep this page open or come back later with this same link: clips are kept for 48 hours.",
+      pode_sair: 'You can close this page: when it finishes, the clips show up in "My clips". They are kept for 6 hours after they are ready.',
+      minhas: "My clips", sair: "Sign out", criar_conta: "Create free account", entrar: "I have an account",
+      conta_dica: 'With an account your clips are saved in "My clips" so you can come back and download them later.',
+      ph_nome: "Your name", ph_senha: "Password (at least 6)", novo_video: "+ New video",
       seus: "Your clips", zip: "Download all (.zip)", novo: "Make another",
       como: "How the clips are made", c1t: "Every word timed", c1: "Audio is transcribed word by word, so no clip starts or ends mid-speech.",
       c2t: "Complete idea + hook", c2: "AI reads the whole video and picks parts that make sense on their own, grab attention at the start and end with a payoff.",
@@ -51,6 +54,11 @@
       escolha_arq: "Escolha um vídeo.", cole: "Cole um link do YouTube, TikTok ou Instagram.", min: "min",
       aviso_ia: "A IA ficou fora do ar em parte do vídeo; alguns cortes foram escolhidos pelo plano B (sem IA).",
       aviso_render: "Algum corte falhou ao montar e foi pulado.", sem_logo: "Escolha a imagem da marca d'água.",
+      entrar_btn: "Entrar", criar_btn: "Criar conta grátis", expira: (h) => `Seus cortes ficam guardados por mais ${h}. Depois são apagados do servidor: baixe antes.`,
+      sem_minhas: "Você ainda não fez nenhum corte (ou eles já passaram das 6 horas e foram apagados).",
+      minhas_dica: (h) => `Cada vídeo fica aqui por ${h} horas depois de pronto.`, cortes_n: (n) => `${n} corte${n === 1 ? "" : "s"}`,
+      est: { fila: "Na fila", rodando: "Cortando…", pronto: "Pronto", erro: "Deu erro" },
+      partes: { hook: "Gancho", payoff: "Conclusão", emotion: "Emoção/humor", share: "Compartilhável" }, nota_tit: "Potencial de viralizar",
       editar: "Editar", refazendo: "Refazendo o corte…", falhou_corte: "Não consegui refazer esse corte.",
       ed_tit: (n) => `Editar corte #${n}`, ed_novo: "Criar corte do meu jeito", ed_salvar: "Refazer corte", ed_criar: "Criar corte",
       ini: "Início", fim: "Fim", previa: "Prévia", resumo: (a, b, d) => `Trecho: ${a} → ${b} · ${d} s`,
@@ -72,6 +80,11 @@
       escolha_arq: "Choose a video.", cole: "Paste a YouTube, TikTok or Instagram link.", min: "min",
       aviso_ia: "The AI was down for part of the video; some clips were picked by the fallback (no AI).",
       aviso_render: "A clip failed to build and was skipped.", sem_logo: "Choose the watermark image.",
+      entrar_btn: "Sign in", criar_btn: "Create free account", expira: (h) => `Your clips are kept for ${h} more. Then they are deleted from the server: download them before.`,
+      sem_minhas: "You haven't made any clips yet (or they passed 6 hours and were deleted).",
+      minhas_dica: (h) => `Each video stays here for ${h} hours after it is ready.`, cortes_n: (n) => `${n} clip${n === 1 ? "" : "s"}`,
+      est: { fila: "Queued", rodando: "Clipping…", pronto: "Ready", erro: "Error" },
+      partes: { hook: "Hook", payoff: "Payoff", emotion: "Emotion/humor", share: "Shareable" }, nota_tit: "Viral potential",
       editar: "Edit", refazendo: "Rebuilding the clip…", falhou_corte: "Couldn't rebuild this clip.",
       ed_tit: (n) => `Edit clip #${n}`, ed_novo: "Make my own clip", ed_salvar: "Rebuild clip", ed_criar: "Create clip",
       ini: "Start", fim: "End", previa: "Teaser", resumo: (a, b, d) => `Part: ${a} → ${b} · ${d} s`,
@@ -98,6 +111,8 @@
       trecho: "Trecho inválido.", duracao_trecho: "O trecho precisa ter entre 3 segundos e 6 minutos e meio.",
       naopronto: "Espere os cortes ficarem prontos.", semoriginal: "O vídeo original já foi apagado (passou de 48 h). Faça de novo.",
       muitos: "Limite de 30 cortes por vídeo.", refazendo: "Esse corte já está sendo refeito.",
+      email: "Digite um e-mail válido.", senha_curta: "A senha precisa ter pelo menos 6 caracteres.", email_existe: "Esse e-mail já tem conta. Toque em \"Já tenho conta\".",
+      senha_errada: "E-mail ou senha errados.", tentativas: "Muitas tentativas. Espere 15 minutos.", login: "Entre na sua conta para continuar.",
     },
     en: {
       link: "Paste a YouTube, TikTok or Instagram link.", privado: "This video is private.",
@@ -113,6 +128,8 @@
       trecho: "Invalid part.", duracao_trecho: "The part must be between 3 seconds and 6.5 minutes.",
       naopronto: "Wait for the clips to be ready.", semoriginal: "The original video was already deleted (over 48 h). Please start again.",
       muitos: "Limit of 30 clips per video.", refazendo: "This clip is already being rebuilt.",
+      email: "Type a valid e-mail.", senha_curta: "The password needs at least 6 characters.", email_existe: "This e-mail already has an account. Tap \"I have an account\".",
+      senha_errada: "Wrong e-mail or password.", tentativas: "Too many attempts. Wait 15 minutes.", login: "Sign in to continue.",
     },
   };
 
@@ -135,6 +152,7 @@
     });
     $$(".idioma button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
     generoDica();
+    try { modoUI(); } catch (e) { /* ainda carregando */ }
     if (ultimo) mostrar(ultimo);
   }
   $$(".idioma button").forEach((b) => b.addEventListener("click", () => {
@@ -200,6 +218,7 @@
       $("#previa").hidden = false;
     } catch (e) { /* só prévia */ }
   }
+  const resta = (s) => { s = Math.max(0, s); const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60); return h ? `${h} h ${String(m).padStart(2, "0")} min` : `${m} min`; };
   const fmt = (s) => { s = Math.round(s); const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = s % 60;
     return (h ? h + ":" + String(m).padStart(2, "0") : m) + ":" + String(x).padStart(2, "0"); };
 
@@ -226,7 +245,8 @@
     const r = await fetch(url, { method: "POST", ...(extra || { headers: { "content-type": "application/json" }, body: JSON.stringify(corpo) }) });
     let j = {};
     try { j = await r.json(); } catch (e) { /* vazio */ }
-    if (!r.ok) throw new Error(j.erro || "falhou");
+    if (r.status === 401) { mostrarConta(); throw new Error("login"); }
+    if (!r.ok) throw new Error(j.erro || (j.detail === "login" ? "login" : "falhou"));
     return j;
   }
 
@@ -291,7 +311,7 @@
   function abrirTarefa(id, novo) {
     tarefa = id;
     if (novo) history.pushState(null, "", "#t=" + id);
-    $("#form").hidden = true;
+    $("#form").hidden = true; $("#minhas").hidden = true; $("#conta").hidden = true;
     $("#hero").classList.add("compacto");
     $("#status").hidden = false;
     $("#como").hidden = true;
@@ -305,6 +325,7 @@
     if (!tarefa) return;
     try {
       const r = await fetch("/api/tarefas/" + tarefa);
+      if (r.status === 401) { tarefa = null; mostrarConta(); return; }
       if (r.status === 404) { voltar(); return; }
       ultimo = await r.json();
       mostrar(ultimo);
@@ -351,6 +372,8 @@
     $("#zip").href = `/api/tarefas/${t.id}/zip`;
     $("#zip").hidden = !pronto || t.cortes.length < 2;
     $("#novo-corte").hidden = !pronto;
+    const ex = $("#expira");
+    if (t.expira && t.estado === "pronto") { ex.textContent = d().expira(resta(t.expira - t.agora)); ex.hidden = false; } else ex.hidden = true;
     const chave = lang + "|" + t.cortes.map((c) => c.n + c.video + c.estado).join(",");
     if (chave !== renderizados) {
       renderizados = chave;
@@ -358,6 +381,11 @@
     }
   }
 
+  function postDe(c) {
+    const p = c && c.post;
+    if (p && typeof p === "object") return { tiktok: p.tiktok || "", instagram: p.instagram || "", youtube: p.youtube || "" };
+    return { tiktok: p || "", instagram: p || "", youtube: p || "" };
+  }
   function el(tag, cls, txt) { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
 
   function cartao(c) {
@@ -372,20 +400,40 @@
       v.src = c.video; v.poster = c.capa; v.controls = true; v.preload = "none"; v.playsInline = true;
       if (c.estado !== "fila") tela.prepend(v);
     }
-    if (c.nota) { const nt = el("span", "nota", `${c.nota}`); nt.title = d().nota; tela.append(nt); }
+    if (c.nota) { const nt = el("span", "nota", `${c.nota}`); nt.title = d().nota_tit; tela.append(nt); }
     const corpo = el("div", "corte-corpo");
     corpo.append(el("p", "corte-meta", `#${c.n} · ${d().duracao(c.dur)} · ${d().de_ate(fmt(c.ini), fmt(c.fim))}`));
     corpo.append(el("h3", "corte-tit", c.titulo || "—"));
     if (c.gancho) { const g = el("p", "corte-gancho"); g.append(el("b", null, d().gancho + ": "), document.createTextNode(c.gancho)); corpo.append(g); }
     if (c.motivo) { const m = el("p", "corte-motivo"); m.append(el("b", null, d().porque + ": "), document.createTextNode(c.motivo)); corpo.append(m); }
-    if (c.post) {
-      const ta = el("textarea", "post"); ta.value = c.post; ta.rows = 3; ta.readOnly = true;
+    if (c.nota && c.partes && Object.keys(c.partes).length) {
+      const box = el("div", "nota-partes");
+      box.append(el("b", null, `${d().nota_tit}: ${c.nota}/100`));
+      const MAX = { hook: 30, payoff: 25, emotion: 25, share: 20 };
+      Object.keys(MAX).forEach((k) => {
+        const linha = el("div", "np-linha");
+        const barra = el("span", "np-barra"); const ench = el("span"); ench.style.width = Math.round(100 * (c.partes[k] || 0) / MAX[k]) + "%";
+        barra.append(ench);
+        linha.append(el("span", "np-nome", d().partes[k]), barra, el("span", "np-val", `${c.partes[k] || 0}/${MAX[k]}`));
+        box.append(linha);
+      });
+      corpo.append(box);
+    }
+    const posts = postDe(c);
+    if (posts.tiktok || posts.instagram || posts.youtube) {
+      const redes = [["tiktok", "TikTok"], ["instagram", "Instagram"], ["youtube", "YouTube Shorts"]];
+      const abas = el("div", "redes");
+      const ta = el("textarea", "post"); ta.rows = 4; ta.readOnly = true;
+      let atual = "tiktok";
+      const marcar = () => { abas.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.r === atual))); ta.value = posts[atual] || ""; };
+      redes.forEach(([k, nome]) => { const b = el("button", "rede", nome); b.type = "button"; b.dataset.r = k; b.addEventListener("click", () => { atual = k; marcar(); }); abas.append(b); });
       const cp = el("button", "btn-mini", d().copiar); cp.type = "button";
       cp.addEventListener("click", async () => {
-        try { await navigator.clipboard.writeText(c.post); } catch (e) { ta.select(); document.execCommand("copy"); }
+        try { await navigator.clipboard.writeText(ta.value); } catch (e) { ta.select(); document.execCommand("copy"); }
         cp.textContent = d().copiado; setTimeout(() => (cp.textContent = d().copiar), 1500);
       });
-      corpo.append(ta, cp);
+      marcar();
+      corpo.append(abas, ta, cp);
     }
     const acoes = el("div", "corte-acoes");
     const a1 = el("a", "btn btn-peq", d().baixar); a1.href = c.video + "&baixar=1";
@@ -408,7 +456,8 @@
     $("#ed-salvar").textContent = c ? d().ed_salvar : d().ed_criar;
     $("#ed-titulo").value = c ? c.titulo || "" : "";
     $("#ed-gancho").value = c ? c.gancho || "" : "";
-    $("#ed-post").value = c ? c.post || "" : "";
+    const pp = postDe(c);
+    ["tiktok", "instagram", "youtube"].forEach((k) => { $("#ed-post-" + k).value = c ? pp[k] : ""; });
     $("#ed-erro").hidden = true;
     $("#ed-frases").replaceChildren(el("li", "dica", d().carregando));
     if (typeof dlg.showModal === "function") dlg.showModal(); else dlg.setAttribute("open", "");
@@ -466,7 +515,7 @@
     const btn = $("#ed-salvar"); btn.disabled = true;
     try {
       await api(`/api/tarefas/${tarefa}/cortes` + (ed.n ? "/" + ed.n : ""), { a: ed.a, b: ed.b, h: ed.h, edicoes,
-        titulo: $("#ed-titulo").value, gancho: $("#ed-gancho").value, post: $("#ed-post").value });
+        titulo: $("#ed-titulo").value, gancho: $("#ed-gancho").value, post: { tiktok: $("#ed-post-tiktok").value, instagram: $("#ed-post-instagram").value, youtube: $("#ed-post-youtube").value } });
       fecharEditor();
       renderizados = "";
       olhar();
@@ -476,20 +525,91 @@
     } finally { btn.disabled = false; }
   });
 
+  // ------------------------------------------------------------------ conta e "Meus cortes"
+  let eu = null, modoConta = "criar";
+  function esconderTudo() { ["#conta", "#minhas", "#form", "#status", "#resultados"].forEach((x) => { $(x).hidden = true; }); }
+  function mostrarConta() {
+    eu = null; esconderTudo();
+    $("#conta").hidden = false; $("#conta-topo").hidden = true; $("#como").hidden = false;
+    $("#hero").classList.remove("compacto");
+  }
+  function modoUI() {
+    $$(".aba-conta").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.modo === modoConta)));
+    $("#c-nome").hidden = modoConta !== "criar";
+    $("#c-senha").autocomplete = modoConta === "criar" ? "new-password" : "current-password";
+    $("#c-ok").textContent = modoConta === "criar" ? d().criar_btn : d().entrar_btn;
+    $("#c-erro").hidden = true;
+  }
+  $$(".aba-conta").forEach((b) => b.addEventListener("click", () => { modoConta = b.dataset.modo; modoUI(); }));
+  $("#form-conta").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const btn = $("#c-ok"); btn.disabled = true; $("#c-erro").hidden = true;
+    try {
+      await api("/api/conta/" + modoConta, { nome: $("#c-nome").value, email: $("#c-email").value, senha: $("#c-senha").value });
+      $("#c-senha").value = "";
+      await iniciar();
+    } catch (err) { $("#c-erro").textContent = erroTxt(err.message); $("#c-erro").hidden = false; }
+    finally { btn.disabled = false; }
+  });
+  $("#btn-sair").addEventListener("click", async () => { try { await api("/api/conta/sair", {}); } catch (e) { /* ok */ } mostrarConta(); });
+  $("#btn-minhas").addEventListener("click", () => { history.pushState(null, "", "#minhas"); lerHash(); });
+  $("#minhas-novo").addEventListener("click", voltar);
+
+  async function abrirMinhas() {
+    clearTimeout(timer); tarefa = null; esconderTudo();
+    $("#minhas").hidden = false; $("#como").hidden = true; $("#hero").classList.add("compacto");
+    const lista = $("#lista-minhas");
+    lista.replaceChildren(el("li", "dica", d().carregando));
+    try {
+      const r = await fetch("/api/minhas");
+      if (r.status === 401) { mostrarConta(); return; }
+      const j = await r.json();
+      $("#minhas-dica").textContent = d().minhas_dica(j.guarda_horas);
+      if (!j.tarefas.length) { lista.replaceChildren(el("li", "dica", d().sem_minhas)); return; }
+      lista.replaceChildren(...j.tarefas.map((t) => {
+        const li = el("li", "item-minha");
+        const a = el("a", "item-link"); a.href = "#t=" + t.id;
+        const img = el("span", "item-capa"); if (t.capa) { const im = document.createElement("img"); im.src = t.capa; im.alt = ""; img.append(im); }
+        const tx = el("span", "item-tx");
+        tx.append(el("b", null, t.titulo || "—"));
+        const info = [d().est[t.estado] || t.estado, d().cortes_n(t.cortes)];
+        if (t.expira) info.push("⏱ " + resta(t.expira - j.agora));
+        tx.append(el("small", null, info.join(" · ")));
+        a.append(img, tx); li.append(a);
+        return li;
+      }));
+    } catch (e) { lista.replaceChildren(el("li", "erro", erroTxt("rede"))); }
+  }
+
   function voltar() {
     clearTimeout(timer);
     tarefa = null; ultimo = null;
-    history.pushState(null, "", location.pathname);
-    $("#form").hidden = false; $("#status").hidden = true; $("#resultados").hidden = true; $("#como").hidden = false;
+    if (location.hash) history.pushState(null, "", location.pathname);
+    esconderTudo();
+    $("#form").hidden = false; $("#como").hidden = false;
     $("#hero").classList.remove("compacto");
   }
   $("#novo").addEventListener("click", voltar);
 
   function lerHash() {
+    if (!eu) return;
     const m = location.hash.match(/t=([0-9a-f]{32})/);
-    if (m) abrirTarefa(m[1], false); else if (tarefa) voltar();
+    if (m) abrirTarefa(m[1], false);
+    else if (location.hash === "#minhas") abrirMinhas();
+    else voltar();
   }
   window.addEventListener("popstate", lerHash);
+
+  async function iniciar() {
+    try {
+      const r = await fetch("/api/conta");
+      if (!r.ok) { mostrarConta(); return; }
+      eu = await r.json();
+    } catch (e) { mostrarConta(); return; }
+    $("#conta").hidden = true; $("#conta-topo").hidden = false;
+    lerHash();
+  }
   aplicarLingua();
-  lerHash();
+  modoUI();
+  iniciar();
 })();

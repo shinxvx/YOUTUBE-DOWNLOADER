@@ -379,7 +379,14 @@ Hard rules for EVERY clip:
    If the strongest hook sentence is in the middle of the clip, give its line number in hook_line (it will be shown first as a teaser).
 3. LENGTH: respect the requested duration range, computed from the timestamps (start of first line to end of last line).
 4. No overlapping clips. Prefer variety (different topics/moments).
-Write title, hook and caption in the SAME LANGUAGE as the transcript. Answer with JSON only."""
+SCORE (viral potential, 0-100) = hook strength in the first 3 s (0-30) + complete idea/payoff (0-25)
++ emotion, humor or surprise (0-25) + shareability/relevance for a wide audience (0-20). Be strict and honest:
+an average clip is 50-70, only exceptional clips get 85+. Give the 4 parts in "parts".
+CAPTIONS: write a ready-to-post caption for each platform, in the transcript's language, without inventing facts:
+- tiktok: 1-2 short punchy lines + 3-5 hashtags (mix of broad and niche)
+- instagram: a hook line, 1-2 lines of context or a question to spark comments, then 5-8 hashtags
+- youtube: a Shorts title up to 90 chars (with 1-2 hashtags at the end, always #shorts)
+Write title, hook and captions in the SAME LANGUAGE as the transcript. Answer with JSON only."""
 
 
 # Tipo de vídeo escolhido pelo cliente: muda o que a IA procura (cada um com a sua ideia de "bom corte" e de gancho).
@@ -418,7 +425,8 @@ Type of video and strategy: {GENEROS.get(genero, GENEROS["auto"])}
 """ + (f"Extra wishes from the client (follow them if possible, but never break the hard rules): {extra}\n" if extra else "") + f"""Pick up to {qtd} clips. Each clip must last between {lo} and {hi} seconds (ideal ~{alvo} s).
 Return: {{"clips":[{{"start": first line number, "end": last line number, "hook_line": line number of the strongest hook inside the clip,
 "title": "catchy title, max 60 chars", "hook": "on-screen hook text, max 45 chars, makes people keep watching",
-"caption": "post caption with 3-5 hashtags", "score": 0-100 virality, "why": "one short sentence"}}]}}
+"captions": {{"tiktok": "...", "instagram": "...", "youtube": "..."}},
+"score": 0-100, "parts": {{"hook": 0-30, "payoff": 0-25, "emotion": 0-25, "share": 0-20}}, "why": "one short sentence"}}]}}
 
 Transcript (line number, start time mm:ss, text). Duration of a clip = start of the line after its last line minus start of its first line:
 """ + "\n".join(linhas)
@@ -466,6 +474,41 @@ def heuristica(frases, qtd, lo, hi, alvo):
         cands.append({"start": a2, "end": b2, "hook_line": a2, "title": frases[a2]["t"][:60], "hook": frases[a2]["t"][:45],
                       "caption": "", "score": min(95, nota), "why": ""})
     return escolher_sem_sobrepor(frases, cands, qtd)
+
+
+def legendas_post(c):
+    """Legenda do post por rede: {"tiktok", "instagram", "youtube"} (texto curto e limpo)."""
+    cap = c.get("captions") if isinstance(c.get("captions"), dict) else {}
+    velho = str(c.get("caption") or "")
+    out = {}
+    for k in ("tiktok", "instagram", "youtube"):
+        out[k] = str(cap.get(k) or velho).strip()[:900 if k == "instagram" else 400]
+    if out["youtube"] and "#shorts" not in out["youtube"].lower():
+        out["youtube"] = (out["youtube"][:82] + " #shorts").strip()
+    return out
+
+
+def partes_nota(c):
+    p = c.get("parts") if isinstance(c.get("parts"), dict) else {}
+    lim = {"hook": 30, "payoff": 25, "emotion": 25, "share": 20}
+    out = {}
+    for k, m in lim.items():
+        try:
+            out[k] = max(0, min(m, int(round(float(p.get(k))))))
+        except (TypeError, ValueError):
+            return {}
+    return out
+
+
+def nota_final(c):
+    """Nota = soma das partes quando a IA mandou as partes (evita nota "chutada" que não bate com os critérios)."""
+    p = partes_nota(c)
+    if p:
+        return float(sum(p.values()))
+    try:
+        return max(0.0, min(100.0, float(c.get("score") or 50)))
+    except (TypeError, ValueError):
+        return 50.0
 
 
 def escolher_sem_sobrepor(frases, cands, qtd):
@@ -534,7 +577,7 @@ def escolher_cortes(frases, dur_video, alvo, qtd, titulo, aviso, genero="auto", 
                 h = a
             cands.append({"start": a, "end": b, "hook_line": h if a <= h <= b else a,
                           "title": str(c.get("title") or "")[:80], "hook": str(c.get("hook") or "")[:60],
-                          "caption": str(c.get("caption") or "")[:600], "score": float(c.get("score") or 50),
+                          "caption": legendas_post(c), "parts": partes_nota(c), "score": nota_final(c),
                           "why": str(c.get("why") or "")[:200]})
     out = escolher_sem_sobrepor(frases, cands, qtd)
     if len(out) < qtd:  # completa com a heurística se a IA trouxe pouco

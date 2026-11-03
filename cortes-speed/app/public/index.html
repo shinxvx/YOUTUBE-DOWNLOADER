@@ -17,7 +17,7 @@
 <link rel="icon" href="icone.svg?v=1" type="image/svg+xml">
 <link rel="manifest" href="manifest.json?v=1">
 <link rel="preload" href="fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="estilo.css?v=4">
+<link rel="stylesheet" href="estilo.css?v=5">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"SPEED Cortes","alternateName":["SPEED Clips","Speed Cortes"],"url":"https://cortes.speedco.com.br/","applicationCategory":"MultimediaApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","description":"Cortes verticais automáticos com IA: gancho, legenda palavra por palavra e marca d'água para TikTok, Reels e Shorts.","offers":{"@type":"Offer","price":"0","priceCurrency":"BRL"},"publisher":{"@type":"Organization","name":"Speed","url":"https://speedco.com.br/"},"inLanguage":["pt-BR","en"]}
 </script>
@@ -32,6 +32,10 @@
   </a>
   <div class="topo-dir">
     <a class="topo-link" href="https://downloader.speedco.com.br/" target="_blank" rel="noopener">Downloader <span aria-hidden="true">↗</span></a>
+    <span class="conta-topo" id="conta-topo" hidden>
+      <button type="button" class="btn-sec btn-mini2" id="btn-minhas" data-i18n="minhas">Meus cortes</button>
+      <button type="button" class="link-sair" id="btn-sair" data-i18n="sair">Sair</button>
+    </span>
     <div class="idioma" role="group" aria-label="Idioma">
       <button type="button" data-lang="pt">PT</button>
       <button type="button" data-lang="en">EN</button>
@@ -46,7 +50,29 @@
     <p class="sub" data-i18n="sub">Cole um link do YouTube ou envie seu vídeo. A IA acha os melhores momentos, corta com começo, meio e fim, abre cada corte com um gancho e coloca legenda. Pronto para TikTok, Reels e Shorts.</p>
   </section>
 
-  <form id="form" class="painel" autocomplete="off" novalidate>
+  <section class="painel conta" id="conta" hidden>
+    <div class="abas" role="tablist">
+      <button type="button" role="tab" class="aba aba-conta" data-modo="criar" aria-selected="true" data-i18n="criar_conta">Criar conta grátis</button>
+      <button type="button" role="tab" class="aba aba-conta" data-modo="entrar" aria-selected="false" data-i18n="entrar">Já tenho conta</button>
+    </div>
+    <p class="dica" data-i18n="conta_dica">Com a conta, seus cortes ficam salvos em "Meus cortes" e você pode voltar para baixar depois.</p>
+    <form id="form-conta" class="conta-form" autocomplete="on" novalidate>
+      <input id="c-nome" class="campo" autocomplete="name" maxlength="60" placeholder="Seu nome" data-i18n-ph="ph_nome" aria-label="Nome">
+      <input id="c-email" class="campo" type="email" autocomplete="email" maxlength="120" placeholder="E-mail" aria-label="E-mail" required>
+      <input id="c-senha" class="campo" type="password" autocomplete="new-password" minlength="6" maxlength="200" placeholder="Senha (mínimo 6)" data-i18n-ph="ph_senha" aria-label="Senha" required>
+      <button type="submit" class="btn" id="c-ok">Criar conta grátis</button>
+      <p class="erro" id="c-erro" role="alert" hidden></p>
+    </form>
+  </section>
+
+  <section class="painel minhas" id="minhas" hidden>
+    <div class="res-topo"><h2 data-i18n="minhas">Meus cortes</h2>
+      <button type="button" class="btn-sec" id="minhas-novo" data-i18n="novo_video">+ Novo vídeo</button></div>
+    <p class="dica" id="minhas-dica"></p>
+    <ul class="lista-minhas" id="lista-minhas"></ul>
+  </section>
+
+  <form id="form" class="painel" autocomplete="off" novalidate hidden>
     <div class="abas" role="tablist">
       <button type="button" role="tab" class="aba" data-aba="link" aria-selected="true" data-i18n="aba_link">Link do YouTube</button>
       <button type="button" role="tab" class="aba" data-aba="arquivo" aria-selected="false" data-i18n="aba_arquivo">Enviar vídeo</button>
@@ -196,7 +222,7 @@
       <li data-p="escolhendo" data-i18n="ps_ia">IA escolhendo os melhores momentos e ganchos</li>
       <li data-p="renderizando" data-i18n="ps_render">Montando os cortes em pé com legenda</li>
     </ol>
-    <p class="dica" data-i18n="pode_sair">Pode deixar esta página aberta ou voltar depois por este mesmo link: os cortes ficam guardados por 48 horas.</p>
+    <p class="dica" data-i18n="pode_sair">Pode fechar esta página: quando terminar, os cortes aparecem em "Meus cortes". Eles ficam guardados por 6 horas depois de prontos.</p>
   </section>
 
   <section id="resultados" hidden>
@@ -208,6 +234,7 @@
         <button type="button" class="btn-sec" id="novo" data-i18n="novo">Fazer outro</button>
       </div>
     </div>
+    <p class="expira" id="expira" hidden></p>
     <div class="cortes" id="cortes"></div>
   </section>
 
@@ -231,7 +258,9 @@
       <div class="ed-campos">
         <label><span data-i18n="ed_titulo">Título</span><input id="ed-titulo" class="campo" maxlength="100"></label>
         <label><span data-i18n="ed_gancho">Texto do gancho (aparece no topo no começo)</span><input id="ed-gancho" class="campo" maxlength="60"></label>
-        <label><span data-i18n="ed_post">Legenda do post</span><textarea id="ed-post" class="campo" rows="2" maxlength="800"></textarea></label>
+        <label><span>TikTok</span><textarea id="ed-post-tiktok" class="campo" rows="2" maxlength="400"></textarea></label>
+        <label><span>Instagram</span><textarea id="ed-post-instagram" class="campo" rows="3" maxlength="900"></textarea></label>
+        <label><span>YouTube Shorts</span><textarea id="ed-post-youtube" class="campo" rows="1" maxlength="400"></textarea></label>
       </div>
       <div class="ed-trecho">
         <p class="ed-resumo" id="ed-resumo"></p>
@@ -247,7 +276,7 @@
   </form>
 </dialog>
 
-<script src="app.js?v=3"></script>
+<script src="app.js?v=4"></script>
 <!-- rodape-speed:inicio -->
 <footer class="rs rs--centro"><div class="rs-in">
 <div class="rs-a"><p class="rs-nome">SPEED SISTEMAS DE PRODUCAO ENTRETENIMENTO E EXPERIENCIAS DIGITAIS LTDA</p><p>CNPJ 29.932.620/0001-40</p></div>

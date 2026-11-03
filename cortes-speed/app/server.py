@@ -1,6 +1,6 @@
 """SPEED Cortes — site que transforma um vídeo longo (link do YouTube ou arquivo enviado) em cortes verticais
 para TikTok, Reels e Shorts, com gancho, legenda e marca d'água. Uma tarefa por vez (fila); tudo fica em /data/tarefas/<id>."""
-import json, os, re, shutil, subprocess, sys, threading, time, traceback, urllib.parse, uuid, zipfile
+import hashlib, hmac, json, os, re, secrets, shutil, sqlite3, subprocess, sys, threading, time, traceback, urllib.parse, uuid, zipfile
 from pathlib import Path
 
 from fastapi import FastAPI, Request, HTTPException
@@ -22,9 +22,146 @@ MAX_POR_IP = int(os.environ.get("MAX_POR_IP", "2"))        # tarefas ativas por 
 MAX_MIN = int(os.environ.get("MAX_MIN", "120"))            # vídeo de até 2 h
 MAX_ENVIO = int(os.environ.get("MAX_ENVIO_MB", "3072")) * 1024 * 1024
 PEDACO = 40 * 1024 * 1024                                  # o túnel da Cloudflare aceita até 100 MB por envio
-GUARDA_H = int(os.environ.get("GUARDA_HORAS", "48"))
+GUARDA_H = float(os.environ.get("GUARDA_HORAS", "6"))  # pedido do dono (03/11/2026): cortes ficam 6 h depois de prontos
 
 app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
+
+# ----------------------------------------------------------------------------------------------- contas
+# Cada pessoa tem a sua conta (e-mail + senha) e só vê os próprios cortes. Banco: data/contas.db (nunca apagar).
+BANCO = DADOS / "contas.db"
+_db_trava = threading.Lock()
+
+
+def db():
+    c = sqlite3.connect(BANCO, timeout=10)
+    c.row_factory = sqlite3.Row
+    return c
+
+
+with db() as _c:
+    _c.executescript("""
+    CREATE TABLE IF NOT EXISTS usuarios (id INTEGER PRIMARY KEY, email TEXT UNIQUE NOT NULL, nome TEXT, sal TEXT NOT NULL,
+        hash TEXT NOT NULL, criado REAL NOT NULL, ip TEXT);
+    CREATE TABLE IF NOT EXISTS sessoes (token TEXT PRIMARY KEY, usuario INTEGER NOT NULL, criado REAL NOT NULL, visto REAL);
+    """)
+
+
+def hash_senha(senha, sal):
+    return hashlib.scrypt(senha.encode(), salt=bytes.fromhex(sal), n=2 ** 14, r=8, p=1, dklen=32).hex()
+
+
+SESSAO_DIAS = 60
+falhas = {}  # ip -> [tempos] (trava tentativa de senha em massa)
+
+
+def usuario_de(req: Request):
+    tok = req.cookies.get("sessao") or ""
+    if not re.fullmatch(r"[A-Za-z0-9_\-]{30,80}", tok):
+        return None
+    with _db_trava, db() as c:
+        r = c.execute("SELECT u.id, u.email, u.nome, s.criado FROM sessoes s JOIN usuarios u ON u.id = s.usuario WHERE s.token = ?",
+                      (hashlib.sha256(tok.encode()).hexdigest(),)).fetchone()
+    if not r or time.time() - r["criado"] > SESSAO_DIAS * 86400:
+        return None
+    return {"id": r["id"], "email": r["email"], "nome": r["nome"] or ""}
+
+
+def exigir(req: Request):
+    u = usuario_de(req)
+    if not u:
+        raise HTTPException(401, "login")
+    return u
+
+
+def abrir_sessao(uid):
+    tok = secrets.token_urlsafe(36)
+    with _db_trava, db() as c:
+        c.execute("INSERT INTO sessoes (token, usuario, criado, visto) VALUES (?, ?, ?, ?)",
+                  (hashlib.sha256(tok.encode()).hexdigest(), uid, time.time(), time.time()))
+    r = JSONResponse({"ok": True})
+    r.set_cookie("sessao", tok, max_age=SESSAO_DIAS * 86400, httponly=True, secure=True, samesite="lax", path="/")
+    return r
+
+
+def muitas_falhas(ip):
+    agora = time.time()
+    falhas[ip] = [t for t in falhas.get(ip, []) if agora - t < 900]
+    return len(falhas[ip]) >= 10
+
+
+@app.post("/api/conta/criar")
+async def conta_criar(req: Request):
+    b = await req.json()
+    email = str(b.get("email") or "").strip().lower()[:120]
+    senha = str(b.get("senha") or "")
+    nome = re.sub(r"\s+", " ", str(b.get("nome") or "")).strip()[:60]
+    if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email):
+        return JSONResponse({"erro": "email"}, 400)
+    if len(senha) < 6 or len(senha) > 200:
+        return JSONResponse({"erro": "senha_curta"}, 400)
+    ip = ip_de(req)
+    if muitas_falhas(ip):
+        return JSONResponse({"erro": "tentativas"}, 429)
+    sal = secrets.token_hex(16)
+    try:
+        with _db_trava, db() as c:
+            if c.execute("SELECT COUNT(*) FROM usuarios WHERE ip = ? AND criado > ?", (ip, time.time() - 86400)).fetchone()[0] >= 5:
+                return JSONResponse({"erro": "tentativas"}, 429)
+            cur = c.execute("INSERT INTO usuarios (email, nome, sal, hash, criado, ip) VALUES (?, ?, ?, ?, ?, ?)",
+                            (email, nome, sal, hash_senha(senha, sal), time.time(), ip))
+            uid = cur.lastrowid
+    except sqlite3.IntegrityError:
+        return JSONResponse({"erro": "email_existe"}, 400)
+    return abrir_sessao(uid)
+
+
+@app.post("/api/conta/entrar")
+async def conta_entrar(req: Request):
+    b = await req.json()
+    email = str(b.get("email") or "").strip().lower()[:120]
+    senha = str(b.get("senha") or "")
+    ip = ip_de(req)
+    if muitas_falhas(ip):
+        return JSONResponse({"erro": "tentativas"}, 429)
+    with _db_trava, db() as c:
+        r = c.execute("SELECT id, sal, hash FROM usuarios WHERE email = ?", (email,)).fetchone()
+    if not r or not hmac.compare_digest(r["hash"], hash_senha(senha, r["sal"])):
+        falhas.setdefault(ip, []).append(time.time())
+        return JSONResponse({"erro": "senha_errada"}, 400)
+    return abrir_sessao(r["id"])
+
+
+@app.post("/api/conta/sair")
+async def conta_sair(req: Request):
+    tok = req.cookies.get("sessao") or ""
+    with _db_trava, db() as c:
+        c.execute("DELETE FROM sessoes WHERE token = ?", (hashlib.sha256(tok.encode()).hexdigest(),))
+    r = JSONResponse({"ok": True})
+    r.delete_cookie("sessao", path="/")
+    return r
+
+
+@app.get("/api/conta")
+def conta(req: Request):
+    u = usuario_de(req)
+    if not u:
+        return JSONResponse({"erro": "login"}, 401)
+    return {**u, "guarda_horas": GUARDA_H}
+
+
+def da_pessoa(tid, req):
+    """Lê a tarefa e confere que é da pessoa logada (404 para não dizer que existe)."""
+    u = exigir(req)
+    t = ler(tid)
+    if t.get("dono") != u["id"]:
+        raise HTTPException(404)
+    return t, u
+
+
+def expira_em(t):
+    if t.get("estado") in ("pronto", "erro"):
+        return (t.get("terminado") or t.get("atualizado") or t["criado"]) + GUARDA_H * 3600
+    return None
 trava = threading.Lock()
 fila = []          # ids esperando
 fila_ed = []       # (tid, n) cortes editados para refazer: passam na frente (são rápidos)
@@ -111,6 +248,7 @@ async def run_thread(fn, *a):
 
 @app.post("/api/envio")
 async def envio_iniciar(req: Request):
+    exigir(req)
     b = await req.json()
     tam = int(b.get("tamanho") or 0)
     nome = re.sub(r"[^\w.\- ]", "", str(b.get("nome") or "video"))[:80] or "video"
@@ -125,6 +263,7 @@ async def envio_iniciar(req: Request):
 
 @app.post("/api/envio/{eid}/pedaco")
 async def envio_pedaco(eid: str, n: int, req: Request):
+    exigir(req)
     if not re.fullmatch(r"[0-9a-f]{32}", eid) or not (ENVIOS / eid).is_dir():
         raise HTTPException(404)
     meta = json.loads((ENVIOS / eid / "meta.json").read_text())
@@ -150,6 +289,7 @@ async def envio_pedaco(eid: str, n: int, req: Request):
 
 @app.post("/api/logo")
 async def logo(req: Request):
+    exigir(req)
     dados = await req.body()
     if len(dados) > 4 * 1024 * 1024:
         return JSONResponse({"erro": "logo"}, 400)
@@ -178,6 +318,7 @@ OPCOES = {
 
 @app.post("/api/tarefas")
 async def criar(req: Request):
+    u = exigir(req)
     b = await req.json()
     ip = ip_de(req)
     opc = {}
@@ -222,7 +363,8 @@ async def criar(req: Request):
         do_ip = 0
         for tid in ativos:
             try:
-                if ler(tid).get("ip") == ip:
+                tt = ler(tid)
+                if tt.get("ip") == ip or tt.get("dono") == u["id"]:
                     do_ip += 1
             except HTTPException:
                 pass
@@ -230,7 +372,7 @@ async def criar(req: Request):
             return JSONResponse({"erro": "porip"}, 429)
         tid = uuid.uuid4().hex
         (TAREFAS / tid).mkdir()
-        t = {"id": tid, "criado": time.time(), "atualizado": time.time(), "ip": ip, "fonte": fonte, "opc": opc,
+        t = {"id": tid, "criado": time.time(), "atualizado": time.time(), "ip": ip, "dono": u["id"], "fonte": fonte, "opc": opc,
              "logo": logo_id if opc["marca_tipo"] == "imagem" else "", "estado": "fila", "etapa": "fila", "progresso": 0,
              "titulo": fonte.get("nome", ""), "cortes": [], "total_cortes": 0, "avisos": []}
         gravar(tid, t)
@@ -249,27 +391,58 @@ def publico(t):
     for c in t.get("cortes", []):
         base = f"/api/tarefas/{tid}/arquivo/{c['nome']}"
         v = f"?v={c.get('versao', 1)}"
-        cortes.append({**{k: c.get(k) for k in ("n", "titulo", "gancho", "post", "nota", "motivo", "dur", "ini", "fim", "a", "b", "h", "versao")},
+        cortes.append({**{k: c.get(k) for k in ("n", "titulo", "gancho", "post", "nota", "motivo", "dur", "ini", "fim", "a", "b", "h", "versao", "partes")},
                        "edicoes": c.get("edicoes", {}), "estado": c.get("estado", "pronto"),
                        "video": base + ".mp4" + v, "capa": base + ".jpg" + v, "srt": base + ".srt" + v})
     return {"id": tid, "estado": t["estado"], "etapa": t["etapa"], "progresso": round(t.get("progresso", 0), 1),
             "posicao": pos, "titulo": t.get("titulo", ""), "duracao_video": t.get("duracao_video"),
             "total_cortes": t.get("total_cortes", 0), "cortes": cortes, "erro": t.get("erro"), "opc": t["opc"],
-            "criado": t["criado"], "avisos": t.get("avisos", [])}
+            "criado": t["criado"], "avisos": t.get("avisos", []), "expira": expira_em(t), "agora": time.time()}
 
 
 @app.get("/api/tarefas/{tid}")
-def ver(tid: str):
-    return publico(ler(tid))
+def ver(tid: str, req: Request):
+    t, _ = da_pessoa(tid, req)
+    return publico(t)
+
+
+@app.get("/api/minhas")
+def minhas(req: Request):
+    """Lista dos cortes da pessoa (os que ainda não foram apagados)."""
+    u = exigir(req)
+    out = []
+    for p in TAREFAS.iterdir():
+        try:
+            t = json.loads((p / "tarefa.json").read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if t.get("dono") != u["id"]:
+            continue
+        cap = next((f"/api/tarefas/{t['id']}/arquivo/{c['nome']}.jpg?v={c.get('versao', 1)}" for c in t.get("cortes", [])
+                    if c.get("estado", "pronto") == "pronto"), "")
+        out.append({"id": t["id"], "titulo": t.get("titulo") or t["fonte"].get("nome") or t["fonte"].get("url", ""),
+                    "estado": t["estado"], "criado": t["criado"], "expira": expira_em(t), "cortes": len(t.get("cortes", [])),
+                    "capa": cap, "duracao": t["opc"].get("duracao")})
+    out.sort(key=lambda x: -x["criado"])
+    return {"tarefas": out, "agora": time.time(), "guarda_horas": GUARDA_H}
 
 
 @app.get("/api/tarefas/{tid}/frases")
-def frases_da_tarefa(tid: str):
+def frases_da_tarefa(tid: str, req: Request):
+    da_pessoa(tid, req)
     try:
         fr = json.loads((caminho(tid) / "transcricao.json").read_text(encoding="utf-8"))["frases"]
     except FileNotFoundError:
         raise HTTPException(404)
     return {"frases": [{"i": i, "s": round(f["s"], 2), "e": round(f["e"], 2), "t": f["t"]} for i, f in enumerate(fr)]}
+
+
+def post_limpo(v):
+    """Legenda do post: {"tiktok","instagram","youtube"} (aceita texto único das tarefas antigas)."""
+    if isinstance(v, dict):
+        return {k: str(v.get(k) or "").strip()[:900 if k == "instagram" else 400] for k in ("tiktok", "instagram", "youtube")}
+    t = str(v or "").strip()[:800]
+    return {"tiktok": t, "instagram": t, "youtube": t[:90]}
 
 
 @app.post("/api/tarefas/{tid}/cortes")
@@ -280,6 +453,7 @@ async def novo_corte(tid: str, req: Request):
 @app.post("/api/tarefas/{tid}/cortes/{n}")
 async def editar(tid: str, n: int, req: Request):
     """Editor: trecho (frase inicial/final/prévia), título, gancho, legenda do post e texto da legenda por frase. n=0 = corte novo."""
+    da_pessoa(tid, req)
     b = await req.json()
     pasta = caminho(tid)
     try:
@@ -329,7 +503,7 @@ async def editar(tid: str, n: int, req: Request):
                 return JSONResponse({"erro": "refazendo"}, 409)
         reg.update(a=a, b=z, h=h if h != a else None, edicoes=edicoes, estado="fila",
                    titulo=str(b.get("titulo", reg.get("titulo", "")))[:100], gancho=str(b.get("gancho", reg.get("gancho", "")))[:60],
-                   post=str(b.get("post", reg.get("post", "")))[:800])
+                   post=post_limpo(b.get("post", reg.get("post", ""))))
         t["atualizado"] = time.time()
         gravar(tid, t)
         fila_ed.append((tid, n))
@@ -338,7 +512,8 @@ async def editar(tid: str, n: int, req: Request):
 
 
 @app.api_route("/api/tarefas/{tid}/arquivo/{nome}", methods=["GET", "HEAD"])
-def arquivo(tid: str, nome: str, baixar: int = 0):
+def arquivo(tid: str, nome: str, req: Request, baixar: int = 0):
+    da_pessoa(tid, req)
     if not re.fullmatch(r"corte\d{2}\.(mp4|jpg|srt)", nome):
         raise HTTPException(404)
     p = caminho(tid) / nome
@@ -360,8 +535,8 @@ def nome_arquivo(titulo, nome):
 
 
 @app.get("/api/tarefas/{tid}/zip")
-def baixar_zip(tid: str):
-    t = ler(tid)
+def baixar_zip(tid: str, req: Request):
+    t, _ = da_pessoa(tid, req)
     pasta = caminho(tid)
     arqs = [(pasta / f"{c['nome']}.mp4", nome_arquivo(c["titulo"], c["nome"] + ".mp4")) for c in t["cortes"]
             if (pasta / f"{c['nome']}.mp4").exists()]
@@ -474,7 +649,8 @@ def processar(tid):
         etapa("renderizando", 50 + 50 * k / len(cortes), corte_atual=k + 1)
         reg = {"n": k + 1, "nome": f"corte{k + 1:02d}", "a": c["start"], "b": c["end"],
                "h": c.get("hook_line") if opc["gancho_inicio"] else None, "titulo": c.get("title") or "",
-               "gancho": (c.get("hook") or "").strip(), "post": c.get("caption") or "", "nota": int(round(float(c.get("score") or 0))),
+               "gancho": (c.get("hook") or "").strip(), "post": post_limpo(c.get("caption") or ""), "partes": c.get("parts") or {},
+               "nota": int(round(float(c.get("score") or 0))),
                "motivo": c.get("why") or "", "edicoes": {}, "versao": 1}
         try:
             render_corte(t, pasta, video, info, frases, tr["palavras"], reg)
@@ -628,16 +804,20 @@ def limpar():
         for p in TAREFAS.iterdir():
             try:
                 t = json.loads((p / "tarefa.json").read_text(encoding="utf-8"))
-                velho = agora - t.get("atualizado", t["criado"]) > GUARDA_H * 3600 and t["estado"] in ("pronto", "erro")
+                exp = expira_em(t)
+                ocupado = rodando["id"] == t["id"] or any(x == t["id"] for x, _ in fila_ed)
+                velho = exp is not None and agora > exp and not ocupado
             except Exception:
                 velho = agora - p.stat().st_mtime > GUARDA_H * 3600
             if velho:
                 shutil.rmtree(p, ignore_errors=True)
+        with _db_trava, db() as c:
+            c.execute("DELETE FROM sessoes WHERE criado < ?", (agora - SESSAO_DIAS * 86400,))
         for pasta, horas in ((ENVIOS, 6), (LOGOS, GUARDA_H + 2)):
             for p in pasta.iterdir():
                 if agora - p.stat().st_mtime > horas * 3600:
                     shutil.rmtree(p, ignore_errors=True) if p.is_dir() else p.unlink(missing_ok=True)
-        time.sleep(1800)
+        time.sleep(600)
 
 
 def atualizar_ytdlp():
