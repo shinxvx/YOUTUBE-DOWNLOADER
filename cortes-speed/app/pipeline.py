@@ -952,7 +952,7 @@ def renderizar(video, info, trechos, opc, pasta, nome, palavras, gancho_txt, log
         except Exception as e:
             print("rosto falhou:", e, flush=True)
             pontos, frac, frac2 = [], 0.0, 0.0
-        if modo == "dividida" and frac2 >= 0.4:
+        if modo == "dividida" and frac2 >= float(os.environ.get("DIVIDIR_MIN", "0.4")):
             # duas pessoas: cada painel 1080x960 (proporção 9:8), recorte do tamanho que deixa o rosto grande
             le, ld, ye, yd, hf = caminho_dividido(pontos)
             ch = int(min(H, max(H * 0.42, hf * H * 3.6)) // 2 * 2)
