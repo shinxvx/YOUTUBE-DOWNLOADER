@@ -258,7 +258,7 @@ def ver(tid: str):
     return publico(ler(tid))
 
 
-@app.get("/api/tarefas/{tid}/arquivo/{nome}")
+@app.api_route("/api/tarefas/{tid}/arquivo/{nome}", methods=["GET", "HEAD"])
 def arquivo(tid: str, nome: str, baixar: int = 0):
     if not re.fullmatch(r"corte\d{2}\.(mp4|jpg|srt)", nome):
         raise HTTPException(404)

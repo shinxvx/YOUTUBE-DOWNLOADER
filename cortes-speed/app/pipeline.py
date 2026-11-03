@@ -292,7 +292,7 @@ def montar_frases(tr):
                 pont[i] = toks[k]
         elif idx:  # contagem diferente: pelo menos marca o fim do segmento com a pontuação final dele
             m = FIM.search(sg["t"].strip())
-            if m and not FIM.search(pont[idx[-1]]):
+            if m and not re.search(r"[.!?…,;:]$", pont[idx[-1]]):
                 pont[idx[-1]] = pont[idx[-1]] + m.group(0)[0]
     frases, atual = [], []
 
@@ -661,10 +661,10 @@ def comandos_crop(lisa, W, H, cw):
 # ----------------------------------------------------------------------------------------------- legenda (ASS)
 ESTILOS = {
     # nome: (fonte, tamanho, cor do texto, cor do destaque, maiúsculas, palavras por linha, contorno, caixa)
-    "amarelo": ("Anton", 104, "FFFFFF", "FFE135", True, 3, 7, False),
-    "verde": ("Montserrat ExtraBold", 82, "FFFFFF", "2EE6B0", True, 3, 7, False),
-    "branco": ("Montserrat ExtraBold", 74, "FFFFFF", "FFFFFF", False, 5, 6, False),
-    "caixa": ("Montserrat ExtraBold", 70, "111111", "FF5C28", False, 4, 0, True),
+    "amarelo": ("Anton", 122, "FFFFFF", "FFE135", True, 3, 7, False),
+    "verde": ("Montserrat ExtraBold", 92, "FFFFFF", "2EE6B0", True, 3, 7, False),
+    "branco": ("Montserrat ExtraBold", 80, "FFFFFF", "FFFFFF", False, 5, 6, False),
+    "caixa": ("Montserrat ExtraBold", 76, "111111", "FF5C28", False, 4, 0, True),
 }
 
 
@@ -695,7 +695,7 @@ def gerar_ass(palavras, trechos, opc, gancho_txt, total):
     leg_back = cor_ass("000000", 0x80)
     estilos = [
         f"Style: Leg,{fonte},{tam},{cor_ass(cor)},{cor_ass(dest)},{leg_out},{leg_back},-1,0,0,0,100,100,0,0,{borda},{contorno if not caixa else 14},{0 if caixa else 3},2,80,80,{margem_v},1",
-        f"Style: Gancho,Montserrat ExtraBold,64,{cor_ass('111111')},{cor_ass('111111')},{cor_ass('FFFFFF')},{cor_ass('000000', 0x60)},-1,0,0,0,100,100,0,0,3,18,0,8,90,90,250,1",
+        f"Style: Gancho,Montserrat ExtraBold,78,{cor_ass('111111')},{cor_ass('111111')},{cor_ass('FFFFFF')},{cor_ass('000000', 0x60)},-1,0,0,0,100,100,0,0,3,22,0,8,80,80,240,1",
         f"Style: Marca,Montserrat ExtraBold,46,{cor_ass('FFFFFF', 0x00)},{cor_ass('FFFFFF')},{cor_ass('000000', 0x40)},{cor_ass('000000', 0x80)},-1,0,0,0,100,100,0,0,1,2,1,7,60,60,60,1",
     ]
     ev = []
