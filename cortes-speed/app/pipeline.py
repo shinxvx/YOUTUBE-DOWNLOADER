@@ -16,6 +16,9 @@ import requests
 GROQ_KEY = os.environ.get("GROQ_API_KEY", "").strip()
 GROQ_STT = os.environ.get("GROQ_MODELO", "whisper-large-v3-turbo")
 GROQ_LLM = os.environ.get("GROQ_LLM", "openai/gpt-oss-120b")
+# plano grátis da Groq: cada modelo tem limite de tokens por minuto; se um recusar (413/429), tenta o próximo
+GROQ_LLMS = [GROQ_LLM, "meta-llama/llama-4-scout-17b-16e-instruct", "llama-3.3-70b-versatile"]
+JANELA_CHARS = int(os.environ.get("JANELA_CHARS", "15000"))  # ~4 mil tokens de transcrição por pedido
 IA_URL = os.environ.get("IA_URL", "http://central-ia-servidor:3970/v1/chat/completions")
 IA_KEY = os.environ.get("IA_KEY", "").strip()
 FONTES = os.environ.get("FONTES", "/app/fontes")
@@ -320,7 +323,7 @@ def montar_frases(tr):
 
 
 # ----------------------------------------------------------------------------------------------- IA (escolha dos cortes)
-def ia(mensagens, max_tokens=6000):
+def ia(mensagens, max_tokens=3000):
     """Central IA do servidor (troca sozinha entre as IAs grátis) e, se falhar, Groq direto."""
     erros = []
     if IA_KEY:
@@ -335,21 +338,25 @@ def ia(mensagens, max_tokens=6000):
         except Exception as e:
             erros.append(f"central {e}")
     if GROQ_KEY:
-        for tent in range(3):
-            try:
-                r = requests.post("https://api.groq.com/openai/v1/chat/completions", timeout=300,
-                                  headers={"Authorization": f"Bearer {GROQ_KEY}"},
-                                  json={"model": GROQ_LLM, "messages": mensagens, "temperature": 0.4, "max_tokens": max_tokens,
-                                        "reasoning_effort": "low", "response_format": {"type": "json_object"}})
-                if r.status_code == 200:
-                    return r.json()["choices"][0]["message"]["content"]
-                erros.append(f"groq {r.status_code} {r.text[:150]}")
-                if r.status_code == 429:
-                    time.sleep(min(60, float(r.headers.get("retry-after") or 20)) + 1)
-                    continue
-            except Exception as e:
-                erros.append(f"groq {e}")
-            break
+        for modelo in GROQ_LLMS:
+            for tent in range(2):
+                try:
+                    corpo = {"model": modelo, "messages": mensagens, "temperature": 0.4, "max_tokens": max_tokens,
+                             "response_format": {"type": "json_object"}}
+                    if "gpt-oss" in modelo:
+                        corpo["reasoning_effort"] = "low"
+                    r = requests.post("https://api.groq.com/openai/v1/chat/completions", timeout=300,
+                                      headers={"Authorization": f"Bearer {GROQ_KEY}"}, json=corpo)
+                    if r.status_code == 200:
+                        return r.json()["choices"][0]["message"]["content"]
+                    erros.append(f"groq {modelo} {r.status_code} {r.text[:120]}")
+                    espera = float(r.headers.get("retry-after") or 0)
+                    if r.status_code == 429 and espera <= 30 and tent == 0:
+                        time.sleep(espera + 1)
+                        continue
+                except Exception as e:
+                    erros.append(f"groq {modelo} {e}")
+                break
     raise RuntimeError("IA indisponível: " + " | ".join(erros))
 
 
@@ -405,7 +412,7 @@ GENEROS = {
 
 
 def pedir_cortes(frases, ini, fim, qtd, lo, hi, alvo, titulo, genero="auto", extra=""):
-    linhas = [f"[{i}] {mmss(f['s'])}-{mmss(f['e'])} | {f['t']}" for i, f in enumerate(frases) if f["s"] >= ini and f["e"] <= fim]
+    linhas = [f"[{i}] {mmss(f['s'])} {f['t']}" for i, f in enumerate(frases) if f["s"] >= ini and f["e"] <= fim]
     pedido = f"""Video title: {titulo or "(unknown)"}
 Type of video and strategy: {GENEROS.get(genero, GENEROS["auto"])}
 """ + (f"Extra wishes from the client (follow them if possible, but never break the hard rules): {extra}\n" if extra else "") + f"""Pick up to {qtd} clips. Each clip must last between {lo} and {hi} seconds (ideal ~{alvo} s).
@@ -413,7 +420,7 @@ Return: {{"clips":[{{"start": first line number, "end": last line number, "hook_
 "title": "catchy title, max 60 chars", "hook": "on-screen hook text, max 45 chars, makes people keep watching",
 "caption": "post caption with 3-5 hashtags", "score": 0-100 virality, "why": "one short sentence"}}]}}
 
-Transcript (line number, start-end, text):
+Transcript (line number, start time mm:ss, text). Duration of a clip = start of the line after its last line minus start of its first line:
 """ + "\n".join(linhas)
     txt = ia([{"role": "system", "content": SISTEMA}, {"role": "user", "content": pedido}])
     return ler_json(txt).get("clips") or []
@@ -486,11 +493,21 @@ def escolher_cortes(frases, dur_video, alvo, qtd, titulo, aviso, genero="auto", 
         if genero == "podcast":  # podcast: um corte por história; mais cortes no automático
             qtd = max(1, min(15, int(total / (alvo * 1.6)) or 1))
     # janelas de ~25 min (texto cabe folgado em qualquer IA) com sobreposição de um corte
-    JAN = 1500
-    janelas, t = [], frases[0]["s"]
-    while t < frases[-1]["e"]:
-        janelas.append((t, t + JAN + hi))
-        t += JAN
+    # janelas pelo TAMANHO do texto (o plano grátis da IA limita tokens por minuto), sobrepostas em ~1 corte
+    janelas, i0 = [], 0
+    while i0 < len(frases):
+        chars, j = 0, i0
+        while j < len(frases) and chars < JANELA_CHARS:
+            chars += len(frases[j]["t"]) + 14
+            j += 1
+        fim_j = frases[j - 1]["e"]
+        janelas.append((frases[i0]["s"], fim_j))
+        if j >= len(frases):
+            break
+        volta = j
+        while volta > i0 + 1 and fim_j - frases[volta - 1]["s"] < hi:
+            volta -= 1
+        i0 = max(volta, i0 + 1)
     cands = []
     for (ini, fim) in janelas:
         q = max(2, math.ceil(qtd * min(1.0, (fim - ini) / max(total, 1)) * 1.6))
