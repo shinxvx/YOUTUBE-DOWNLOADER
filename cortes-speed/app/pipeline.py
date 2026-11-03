@@ -619,6 +619,8 @@ def mapear(t, trechos):
     for (s, e) in trechos:
         if s <= t < e:
             out.append(base + t - s)
+        elif s - 0.35 <= t < s:  # palavra que começa um pouquinho antes do corte: entra no início
+            out.append(base)
         base += e - s
     return out
 
