@@ -14,6 +14,21 @@ const B = process.argv[2], OUT = process.argv[3];
   const larg = async (p, nome) => {
     const w = await p.evaluate(() => [document.documentElement.scrollWidth, innerWidth]);
     if (w[0] > w[1] + 1) erros.push(`${nome}: estouro de largura ${w[0]} > ${w[1]}`);
+    // Partes cortadas: texto saindo da tela ou da própria caixa
+    const c = await p.evaluate(() => {
+      const out = [];
+      for (const el of document.querySelectorAll('body *')) {
+        if (el.closest('.banda, .deck, .marcar, .prog-aluno, #modal[hidden], script, style, svg')) continue;
+        const cs = getComputedStyle(el); if (cs.display === 'none' || cs.visibility === 'hidden') continue;
+        const r = el.getBoundingClientRect(); if (!r.width) continue;
+        const temTexto = [...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim());
+        if (temTexto && (r.right > innerWidth + 1 || r.left < -1)) out.push('fora da tela: ' + el.className + ' "' + el.textContent.trim().slice(0, 30) + '"');
+        if (temTexto && el.scrollWidth > el.clientWidth + 2 && cs.overflowX !== 'visible') out.push('texto cortado: ' + el.className + ' "' + el.textContent.trim().slice(0, 30) + '"');
+        if (temTexto && el.scrollHeight > el.clientHeight + 2 && cs.overflowY === 'hidden' && el.clientHeight) out.push('texto cortado (altura): ' + el.className + ' "' + el.textContent.trim().slice(0, 30) + '"');
+      }
+      return [...new Set(out)].slice(0, 12);
+    });
+    c.forEach((x) => erros.push(nome + ': ' + x));
   };
   const shot = async (p, nome, full = true) => { await p.waitForTimeout(900); await larg(p, nome); await p.screenshot({ path: `${OUT}/${nome}.png`, fullPage: full }); };
 
@@ -23,12 +38,12 @@ const B = process.argv[2], OUT = process.argv[3];
     await p.goto(B + '/'); await p.waitForTimeout(1600);
     await p.evaluate(() => document.querySelectorAll('.revela').forEach((e) => e.classList.add('vis')));
     await shot(p, 'visitante-' + nome);
-    await p.click('[data-cad] >> nth=0'); await shot(p, 'cadastro-' + nome, false);
+    await p.click('.hero [data-cad]'); await shot(p, 'cadastro-' + nome, false);
     await p.close();
   }
   // Aluno no PC
   let p = await nova({ width: 1360, height: 820 });
-  await p.goto(B + '/'); await p.click('[data-entrar]');
+  await p.goto(B + '/'); await p.click('.nav [data-entrar]');
   await p.fill('input[name=email]', 'ana@x.com'); await p.fill('input[name=senha]', '123456'); await p.click('form button.btn');
   await p.waitForSelector('.ola'); await p.evaluate(() => document.querySelectorAll('.revela').forEach((e) => e.classList.add('vis')));
   await shot(p, 'inicio-pc');
@@ -46,7 +61,7 @@ const B = process.argv[2], OUT = process.argv[3];
   await p.goto(B + '/#/street'); await shot(p, 'street-pc');
   // Admin
   await p.evaluate(() => fetch('/api/sair', { method: 'POST' }));
-  await p.goto(B + '/'); await p.reload(); await p.click('[data-entrar]');
+  await p.goto(B + '/'); await p.reload(); await p.click('.nav [data-entrar]');
   await p.fill('input[name=email]', 'olly@studio82'); await p.fill('input[name=senha]', 'teste123'); await p.click('form button.btn');
   await p.waitForSelector('.ola');
   await p.goto(B + '/#/professor'); await shot(p, 'prof-aulas');
@@ -56,7 +71,7 @@ const B = process.argv[2], OUT = process.argv[3];
   await p.close();
   // Celular: aluno, tela cheia
   p = await nova({ width: 390, height: 780 }, 1);
-  await p.goto(B + '/'); await p.click('[data-entrar]');
+  await p.goto(B + '/'); await p.click('.nav [data-entrar]');
   await p.fill('input[name=email]', 'ana@x.com'); await p.fill('input[name=senha]', '123456'); await p.click('form button.btn');
   await p.waitForSelector('.ola'); await p.evaluate(() => document.querySelectorAll('.revela').forEach((e) => e.classList.add('vis')));
   await shot(p, 'inicio-cel');

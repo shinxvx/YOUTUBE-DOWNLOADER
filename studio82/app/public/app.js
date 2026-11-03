@@ -105,16 +105,16 @@ function topo() {
   const r = rota();
   const h = $('#topo');
   if (!S.eu) {
-    h.innerHTML = `<nav class="nav"><a class="logo" href="#/"><span class="m">82</span><span>STUDIO 82<small>TRAINING</small></span></a>
-      <div class="abas abas-vis"><button class="aba" data-entrar>Entrar</button></div></nav>`;
-    $('.abas', h).style.display = 'flex'; $('.abas', h).style.width = 'auto'; $('.abas', h).style.flexDirection = 'row'; $('.abas', h).style.padding = '0';
+    h.innerHTML = `<nav class="nav"><a class="logo" href="#/"><span class="m">82</span><span class="lt">Studio 82<small>Training</small></span></a>
+      <div class="nav-vis"><button class="btn btn-l btn-s" data-entrar>Entrar</button><button class="btn btn-p btn-s" data-cad>Criar conta</button></div></nav>`;
     $('[data-entrar]', h).onclick = () => telaEntrar();
+    $('[data-cad]', h).onclick = () => telaEntrar('cadastro');
     return;
   }
   const abas = [['#/', 'Início', '']].concat(S.info.estilos.map((e) => [`#/${e.id === 'street' ? 'street' : 'estilo/' + e.id}`, e.especial ? e.nome : e.nome, 'e-' + e.id + (e.especial ? ' especial' : '')]));
   if (S.eu.role === 'admin') abas.push(['#/professor', 'Professor', '']);
   const atual = '#/' + (r[0] === 'estilo' ? 'estilo/' + r[1] : r[0] === 'aula' ? '' : r[0] || '');
-  h.innerHTML = `<nav class="nav"><a class="logo" href="#/"><span class="m">82</span><span>STUDIO 82<small>TRAINING</small></span></a>
+  h.innerHTML = `<nav class="nav"><a class="logo" href="#/"><span class="m">82</span><span class="lt">Studio 82<small>Training</small></span></a>
     <div class="abas">${abas.map(([href, n, c]) => `<a class="aba ${c} ${atual === href || (href === '#/professor' && r[0] === 'professor') ? 'on' : ''}" href="${href}">${esc(n)}</a>`).join('')}</div>
     <button class="menu-btn" aria-label="Menu"><span></span></button>
     <button class="perfil" title="${esc(S.eu.nome)}">${esc(iniciais(S.eu.nome))}</button></nav>`;
@@ -173,39 +173,39 @@ function depoisRender() {
 // ---------- Páginas ----------
 function paginaVisitante() {
   const es = S.info.estilos;
-  const nomes = es.map((e) => e.nome.toUpperCase());
-  const faixa = (alt) => `<div class="faixa ${alt ? 'alt' : ''}"><div class="trilho">${[0, 1].map(() => nomes.map((n, i) => `<span class="${!alt && i % 2 ? 'o' : ''}">${esc(n)}</span>`).join('')).join('')}</div></div>`;
+  const total = Object.values(S.info.contagem).reduce((a, b) => a + b, 0);
+  const banda = [0, 1].map(() => es.map((e) => `<span>${esc(e.nome)}</span><i>✦</i>`).join('')).join('');
   raiz.innerHTML = `
   <section class="hero wrap">
-    <div class="n82" aria-hidden="true">82<span>82</span></div>
-    <div class="prof"><i>O</i> Aulas com OLLY <span class="vivo"></span></div>
-    <h1><span class="l"><span>Dance</span></span><span class="l"><span class="contorno">onde</span></span><span class="l"><span class="grad-tx">quiser.</span></span></h1>
-    <p class="sub">As aulas do <b>Studio 82 Training</b> na palma da mão. K-Pop, Jazz Funk, Heels, Flexibilidade e Street Style — com espelho, câmera lenta e uma trilha que vai liberando passos novos conforme você evolui.</p>
-    <div class="acoes"><button class="btn btn-p" data-cad><span>Começar agora <span class="seta">→</span></span></button><button class="btn btn-g" data-entrar>Já tenho conta</button></div>
-    <svg class="selo" viewBox="0 0 132 132" aria-hidden="true"><defs><path id="cir" d="M66,66 m-52,0 a52,52 0 1,1 104,0 a52,52 0 1,1 -104,0"/></defs><text><textPath href="#cir">studio 82 training • dance • treine •</textPath></text></svg>
-    <div class="selo-c" aria-hidden="true">✦</div>
+    <div class="hero-tx">
+      <div class="selo-top"><span class="vivo"></span>Studio 82 Training · aulas com OLLY</div>
+      <h1>Aprenda a dançar <em>no seu ritmo.</em></h1>
+      <p class="sub">As aulas do estúdio na palma da mão: K-Pop, Jazz Funk, Heels, Flexibilidade e Street Style. Assista quando quiser, em câmera lenta ou no espelho, e libere passos novos conforme evolui.</p>
+      <div class="acoes"><button class="btn btn-p" data-cad>Começar agora <span class="seta">→</span></button><button class="btn btn-l" data-entrar>Já tenho conta</button></div>
+      <ul class="numeros"><li><b>5</b><span>estilos de dança</span></li><li><b>${total || '—'}</b><span>aula${total === 1 ? '' : 's'} no catálogo</span></li><li><b>0,5x</b><span>câmera lenta e espelho</span></li></ul>
+    </div>
+    <div class="deck" aria-hidden="true">${es.map((e, i) => `
+      <div class="deck-c e-${e.id}"><span class="num">${String(i + 1).padStart(2, '0')}</span><b>${esc(e.nome)}</b><span class="niv">${esc(e.niveis.join(' · '))}</span><span class="ir">↗</span></div>`).join('')}</div>
   </section>
-  ${faixa(false)}${faixa(true)}
-  <section class="sec wrap">
-    <div class="sec-top revela"><div><div class="kicker">Modalidades</div><h2 class="h-sec">Escolha seu <span class="grad-tx">estilo</span></h2></div><p>Do primeiro passo ao intermediário. Cada estilo tem seus níveis — e o Street Style traz professores convidados.</p></div>
+  <div class="banda" aria-hidden="true"><div class="trilho">${banda}</div></div>
+  <section class="sec wrap" id="estilos">
+    <div class="sec-top revela"><div><p class="eyebrow">Modalidades</p><h2 class="h-sec">Escolha seu <em>estilo</em></h2></div><p>Do primeiro passo ao intermediário. Cada estilo tem seus níveis, e o Street Style traz professores convidados.</p></div>
     <div class="estilos">${es.map((e, i) => `
       <button class="est e-${e.id} revela" data-cad data-tilt>
-        <span class="glifo" aria-hidden="true">${String(i + 1).padStart(2, '0')}</span>
-        ${e.especial ? '<span class="tag selo-conv"><span class="pt"></span>Convidados</span>' : ''}
-        <div><div class="num">${String(i + 1).padStart(2, '0')} / 05</div><h3>${esc(e.nome)}</h3>
-        <div class="niveis">${e.niveis.map((n) => `<span class="tag">${esc(n)}</span>`).join('')}</div></div>
+        <div class="est-top"><span class="num">${String(i + 1).padStart(2, '0')} / 05</span>${e.especial ? '<span class="tag">Convidados</span>' : ''}</div>
+        <div><h3>${esc(e.nome)}</h3><div class="niveis">${e.niveis.map((n) => `<span class="tag">${esc(n)}</span>`).join('')}</div></div>
         <div class="rodape-est"><span>${S.info.contagem[e.id] || 0} aula${S.info.contagem[e.id] === 1 ? '' : 's'}</span><span class="ir">↗</span></div>
       </button>`).join('')}</div>
   </section>
   <section class="sec wrap">
-    <div class="sec-top revela"><div><div class="kicker">Como funciona</div><h2 class="h-sec">Treine. Conclua.<br><span class="grad-tx">Desbloqueie.</span></h2></div></div>
+    <div class="sec-top revela"><div><p class="eyebrow">Como funciona</p><h2 class="h-sec">Treine, conclua e <em>desbloqueie.</em></h2></div></div>
     <div class="passos">
-      <div class="passo revela"><span class="ic">▶</span><h4>Assista no seu ritmo</h4><p>Câmera lenta, modo espelho e tela cheia que enche o celular. Volte 5 segundos quantas vezes precisar.</p></div>
-      <div class="passo revela"><span class="ic">✓</span><h4>Conclua as aulas</h4><p>Seu progresso fica salvo. Assistiu a aula até o fim? Ela conta como feita.</p></div>
-      <div class="passo revela"><span class="ic">✦</span><h4>Libere passos novos</h4><p>Algumas aulas abrem só depois que você domina o passo base. É a sua trilha de evolução.</p></div>
+      <div class="passo revela"><span class="n">1</span><h4>Assista no seu ritmo</h4><p>Câmera lenta, modo espelho e tela cheia que ocupa o celular todo. Volte 5 segundos quantas vezes precisar.</p></div>
+      <div class="passo revela"><span class="n">2</span><h4>Conclua as aulas</h4><p>Seu progresso fica salvo. Assistiu a aula até o fim? Ela conta como feita.</p></div>
+      <div class="passo revela"><span class="n">3</span><h4>Libere passos novos</h4><p>Algumas aulas abrem só depois que você domina o passo base. É a sua trilha de evolução.</p></div>
     </div>
   </section>
-  <section class="wrap"><div class="cta-final revela"><h2>Bora<br><span class="grad-tx">dançar?</span></h2><p>Crie sua conta e comece hoje. Aluna do estúdio tem acesso liberado pelo professor.</p><button class="btn btn-p" data-cad><span>Criar minha conta <span class="seta">→</span></span></button></div></section>`;
+  <section class="wrap"><div class="cta-final revela"><h2>Bora <em>dançar?</em></h2><p>Crie sua conta e comece hoje. Quem é aluna do estúdio tem o acesso liberado pelo professor.</p><button class="btn btn-claro" data-cad>Criar minha conta <span class="seta">→</span></button></div></section>`;
   $$('[data-cad]').forEach((b) => (b.onclick = () => telaEntrar('cadastro')));
   $$('[data-entrar]').forEach((b) => (b.onclick = () => telaEntrar()));
 }
@@ -220,17 +220,17 @@ function paginaInicio() {
   const sauda = hora < 12 ? 'Bom dia' : hora < 18 ? 'Boa tarde' : 'Boa noite';
   raiz.innerHTML = `<div class="wrap">
     <section class="ola">
-      <div><div class="kicker">${sauda}</div><h1>Oi, <span class="grad-tx">${esc(nome)}</span>.<br>Bora treinar?</h1><p class="lead">${total ? `Você tem ${total} aula${total > 1 ? 's' : ''} no catálogo. Cada aula concluída pode liberar passos novos.` : 'As aulas vão aparecer aqui assim que o professor publicar.'}</p></div>
+      <div><p class="eyebrow">${sauda}</p><h1>Oi, <em>${esc(nome)}</em>.<br>Bora treinar?</h1><p class="lead">${total ? `Você tem ${total} aula${total > 1 ? 's' : ''} no catálogo. Cada aula concluída pode liberar passos novos.` : 'As aulas vão aparecer aqui assim que o professor publicar.'}</p></div>
       <div class="stat"><div class="anel" data-p="${pct}"><b>${feitas}</b></div><div class="t"><b>${feitas} de ${total} aulas</b><span>concluídas · ${pct}% da trilha</span></div></div>
     </section>
-    ${cont ? `<a class="continuar e-${cont.estilo} revela" href="#/aula/${cont.id}"><div class="im">${cont.temCapa ? `<img src="${capaUrl(cont)}" alt="">` : ''}</div>
-      <div class="tx"><div class="kicker">${cont.feito > 0.02 ? 'Continue de onde parou' : 'Comece por aqui'}</div><h3>${esc(cont.titulo)}</h3><div class="tags"><span class="tag">${esc(est(cont.estilo).nome)}</span> <span class="tag neutra">${esc(cont.nivel)}</span></div>
-      <div class="barra"><i data-w="${Math.round(cont.feito * 100)}"></i></div><span class="btn btn-p btn-s"><span>${cont.feito > 0.02 ? 'Continuar' : 'Assistir'} <span class="seta">→</span></span></span></div></a>` : ''}
+    ${cont ? `<a class="continuar e-${cont.estilo} revela" href="#/aula/${cont.id}"><div class="im">${cont.temCapa ? `<img src="${capaUrl(cont)}" alt="">` : ''}<span class="play"></span></div>
+      <div class="tx"><p class="eyebrow">${cont.feito > 0.02 ? 'Continue de onde parou' : 'Comece por aqui'}</p><h3>${esc(cont.titulo)}</h3><div class="tags"><span class="tag">${esc(est(cont.estilo).nome)}</span><span class="tag neutra">${esc(cont.nivel)}</span></div>
+      ${cont.feito > 0.02 ? `<div class="barra"><i data-w="${Math.round(cont.feito * 100)}"></i></div>` : ''}<span class="btn btn-p btn-s">${cont.feito > 0.02 ? 'Continuar' : 'Assistir'} <span class="seta">→</span></span></div></a>` : ''}
     ${S.info.estilos.map((e) => {
       const l = pub.filter((a) => a.estilo === e.id);
       if (!l.length) return '';
       const href = e.id === 'street' ? '#/street' : '#/estilo/' + e.id;
-      return `<section class="trilha e-${e.id} revela"><div class="trilha-top"><h2>${esc(e.nome)}</h2><a href="${href}">Ver todas (${l.length}) →</a></div><div class="grade">${l.slice(0, 4).map(cartao).join('')}</div></section>`;
+      return `<section class="trilha e-${e.id} revela"><div class="trilha-top"><h2><span class="bola"></span>${esc(e.nome)}</h2><a href="${href}">Ver todas (${l.length}) →</a></div><div class="grade">${l.slice(0, 4).map(cartao).join('')}</div></section>`;
     }).join('')}
     ${!total ? '<div class="vazio"><b>Nenhuma aula publicada ainda</b>Volte daqui a pouco!</div>' : ''}
   </div>`;
@@ -240,11 +240,12 @@ function paginaEstilo(id, nivel) {
   const e = est(id);
   const l = S.aulas.filter((a) => a.publicado && a.estado === 'pronto' && a.estilo === id);
   const f = nivel ? l.filter((a) => a.nivel === nivel) : l;
-  const partes = e.nome.split(' ');
   raiz.innerHTML = `<div class="wrap e-${id}">
-    <section class="cab-est"><div class="kicker">${l.length} aula${l.length === 1 ? '' : 's'} · ${e.niveis.join(' · ')}</div>
-      <h1 class="gig">${partes.length > 1 ? esc(partes[0]) + '<span class="o">' + esc(partes.slice(1).join(' ')) + '</span>' : '<span class="o">' + esc(e.nome) + '</span>'}</h1>
-      <div class="lin"><div class="chips">${e.niveis.length > 1 ? ['', ...e.niveis].map((n) => `<button class="chip ${n === (nivel || '') ? 'on' : ''}" data-n="${esc(n)}">${n || 'Todos'}</button>`).join('') : ''}</div></div>
+    <section class="cab-est">
+      <p class="eyebrow">${l.length} aula${l.length === 1 ? '' : 's'}</p>
+      <h1><span class="bola"></span>${esc(e.nome)}</h1>
+      <p class="niveis-txt"><em>${esc(e.niveis.join(', ').replace(/, ([^,]*)$/, ' e $1'))}</em></p>
+      ${e.niveis.length > 1 ? `<div class="chips">${['', ...e.niveis].map((n) => `<button class="chip ${n === (nivel || '') ? 'on' : ''}" data-n="${esc(n)}">${n || 'Todos'}</button>`).join('')}</div>` : ''}
     </section>
     ${f.length ? `<div class="grade">${f.map(cartao).join('')}</div>` : '<div class="vazio"><b>Em breve</b>Ainda não tem aula aqui.</div>'}
   </div>`;
@@ -257,17 +258,16 @@ function paginaStreet() {
   for (const a of l) { const c = a.convidado; if (c?.nome && !conv.has(c.nome)) conv.set(c.nome, c); }
   raiz.innerHTML = `<div class="wrap e-street">
     <section class="street-hero"><div class="fita">✦ Guest sessions</div>
-      <h1 class="gig">Street<br><span class="o">Style</span><em>.</em></h1>
-      <p class="lead"></p>
+      <h1>Street Style <em>com convidados</em></h1>
+      <p class="lead">Uma aba especial para os professores convidados do Studio 82. Cada um traz a sua linguagem. Venha conhecer.</p>
     </section>
-    ${conv.size ? `<div class="kicker">Professores convidados</div><div class="convidados">${[...conv.values()].map((c) => `
-      <div class="conv revela"><span class="q">”</span><div class="av">${esc(iniciais(c.nome))}</div><h3>${esc(c.nome)}</h3>
-      ${c.insta ? `<a class="ig" href="https://www.instagram.com/${encodeURIComponent(c.insta)}/" target="_blank" rel="noopener">@${esc(c.insta)}</a>` : ''}
+    ${conv.size ? `<p class="eyebrow">Professores convidados</p><div class="convidados">${[...conv.values()].map((c) => `
+      <div class="conv revela"><div class="av">${esc(iniciais(c.nome))}</div><div><h3>${esc(c.nome)}</h3>
+      ${c.insta ? `<a class="ig" href="https://www.instagram.com/${encodeURIComponent(c.insta)}/" target="_blank" rel="noopener">@${esc(c.insta)}</a>` : ''}</div>
       ${c.bio ? `<p>${esc(c.bio)}</p>` : ''}</div>`).join('')}</div>` : ''}
-    <div class="kicker">Aulas</div><br>
+    <p class="eyebrow">Aulas</p>
     ${l.length ? `<div class="grade">${l.map(cartao).join('')}</div>` : '<div class="vazio"><b>Os convidados estão chegando</b>As aulas especiais aparecem aqui.</div>'}
   </div>`;
-  $('.street-hero .lead').textContent = 'Uma aba especial para os professores convidados do Studio 82. Cada um traz sua linguagem — venha conhecer.';
 }
 
 function paginaAula(id) {
@@ -662,13 +662,8 @@ function render() {
     else paginaInicio();
   }
   depoisRender();
-  $('#topo .nav')?.style.setProperty('--c', 'var(--a1)');
-}
+  }
 addEventListener('hashchange', () => { render(); scrollTo({ top: 0, behavior: 'instant' }); });
-
-// Brilho que segue o mouse
-const cur = $('#cursor');
-addEventListener('pointermove', (e) => { if (e.pointerType !== 'mouse') return; cur.classList.add('on'); cur.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`; }, { passive: true });
 
 (async function inicio() {
   raiz.innerHTML = '<div class="carregando"><div class="giro"></div></div>';
