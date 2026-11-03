@@ -244,7 +244,7 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spa
 .cab-est h1 { font: 700 clamp(48px, 9vw, 128px)/1.02 var(--sans); letter-spacing: -.06em; }
 .niveis-txt { font: italic 400 clamp(22px, 2.4vw, 30px)/1.3 var(--serif); color: var(--cd); margin: 8px 0 26px; }
 .chips { display: flex; gap: 8px; flex-wrap: wrap; }
-.chip { height: 42px; padding: 0 18px; border-radius: 99px; font-weight: 600; font-size: 14.5px; background: var(--papel); box-shadow: inset 0 0 0 1px var(--line2); color: var(--ink2); transition: .25s; }
+.chip { display: inline-flex; align-items: center; height: 42px; padding: 0 18px; border-radius: 99px; font-weight: 600; font-size: 14.5px; background: var(--papel); box-shadow: inset 0 0 0 1px var(--line2); color: var(--ink2); transition: .25s; }
 .chip:hover { box-shadow: inset 0 0 0 1px var(--ink); }
 .chip.on { background: var(--ink); color: var(--bg); box-shadow: none; }
 
@@ -467,6 +467,23 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spa
 .prog-aluno .it button { height: 32px; padding: 0 12px; border-radius: 99px; font-size: 12.5px; font-weight: 700; background: var(--bg2); color: var(--ink2); }
 .prog-aluno .it button.on { background: var(--ok); color: #fff; }
 .prog-aluno .it button.lib.on { background: var(--ink); color: var(--bg); }
+
+/* Google Drive */
+.estado.nuvem { color: #1a62d6; background: rgba(26, 98, 214, .1); }
+.drive-ok { display: flex; gap: 14px; align-items: center; padding: 14px 16px; border-radius: 18px; background: #fff; box-shadow: inset 0 0 0 1px var(--line); margin-bottom: 16px; }
+.drive-ok .g-ic { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--ok); color: #fff; font-weight: 800; flex: none; }
+.drive-ok b { display: block; overflow-wrap: anywhere; }
+.drive-ok span { color: var(--mu); font-size: 13.5px; }
+.drive-uso { margin-bottom: 14px; }
+.drive-uso .lin { display: flex; justify-content: space-between; gap: 10px; font-size: 13.5px; font-weight: 600; color: var(--mu); margin-bottom: 8px; }
+.drive-uso .barra i { background: #1a62d6; }
+.drive-st { color: var(--ink2); font-size: 14.5px; margin-bottom: 14px; }
+.dica-g { margin: 14px 0 0; }
+.passos-g { padding-left: 22px; display: flex; flex-direction: column; gap: 12px; margin-bottom: 22px; color: var(--ink2); font-size: 15px; }
+.passos-g li::marker { font-weight: 700; color: var(--a1); }
+.passos-g a { color: #1a62d6; text-decoration: underline; text-underline-offset: 2px; }
+.copiar { display: flex; gap: 8px; align-items: center; margin-top: 8px; padding: 6px 6px 6px 14px; border-radius: 14px; background: #fff; box-shadow: inset 0 0 0 1px var(--line2); }
+.copiar code { flex: 1; min-width: 0; font: 600 13px/1.4 ui-monospace, monospace; overflow-wrap: anywhere; }
 
 /* ---------- Rodapé ---------- */
 .rodape { border-top: 1px solid var(--line); margin-top: 70px; }

@@ -439,7 +439,11 @@ function estadoTxt(a) {
   if (a.estado === 'processando') return `<span class="estado proc">Preparando vídeo ${Math.round(a.progresso * 100)}%</span>`;
   if (a.estado === 'erro') return '<span class="estado err">Erro no vídeo</span>';
   if (a.estado === 'sem-video') return '<span class="estado err">Sem vídeo</span>';
-  return a.publicado ? '<span class="estado pub">● Publicada</span>' : '<span class="estado ras">Rascunho</span>';
+  const pub = a.publicado ? '<span class="estado pub">● Publicada</span>' : '<span class="estado ras">Rascunho</span>';
+  const nuvem = a.onde === 'drive' ? '<span class="estado nuvem">☁ No Drive</span>'
+    : a.driveProg != null ? `<span class="estado proc">☁ Indo para o Drive ${Math.round(a.driveProg * 100)}%</span>`
+    : a.driveErro ? '<span class="estado err" title="' + esc(a.driveErro) + '">☁ Drive falhou, tento de novo</span>' : '';
+  return pub + nuvem;
 }
 function admAulas() {
   const c = $('#admC');
@@ -459,7 +463,7 @@ function admAulas() {
 }
 function agendaPoll() {
   clearTimeout(pollT);
-  if (!S.aulas.some((a) => ['fila', 'processando'].includes(a.estado))) return;
+  if (!S.aulas.some((a) => ['fila', 'processando'].includes(a.estado) || a.driveProg != null)) return;
   pollT = setTimeout(async () => {
     const r = rota(); if (r[0] !== 'professor') return;
     const n = await api('/api/aulas').catch(() => null); if (!n) return agendaPoll();
@@ -638,13 +642,57 @@ function progressoAluno(x) {
 function admAjustes() {
   const c = $('#admC');
   const cf = S.info.config;
-  c.innerHTML = `<div class="painel"><h3>Cadastro de alunos</h3><p class="dica">Com a aprovação ligada, quem cria conta só entra depois que você liberar em Alunos.</p>
+  c.innerHTML = `<div class="painel" id="pDrive"><h3>☁ Google Drive</h3><p class="dica">Os vídeos das aulas ficam guardados no Google Drive do estúdio, não no servidor. Os alunos assistem do mesmo jeito.</p><div id="dC"><div class="giro"></div></div></div>
+    <div class="painel"><h3>Cadastro de alunos</h3><p class="dica">Com a aprovação ligada, quem cria conta só entra depois que você liberar em Alunos.</p>
     <label class="chave"><div><b>Aprovar cada aluno novo</b><span>Recomendado: só seus alunos assistem</span></div><input type="checkbox" id="cAprovar" ${cf.aprovar ? 'checked' : ''}></label></div>
     <div class="painel"><h3>Professor principal</h3><p class="dica">Nome que aparece nas aulas.</p><form id="fCf"><label class="campo"><span>Nome</span><input name="professor" value="${esc(cf.professor)}" maxlength="60"></label><button class="btn btn-g">Salvar</button></form></div>
     <div class="painel"><h3>Link do site</h3><p class="dica">Mande para seus alunos:</p><div class="tag neutra" id="lnk"></div></div>`;
   $('#lnk').textContent = location.origin;
   $('#cAprovar').onchange = async (e) => { await api('/api/admin/config', { aprovar: e.target.checked }); cf.aprovar = e.target.checked; toast('Salvo ✓'); };
   $('#fCf').onsubmit = async (e) => { e.preventDefault(); await api('/api/admin/config', { professor: e.target.professor.value }); cf.professor = e.target.professor.value; toast('Salvo ✓'); };
+  painelDrive();
+}
+const gb = (b) => (b >= 1e9 ? (b / 1e9).toFixed(1).replace('.', ',') + ' GB' : Math.round(b / 1e6) + ' MB');
+let driveT = 0;
+async function painelDrive(trocar) {
+  clearTimeout(driveT);
+  const c = $('#dC'); if (!c) return;
+  let s; try { s = await api('/api/admin/drive'); } catch (e) { c.innerHTML = `<p class="msg-erro">${esc(e.message)}</p>`; return; }
+  if (!$('#dC')) return;
+  if (s.conectado && !s.erro && !trocar) {
+    const pc = s.uso?.total ? Math.min(100, Math.round((s.uso.usado / s.uso.total) * 100)) : 0;
+    c.innerHTML = `<div class="drive-ok"><span class="g-ic">✓</span><div><b>Conectado a ${esc(s.email || 'sua conta do Google')}</b><span>Pasta “Studio 82 Training — vídeos das aulas”</span></div></div>
+      ${s.uso ? `<div class="drive-uso"><div class="lin"><span>Espaço do Drive</span><span>${gb(s.uso.usado)} de ${s.uso.total ? gb(s.uso.total) : 'ilimitado'}</span></div><div class="barra"><i data-w="${pc}"></i></div></div>` : ''}
+      <p class="drive-st">${s.noDrive} vídeo${s.noDrive === 1 ? '' : 's'} no Drive${s.noServidor ? ` · ${s.noServidor} esperando para ir` : ''}${s.enviando ? `<br><b>Enviando “${esc(s.enviando.titulo)}”: ${Math.round(s.enviando.prog * 100)}%</b>` : ''}</p>
+      <div class="chips">${s.pasta ? `<a class="btn btn-g btn-s" href="https://drive.google.com/drive/folders/${encodeURIComponent(s.pasta)}" target="_blank" rel="noopener">Abrir pasta no Drive ↗</a>` : ''}<button class="btn btn-x btn-s" id="dSai">Desconectar</button></div>`;
+    $('#dSai').onclick = async () => {
+      if (!confirm('Desconectar o Drive? Os vídeos que já estão lá param de tocar até você conectar a MESMA conta de novo. Vídeos novos ficam no servidor.')) return;
+      await api('/api/admin/drive/desconectar', {}); toast('Drive desconectado'); painelDrive();
+    };
+    if (s.enviando || s.noServidor) driveT = setTimeout(() => painelDrive(), 4000);
+    return;
+  }
+  const passos = `<ol class="passos-g">
+      <li>Entre em <a href="https://console.cloud.google.com/projectcreate" target="_blank" rel="noopener">console.cloud.google.com</a> com a conta do Drive do estúdio e crie um projeto chamado <b>Studio 82</b>.</li>
+      <li>Ative a <a href="https://console.cloud.google.com/apis/library/drive.googleapis.com" target="_blank" rel="noopener">Google Drive API</a> (botão <b>Ativar</b>).</li>
+      <li>Abra a <a href="https://console.cloud.google.com/auth/branding" target="_blank" rel="noopener">Tela de permissão OAuth</a>: nome do app <b>Studio 82</b>, seu e-mail, público <b>Externo</b>. Depois, em <b>Público-alvo</b>, clique em <b>Publicar app</b> (senão a conexão cai a cada 7 dias).</li>
+      <li>Em <a href="https://console.cloud.google.com/auth/clients/create" target="_blank" rel="noopener">Clientes → Criar cliente</a>, escolha <b>Aplicativo da Web</b> e, em <b>URIs de redirecionamento autorizados</b>, cole:<div class="copiar"><code id="dUri"></code><button type="button" class="btn btn-g btn-s" id="dCp">Copiar</button></div></li>
+      <li>Copie o <b>ID do cliente</b> e a <b>Chave secreta</b> que aparecerem e cole aqui embaixo.</li>
+    </ol>
+    <form id="fDc"><label class="campo"><span>ID do cliente</span><input name="clientId" placeholder="123…apps.googleusercontent.com" autocomplete="off" required></label>
+    <label class="campo"><span>Chave secreta do cliente</span><input name="clientSecret" placeholder="GOCSPX-…" autocomplete="off" required></label>
+    <button class="btn btn-p">Salvar</button></form>`;
+  if (s.cliente && !trocar) {
+    c.innerHTML = `${s.erro ? `<p class="msg-erro">${esc(s.erro)}</p>` : '<p class="drive-st">Falta só entrar na conta do Google do estúdio e permitir o acesso.</p>'}
+      <div class="chips"><a class="btn btn-p" href="/api/admin/drive/conectar">${s.erro || s.email ? 'Conectar de novo' : 'Conectar conta do Google'}</a><button type="button" class="btn btn-g" id="dTroca">Trocar ID do cliente</button></div>
+      <p class="dica dica-g">Se o Google mostrar “o app não foi verificado”, clique em <b>Avançado</b> → <b>Acessar Studio 82</b>: o app é seu.</p>`;
+    $('#dTroca').onclick = () => painelDrive(true);
+    return;
+  }
+  c.innerHTML = passos;
+  $('#dUri').textContent = s.redirect;
+  $('#dCp').onclick = () => { navigator.clipboard?.writeText(s.redirect).then(() => toast('Copiado ✓'), () => toast('Selecione e copie o endereço')); };
+  $('#fDc').onsubmit = async (e) => { e.preventDefault(); try { await api('/api/admin/drive/cliente', Object.fromEntries(new FormData(e.target))); toast('Salvo ✓ Agora conecte a conta'); painelDrive(); } catch (err) { toast(esc(err.message), 'erro'); } };
 }
 
 // ---------- Roteador ----------
@@ -665,6 +713,12 @@ function render() {
   }
 addEventListener('hashchange', () => { render(); scrollTo({ top: 0, behavior: 'instant' }); });
 
+(function avisoDrive() {
+  const m = new URLSearchParams(location.search).get('drive');
+  if (m === null) return;
+  history.replaceState(null, '', '/' + location.hash);
+  setTimeout(() => (m === 'ok' ? (confete(), toast('<b>Google Drive conectado! ☁</b>Os vídeos vão para lá sozinhos.', 'grande', 6000)) : toast(esc(m), 'erro', 8000)), 900);
+})();
 (async function inicio() {
   raiz.innerHTML = '<div class="carregando"><div class="giro"></div></div>';
   try { await carregar(); } catch { raiz.innerHTML = '<div class="wrap"><div class="vazio" style="margin:60px 0"><b>Sem conexão</b>Tente de novo em instantes.</div></div>'; return; }

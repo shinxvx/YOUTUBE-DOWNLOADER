@@ -61,6 +61,7 @@ function confere(s, u) {
     salvar();
   }
 })();
+const DRIVE = require('./drive')({ db, salvar: () => salvar(), VID });
 // Processos de vídeo que pararam no meio (reinício) voltam para a fila
 for (const a of db.aulas) if (a.estado === 'processando') a.estado = 'fila';
 
@@ -96,7 +97,7 @@ function aulaPub(a, u) {
   return {
     id: a.id, titulo: a.titulo, estilo: a.estilo, nivel: a.nivel, bio: a.bio || '', professor: a.professor || db.config.professor,
     convidado: a.convidado || null, duracao: a.duracao || 0, criado: a.criado, ordem: a.ordem ?? 0, publicado: !!a.publicado,
-    estado: a.estado || 'sem-video', progresso: a.progresso || 0, temCapa: !!a.capa, capa: a.capa || 0, v: a.v || 0,
+    estado: a.estado || 'sem-video', progresso: a.progresso || 0, temCapa: !!a.capa, capa: a.capa || 0, v: a.v || 0, onde: a.drive ? 'drive' : 'servidor', driveProg: a.driveProg, driveErro: a.driveErro || '',
     trancada: tr.length > 0, motivos: tr, req: a.req || { aulas: [], min: 0, minEstilo: '' }, libera: libera(a.id),
     feito: Math.min(1, p.vis && a.duracao ? p.vis / a.duracao : 0), ok: !!p.ok, pos: p.pos || 0,
   };
@@ -174,6 +175,7 @@ function proximoVideo() {
       try {
         if (code !== 0) throw new Error(err.slice(-400) || 'ffmpeg ' + code);
         await fsp.rename(sai, path.join(VID, a.id + '.mp4'));
+        if (a.drive) { DRIVE.apaga(a.drive); a.drive = ''; } // vídeo trocado: o antigo sai do Drive
         a.duracao = (await sondar(path.join(VID, a.id + '.mp4'))) || dur;
         a.v = Date.now();
         if (!a.capa) await capa(a, a.duracao * 0.3).catch(() => {});
@@ -183,7 +185,7 @@ function proximoVideo() {
         a.estado = 'erro'; a.falha = String(e.message).slice(0, 300);
         await fsp.rm(sai, { force: true }).catch(() => {});
       }
-      salvar(); rodando = false; proximoVideo();
+      salvar(); rodando = false; proximoVideo(); DRIVE.fila();
     });
   }).catch((e) => { a.estado = 'erro'; a.falha = 'Arquivo de vídeo inválido'; salvar(); rodando = false; proximoVideo(); });
 }
@@ -194,10 +196,15 @@ function sondar(arq) {
     p.on('close', (c) => { const d = parseFloat(o); c === 0 && d > 0 ? ok(d) : nao(new Error('ffprobe')); });
   });
 }
-function capa(a, t) {
+async function capa(a, t) {
+  const local = path.join(VID, a.id + '.mp4');
+  let ent = ['-i', local];
+  if (!fs.existsSync(local) && a.drive) { const d = await DRIVE.entradaFfmpeg(a.drive); ent = ['-headers', d.cab, '-i', d.url]; }
+  // -ss antes da entrada (pula direto no ponto; no Drive pede só aquele pedaço)
+  ent = ent.slice(0, -2).concat(['-ss', String(Math.max(0, t || 0))], ent.slice(-2));
   return new Promise((ok, nao) => {
     const out = path.join(VID, a.id + '.jpg');
-    const p = spawn('ffmpeg', ['-y', '-loglevel', 'error', '-ss', String(Math.max(0, t || 0)), '-i', path.join(VID, a.id + '.mp4'), '-frames:v', '1', '-vf', 'scale=1280:-2', '-q:v', '3', out]);
+    const p = spawn('ffmpeg', ['-y', '-loglevel', 'error', ...ent, '-frames:v', '1', '-vf', 'scale=1280:-2', '-q:v', '3', out]);
     p.on('close', (c) => { if (c === 0) { a.capa = Date.now(); salvar(); ok(); } else nao(new Error('capa')); });
   });
 }
@@ -356,6 +363,7 @@ const servidor = http.createServer(async (req, res) => {
       const [a] = db.aulas.splice(i, 1);
       for (const x of db.aulas) if (x.req?.aulas) x.req.aulas = x.req.aulas.filter((y) => y !== a.id);
       for (const ux of db.users) ux.liberadas = (ux.liberadas || []).filter((y) => y !== a.id);
+      if (a.drive) DRIVE.apaga(a.drive);
       for (const ext of ['.mp4', '.jpg']) fsp.rm(path.join(VID, a.id + ext), { force: true }).catch(() => {});
       fsp.rm(path.join(TMP, a.id + '.up'), { force: true }).catch(() => {});
       salvar();
@@ -423,6 +431,27 @@ const servidor = http.createServer(async (req, res) => {
       salvar();
       return json(res, 200, { ok: true });
     }
+    // ----- Google Drive -----
+    if (p === '/api/admin/drive') return json(res, 200, { ...(await DRIVE.estado()), redirect: redirDrive(req) });
+    if (p === '/api/admin/drive/cliente' && req.method === 'POST') {
+      const b = await corpo(req);
+      const id = limpa(b.clientId, 200), sec = limpa(b.clientSecret, 200);
+      if (!/\.apps\.googleusercontent\.com$/.test(id)) return erro(res, 400, 'O ID do cliente termina com .apps.googleusercontent.com');
+      if (sec.length < 10) return erro(res, 400, 'Cole a chave secreta do cliente');
+      DRIVE.salvaCliente(id, sec);
+      return json(res, 200, { ok: true });
+    }
+    if (p === '/api/admin/drive/conectar') {
+      if (!db.drive.clientId) return erro(res, 400, 'Cole o ID e a chave do cliente primeiro');
+      res.writeHead(302, { Location: DRIVE.linkConectar(redirDrive(req), u.id) }); return res.end();
+    }
+    if (p === '/api/admin/drive/volta') {
+      let msg = 'ok';
+      if (url.searchParams.get('error')) msg = 'O acesso ao Google foi cancelado';
+      else { try { await DRIVE.volta(url.searchParams.get('code'), url.searchParams.get('state'), u.id); } catch (e) { msg = e.message; } }
+      res.writeHead(302, { Location: '/?drive=' + encodeURIComponent(msg) + '#/professor/ajustes' }); return res.end();
+    }
+    if (p === '/api/admin/drive/desconectar' && req.method === 'POST') { DRIVE.desconectar(); return json(res, 200, { ok: true }); }
     if (p === '/api/admin/config' && req.method === 'POST') {
       const b = await corpo(req);
       if ('aprovar' in b) db.config.aprovar = !!b.aprovar;
@@ -438,6 +467,10 @@ const servidor = http.createServer(async (req, res) => {
   }
 });
 
+function redirDrive(req) {
+  const https = (req.headers['x-forwarded-proto'] || '').includes('https') || /speedco|brgirlslive/.test(req.headers.host || '');
+  return `${https ? 'https' : 'http'}://${req.headers.host}/api/admin/drive/volta`;
+}
 function media(req, res, p) {
   const m = /^\/media\/(v|c)\/([\w-]+)$/.exec(p);
   const u = usuario(req);
@@ -446,7 +479,9 @@ function media(req, res, p) {
   if (!a) { res.writeHead(404); return res.end(); }
   if (m[1] === 'c') return servirArquivo(req, res, path.join(VID, a.id + '.jpg'), 'image/jpeg');
   if ((!a.publicado && u.role !== 'admin') || motivos(a, u).length) { res.writeHead(403); return res.end(); }
-  return servirArquivo(req, res, path.join(VID, a.id + '.mp4'), 'video/mp4');
+  const local = path.join(VID, a.id + '.mp4');
+  if (a.drive && !fs.existsSync(local)) return DRIVE.stream(req, res, a.drive, cab);
+  return servirArquivo(req, res, local, 'video/mp4');
 }
 
 // Limpa sessões vencidas uma vez por dia
