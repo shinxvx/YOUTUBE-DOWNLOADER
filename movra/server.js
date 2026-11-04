@@ -18,6 +18,28 @@ const MP = {
   webhookSecret: process.env.MP_WEBHOOK_SECRET || ''
 };
 const mpOn = () => !!MP.token;
+// Asaas (escolha do dono em 04/11/2026: conta de pessoa física, só CPF). Chave sandbox começa com $aact_hmlg_.
+const ASAAS = {
+  key: process.env.ASAAS_API_KEY || '',
+  webhookToken: process.env.ASAAS_WEBHOOK_TOKEN || '',
+  saqueAuto: process.env.SAQUE_AUTOMATICO !== '0'
+};
+ASAAS.base = ASAAS.key.includes('_hmlg_') ? 'https://api-sandbox.asaas.com/v3' : 'https://api.asaas.com/v3';
+const asaasOn = () => !!ASAAS.key;
+const realOn = () => asaasOn() || mpOn();
+async function asaas(method, url, body) {
+  const r = await fetch(ASAAS.base + url, { method, headers: { access_token: ASAAS.key, 'Content-Type': 'application/json', 'User-Agent': 'MOVRA' },
+    body: body ? JSON.stringify(body) : undefined });
+  let j = null; try { j = await r.json(); } catch (e) { }
+  return { ok: r.ok, status: r.status, j };
+}
+const asaasErro = r => ((r.j && r.j.errors) || []).map(e => e.description).join(' ') || ('HTTP ' + r.status);
+function cpfValido(v) {
+  const c = String(v || '').replace(/\D/g, '');
+  if (c.length !== 11 || /^(\d)\1+$/.test(c)) return false;
+  for (const n of [9, 10]) { let s = 0; for (let i = 0; i < n; i++) s += Number(c[i]) * (n + 1 - i); const d = (s * 10) % 11 % 10; if (d !== Number(c[n])) return false; }
+  return true;
+}
 const oauthOn = () => !!(MP.clientId && MP.clientSecret);
 const r2 = v => Math.round(Number(v || 0) * 100) / 100;
 const agora = () => Date.now();
@@ -45,6 +67,8 @@ create table if not exists demo_students(id text primary key, teacher_id text no
 create table if not exists oauth_states(state text primary key, teacher_id text not null, criado integer not null);
 create table if not exists images(id text primary key, mime text not null, data blob not null, v integer not null);
 `);
+for (const sql of ['alter table users add column cpf text', 'alter table users add column asaas_customer text', 'alter table payments add column asaas_id text', 'alter table payments add column url text', 'alter table withdrawals add column asaas_id text'])
+  try { db.exec(sql); } catch (e) { /* já existe */ }
 
 function hash(senha, salt = crypto.randomBytes(16).toString('hex')) {
   return 's1:' + salt + ':' + crypto.scryptSync(senha, salt, 32).toString('hex');
@@ -130,8 +154,8 @@ function activeAccess(userId) {
   return db.prepare('select * from access where user_id=? and (expira is null or expira>?)').all(userId, agora());
 }
 function saldoDe(tid) {
-  const ganho = db.prepare("select coalesce(sum(liquido),0) v from payments where teacher_id=? and status='aprovado' and split=0 and (demo=0 or ?)").get(tid, mpOn() ? 0 : 1).v;
-  const saques = db.prepare("select coalesce(sum(valor),0) v from withdrawals where teacher_id=? and status in ('pedido','pago')").get(tid).v;
+  const ganho = db.prepare("select coalesce(sum(liquido),0) v from payments where teacher_id=? and status='aprovado' and split=0 and (demo=0 or ?)").get(tid, realOn() ? 0 : 1).v;
+  const saques = db.prepare("select coalesce(sum(valor),0) v from withdrawals where teacher_id=? and status in ('pedido','enviado','pago')").get(tid).v;
   return r2(ganho - saques);
 }
 function publicTeacher(t) {
@@ -267,7 +291,8 @@ function studioData(tid) {
   const pagamentos = db.prepare("select p.id, p.titulo, p.valor, p.taxa, p.liquido, p.split, p.metodo, p.aprovado, p.demo, u.nome from payments p join users u on u.id=p.user_id where p.teacher_id=? and p.status='aprovado' order by p.aprovado desc limit 50").all(tid);
   const saques = db.prepare('select id, valor, pix, status, obs, criado, resolvido from withdrawals where teacher_id=? order by criado desc limit 30').all(tid);
   return { teacherId: tid, students: [...porAluno.values(), ...demo], pagamentos, saques, saldo: saldoDe(tid), pixKey: t.pixKey || '',
-    mpConectado: !!(t.mp && t.mp.access_token), oauth: oauthOn(), lessonsCount: ls.length };
+    pixType: t.pixType || '', saqueAuto: asaasOn() && ASAAS.saqueAuto && !t.demo, provedor: asaasOn() ? 'asaas' : mpOn() ? 'mercadopago' : '', demo: !!t.demo,
+    mpConectado: !!(t.mp && t.mp.access_token), oauth: oauthOn() && !asaasOn(), lessonsCount: ls.length };
 }
 app.get('/api/estado', (req, res) => {
   const u = req.user;
@@ -282,8 +307,8 @@ app.get('/api/estado', (req, res) => {
     studio = studioData(tid);
     if (studio && u.papel === 'dono' && !teachers.some(t => t.id === tid)) teachers.push(publicTeacher(getT(tid)));
   }
-  res.json({ user: u ? { nome: u.nome, email: u.email, papel: u.papel, teacherId: u.teacher_id } : null,
-    pagamentoReal: mpOn(), teachers, lessons, done, access, studio });
+  res.json({ user: u ? { nome: u.nome, email: u.email, papel: u.papel, teacherId: u.teacher_id, temCpf: !!u.cpf } : null,
+    pagamentoReal: realOn(), teachers, lessons, done, access, studio });
 });
 
 /* progresso */
@@ -309,12 +334,41 @@ app.post('/api/pagar', precisa(), async (req, res) => {
   const { kind, ref } = req.body || {};
   const pr = preco(kind, ref);
   if (!pr || !(pr.valor > 0)) return res.status(400).json({ erro: 'Esse plano não está disponível.' });
-  const t = pr.t, split = !!(t.mp && t.mp.access_token);
+  const t = pr.t, split = !asaasOn() && !!(t.mp && t.mp.access_token);
   const id = uid('p_'), taxa = r2(pr.valor * FEE), liquido = r2(pr.valor - taxa);
-  const demo = !mpOn() && !split;
+  // professor de demonstração nunca cobra de verdade
+  const demo = !!t.demo || (!realOn() && !split);
+  let u = req.user;
+  if (!demo && asaasOn()) {
+    if (!u.cpf) {
+      if (!cpfValido(req.body.cpf)) return res.status(400).json({ erro: 'Informe um CPF válido para pagar.', precisaCpf: true });
+      db.prepare('update users set cpf=? where id=?').run(String(req.body.cpf).replace(/\D/g, ''), u.id);
+      u = db.prepare('select * from users where id=?').get(u.id);
+    }
+  }
   db.prepare('insert into payments(id,user_id,teacher_id,kind,ref,titulo,valor,taxa,liquido,status,split,demo,criado) values(?,?,?,?,?,?,?,?,?,?,?,?,?)')
     .run(id, req.user.id, t.id, kind, ref, pr.titulo, pr.valor, taxa, liquido, 'pendente', split ? 1 : 0, demo ? 1 : 0, agora());
   if (demo) return res.json({ id, demo: true });
+  if (asaasOn()) {
+    try {
+      if (!u.asaas_customer) {
+        const c = await asaas('POST', '/customers', { name: u.nome, cpfCnpj: u.cpf, email: u.email, externalReference: u.id, notificationDisabled: true });
+        if (!c.ok) throw new Error('cliente: ' + asaasErro(c));
+        db.prepare('update users set asaas_customer=? where id=?').run(c.j.id, u.id); u.asaas_customer = c.j.id;
+      }
+      const venc = new Date(agora() + 2 * 864e5).toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' });
+      const corpo = { customer: u.asaas_customer, billingType: 'UNDEFINED', value: pr.valor, dueDate: venc, description: 'MOVRA · ' + pr.titulo, externalReference: id };
+      let r = await asaas('POST', '/payments', Object.assign({ callback: { successUrl: `${BASE}/#pago-${id}`, autoRedirect: true } }, corpo));
+      if (!r.ok) r = await asaas('POST', '/payments', corpo); // o retorno automático exige o domínio cadastrado no Asaas
+      if (!r.ok) throw new Error('cobrança: ' + asaasErro(r));
+      db.prepare('update payments set asaas_id=?, url=? where id=?').run(r.j.id, r.j.invoiceUrl, id);
+      return res.json({ id, url: r.j.invoiceUrl });
+    } catch (e) {
+      console.error('Asaas falhou', e.message);
+      db.prepare("update payments set status='erro' where id=?").run(id);
+      return res.status(502).json({ erro: 'Não deu para abrir o pagamento agora. Tente de novo em alguns minutos.' });
+    }
+  }
   const token = split ? t.mp.access_token : MP.token;
   const body = {
     items: [{ id: String(ref), title: pr.titulo, quantity: 1, unit_price: pr.valor, currency_id: 'BRL' }],
@@ -342,7 +396,22 @@ app.post('/api/pagar/simular', precisa(), (req, res) => {
   if (!p || !p.demo) return res.status(400).json({ erro: 'Pagamento não encontrado.' });
   aprovar(p); res.json({ ok: true });
 });
+const ASAAS_METODO = { PIX: 'pix', CREDIT_CARD: 'credit_card', DEBIT_CARD: 'debit_card', BOLETO: 'boleto' };
+async function conferirAsaas(p) {
+  const r = await asaas('GET', '/payments/' + encodeURIComponent(p.asaas_id));
+  if (!r.ok) return;
+  const pay = r.j;
+  if (pay.externalReference !== p.id) return;
+  if (Math.abs(Number(pay.value) - p.valor) > 0.01) { console.error('valor diferente no pagamento', p.id); return; }
+  const tarifa = pay.netValue != null ? r2(Number(pay.value) - Number(pay.netValue)) : null;
+  db.prepare('update payments set metodo=?, mp_tarifa=? where id=?').run(ASAAS_METODO[pay.billingType] || pay.billingType || null, tarifa, p.id);
+  const atual = db.prepare('select * from payments where id=?').get(p.id);
+  if (['RECEIVED', 'CONFIRMED', 'RECEIVED_IN_CASH'].includes(pay.status)) aprovar(atual);
+  else if (['REFUNDED', 'CHARGEBACK_REQUESTED', 'CHARGEBACK_DISPUTE', 'AWAITING_CHARGEBACK_REVERSAL'].includes(pay.status)) { if (atual.status === 'aprovado') revogar(atual, 'estornado'); }
+  else if (pay.deleted || pay.status === 'OVERDUE') { if (atual.status !== 'aprovado') db.prepare("update payments set status='expirado' where id=?").run(p.id); }
+}
 async function conferir(p, mpId) {
+  if (p.asaas_id) return conferirAsaas(p);
   const t = getT(p.teacher_id);
   const token = p.split ? t?.mp?.access_token : MP.token;
   if (!token) return;
@@ -381,11 +450,41 @@ app.post('/api/mp/webhook', async (req, res) => {
     if (p && mpId) await conferir(p, mpId);
   } catch (e) { console.error('webhook', e.message); }
 });
+// avisos do Asaas: pagamento confirmado/estornado e saque (transferência) feito ou com falha
+app.post('/api/asaas/webhook', async (req, res) => {
+  if (ASAAS.webhookToken && req.headers['asaas-access-token'] !== ASAAS.webhookToken) return res.status(401).end();
+  res.sendStatus(200);
+  try {
+    const b = req.body || {};
+    if (b.payment && b.payment.externalReference) {
+      const p = db.prepare('select * from payments where id=? and asaas_id=?').get(String(b.payment.externalReference), String(b.payment.id));
+      if (p) await conferirAsaas(p);
+    }
+    if (b.transfer && b.transfer.id) {
+      const w = db.prepare('select * from withdrawals where asaas_id=?').get(String(b.transfer.id));
+      if (w) {
+        if (b.event === 'TRANSFER_DONE') db.prepare("update withdrawals set status='pago', resolvido=? where id=?").run(agora(), w.id);
+        else if (['TRANSFER_FAILED', 'TRANSFER_CANCELLED'].includes(b.event)) db.prepare("update withdrawals set status='falhou', obs=?, resolvido=? where id=?").run(String(b.transfer.failReason || 'O Asaas não conseguiu enviar o Pix.').slice(0, 200), agora(), w.id);
+      }
+    }
+  } catch (e) { console.error('webhook Asaas', e.message); }
+});
+// registra o aviso no Asaas uma vez (precisa de ASAAS_WEBHOOK_TOKEN no .env)
+async function garanteWebhookAsaas() {
+  if (!asaasOn() || !ASAAS.webhookToken) return;
+  const url = `${BASE}/api/asaas/webhook`;
+  const l = await asaas('GET', '/webhooks');
+  if (l.ok && (l.j.data || []).some(w => w.url === url)) return;
+  const r = await asaas('POST', '/webhooks', { name: 'MOVRA', url, email: process.env.DONO_EMAIL || undefined, enabled: true, interrupted: false, apiVersion: 3,
+    authToken: ASAAS.webhookToken, sendType: 'SEQUENTIALLY',
+    events: ['PAYMENT_CONFIRMED', 'PAYMENT_RECEIVED', 'PAYMENT_OVERDUE', 'PAYMENT_DELETED', 'PAYMENT_REFUNDED', 'PAYMENT_CHARGEBACK_REQUESTED', 'TRANSFER_DONE', 'TRANSFER_FAILED', 'TRANSFER_CANCELLED'] });
+  console.log(r.ok ? 'aviso do Asaas registrado' : 'aviso do Asaas não registrado: ' + asaasErro(r));
+}
 app.get('/api/pagamento/:id', precisa(), async (req, res) => {
   let p = db.prepare('select * from payments where id=? and user_id=?').get(req.params.id, req.user.id);
   if (!p) return res.status(404).json({ erro: 'Pagamento não encontrado.' });
   if (p.status === 'pendente' && !p.demo) { await conferir(p, null).catch(() => { }); p = db.prepare('select * from payments where id=?').get(p.id); }
-  res.json({ status: p.status, titulo: p.titulo, valor: p.valor, teacherId: p.teacher_id, demo: !!p.demo });
+  res.json({ status: p.status, titulo: p.titulo, valor: p.valor, teacherId: p.teacher_id, demo: !!p.demo, url: p.status === 'pendente' ? p.url : null });
 });
 
 /* professor */
@@ -396,6 +495,7 @@ app.put('/api/professor/perfil', prof, (req, res) => {
   if (typeof b.bio === 'string') t.bio = b.bio.slice(0, 400);
   if (typeof b.photo === 'string') { const u = salvarImagem('foto-' + t.id, b.photo); if (!u) return res.status(400).json({ erro: 'Imagem inválida ou grande demais.' }); t.photo = u; }
   if (typeof b.pixKey === 'string') t.pixKey = b.pixKey.trim().slice(0, 120);
+  if (['CPF', 'CNPJ', 'EMAIL', 'PHONE', 'EVP'].includes(b.pixType)) t.pixType = b.pixType;
   if (Array.isArray(b.styles)) t.styles = b.styles.filter(s => ['kpop', 'jazzfunk', 'autoral'].includes(s)).slice(0, 3);
   putT(t); res.json({ ok: true });
 });
@@ -434,14 +534,39 @@ app.delete('/api/professor/aula/:id', prof, (req, res) => {
   db.prepare('delete from images where id=?').run('capa-' + l.id);
   res.json({ ok: true });
 });
-app.post('/api/professor/saque', prof, (req, res) => {
+function chavePix(t) {
+  const k = String(t.pixKey || '').trim(), tipo = t.pixType || (k.includes('@') ? 'EMAIL' : /^[0-9a-f-]{32,36}$/i.test(k) ? 'EVP' : k.replace(/\D/g, '').length === 14 ? 'CNPJ' : cpfValido(k) ? 'CPF' : 'PHONE');
+  let chave = k;
+  if (tipo === 'CPF' || tipo === 'CNPJ') chave = k.replace(/\D/g, '');
+  if (tipo === 'PHONE') { chave = k.replace(/\D/g, ''); if ((chave.length === 12 || chave.length === 13) && chave.startsWith('55')) chave = chave.slice(2); }
+  return { chave, tipo };
+}
+const saqueEmCurso = new Set();
+app.post('/api/professor/saque', prof, async (req, res) => {
   const tid = tidDe(req), t = getT(tid);
   if (!t.pixKey) return res.status(400).json({ erro: 'Cadastre sua chave Pix antes de pedir o saque.' });
-  const saldo = saldoDe(tid), v = r2(req.body.valor || saldo);
-  if (v < SAQUE_MIN) return res.status(400).json({ erro: `O saque mínimo é R$ ${SAQUE_MIN},00.` });
-  if (v > saldo) return res.status(400).json({ erro: 'Valor maior que o seu saldo.' });
-  db.prepare('insert into withdrawals values(?,?,?,?,?,?,?,?)').run(uid('w_'), tid, v, t.pixKey, 'pedido', null, agora(), null);
-  res.json({ ok: true });
+  if (saqueEmCurso.has(tid)) return res.status(429).json({ erro: 'Já tem um saque sendo enviado. Espere um instante.' });
+  saqueEmCurso.add(tid);
+  try {
+    const saldo = saldoDe(tid), v = r2(req.body.valor || saldo);
+    if (v < SAQUE_MIN) return res.status(400).json({ erro: `O saque mínimo é R$ ${SAQUE_MIN},00.` });
+    if (v > saldo) return res.status(400).json({ erro: 'Valor maior que o seu saldo.' });
+    const wid = uid('w_');
+    db.prepare('insert into withdrawals(id,teacher_id,valor,pix,status,obs,criado,resolvido) values(?,?,?,?,?,?,?,?)').run(wid, tid, v, t.pixKey, 'pedido', null, agora(), null);
+    if (asaasOn() && ASAAS.saqueAuto && !t.demo) {
+      const { chave, tipo } = chavePix(t);
+      const r = await asaas('POST', '/transfers', { value: v, pixAddressKey: chave, pixAddressKeyType: tipo, description: `MOVRA · saque ${t.name}`.slice(0, 140), externalReference: wid })
+        .catch(e => ({ ok: false, j: { errors: [{ description: e.message }] } }));
+      if (r.ok) {
+        db.prepare("update withdrawals set status=?, asaas_id=?, obs=? where id=?").run(r.j.status === 'DONE' ? 'pago' : 'enviado', r.j.id, null, wid);
+        return res.json({ ok: true, enviado: true });
+      }
+      console.error('saque Asaas falhou', asaasErro(r));
+      db.prepare('update withdrawals set obs=? where id=?').run(('Envio automático falhou: ' + asaasErro(r)).slice(0, 200), wid);
+      return res.json({ ok: true, enviado: false });
+    }
+    res.json({ ok: true, enviado: false });
+  } finally { saqueEmCurso.delete(tid); }
 });
 // conectar a conta Mercado Pago do professor (divisão automática: 90% caem direto na conta dele)
 app.get('/api/professor/mp/conectar', prof, (req, res) => {
@@ -477,8 +602,9 @@ setInterval(async () => {
 
 /* painel do dono */
 const dono = precisa('dono');
-app.get('/api/dono/resumo', dono, (req, res) => {
-  const aprov = db.prepare("select * from payments where status='aprovado' and (demo=0 or ?)").all(mpOn() ? 0 : 1);
+app.get('/api/dono/resumo', dono, async (req, res) => {
+  const saldoAsaas = asaasOn() ? await asaas('GET', '/finance/balance').then(r => r.ok ? r.j.balance : null).catch(() => null) : null;
+  const aprov = db.prepare("select * from payments where status='aprovado' and (demo=0 or ?)").all(realOn() ? 0 : 1);
   const soma = (arr, k) => r2(arr.reduce((a, p) => a + Number(p[k] || 0), 0));
   const mes = new Date(); mes.setDate(1); mes.setHours(0, 0, 0, 0);
   const doMes = aprov.filter(p => p.aprovado >= mes.getTime());
@@ -494,11 +620,13 @@ app.get('/api/dono/resumo', dono, (req, res) => {
   const saques = db.prepare("select w.* from withdrawals w order by (w.status='pedido') desc, w.criado desc limit 100").all()
     .map(w => Object.assign(w, { professor: getT(w.teacher_id)?.name || w.teacher_id }));
   res.json({
-    config: { mercadoPago: mpOn(), conexaoProfessores: oauthOn(), webhookAssinado: !!MP.webhookSecret, base: BASE },
+    config: { provedor: asaasOn() ? 'asaas' : mpOn() ? 'mercadopago' : '', real: realOn(), saqueAuto: asaasOn() && ASAAS.saqueAuto, avisoAsaas: !!ASAAS.webhookToken, sandbox: ASAAS.key.includes('_hmlg_'),
+      mercadoPago: mpOn(), conexaoProfessores: oauthOn() && !asaasOn(), webhookAssinado: !!MP.webhookSecret, base: BASE },
     totais: {
       vendido: soma(aprov, 'valor'), vendidoMes: soma(doMes, 'valor'), taxaMovra: soma(aprov, 'taxa'), taxaMovraMes: soma(doMes, 'taxa'),
       tarifaMp: soma(viaMovra, 'mp_tarifa'), aRepassar: r2(professores.reduce((a, t) => a + Math.max(0, t.saldo), 0) + soma(saques.filter(w => w.status === 'pedido'), 'valor')),
       saquesPedidos: saques.filter(w => w.status === 'pedido').length, alunos: db.prepare("select count(*) n from users where papel='aluno'").get().n,
+      saldoAsaas,
       pagamentosDemo: db.prepare("select count(*) n from payments where demo=1 and status='aprovado'").get().n
     },
     professores, pagamentos, saques
@@ -513,7 +641,8 @@ app.post('/api/dono/saque/:id', dono, (req, res) => {
 });
 app.post('/api/dono/professor/:id', dono, (req, res) => {
   if (!getT(req.params.id)) return res.status(404).json({ erro: 'Professor não encontrado.' });
-  db.prepare('update teachers set ativo=? where id=?').run(req.body.ativo ? 1 : 0, req.params.id);
+  if ('ativo' in req.body) db.prepare('update teachers set ativo=? where id=?').run(req.body.ativo ? 1 : 0, req.params.id);
+  if ('demo' in req.body) { const t = getT(req.params.id); t.demo = !!req.body.demo; putT(t); }
   res.json({ ok: true });
 });
 
@@ -529,4 +658,7 @@ app.use(express.static(pub, { index: false, maxAge: '5m' }));
 app.get(['/', '/dono'], (req, res) => res.sendFile(path.join(pub, 'index.html')));
 app.use('/api', (req, res) => res.status(404).json({ erro: 'Rota não encontrada.' }));
 app.use((req, res) => res.redirect('/'));
-app.listen(PORT, () => console.log('MOVRA na porta', PORT, '| Mercado Pago:', mpOn() ? 'ligado' : 'demonstração', '| conexão de professores:', oauthOn() ? 'ligada' : 'desligada'));
+app.listen(PORT, () => {
+  console.log('MOVRA na porta', PORT, '| pagamento:', asaasOn() ? (ASAAS.key.includes('_hmlg_') ? 'Asaas (teste)' : 'Asaas') : mpOn() ? 'Mercado Pago' : 'demonstração', '| saque automático:', asaasOn() && ASAAS.saqueAuto ? 'sim' : 'não');
+  garanteWebhookAsaas().catch(e => console.error('aviso do Asaas', e.message));
+});
