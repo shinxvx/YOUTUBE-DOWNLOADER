@@ -87,13 +87,13 @@ h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.
 .hero-facts strong{font-family:var(--display);font-size:22px}
 .hero-facts span{font-size:12px;color:var(--muted)}
 .deck{position:relative;height:420px}
-.deck .card{position:absolute;width:236px;top:20px;left:50%;transition:transform .4s}
-.deck .card:nth-child(1){transform:translateX(-95%) rotate(-9deg) translateY(30px)}
-.deck .card:nth-child(2){transform:translateX(-50%) rotate(1deg);z-index:2}
-.deck .card:nth-child(3){transform:translateX(-5%) rotate(10deg) translateY(36px)}
-.deck:hover .card:nth-child(1){transform:translateX(-110%) rotate(-13deg) translateY(24px)}
-.deck:hover .card:nth-child(3){transform:translateX(10%) rotate(14deg) translateY(30px)}
-@media (max-width:900px){.hero{grid-template-columns:1fr}.deck{height:360px;overflow:hidden}.deck .card{width:200px}}
+.deck>*{position:absolute!important;width:236px;top:20px;left:50%;transition:transform .4s}
+.deck>*:nth-child(1){transform:translateX(-95%) rotate(-9deg) translateY(30px)}
+.deck>*:nth-child(2){transform:translateX(-50%) rotate(1deg);z-index:2}
+.deck>*:nth-child(3){transform:translateX(-5%) rotate(10deg) translateY(36px)}
+.deck:hover>*:nth-child(1){transform:translateX(-110%) rotate(-13deg) translateY(24px)}
+.deck:hover>*:nth-child(3){transform:translateX(10%) rotate(14deg) translateY(30px)}
+@media (max-width:900px){.hero{grid-template-columns:1fr}.deck{height:330px;overflow:hidden}.deck>*{width:190px}}
 
 /* filters */
 .filters{display:flex;flex-direction:column;gap:12px;padding-block:20px;border-top:1px solid var(--line)}
@@ -149,8 +149,48 @@ h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.
 .tcard strong{display:block;font-size:15px}
 .tcard small{color:var(--muted);font-size:12px}
 
+/* cards de professor */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px}
+.pcard{position:relative;aspect-ratio:3/4;border-radius:22px;overflow:hidden;text-decoration:none;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;box-shadow:var(--shadow);max-width:100%;isolation:isolate}
+.pphoto{position:absolute;inset:0;display:block;overflow:hidden;z-index:-1}
+.pphoto img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}
+.pcard:hover .pphoto img,.pcard:hover .ph-gen b{transform:scale(1.05)}
+.ph-gen{--h:260;position:absolute;inset:0;display:grid;place-items:center;align-content:center;gap:6px;overflow:hidden;
+  background:radial-gradient(90% 70% at 80% 10%,hsl(calc(var(--h) + 40) 95% 62%),transparent 60%),radial-gradient(80% 60% at 0% 90%,hsl(calc(var(--h) - 30) 90% 50%),transparent 65%),linear-gradient(160deg,hsl(var(--h) 70% 32%),hsl(calc(var(--h) + 20) 75% 10%))}
+.ph-gen b{font-family:var(--display);font-weight:900;font-size:min(42cqw,120px);font-size:120px;line-height:.8;color:transparent;-webkit-text-stroke:2px rgba(255,255,255,.75);transition:transform .5s}
+.ph-gen small{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.7}
+.pinfo{display:flex;flex-direction:column;gap:8px;padding:60px 18px 18px;background:linear-gradient(180deg,transparent,rgba(8,6,12,.82) 55%)}
+.pinfo strong{font-family:var(--display);font-weight:900;font-size:26px;line-height:.95;text-transform:uppercase;letter-spacing:-.01em;text-wrap:balance}
+.ptags{display:flex;gap:6px;flex-wrap:wrap}
+.ptags i{font-style:normal;font-size:11px;font-weight:800;padding:4px 9px;border-radius:999px;background:rgba(255,255,255,.18);backdrop-filter:blur(6px)}
+.ptags i.free{background:#fff;color:#16121D}
+.pmeta{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;font-weight:700;opacity:.9;flex-wrap:wrap}
+.pphoto.big{position:relative;inset:auto;z-index:auto;width:150px;height:190px;border-radius:24px;box-shadow:var(--shadow)}
+.pphoto.big .ph-gen b{font-size:64px}.pphoto.big .ph-gen small{display:none}
+.pphoto.mini{position:relative;inset:auto;z-index:auto;width:40px;height:40px;border-radius:12px;flex:none}
+.pphoto.mini .ph-gen b{font-size:16px;-webkit-text-stroke:0;color:#fff}.pphoto.mini .ph-gen small{display:none}
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;counter-reset:st}
+@media (max-width:860px){.steps{grid-template-columns:1fr 1fr}}@media (max-width:480px){.steps{grid-template-columns:1fr}}
+.steps li{counter-increment:st;background:var(--surface);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:6px;box-shadow:inset 0 0 0 1px var(--line)}
+.steps li::before{content:"FASE " counter(st);font-family:var(--mono);font-size:11px;font-weight:700;color:var(--accent);letter-spacing:.1em}
+.steps span{font-size:13px;color:var(--muted)}
+.back{display:inline-block;margin-top:22px;font-weight:700;font-size:13px;text-decoration:none;color:var(--muted)}
+.gate{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:18px 20px;border-radius:18px;background:var(--ink);color:var(--bg);margin-bottom:8px}
+.gate div{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1 1 300px}
+.gate b{font-family:var(--display);font-size:18px}
+.gate span{font-size:14px;opacity:.78}
+.gate.ok{background:color-mix(in srgb,var(--good) 16%,var(--surface));color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--good)}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-top:18px;overflow-x:auto;scroll-margin-top:80px}
+.tabs button{border:0;background:none;padding:12px 16px;font-weight:800;font-size:14px;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.tabs button.on{color:var(--ink);border-bottom-color:var(--hot)}
+.tag.free{background:var(--accent-soft);color:var(--accent)}
+.ribbon{position:absolute;left:14px;top:46px;z-index:2;background:#fff;color:#16121D;font-family:var(--mono);font-weight:700;font-size:10px;letter-spacing:.14em;padding:5px 9px;border-radius:6px}
+.profile{display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap;background:var(--surface);border-radius:var(--r);padding:16px;box-shadow:inset 0 0 0 1px var(--line)}
+.prof-up{position:relative!important;inset:auto!important;z-index:auto!important;width:120px;height:150px;border-radius:18px;cursor:pointer;flex:none}
+.prof-up .ph-gen b{font-size:48px}.prof-up .ph-gen small{display:none}
+.prof-up .up{position:absolute;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);color:#fff;font-size:11px;font-weight:800;text-align:center;padding:6px}
 /* teacher page */
-.thead{display:grid;grid-template-columns:auto 1fr auto;gap:22px;align-items:center;padding-block:34px 20px}
+.thead{display:grid;grid-template-columns:auto minmax(0,1fr);gap:22px;align-items:center;padding-block:34px 20px}
 .thead h1{font-size:clamp(30px,5vw,50px);font-weight:900}
 .thead p{margin:8px 0 0;max-width:60ch;color:var(--muted)}
 .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
@@ -342,21 +382,19 @@ footer button{background:none;border:0;color:var(--accent);font-weight:700;curso
 </style>
 
 <header class="top"><div class="wrap">
-  <a class="logo" href="#explorar"><i></i>MOVRA</a>
+  <a class="logo" href="#inicio"><i></i>MOVRA</a>
   <nav class="nav" id="nav">
-    <a href="#explorar" data-r="explorar">Explorar</a>
-    <a href="#professores" data-r="professores">Professores</a>
+    <a href="#inicio" data-r="inicio">Professores</a>
     <a href="#trilha" data-r="trilha">Minha trilha</a>
   </nav>
   <div class="role" id="role">
-    <a href="#explorar" data-role="aluno">Aluno</a>
+    <a href="#inicio" data-role="aluno">Aluno</a>
     <a href="#studio" data-role="prof">Professor</a>
   </div>
 </div></header>
 <main id="app"></main>
 <nav class="mnav" id="mnav">
-  <a href="#explorar" data-r="explorar">Explorar</a>
-  <a href="#professores" data-r="professores">Professores</a>
+  <a href="#inicio" data-r="inicio">Professores</a>
   <a href="#trilha" data-r="trilha">Trilha</a>
   <a href="#studio" data-r="studio">Studio</a>
 </nav>
@@ -375,7 +413,7 @@ const LEVELS = [
 const MODS = {kpop:'K-pop', jazzfunk:'Jazz Funk', autoral:'Coreografia Autoral'};
 const CATS = {fundamentos:'Fundamentos', tecnica:'Técnica', coreografia:'Coreografia', performance:'Performance'};
 const RANKS = [[0,'Trainee'],[300,'Pré-debut'],[900,'Rookie'],[1800,'Idol'],[3200,'Ace']];
-const STORE = 'movra-demo-v1';
+const STORE = 'movra-demo-v2';
 
 const $ = (s,r=document)=>r.querySelector(s);
 const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
@@ -393,52 +431,49 @@ function L(id,teacherId,artist,song,modality,category,level,o){
 }
 function seed(){
   const teachers = [
-    {id:'bia',name:'Bia Hwang',city:'São Paulo, SP',hue:262,rating:'4,9',styles:['kpop'],
-      bio:'Ex-trainee em Seul, dá aula de K-pop há 7 anos. Quebra cada coreografia em blocos de 8 tempos, com versão lenta e espelhada.',
-      pricing:{mode:'turmas',passPrice:55,billing:'mensal'},
-      turmas:[
-        {id:'t-bia-1',name:'Turma Iniciante',price:25,schedule:'Seg e Qua · 19h30',note:'Aula nova toda segunda'},
-        {id:'t-bia-2',name:'Turma Intermediário',price:30,schedule:'Ter e Qui · 20h',note:'Coreos completas de comeback'},
-        {id:'t-bia-3',name:'Turma Avançado',price:45,schedule:'Sábado · 10h',note:'Velocidade real e formação'}]},
-    {id:'rafa',name:'Rafa Mendes',city:'Rio de Janeiro, RJ',hue:330,rating:'4,8',styles:['jazzfunk'],
-      bio:'Jazz Funk com atitude: isolamento, olhar e presença de palco. Coreógrafa de clipes e shows no Rio.',
-      pricing:{mode:'passe',passPrice:50,billing:'mensal'},turmas:[]},
-    {id:'kai',name:'Kaique Sato',city:'Belo Horizonte, MG',hue:200,rating:'4,9',styles:['kpop','autoral'],
-      bio:'Coreografias de boy group e criação autoral. Foco em limpeza de movimento, popping leve e waves.',
+    {id:'yago',name:'Yago Tiger',city:'Aulas online',hue:262,styles:['kpop'],photo:null,
+      bio:'Coreografias de boy group de K-pop, quebradas em blocos de 8 tempos, com versão lenta e espelhada.',
       pricing:{mode:'turmas',passPrice:60,billing:'mensal'},
       turmas:[
-        {id:'t-kai-1',name:'Turma Básico',price:30,schedule:'Terça · 19h',note:'Base de boy group'},
-        {id:'t-kai-2',name:'Turma Performance',price:40,schedule:'Sexta · 20h',note:'Coreo + câmera + palco'}]},
-    {id:'lia',name:'Lia Moon',city:'Curitiba, PR',hue:20,rating:'5,0',styles:['kpop','jazzfunk'],
-      bio:'Girl group e Jazz Funk. Gravo tudo na vertical, pensado pra você treinar com o celular apoiado no espelho.',
-      pricing:{mode:'passe',passPrice:65,billing:'mensal'},turmas:[]}
+        {id:'t-yago-1',name:'Turma Iniciante',price:25,schedule:'Seg e Qua · 19h30',note:'Aula nova toda segunda'},
+        {id:'t-yago-2',name:'Turma Intermediário',price:30,schedule:'Ter e Qui · 20h',note:'Coreos completas de comeback'},
+        {id:'t-yago-3',name:'Turma Avançado',price:45,schedule:'Sábado · 10h',note:'Velocidade real e formação'}]},
+    {id:'mila',name:'Mila Fernandes',city:'Aulas online',hue:330,styles:['kpop'],photo:null,
+      bio:'Coreografias de girl group de K-pop, gravadas na vertical para treinar com o celular apoiado no espelho.',
+      pricing:{mode:'passe',passPrice:50,billing:'mensal'},turmas:[]},
+    {id:'bela',name:'Bela Góes',city:'Aulas online',hue:20,styles:['jazzfunk','autoral'],photo:null,
+      bio:'Jazz Funk e coreografias: isolamento, atitude, chão e presença de palco.',
+      pricing:{mode:'turmas',passPrice:65,billing:'mensal'},
+      turmas:[
+        {id:'t-bela-1',name:'Turma Básico',price:30,schedule:'Terça · 19h',note:'Base do Jazz Funk'},
+        {id:'t-bela-2',name:'Turma Avançado',price:45,schedule:'Sexta · 20h',note:'Coreo completa + performance'}]}
   ];
   const lessons = [
-    L('b1','bia','','Groove K-pop: Bounce e Hit','kpop','fundamentos',0,{price:0,duration:'14:20',bpm:110,hue:262}),
-    L('b2','bia','','Contagem de 8 e Musicalidade','kpop','fundamentos',0,{price:12,duration:'11:05',bpm:100,hue:280,turmaId:'t-bia-1'}),
-    L('b3','bia','NewJeans','Super Shy','kpop','coreografia',1,{price:15,duration:'18:40',bpm:150,hue:200,orientation:'v',turmaId:'t-bia-1',prereq:{mode:'all',ids:['b1']}}),
-    L('b4','bia','ITZY','WANNABE','kpop','coreografia',1,{price:15,duration:'21:10',bpm:122,hue:310,turmaId:'t-bia-1',prereq:{mode:'all',ids:['b1','b2']}}),
-    L('b5','bia','LE SSERAFIM','ANTIFRAGILE','kpop','coreografia',2,{price:20,duration:'24:30',bpm:105,hue:350,turmaId:'t-bia-2',prereq:{mode:'any',ids:['b3','b4']}}),
-    L('b6','bia','ATEEZ','BAD','kpop','coreografia',2,{price:20,duration:'26:15',bpm:120,hue:15,cropMobile:false,turmaId:'t-bia-2',prereq:{mode:'all',ids:['b4']}}),
-    L('b7','bia','aespa','Supernova','kpop','coreografia',2,{price:20,duration:'22:50',bpm:120,hue:230,orientation:'v',turmaId:'t-bia-2',prereq:{mode:'all',ids:['b5']}}),
-    L('b8','bia','Stray Kids','S-Class','kpop','coreografia',3,{price:28,duration:'31:00',bpm:105,hue:0,turmaId:'t-bia-3',prereq:{mode:'all',ids:['b6','b7']}}),
-    L('b9','bia','ATEEZ','WORK','kpop','coreografia',3,{price:28,duration:'29:40',bpm:125,hue:40,orientation:'v',turmaId:'t-bia-3',prereq:{mode:'all',ids:['b6']}}),
-    L('r1','rafa','','Isolamentos de Jazz Funk','jazzfunk','tecnica',0,{price:10,duration:'12:30',bpm:96,hue:330}),
-    L('r2','rafa','','Atitude, Olhar e Hair Flip','jazzfunk','performance',1,{price:12,duration:'15:10',bpm:100,hue:300,orientation:'v',prereq:{mode:'all',ids:['r1']}}),
-    L('r3','rafa','Doja Cat','Paint The Town Red','jazzfunk','coreografia',1,{price:18,duration:'19:20',bpm:100,hue:355,orientation:'v',prereq:{mode:'all',ids:['r1']}}),
-    L('r6','rafa','','Chão e Transições','jazzfunk','tecnica',2,{price:15,duration:'17:00',bpm:90,hue:275,cropMobile:false,prereq:{mode:'all',ids:['r1']}}),
-    L('r4','rafa','Tinashe','Nasty','jazzfunk','coreografia',2,{price:22,duration:'23:45',bpm:112,hue:320,prereq:{mode:'all',ids:['r2','r3']}}),
-    L('r5','rafa','Beyoncé','Partition','jazzfunk','coreografia',3,{price:30,duration:'28:30',bpm:98,hue:40,prereq:{mode:'all',ids:['r4']}}),
-    L('k1','kai','','Waves e Popping Leve','kpop','tecnica',0,{price:0,duration:'13:15',bpm:100,hue:190}),
-    L('k2','kai','BOYNEXTDOOR','Earth, Wind & Fire','kpop','coreografia',1,{price:15,duration:'19:00',bpm:118,hue:160,turmaId:'t-kai-1',prereq:{mode:'all',ids:['k1']}}),
-    L('k3','kai','SEVENTEEN','MAESTRO','kpop','coreografia',2,{price:22,duration:'27:20',bpm:115,hue:215,turmaId:'t-kai-2',prereq:{mode:'all',ids:['k2']}}),
-    L('k4','kai','ENHYPEN','Bite Me','kpop','coreografia',2,{price:22,duration:'24:00',bpm:110,hue:345,orientation:'v',turmaId:'t-kai-2',prereq:{mode:'all',ids:['k2']}}),
-    L('k5','kai','','Coreografia Autoral: Neon','autoral','coreografia',3,{price:30,duration:'33:10',bpm:128,hue:170,cropMobile:false,turmaId:'t-kai-2',prereq:{mode:'all',ids:['k3','k4']}}),
-    L('l1','lia','','Linhas e Extensões','jazzfunk','tecnica',0,{price:10,duration:'12:00',bpm:95,hue:20,orientation:'v'}),
-    L('l2','lia','IVE','HEYA','kpop','coreografia',1,{price:16,duration:'20:30',bpm:115,hue:45,orientation:'v',prereq:{mode:'all',ids:['l1']}}),
-    L('l5','lia','','Freestyle Guiado de Jazz Funk','jazzfunk','performance',2,{price:18,duration:'16:40',bpm:100,hue:5,prereq:{mode:'all',ids:['l1']}}),
-    L('l3','lia','BLACKPINK','Shut Down','kpop','coreografia',2,{price:22,duration:'25:10',bpm:110,hue:330,orientation:'v',prereq:{mode:'all',ids:['l2']}}),
-    L('l4','lia','BABYMONSTER','SHEESH','kpop','coreografia',3,{price:28,duration:'27:00',bpm:130,hue:0,prereq:{mode:'any',ids:['l3','l5']}})
+    L('y1','yago','','Groove K-pop: Bounce e Hit','kpop','fundamentos',0,{price:0,duration:'14:20',bpm:110,hue:262}),
+    L('y2','yago','','Contagem de 8 e Musicalidade','kpop','fundamentos',0,{price:0,duration:'11:05',bpm:100,hue:280}),
+    L('y3','yago','BOYNEXTDOOR','Earth, Wind & Fire','kpop','coreografia',1,{price:15,duration:'19:00',bpm:118,hue:160,turmaId:'t-yago-1',prereq:{mode:'all',ids:['y1']}}),
+    L('y4','yago','ENHYPEN','Bite Me','kpop','coreografia',1,{price:15,duration:'21:10',bpm:110,hue:345,orientation:'v',turmaId:'t-yago-1',prereq:{mode:'all',ids:['y1','y2']}}),
+    L('y5','yago','ATEEZ','BAD','kpop','coreografia',2,{price:20,duration:'26:15',bpm:120,hue:15,cropMobile:false,turmaId:'t-yago-2',prereq:{mode:'any',ids:['y3','y4']}}),
+    L('y6','yago','SEVENTEEN','MAESTRO','kpop','coreografia',2,{price:20,duration:'27:20',bpm:115,hue:215,turmaId:'t-yago-2',prereq:{mode:'all',ids:['y4']}}),
+    L('y7','yago','ATEEZ','WORK','kpop','coreografia',2,{price:20,duration:'24:30',bpm:125,hue:40,orientation:'v',turmaId:'t-yago-2',prereq:{mode:'all',ids:['y5']}}),
+    L('y8','yago','Stray Kids','S-Class','kpop','coreografia',3,{price:28,duration:'31:00',bpm:105,hue:0,turmaId:'t-yago-3',prereq:{mode:'all',ids:['y6','y7']}}),
+    L('y9','yago','','Coreografia Autoral: Neon','autoral','coreografia',3,{price:30,duration:'33:10',bpm:128,hue:170,cropMobile:false,turmaId:'t-yago-3',prereq:{mode:'all',ids:['y8']}}),
+    L('m1','mila','','Linhas, Extensões e Expressão','kpop','fundamentos',0,{price:0,duration:'12:00',bpm:95,hue:330,orientation:'v'}),
+    L('m2','mila','NewJeans','Super Shy','kpop','coreografia',1,{price:0,duration:'18:40',bpm:150,hue:200,orientation:'v'}),
+    L('m3','mila','ITZY','WANNABE','kpop','coreografia',1,{price:15,duration:'21:10',bpm:122,hue:310,prereq:{mode:'all',ids:['m1']}}),
+    L('m4','mila','IVE','HEYA','kpop','coreografia',1,{price:16,duration:'20:30',bpm:115,hue:45,orientation:'v',prereq:{mode:'all',ids:['m1']}}),
+    L('m5','mila','LE SSERAFIM','ANTIFRAGILE','kpop','coreografia',2,{price:20,duration:'24:30',bpm:105,hue:350,prereq:{mode:'any',ids:['m3','m4']}}),
+    L('m6','mila','aespa','Supernova','kpop','coreografia',2,{price:20,duration:'22:50',bpm:120,hue:230,orientation:'v',prereq:{mode:'all',ids:['m2']}}),
+    L('m7','mila','BLACKPINK','Shut Down','kpop','coreografia',2,{price:22,duration:'25:10',bpm:110,hue:300,orientation:'v',prereq:{mode:'all',ids:['m5']}}),
+    L('m8','mila','BABYMONSTER','SHEESH','kpop','coreografia',3,{price:28,duration:'27:00',bpm:130,hue:5,prereq:{mode:'any',ids:['m6','m7']}}),
+    L('g1','bela','','Isolamentos de Jazz Funk','jazzfunk','tecnica',0,{price:0,duration:'12:30',bpm:96,hue:20}),
+    L('g2','bela','','Atitude, Olhar e Hair Flip','jazzfunk','performance',0,{price:0,duration:'15:10',bpm:100,hue:300,orientation:'v'}),
+    L('g3','bela','Doja Cat','Paint The Town Red','jazzfunk','coreografia',1,{price:18,duration:'19:20',bpm:100,hue:355,orientation:'v',turmaId:'t-bela-1',prereq:{mode:'all',ids:['g1']}}),
+    L('g4','bela','','Chão e Transições','jazzfunk','tecnica',1,{price:15,duration:'17:00',bpm:90,hue:275,cropMobile:false,turmaId:'t-bela-1',prereq:{mode:'all',ids:['g1']}}),
+    L('g5','bela','Tinashe','Nasty','jazzfunk','coreografia',2,{price:22,duration:'23:45',bpm:112,hue:320,turmaId:'t-bela-1',prereq:{mode:'all',ids:['g2','g3']}}),
+    L('g6','bela','','Freestyle Guiado de Jazz Funk','jazzfunk','performance',2,{price:18,duration:'16:40',bpm:100,hue:10,turmaId:'t-bela-2',prereq:{mode:'all',ids:['g4']}}),
+    L('g7','bela','Beyoncé','Partition','jazzfunk','coreografia',3,{price:30,duration:'28:30',bpm:98,hue:40,turmaId:'t-bela-2',prereq:{mode:'all',ids:['g5']}}),
+    L('g8','bela','','Coreografia Autoral: Brasa','autoral','coreografia',3,{price:30,duration:'30:00',bpm:120,hue:15,turmaId:'t-bela-2',prereq:{mode:'any',ids:['g6','g7']}})
   ];
   // alunos fake por professor
   const NAMES=['Ana Luiza','Bruna','Camila','Carol','Duda','Gabi','Giovanna','Isa','Júlia','Larissa','Lara','Letícia','Malu','Manu','Mariana','Nina','Pedro','Rafaela','Sofia','Thaís','Vitória','Yasmin','Kaio','Lucas','Mel','Helena','Clara','Enzo','Lívia','Hana','Jade','Luan'];
@@ -446,7 +481,7 @@ function seed(){
   let seedN=7; const rnd=()=>{seedN=(seedN*16807)%2147483647;return (seedN-1)/2147483646};
   const MONTHS=['mai','jun','jul','ago','set','out','nov'];
   const students=[];
-  const counts={bia:27,rafa:19,kai:14,lia:22};
+  const counts={yago:27,mila:22,bela:19};
   for(const t of teachers){
     for(let i=0;i<counts[t.id];i++){
       const name=`${NAMES[Math.floor(rnd()*NAMES.length)]} ${SUR[Math.floor(rnd()*SUR.length)]}`;
@@ -458,11 +493,11 @@ function seed(){
       students.push({id:`s-${t.id}-${i}`,teacherId:t.id,name,plan,paid,since:MONTHS[Math.floor(rnd()*MONTHS.length)],progress:Math.round(rnd()*100)});
     }
   }
-  return {v:1,teachers,lessons,students,me:'bia',done:['b1','b2','k1'],access:{turmas:['t-bia-1'],passes:[],lessons:[]}};
+  return {v:2,teachers,lessons,students,me:'yago',done:['y1'],access:{turmas:[],passes:[],lessons:[]}};
 }
 
 let S;
-function load(){try{const raw=localStorage.getItem(STORE);if(raw){const d=JSON.parse(raw);if(d&&d.v===1){S=d;return}}}catch(e){} S=seed()}
+function load(){try{const raw=localStorage.getItem(STORE);if(raw){const d=JSON.parse(raw);if(d&&d.v===2){S=d;return}}}catch(e){} S=seed()}
 const videoBlobs={}; // vídeos enviados nesta sessão (não persistem)
 function save(){try{localStorage.setItem(STORE,JSON.stringify(S))}catch(e){}}
 load();
@@ -502,7 +537,7 @@ function card(l){
     <div class="cover" style="--h:${l.hue}">
       <div class="cover-top"><span class="lvl">${LEVELS[l.level].k}</span>${orient(l)}</div>
       <div class="cover-title"><span class="artist">${esc(l.artist||MODS[l.modality])}</span><span class="song${songCls(l.song)}">${esc(l.song)}</span></div>
-      ${st==='done'?'<span class="stamp">CLEAR</span>':''}${veil}
+      ${!l.price&&st!=='done'?'<span class="ribbon">GRÁTIS</span>':''}${st==='done'?'<span class="stamp">CLEAR</span>':''}${veil}
     </div>
     <div class="card-body">
       <div class="row">${stars(l.level)}<span class="xp">+${xpOf(l)} XP</span></div>
@@ -512,10 +547,18 @@ function card(l){
     </div></a>`;
 }
 function songCls(s){const w=Math.max(...s.split(/\s+/).map(x=>x.length));return w>11||s.length>26?' xl':w>8||s.length>16?' long':''}
+function photo(t){return t.photo?`<img src="${t.photo}" alt="Foto de ${esc(t.name)}">`:`<span class="ph-gen" style="--h:${t.hue}"><b>${initials(t.name)}</b><small>foto do professor</small></span>`}
+function tAccess(t){if(S.access.passes.includes(t.id))return'Valor fixo';const tm=t.turmas.find(x=>S.access.turmas.includes(x.id));return tm?tm.name:null}
+function fromPrice(t){if(t.pricing.mode==='passe')return`${brl(t.pricing.passPrice)}${t.pricing.billing==='mensal'?'/mês':''} · tudo liberado`;const ps=t.turmas.map(x=>x.price);return ps.length?`Turmas a partir de ${brl(Math.min(...ps))}`:'Aulas avulsas'}
+function pcard(t){const ls=tLessons(t.id),free=ls.filter(l=>!l.price).length,acc=tAccess(t);
+  return `<a class="pcard" href="#prof-${t.id}"><span class="pphoto">${photo(t)}</span>
+  <span class="pinfo"><span class="ptags">${t.styles.map(s=>`<i>${MODS[s]}</i>`).join('')}${free?`<i class="free">${free} grátis</i>`:''}</span>
+  <strong>${esc(t.name)}</strong>
+  <span class="pmeta"><span>${ls.length} aulas</span><span>${acc?'Você tem acesso':fromPrice(t)}</span></span></span></a>`}
 function tcard(t){
   const n=tLessons(t.id).length;
   return `<a class="tcard" href="#prof-${t.id}"><span class="ava" style="--h:${t.hue}">${initials(t.name)}</span>
-  <span><strong>${esc(t.name)}</strong><small>${t.styles.map(s=>MODS[s]).join(' · ')} · ${n} aulas · ★ ${t.rating}</small><br><small>${pricingLine(t)}</small></span></a>`;
+  <span><strong>${esc(t.name)}</strong><small>${t.styles.map(s=>MODS[s]).join(' · ')} · ${n} aulas</small><br><small>${pricingLine(t)}</small></span></a>`;
 }
 function pricingLine(t){
   if(t.pricing.mode==='passe')return`Valor fixo ${brl(t.pricing.passPrice)}${t.pricing.billing==='mensal'?'/mês':''}, tudo liberado`;
@@ -523,45 +566,43 @@ function pricingLine(t){
 }
 
 /* ---------- views ---------- */
-const UI={mod:'all',cat:'all',lvl:'all',q:''};
+const UI={mod:'all',cat:'all',lvl:'all',q:'',tid:null,tab:'aulas'};
 function vExplorar(){
-  const feat=['b3','b4','k3'].map(lesson).filter(Boolean);
   return `<section class="wrap hero">
     <div>
       <div class="eyebrow">K-pop · Jazz Funk · Coreografias</div>
       <h1>MOVRA<span>5678</span></h1>
-      <p>Aulas de dança organizadas como fases. Cada coreografia tem dificuldade em estrelas, XP e pré-requisitos, e cada professor define o próprio preço.</p>
+      <p>Escolha um professor e comece pelas aulas grátis. Depois, libere as turmas e conclua cada coreografia como uma fase, com estrelas, XP e pré-requisitos.</p>
       <div class="count" id="count" aria-hidden="true">${[1,2,3,4,5,6,7,8].map(n=>`<b>${n}</b>`).join('')}</div>
-      <div class="hero-cta"><a class="btn acc" href="#aulas">Explorar aulas</a><a class="btn ghost" href="#studio">Sou professor</a></div>
+      <div class="hero-cta"><a class="btn acc" href="#professores">Ver professores</a><a class="btn ghost" href="#studio">Sou professor</a></div>
       <div class="hero-facts">
         <div><strong>${S.teachers.length}</strong><span>professores</span></div>
         <div><strong>${S.lessons.length}</strong><span>aulas no ar</span></div>
-        <div><strong>90%</strong><span>do valor fica com o professor</span></div>
+        <div><strong>${S.lessons.filter(l=>!l.price).length}</strong><span>aulas grátis</span></div>
       </div>
     </div>
-    <div class="deck">${feat.map(card).join('')}</div>
+    <div class="deck">${S.teachers.slice(0,3).map(pcard).join('')}</div>
   </section>
-  <section class="wrap" id="aulas">
-    <div class="filters">
-      <div class="search"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 3a7 7 0 015.6 11.2l4.6 4.6-1.4 1.4-4.6-4.6A7 7 0 1110 3zm0 2a5 5 0 100 10 5 5 0 000-10z"/></svg><input id="q" type="search" placeholder="Buscar artista, música ou professor" value="${esc(UI.q)}" aria-label="Buscar"></div>
-      <div class="frow"><span class="eyebrow">Modalidade</span>${chips('mod',{all:'Todas',...MODS})}</div>
-      <div class="frow"><span class="eyebrow">Categoria</span>${chips('cat',{all:'Todas',...CATS})}</div>
-      <div class="frow"><span class="eyebrow">Dificuldade</span>${chips('lvl',{all:'Todas',0:'★ Iniciante',1:'★★ Básico',2:'★★★ Intermediário',3:'★★★★ Avançado'})}</div>
-    </div>
-    <div class="sec-head"><h2>Aulas</h2><span class="muted" id="cnt"></span></div>
-    <div class="grid" id="lgrid"></div>
-    <div class="sec-head"><h2>Professores</h2><a href="#professores" class="muted">Ver todos</a></div>
-    <div class="tgrid">${S.teachers.map(tcard).join('')}</div>
+  <section class="wrap" id="professores">
+    <div class="sec-head"><h2>Professores</h2><span class="muted">Toque num professor para ver as aulas dele</span></div>
+    <div class="pgrid">${S.teachers.map(pcard).join('')}</div>
+    <div class="sec-head"><h2>Como funciona</h2></div>
+    <ol class="steps">
+      <li><b>Escolha o professor</b><span>Cada professor tem a própria aba de aulas, turmas e preço.</span></li>
+      <li><b>Comece grátis</b><span>O professor deixa algumas aulas abertas para você experimentar.</span></li>
+      <li><b>Libere o acesso</b><span>Entre numa turma ou pague o valor fixo para liberar as outras aulas.</span></li>
+      <li><b>Zere as fases</b><span>Conclua as aulas para ganhar XP e destravar as próximas.</span></li>
+    </ol>
   </section>`;
 }
-function chips(k,map){return Object.entries(map).map(([v,lab])=>`<button class="chip${String(UI[k])===v?' on':''}" data-act="filter" data-k="${k}" data-v="${v}">${lab}</button>`).join('')}
+function chips(k,map){return Object.entries(map).sort((x,y)=>(y[0]==='all')-(x[0]==='all')).map(([v,lab])=>`<button class="chip${String(UI[k])===v?' on':''}" data-act="filter" data-k="${k}" data-v="${v}">${lab}</button>`).join('')}
 function renderGrid(){
   const q=UI.q.trim().toLowerCase();
-  const list=S.lessons.filter(l=>(UI.mod==='all'||l.modality===UI.mod)&&(UI.cat==='all'||l.category===UI.cat)&&(UI.lvl==='all'||l.level==UI.lvl)&&
+  const list=(UI.tid?tLessons(UI.tid):S.lessons).filter(l=>(UI.mod==='all'||l.modality===UI.mod)&&(UI.cat==='all'||l.category===UI.cat)&&(UI.lvl==='all'||l.level==UI.lvl)&&
     (!q||`${l.title} ${teacher(l.teacherId).name}`.toLowerCase().includes(q)));
   const g=$('#lgrid');if(!g)return;
   g.innerHTML=list.length?list.map(card).join(''):'<div class="empty">Nenhuma aula com esses filtros.</div>';
-  $('#cnt').textContent=`${list.length} ${list.length===1?'aula':'aulas'}`;
+  if($('#cnt'))$('#cnt').textContent=`${list.length} ${list.length===1?'aula':'aulas'}`;
 }
 
 function vProfessores(){
@@ -588,17 +629,29 @@ function vProf(id){
     const loose=ls.filter(l=>!l.turmaId&&l.price>0);
     if(loose.length)plans+=`<div class="plan"><span class="eyebrow">Avulsas</span><h3>Fora das turmas</h3><ul>${loose.map(l=>`<li><span>${esc(l.title)}</span><b>${brl(l.price)}</b></li>`).join('')}</ul></div>`;
   }
+  UI.tid=t.id;
+  const free=ls.filter(l=>!l.price),acc=tAccess(t),tab=UI.tab;
+  const gate=acc?`<div class="gate ok"><div><b>Você tem acesso: ${esc(acc)}</b><span>As aulas liberadas aparecem com o selo azul. Conclua as fases para destravar as próximas.</span></div></div>`
+    :`<div class="gate"><div><b>Libere as aulas de ${esc(t.name.split(' ')[0])}</b><span>${free.length?`${free.length} ${free.length>1?'aulas grátis estão abertas':'aula grátis está aberta'} para você começar agora. `:''}As outras precisam de ${t.pricing.mode==='passe'?`acesso por ${brl(t.pricing.passPrice)}${t.pricing.billing==='mensal'?'/mês':''}`:'uma turma'}.</span></div><button class="btn hot" data-act="tab" data-v="planos">${t.pricing.mode==='passe'?'Liberar tudo':'Ver turmas'}</button></div>`;
+  const tabs=[['aulas',`Aulas (${ls.length})`],['trilha','Trilha'],['planos',t.pricing.mode==='passe'?'Acesso':'Turmas']];
+  let body='';
+  if(tab==='planos')body=`<div class="sec-head"><h2>${t.pricing.mode==='passe'?'Acesso':'Turmas'}</h2><span class="muted">10% de cada pagamento é a taxa MOVRA</span></div><div class="plans">${plans}</div>`;
+  else if(tab==='trilha')body=`<div class="sec-head"><h2>Trilha</h2><span class="muted">As linhas mostram o que precisa ser concluído antes</span></div>${tree(ls)}`;
+  else body=`${free.length?`<div class="sec-head"><h2>Comece grátis</h2><span class="muted">Liberadas para todo mundo</span></div><div class="grid">${free.map(card).join('')}</div>`:''}
+    <div class="sec-head"><h2>Todas as aulas</h2><span class="muted" id="cnt"></span></div>
+    <div class="filters" style="border-top:0;padding-top:0">
+      <div class="frow"><span class="eyebrow">Dificuldade</span>${chips('lvl',{all:'Todas',0:'★ Iniciante',1:'★★ Básico',2:'★★★ Intermediário',3:'★★★★ Avançado'})}</div>
+      <div class="frow"><span class="eyebrow">Categoria</span>${chips('cat',{all:'Todas',...CATS})}</div>
+    </div>
+    <div class="grid" id="lgrid"></div>`;
   return `<section class="wrap">
-    <div class="thead"><span class="ava lg" style="--h:${t.hue}">${initials(t.name)}</span>
-      <div><div class="eyebrow">${esc(t.city)} · ★ ${t.rating}</div><h1>${esc(t.name)}</h1><p>${esc(t.bio)}</p>
-      <div class="tags">${t.styles.map(s=>`<span class="tag">${MODS[s]}</span>`).join('')}<span class="tag">${ls.length} aulas</span></div></div>
-      <div></div></div>
-    <div class="sec-head"><h2>${t.pricing.mode==='passe'?'Plano':'Turmas'}</h2><span class="muted">10% de cada pagamento é a taxa MOVRA</span></div>
-    <div class="plans">${plans}</div>
-    <div class="sec-head"><h2>Trilha</h2><span class="muted">As linhas mostram o que precisa ser concluído antes</span></div>
-    ${tree(ls)}
-    <div class="sec-head"><h2>Todas as aulas</h2></div>
-    <div class="grid">${ls.map(card).join('')}</div>
+    <a href="#inicio" class="back">← Todos os professores</a>
+    <div class="thead"><span class="pphoto big">${photo(t)}</span>
+      <div style="min-width:0"><div class="eyebrow">${esc(t.city)}</div><h1>${esc(t.name)}</h1><p>${esc(t.bio)}</p>
+      <div class="tags">${t.styles.map(s=>`<span class="tag">${MODS[s]}</span>`).join('')}<span class="tag">${ls.length} aulas</span>${free.length?`<span class="tag free">${free.length} grátis</span>`:''}</div></div></div>
+    ${gate}
+    <div class="tabs" role="tablist">${tabs.map(([k,lab])=>`<button role="tab" aria-selected="${tab===k}" class="${tab===k?'on':''}" data-act="tab" data-v="${k}">${lab}</button>`).join('')}</div>
+    ${body}
   </section>`;
 }
 function tree(ls){
@@ -659,7 +712,7 @@ function vAula(id){
         <div class="eyebrow">${MODS[l.modality]} · ${CATS[l.category]}</div>
         <h2>${esc(l.title)}</h2>
         <div style="display:flex;gap:10px;align-items:center">${stars(l.level,1)}<b style="font-family:var(--mono);font-size:12px">${LEVELS[l.level].k}</b></div>
-        <a href="#prof-${t.id}" class="tcard" style="box-shadow:none;background:var(--bg);padding:10px"><span class="ava" style="--h:${t.hue};width:40px;height:40px;font-size:14px;border-radius:12px">${initials(t.name)}</span><span><strong>${esc(t.name)}</strong><small>${esc(t.city)}</small></span></a>
+        <a href="#prof-${t.id}" class="tcard" style="box-shadow:none;background:var(--bg);padding:10px"><span class="pphoto mini">${photo(t)}</span><span><strong>${esc(t.name)}</strong><small>Ver todas as aulas</small></span></a>
         <dl class="kv">
           <dt>Duração</dt><dd class="mono">${esc(l.duration)}</dd>
           <dt>Andamento</dt><dd class="mono">${l.bpm} BPM</dd>
@@ -745,6 +798,10 @@ function vStudio(){
       <div class="panel chart"><h4>Receita bruta por mês</h4>${chart}</div>
       <div class="panel"><h4>De onde vem o dinheiro</h4><div class="mix">${mix||'<span class="muted">Sem alunos ainda.</span>'}</div></div>
     </div>
+    <div class="sec-head"><h2>Seu perfil</h2><span class="muted">É o que o aluno vê no card</span></div>
+    <div class="profile"><label class="pphoto prof-up" for="photoIn">${photo(t)}<span class="up">Trocar foto</span></label><input type="file" id="photoIn" accept="image/*" hidden>
+      <div class="field" style="flex:1;min-width:220px"><label for="bioIn">Apresentação</label><textarea class="inp" id="bioIn" rows="3" data-bind="bio">${esc(t.bio)}</textarea>
+      <small class="muted">Os vídeos das aulas vão para a pasta MOVRA no Google Drive (ligação em andamento).</small></div></div>
     <div class="sec-head"><h2>Turmas e preços</h2><div class="seg"><button class="${pr.mode==='turmas'?'on':''}" data-act="mode" data-v="turmas">Dividir em turmas</button><button class="${pr.mode==='passe'?'on':''}" data-act="mode" data-v="passe">Valor fixo</button></div></div>
     <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap"><span class="muted" style="font-size:13px">Cobrança:</span><div class="seg"><button class="${pr.billing==='mensal'?'on':''}" data-act="billing" data-v="mensal">Mensal</button><button class="${pr.billing==='unico'?'on':''}" data-act="billing" data-v="unico">Pagamento único</button></div></div>
     ${turmas}
@@ -975,7 +1032,7 @@ function openBuy(kind,id){
   $('#buyf').addEventListener('submit',e=>{e.preventDefault();const o=opts[Number(new FormData(e.target).get('o'))];
     if(o.k==='turma')S.access.turmas.push(o.id);else if(o.k==='passe')S.access.passes.push(o.id);else S.access.lessons.push(o.id);
     S.students.push({id:'s-me-'+Date.now(),teacherId:t.id,name:'Você (demo)',plan:o.k==='turma'?{type:'turma',id:o.id}:o.k==='passe'?{type:'passe'}:{type:'avulso',ids:[o.id]},paid:o.price,since:'nov',progress:0});
-    save();closeModal();toast(`Desbloqueado: ${o.name}`);route();});
+    save();closeModal();toast(`Desbloqueado: ${o.name}`);if(UI.tab==='planos')UI.tab='aulas';route(true);});
 }
 function closeModal(){const m=$('#modal');m.hidden=true;m.innerHTML=''}
 
@@ -986,6 +1043,7 @@ function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show'
 const A={
   filter(el){UI[el.dataset.k]=el.dataset.v;$$(`[data-act="filter"][data-k="${el.dataset.k}"]`).forEach(b=>b.classList.toggle('on',b===el));renderGrid()},
   buy(el){openBuy(el.dataset.kind,el.dataset.id)},
+  tab(el){UI.tab=el.dataset.v;route(true);const t=$('.tabs');if(t)t.scrollIntoView({block:'start'})},
   close(){closeModal()},
   done(el){const before=new Set(S.lessons.filter(l=>status(l)==='open').map(l=>l.id));S.done.push(el.dataset.id);save();
     const nw=S.lessons.filter(l=>status(l)==='open'&&!before.has(l.id)&&l.id!==el.dataset.id);
@@ -1025,42 +1083,44 @@ document.addEventListener('change',e=>{
         $(`#lform input[name="orientation"][value="${ori}"]`).checked=true;if(isFinite(v.duration))$('#duration').value=fmtT(v.duration);formPreview();toast(`Detectado: vídeo ${ori==='h'?'horizontal':'vertical'}`)}}
     formPreview();return;
   }
+  if(el.id==='photoIn'&&el.files[0]){resizePhoto(el.files[0]).then(url=>{teacher(S.me).photo=url;save();toast('Foto atualizada');route(true)}).catch(()=>toast('Não deu para ler essa imagem. Tente um JPG ou PNG.'));return}
   const b=el.dataset.bind;if(!b)return;const [k,id,f]=b.split(':');const t=teacher(S.me);
   if(k==='me'){S.me=el.value;save();route();return}
   if(k==='turma'){const tm=t.turmas.find(x=>x.id===id);tm[f]=f==='price'?Math.max(0,Number(el.value)||0):el.value}
   if(k==='pass')t.pricing.passPrice=Math.max(0,Number(el.value)||0);
+  if(k==='bio')t.bio=el.value.slice(0,400);
   if(k==='lturma')lesson(id).turmaId=el.value||null;
   if(k==='lprice')lesson(id).price=Math.max(0,Number(el.value)||0);
-  save();toast('Salvo');route();
+  save();toast('Salvo');route(true);
 });
 document.addEventListener('submit',e=>{if(e.target.id==='lform'){e.preventDefault();submitForm()}});
 
+function resizePhoto(file){return new Promise((ok,bad)=>{const img=new Image();img.onload=()=>{const k=Math.min(1,720/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(img.src);ok(c.toDataURL('image/jpeg',.84))};img.onerror=bad;img.src=URL.createObjectURL(file)})}
 /* ---------- roteador ---------- */
 function notFound(){return`<section class="wrap"><div class="empty" style="margin-top:40px">Página não encontrada. <a href="#explorar">Voltar para Explorar</a></div></section>`}
 let ticker;
-function route(){
+function route(keep){
   stopPlayer();clearInterval(ticker);
-  const h=(location.hash.slice(1)||'explorar');let html,key=h;
-  if(h==='explorar'||h==='aulas'){html=vExplorar();key='explorar'}
-  else if(h==='professores')html=vProfessores();
+  const h=(location.hash.slice(1)||'inicio');let html,key=h;UI.tid=null;
+  if(['inicio','explorar','aulas','professores'].includes(h)){html=vExplorar();key='inicio'}
   else if(h==='trilha')html=vTrilha();
   else if(h==='studio')html=vStudio();
   else if(h==='nova-aula'){html=vForm(null);key='studio'}
   else if(h.startsWith('editar-')){html=vForm(h.slice(7));key='studio'}
-  else if(h.startsWith('prof-')){html=vProf(h.slice(5));key='professores'}
-  else if(h.startsWith('aula-')){html=vAula(h.slice(5));key='explorar'}
+  else if(h.startsWith('prof-')){html=vProf(h.slice(5));key='inicio'}
+  else if(h.startsWith('aula-')){html=vAula(h.slice(5));key='inicio'}
   else html=notFound();
   $('#app').innerHTML=html+`<div class="wrap"><footer><span>MOVRA · demonstração com professores, alunos e aulas fictícios. Taxa da plataforma: 10% de cada pagamento.</span><button id="resetBtn" data-act="reset">Reiniciar demonstração</button></footer></div>`;
   $$('[data-r]').forEach(a=>a.classList.toggle('on',a.dataset.r===key));
   const prof=key==='studio';$$('#role a').forEach(a=>a.classList.toggle('on',(a.dataset.role==='prof')===prof));
-  if(key==='explorar'&&$('#lgrid')){renderGrid();if(h==='aulas')$('#aulas').scrollIntoView();else window.scrollTo(0,0);
-    if(!matchMedia('(prefers-reduced-motion: reduce)').matches){let i=0;const bs=$$('#count b');ticker=setInterval(()=>{bs.forEach((b,j)=>b.classList.toggle('on',j===i));i=(i+1)%8},60000/118)}}
-  else window.scrollTo(0,0);
+  if($('#lgrid'))renderGrid();
+  if(!keep){if(h==='professores')$('#professores').scrollIntoView();else window.scrollTo(0,0)}
+  if($('#count')&&!matchMedia('(prefers-reduced-motion: reduce)').matches){let i=0;const bs=$$('#count b');ticker=setInterval(()=>{bs.forEach((b,j)=>b.classList.toggle('on',j===i));i=(i+1)%8},60000/118)}
   if(h.startsWith('aula-')&&lesson(h.slice(5)))mountPlayer(lesson(h.slice(5)));
   if($('#tree'))requestAnimationFrame(drawLinks);
   if($('#lform'))formPreview();
 }
-window.addEventListener('hashchange',()=>{PEND.del=null;route()});
+window.addEventListener('hashchange',()=>{PEND.del=null;UI.tab='aulas';UI.lvl='all';UI.cat='all';route()});
 window.addEventListener('resize',()=>{if($('#tree'))drawLinks()});
 if(document.fonts)document.fonts.ready.then(()=>{if($('#tree'))drawLinks()});
 route();
