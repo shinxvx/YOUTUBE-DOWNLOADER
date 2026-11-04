@@ -43,6 +43,7 @@ create table if not exists withdrawals(id text primary key, teacher_id text not 
   status text not null, obs text, criado integer not null, resolvido integer);
 create table if not exists demo_students(id text primary key, teacher_id text not null, dados text not null);
 create table if not exists oauth_states(state text primary key, teacher_id text not null, criado integer not null);
+create table if not exists images(id text primary key, mime text not null, data blob not null, v integer not null);
 `);
 
 function hash(senha, salt = crypto.randomBytes(16).toString('hex')) {
@@ -103,6 +104,17 @@ if (!db.prepare("select 1 from meta where k='sem_turmas'").get()) {
   })();
   console.log('convertido: sem turmas e sem pré-requisitos');
 }
+function salvarImagem(id, dataUrl) {
+  const m = /^data:(image\/(?:jpeg|png|webp));base64,([A-Za-z0-9+/=]+)$/.exec(String(dataUrl || ''));
+  if (!m) return null;
+  const buf = Buffer.from(m[2], 'base64');
+  if (!buf.length || buf.length > 1.5 * 1024 * 1024) return null;
+  const v = agora();
+  db.prepare('insert into images values(?,?,?,?) on conflict(id) do update set mime=excluded.mime, data=excluded.data, v=excluded.v').run(id, m[1], buf, v);
+  return `/img/${id}?v=${v}`;
+}
+// fotos antigas guardadas dentro do professor viram imagem própria
+for (const t of allT()) if (t.photo && t.photo.startsWith('data:')) { t.photo = salvarImagem('foto-' + t.id, t.photo); putT(t); }
 // contas fixas (vêm do .env): dono e professores de demonstração
 function garanteConta(email, nome, senha, papel, teacherId) {
   if (!email || !senha) return;
@@ -382,7 +394,7 @@ app.put('/api/professor/perfil', prof, (req, res) => {
   const t = getT(tidDe(req)); if (!t) return res.status(404).json({ erro: 'Professor não encontrado.' });
   const b = req.body || {};
   if (typeof b.bio === 'string') t.bio = b.bio.slice(0, 400);
-  if (typeof b.photo === 'string' && /^data:image\/(jpeg|png|webp);base64,/.test(b.photo) && b.photo.length < 600000) t.photo = b.photo;
+  if (typeof b.photo === 'string') { const u = salvarImagem('foto-' + t.id, b.photo); if (!u) return res.status(400).json({ erro: 'Imagem inválida ou grande demais.' }); t.photo = u; }
   if (typeof b.pixKey === 'string') t.pixKey = b.pixKey.trim().slice(0, 120);
   if (Array.isArray(b.styles)) t.styles = b.styles.filter(s => ['kpop', 'jazzfunk', 'autoral'].includes(s)).slice(0, 3);
   putT(t); res.json({ ok: true });
@@ -411,12 +423,15 @@ app.post('/api/professor/aula', prof, (req, res) => {
     turmaId: null, prereq: { mode: 'all', ids: [] },
     hue: Number.isFinite(Number(b.hue)) ? Number(b.hue) % 360 : 260
   });
+  if (b.removeCover) { l.cover = null; db.prepare('delete from images where id=?').run('capa-' + l.id); }
+  else if (b.coverData) { const u = salvarImagem('capa-' + l.id, b.coverData); if (!u) return res.status(400).json({ erro: 'Capa inválida ou grande demais.' }); l.cover = u; }
   putL(l); res.json({ ok: true, id: l.id });
 });
 app.delete('/api/professor/aula/:id', prof, (req, res) => {
   const tid = tidDe(req), l = getL(req.params.id);
   if (!l || l.teacherId !== tid) return res.status(404).json({ erro: 'Aula não encontrada.' });
   db.prepare('delete from lessons where id=?').run(l.id);
+  db.prepare('delete from images where id=?').run('capa-' + l.id);
   res.json({ ok: true });
 });
 app.post('/api/professor/saque', prof, (req, res) => {
@@ -500,6 +515,12 @@ app.post('/api/dono/professor/:id', dono, (req, res) => {
   if (!getT(req.params.id)) return res.status(404).json({ erro: 'Professor não encontrado.' });
   db.prepare('update teachers set ativo=? where id=?').run(req.body.ativo ? 1 : 0, req.params.id);
   res.json({ ok: true });
+});
+
+app.get('/img/:id', (req, res) => {
+  const im = db.prepare('select mime, data from images where id=?').get(String(req.params.id));
+  if (!im) return res.status(404).end();
+  res.set({ 'Content-Type': im.mime, 'Cache-Control': 'public, max-age=31536000, immutable' }).send(im.data);
 });
 
 /* site */

@@ -114,6 +114,8 @@ h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.
    radial-gradient(120% 80% at 85% 0%,hsl(calc(var(--h) + 40) 95% 62% / .9),transparent 60%),
    radial-gradient(90% 70% at 0% 100%,hsl(calc(var(--h) - 30) 90% 55% / .85),transparent 65%),
    linear-gradient(160deg,hsl(var(--h) 70% 30%),hsl(calc(var(--h) + 20) 75% 12%))}
+.cover.has-img{background:linear-gradient(180deg,rgba(8,6,12,.35) 0%,rgba(8,6,12,0) 30%,rgba(8,6,12,0) 50%,rgba(8,6,12,.78) 100%),var(--img) center/cover no-repeat}
+.cover.has-img::after{display:none}
 .cover::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,.07) 0 2px,transparent 2px 14px);mix-blend-mode:overlay;pointer-events:none}
 .cover-top{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}
 .lvl{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;background:rgba(0,0,0,.35);padding:5px 8px;border-radius:6px;backdrop-filter:blur(4px)}
@@ -345,6 +347,12 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--m
 .me h1{font-size:clamp(28px,5vw,44px);font-weight:900}
 
 /* modal + toast */
+.crop-frame{position:relative;width:100%;overflow:hidden;border-radius:14px;background:#000;touch-action:none;cursor:grab;user-select:none}
+.crop-frame img{position:absolute;left:0;top:0;transform-origin:0 0;max-width:none;pointer-events:none}
+.crop-grid{position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,transparent 33.2%,rgba(255,255,255,.35) 33.3%,transparent 33.5%,transparent 66.5%,rgba(255,255,255,.35) 66.6%,transparent 66.8%),linear-gradient(transparent 33.2%,rgba(255,255,255,.35) 33.3%,transparent 33.5%,transparent 66.5%,rgba(255,255,255,.35) 66.6%,transparent 66.8%);box-shadow:inset 0 0 0 2px rgba(255,255,255,.6)}
+.capa-row{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.capa-prev{width:120px;aspect-ratio:4/4.3;border-radius:12px;flex:none;overflow:hidden;background:var(--bg);box-shadow:inset 0 0 0 1.5px var(--line);display:grid;place-items:center;font-size:12px;color:var(--muted);text-align:center;padding:8px}
+.capa-prev img{width:100%;height:100%;object-fit:cover;display:block}
 .modal{position:fixed;inset:0;z-index:20;background:rgba(10,8,16,.55);display:grid;place-items:center;padding:20px max(16px,env(safe-area-inset-right,0px)) 20px max(16px,env(safe-area-inset-left,0px))}
 .sheet{background:var(--surface);border-radius:22px;width:min(480px,100%);padding:22px;display:flex;flex-direction:column;gap:14px;max-height:90vh;overflow:auto;box-shadow:0 30px 80px rgba(0,0,0,.4)}
 .opt{display:flex;gap:12px;align-items:center;padding:14px;border-radius:14px;background:var(--bg);cursor:pointer;box-shadow:inset 0 0 0 1.5px var(--line)}
@@ -449,11 +457,12 @@ const PLAY='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12-7.
 const PAUSE='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h4v16H6zm8 0h4v16h-4z"/></svg>';
 const orient=l=>`<span class="orient"><i class="${l.orientation}"></i>${l.orientation==='v'?'VERT':'HORIZ'}</span>`;
 
+const capaSrc=l=>l.coverData||l.cover||'';
 function card(l){
   const t=teacher(l.teacherId),st=status(l),[cls,lab]=stateLabel(l,st);
   const veil='';
   return `<a class="card st-${st}" href="#aula-${l.id}">
-    <div class="cover" style="--h:${l.hue}">
+    <div class="cover${capaSrc(l)?' has-img':''}" style="--h:${l.hue}${capaSrc(l)?`;--img:url('${capaSrc(l)}')`:''}">
       <div class="cover-top"><span class="lvl">${LEVELS[l.level].k}</span>${orient(l)}</div>
       <div class="cover-title"><span class="artist">${esc(l.artist||MODS[l.modality])}</span><span class="song${songCls(l.song)}">${esc(l.song)}</span></div>
       ${!l.price&&st!=='done'?'<span class="ribbon">GRÁTIS</span>':''}${st==='done'?'<span class="stamp">CLEAR</span>':''}${veil}
@@ -620,6 +629,10 @@ function vTrilha(){
     <div class="me"><div class="rank" style="--p:${p}"><div><span>${rk.name}<small>${xp} XP</small></span></div></div>
       <div><div class="eyebrow">Seu progresso</div><h1>${done.length} ${done.length===1?'fase concluída':'fases concluídas'}</h1>
       <p class="muted" style="margin:6px 0 0">${rk.next?`Faltam ${rk.next[0]-xp} XP para virar ${rk.next[1]}.`:'Rank máximo alcançado.'}</p></div></div>
+    <div class="two" style="margin-top:8px">
+      <div class="panel"><h4>Quanto vale cada aula</h4><div class="tablebox" style="box-shadow:none"><table style="min-width:0"><thead><tr><th>Dificuldade</th><th class="n">XP</th></tr></thead><tbody>${LEVELS.map((lv,i)=>`<tr><td>${stars(i)} ${lv.k}</td><td class="n">+${[60,120,220,360][i]}</td></tr>`).join('')}</tbody></table></div></div>
+      <div class="panel"><h4>Níveis</h4><div class="tablebox" style="box-shadow:none"><table style="min-width:0"><thead><tr><th>Nível</th><th class="n">A partir de</th></tr></thead><tbody>${RANKS.map(([x,n])=>`<tr${n===rk.name?' style="font-weight:800"':''}><td>${n}${n===rk.name?' · você':''}</td><td class="n">${x} XP</td></tr>`).join('')}</tbody></table></div></div>
+    </div>
     <div class="sec-head"><h2>Prontas para jogar</h2><span class="muted">${open.length} liberadas</span></div>
     <div class="grid">${open.map(card).join('')||'<div class="empty">Nada liberado agora. Assine a mensalidade de um professor ou compre uma aula.</div>'}</div>
     <div class="sec-head"><h2>Concluídas</h2></div>
@@ -703,7 +716,7 @@ function vStudio(){
 let D=null;
 function newDraft(edit){
   if(edit)return JSON.parse(JSON.stringify(edit));
-  return {id:null,teacherId:S.me,artist:'',song:'',freeTitle:false,modality:'kpop',category:'coreografia',level:0,orientation:'h',cropMobile:true,
+  return {coverData:'',removeCover:false,id:null,teacherId:S.me,artist:'',song:'',freeTitle:false,modality:'kpop',category:'coreografia',level:0,orientation:'h',cropMobile:true,
     price:5,duration:'',hue:Math.floor(Math.random()*360)};
 }
 function vForm(editId){
@@ -720,7 +733,13 @@ function vForm(editId){
       <label class="drop" for="vfile"><strong id="vname">${videoBlobs[D.id]?'Vídeo carregado':'Escolher vídeo da aula'}</strong><small class="muted">MP4 ou MOV. O formato é detectado sozinho, e você pode trocar abaixo.</small></label>
       <input type="file" id="vfile" accept="video/*" hidden>
     </div>
-    <div class="fsec"><h3><em>02</em>Título</h3>
+    <div class="fsec"><h3><em>02</em>Capa</h3>
+      <div class="capa-row"><div class="capa-prev" id="capaPrev"></div>
+        <div style="display:flex;flex-direction:column;gap:8px;min-width:0;flex:1"><small class="muted">A capa aparece no card da aula. Depois de escolher, você arrasta e dá zoom para encaixar no tamanho certo. Sem capa, o card usa as cores da aula.</small>
+          <div style="display:flex;gap:8px;flex-wrap:wrap"><label class="btn acc sm" for="capaIn">Escolher capa</label><button type="button" class="btn ghost sm" data-act="semcapa" id="semCapa">Tirar capa</button></div></div></div>
+      <input type="file" id="capaIn" accept="image/*" hidden>
+    </div>
+    <div class="fsec"><h3><em>03</em>Título</h3>
       <div class="fgrid" id="ktitle"${D.freeTitle?' hidden':''}>
         <div class="field"><label for="artist">Artista / grupo</label><input class="inp" id="artist" name="artist" placeholder="ATEEZ" value="${esc(D.artist)}"></div>
         <div class="field"><label for="song">Música</label><input class="inp" id="song" name="song" placeholder="BAD" value="${esc(D.freeTitle?'':D.song)}"></div>
@@ -729,14 +748,14 @@ function vForm(editId){
       <label class="switch"><input type="checkbox" name="freeTitle" id="freeTitle" ${D.freeTitle?'checked':''}><span><b>Aula técnica (título livre)</b><br><small class="muted">Para aulas sem música específica, como fundamentos e técnica.</small></span></label>
       <div class="muted" style="font-size:13px">Aparece como: <b id="tprev" style="color:var(--ink)"></b></div>
     </div>
-    <div class="fsec"><h3><em>03</em>Dificuldade</h3>
+    <div class="fsec"><h3><em>04</em>Dificuldade</h3>
       <div class="tiles">${LEVELS.map((lv,i)=>`<label class="tile"><input type="radio" ${r('level',i,D.level)}><span>${stars(i)}<b>${lv.k}</b><small>${lv.d}</small></span></label>`).join('')}</div>
     </div>
-    <div class="fsec"><h3><em>04</em>Modalidade e categoria</h3>
+    <div class="fsec"><h3><em>05</em>Modalidade e categoria</h3>
       <div class="field"><span class="lab">Modalidade</span><div class="tiles" style="grid-template-columns:repeat(3,1fr)">${Object.entries(MODS).map(([k,v])=>`<label class="tile"><input type="radio" ${r('modality',k,D.modality)}><span><b>${v}</b></span></label>`).join('')}</div></div>
       <div class="field"><span class="lab">Categoria de aprendizado</span><div class="tiles">${Object.entries(CATS).map(([k,v])=>`<label class="tile"><input type="radio" ${r('category',k,D.category)}><span><b>${v}</b></span></label>`).join('')}</div></div>
     </div>
-    <div class="fsec"><h3><em>05</em>Formato do vídeo</h3>
+    <div class="fsec"><h3><em>06</em>Formato do vídeo</h3>
       <div class="tiles two-c">
         <label class="tile"><input type="radio" ${r('orientation','h',D.orientation)}><span><i class="shape h"></i><b>HORIZONTAL</b><small>16:9, gravado deitado</small></span></label>
         <label class="tile"><input type="radio" ${r('orientation','v',D.orientation)}><span><i class="shape v"></i><b>VERTICAL</b><small>9:16, gravado em pé</small></span></label>
@@ -746,7 +765,7 @@ function vForm(editId){
         <div class="crop-demo"><div class="cd" id="cdOff"><span class="ph"><i class="lb"></i></span>Sem crop</div><div class="cd" id="cdOn"><span class="ph"><i class="cr"></i></span>Com crop</div></div>
       </div>
     </div>
-    <div class="fsec"><h3><em>06</em>Preço avulso</h3>
+    <div class="fsec"><h3><em>07</em>Preço avulso</h3>
       <div class="fgrid">
         <div class="field"><label for="price">Preço da aula avulsa</label><div class="money"><span>R$</span><input class="inp" id="price" name="price" type="number" min="0" step="1" value="${D.price}"></div><small class="muted">Coloque 0 para deixar grátis.</small></div>
         <div class="field"><span class="lab">Mensalidade</span><small class="muted" style="padding-top:8px">Quem paga a sua mensalidade de ${brl(t.pricing.passPrice)} já tem esta aula liberada.</small></div>
@@ -772,11 +791,12 @@ function formPreview(){
   readForm();
   $('#ktitle').hidden=D.freeTitle;$('#ftitle').hidden=!D.freeTitle;
   $('#tprev').textContent=D.title||'(preencha artista e música)';
+  const cs=D.removeCover?'':capaSrc(D);$('#capaPrev').innerHTML=cs?`<img src="${cs}" alt="Capa da aula">`:'Sem capa';$('#semCapa').hidden=!cs;
   $('#cropBox').hidden=D.orientation!=='h';
   $('#cdOn').classList.toggle('on',D.cropMobile);$('#cdOff').classList.toggle('on',!D.cropMobile);
   const t=teacher(D.teacherId);
   $('#calc').innerHTML=D.price?`<div><span>Aluno paga (avulsa)</span><span class="mono">${brl(D.price)}</span></div><div><span>Taxa MOVRA (10%)</span><span class="mono">−${brl(D.price*FEE)}</span></div><div class="net"><span>Você recebe</span><span class="mono">${brl(D.price*(1-FEE))}</span></div>`:'<div><span>Aula grátis</span><span>sem cobrança</span></div>';
-  const fake=Object.assign({},D,{id:D.id||'__p',title:D.title||'ARTISTA - MÚSICA',song:D.song||'MÚSICA',artist:D.freeTitle?'':(D.artist||'ARTISTA'),duration:D.duration||'--:--',bpm:Number(D.bpm)||110});
+  const fake=Object.assign({},D,D.removeCover?{cover:'',coverData:''}:{},{id:D.id||'__p',title:D.title||'ARTISTA - MÚSICA',song:D.song||'MÚSICA',artist:D.freeTitle?'':(D.artist||'ARTISTA'),duration:D.duration||'--:--',bpm:Number(D.bpm)||110});
   const prev=S.lessons;S.lessons=[...prev.filter(l=>l.id!==fake.id),fake];
   $('#pcard').innerHTML=card(fake).replace('<a ','<div ').replace(/<\/a>$/,'</div>');
   S.lessons=prev;
@@ -787,7 +807,7 @@ function submitForm(){
   if(!D.freeTitle&&!D.artist){$('#ferr').textContent='Preencha o artista ou grupo.';return}
   if(D.duration&&!/^\d{1,3}:\d{2}$/.test(D.duration)){$('#ferr').textContent='Duração no formato minutos:segundos, por exemplo 18:40.';return}
   const data={teacherId:D.teacherId,artist:D.artist,song:D.song,title:D.title,modality:D.modality,category:D.category,level:D.level,orientation:D.orientation,
-    cropMobile:D.orientation==='h'?D.cropMobile:true,price:D.price,duration:D.duration||'15:00',bpm:Number(D.bpm)||110,hue:D.hue};
+    cropMobile:D.orientation==='h'?D.cropMobile:true,price:D.price,duration:D.duration||'15:00',bpm:Number(D.bpm)||110,hue:D.hue,coverData:D.coverData||undefined,removeCover:!!D.removeCover};
   const btn=$('#lform button[type=submit]');btn.disabled=true;
   salvarAula(Object.assign({id:D.id||undefined},data)).then(async r=>{if(D.blob)videoBlobs[r.id]=D.blob;await refresh();toast(D.id?'Aula atualizada':'Aula publicada');location.hash='aula-'+r.id})
     .catch(e=>{$('#ferr').textContent=e.message;btn.disabled=false});
@@ -800,7 +820,7 @@ function mountPlayer(l){
   const stage=$('#stage');const v=l.orientation==='v';const W=v?540:960,H=v?960:540;
   const st=status(l);
   P={l,W,H,t:0,playing:false,speed:1,mirror:false,phoneFull:false,last:performance.now(),limit:st==='lock-pay'?15:null};
-  if(videoBlobs[l.id]){P.video=document.createElement('video');P.video.src=videoBlobs[l.id];P.video.playsInline=true;P.video.loop=true;stage.appendChild(P.video);P.src=P.video;P.dur=1}
+  if(videoBlobs[l.id]){P.video=document.createElement('video');P.video.src=videoBlobs[l.id];P.video.playsInline=true;P.video.addEventListener('ended',()=>{P&&(P.video.currentTime=0,setPlaying(false))});stage.appendChild(P.video);P.src=P.video;P.dur=1}
   else{P.canvas=document.createElement('canvas');P.canvas.width=W;P.canvas.height=H;stage.appendChild(P.canvas);P.ctx=P.canvas.getContext('2d');P.src=P.canvas;P.dur=parseDur(l.duration)}
   P.pc=$('#phoneCanvas');P.pctx=P.pc.getContext('2d');
   if(P.ctx)drawScene(P.ctx,W,H,0,l,false);
@@ -809,11 +829,11 @@ function mountPlayer(l){
 function loop(now){
   if(!P)return;const dt=Math.min(.1,(now-P.last)/1000);P.last=now;
   if(P.video){P.t=P.video.currentTime;P.dur=P.video.duration||1}
-  else if(P.playing){P.t+=dt*P.speed;if(P.t>=P.dur)P.t=0}
+  else if(P.playing){P.t+=dt*P.speed;if(P.t>=P.dur){P.t=0;setPlaying(false)}}
   if(P.limit&&P.t>=P.limit){setPlaying(false);P.t=0;if(P.video)P.video.currentTime=0;showVeil()}
   if(P.ctx)drawScene(P.ctx,P.W,P.H,P.t,P.l,P.mirror);
   drawPhone();
-  const seek=$('#seek');if(seek&&document.activeElement!==seek)seek.value=Math.round(P.t/P.dur*1000);
+  const seek=$('#seek');if(seek&&!P.arrastando)seek.value=Math.round(P.t/(P.dur||1)*1000);
   const tm=$('#time');if(tm)tm.textContent=`${fmtT(P.t)} / ${fmtT(P.dur)}`;
   P.raf=requestAnimationFrame(loop);
 }
@@ -995,6 +1015,7 @@ const A={
   dsaque(el){const k=el.dataset.id+(el.dataset.st==='pago'?'p':'r');if(PEND.del!==k){PEND.del=k;carregarDono();return}PEND.del=null;
     api('POST','/api/dono/saque/'+el.dataset.id,{status:el.dataset.st}).then(()=>{toast(el.dataset.st==='pago'?'Saque marcado como pago':'Saque recusado');carregarDono()}).catch(e=>toast(e.message))},
   dprof(el){api('POST','/api/dono/professor/'+el.dataset.id,{ativo:el.dataset.v==='1'}).then(async()=>{await refresh();carregarDono()}).catch(e=>toast(e.message))},
+  semcapa(){if(!D)return;D.coverData='';D.removeCover=true;formPreview()},
   async dverstudio(el){DONO_TID=el.dataset.id;await refresh();location.hash='studio'},
   copiar(el){const v=el.dataset.v;(navigator.clipboard?navigator.clipboard.writeText(v):Promise.reject()).then(()=>toast('Chave copiada')).catch(()=>toast(v))},
   play(){if(!P)return;$('#veil').hidden=true;setPlaying(!P.playing)},
@@ -1012,6 +1033,8 @@ document.addEventListener('click',e=>{
   if(e.target.id==='modal'){closeModal();return}
   if(!el)return;e.preventDefault();A[el.dataset.act]?.(el);
 });
+document.addEventListener('pointerdown',e=>{if(e.target.id==='seek'&&P)P.arrastando=true});
+document.addEventListener('pointerup',()=>{if(P)P.arrastando=false});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#modal').hidden)closeModal()});
 document.addEventListener('input',e=>{
   if(e.target.id==='q'){UI.q=e.target.value;renderGrid();return}
@@ -1021,12 +1044,13 @@ document.addEventListener('input',e=>{
 document.addEventListener('change',e=>{
   const el=e.target;
   if(el.closest('#lform')){
+    if(el.id==='capaIn'&&el.files[0]){const f=el.files[0];el.value='';openCrop(f,4/4.3,800,'Enquadrar a capa',url=>{D.coverData=url;D.removeCover=false;formPreview()});return}
     if(el.id==='vfile'&&el.files[0]){const f=el.files[0],url=URL.createObjectURL(f);D.blob=url;$('#vname').textContent=f.name;
       const v=document.createElement('video');v.preload='metadata';v.src=url;v.onloadedmetadata=()=>{const ori=v.videoWidth>=v.videoHeight?'h':'v';
         $(`#lform input[name="orientation"][value="${ori}"]`).checked=true;if(isFinite(v.duration))$('#duration').value=fmtT(v.duration);formPreview();toast(`Detectado: vídeo ${ori==='h'?'horizontal':'vertical'}`)}}
     formPreview();return;
   }
-  if(el.id==='photoIn'&&el.files[0]){resizePhoto(el.files[0]).then(url=>apos(api('PUT','/api/professor/perfil'+qTid(),{photo:url}),'Foto atualizada')).catch(()=>toast('Não deu para ler essa imagem. Tente um JPG ou PNG.'));return}
+  if(el.id==='photoIn'&&el.files[0]){const f=el.files[0];el.value='';openCrop(f,3/4,720,'Enquadrar sua foto',url=>apos(api('PUT','/api/professor/perfil'+qTid(),{photo:url}),'Foto atualizada'));return}
   const b=el.dataset.bind;if(!b)return;const [k,id,f]=b.split(':');const t=teacher(S.me);
   if(k==='me'){DONO_TID=el.value;apos(Promise.resolve());return}
   if(k==='pass'){t.pricing.passPrice=Math.max(0,Number(el.value)||0);apos(salvarPrecos(t),'Salvo');return}
@@ -1036,7 +1060,40 @@ document.addEventListener('change',e=>{
 });
 document.addEventListener('submit',e=>{if(e.target.id==='lform'){e.preventDefault();submitForm()}});
 
-function resizePhoto(file){return new Promise((ok,bad)=>{const img=new Image();img.onload=()=>{const k=Math.min(1,720/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(img.src);ok(c.toDataURL('image/jpeg',.84))};img.onerror=bad;img.src=URL.createObjectURL(file)})}
+/* ---------- recorte de imagem ---------- */
+function openCrop(file,aspect,outW,titulo,pronto){
+  const url=URL.createObjectURL(file),img=new Image();
+  img.onerror=()=>{URL.revokeObjectURL(url);toast('Não deu para ler essa imagem. Tente um JPG ou PNG.')};
+  img.onload=()=>{
+    const m=$('#modal');
+    m.innerHTML=`<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="ct" style="width:min(520px,100%)">
+      <h2 id="ct" style="font-size:20px">${esc(titulo)}</h2><p class="muted" style="margin:0;font-size:13px">Arraste a imagem para enquadrar e use o zoom para aproximar.</p>
+      <div class="crop-frame" id="cropFrame" style="aspect-ratio:${aspect}"><img id="cropImg" src="${url}" alt="" draggable="false"><span class="crop-grid" aria-hidden="true"></span></div>
+      <div class="field"><label for="cropZoom">Zoom</label><input type="range" id="cropZoom" min="1" max="4" step="0.01" value="1"></div>
+      <div style="display:flex;gap:10px;justify-content:flex-end"><button type="button" class="btn ghost" data-act="close">Cancelar</button><button type="button" class="btn acc" id="cropOk">Usar imagem</button></div></div>`;
+    m.hidden=false;
+    const fr=$('#cropFrame'),im=$('#cropImg'),zoom=$('#cropZoom');
+    const W=()=>fr.clientWidth,H=()=>fr.clientHeight;
+    let base=Math.max(W()/img.width,H()/img.height),z=1,x=(W()-img.width*base)/2,y=(H()-img.height*base)/2;
+    const sc=()=>base*z;
+    const clamp=()=>{x=Math.min(0,Math.max(W()-img.width*sc(),x));y=Math.min(0,Math.max(H()-img.height*sc(),y))};
+    const draw=()=>{clamp();im.style.width=img.width+'px';im.style.transform=`translate(${x}px,${y}px) scale(${sc()})`};
+    const setZoom=nz=>{const s0=sc();z=Math.min(4,Math.max(1,nz));const k=sc()/s0,cx=W()/2,cy=H()/2;x=cx-(cx-x)*k;y=cy-(cy-y)*k;zoom.value=z;draw()};
+    draw();
+    let drag=null;
+    fr.addEventListener('pointerdown',e=>{drag={px:e.clientX,py:e.clientY,x,y};fr.setPointerCapture(e.pointerId)});
+    fr.addEventListener('pointermove',e=>{if(!drag)return;x=drag.x+e.clientX-drag.px;y=drag.y+e.clientY-drag.py;draw()});
+    fr.addEventListener('pointerup',()=>{drag=null});fr.addEventListener('pointercancel',()=>{drag=null});
+    fr.addEventListener('wheel',e=>{e.preventDefault();setZoom(z*(e.deltaY<0?1.08:1/1.08))},{passive:false});
+    zoom.addEventListener('input',()=>setZoom(Number(zoom.value)));
+    $('#cropOk').addEventListener('click',()=>{
+      const outH=Math.round(outW/aspect),c=document.createElement('canvas');c.width=outW;c.height=outH;
+      const s=sc();c.getContext('2d').drawImage(img,-x/s,-y/s,W()/s,H()/s,0,0,outW,outH);
+      URL.revokeObjectURL(url);closeModal();pronto(c.toDataURL('image/jpeg',.86));
+    });
+  };
+  img.src=url;
+}
 /* ---------- roteador ---------- */
 function notFound(){return`<section class="wrap"><div class="empty" style="margin-top:40px">Página não encontrada. <a href="#explorar">Voltar para Explorar</a></div></section>`}
 let ticker;
