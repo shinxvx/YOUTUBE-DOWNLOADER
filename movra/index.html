@@ -1,0 +1,1067 @@
+<title>MOVRA</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: palco de ensaio. Barra fixa no topo, conteúdo numa coluna larga; aulas são cartas de fase (capa + estrelas + XP). */
+:root{
+  --bg:#ECE9F2; --surface:#F9F8FB; --surface-2:#E1DCEA; --ink:#16121D; --muted:#625B70; --line:#D2CCDD;
+  --accent:#4B2BFF; --accent-ink:#FFFFFF; --accent-soft:#DCD6FF; --hot:#F2346F; --good:#0E9B64; --warn:#C7741F;
+  --display:"Unbounded","Arial Black",system-ui,sans-serif;
+  --body:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:14px; --shadow:0 1px 0 rgba(22,18,29,.04),0 12px 30px -18px rgba(40,20,90,.35);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0D0B12; --surface:#16131D; --surface-2:#221E2C; --ink:#F1ECF7; --muted:#9C94AC; --line:#2C2737;
+  --accent:#9483FF; --accent-ink:#0D0B12; --accent-soft:#2A2350; --hot:#FF5E95; --good:#3DD69A; --warn:#F0A04B;
+  --shadow:0 1px 0 rgba(0,0,0,.2),0 16px 34px -18px rgba(0,0,0,.8); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0D0B12; --surface:#16131D; --surface-2:#221E2C; --ink:#F1ECF7; --muted:#9C94AC; --line:#2C2737;
+  --accent:#9483FF; --accent-ink:#0D0B12; --accent-soft:#2A2350; --hot:#FF5E95; --good:#3DD69A; --warn:#F0A04B;
+  --shadow:0 1px 0 rgba(0,0,0,.2),0 16px 34px -18px rgba(0,0,0,.8); color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.muted{color:var(--muted)}
+
+/* top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:18px;height:62px}
+.logo{font-family:var(--display);font-weight:900;font-size:20px;letter-spacing:.06em;text-decoration:none;display:flex;align-items:center;gap:8px}
+.logo i{width:10px;height:10px;border-radius:2px;background:var(--hot);transform:rotate(45deg);display:inline-block}
+.nav{display:flex;gap:4px;margin-left:8px}
+.nav a{text-decoration:none;padding:8px 12px;border-radius:999px;font-weight:600;font-size:14px;color:var(--muted)}
+.nav a.on,.nav a:hover{color:var(--ink);background:var(--surface-2)}
+.role{margin-left:auto;display:flex;background:var(--surface-2);border-radius:999px;padding:3px}
+.role a{text-decoration:none;font-size:13px;font-weight:700;padding:7px 14px;border-radius:999px;color:var(--muted)}
+.role a.on{background:var(--ink);color:var(--bg)}
+@media (max-width:760px){.nav{display:none}.top .wrap{gap:10px}}
+.mnav{display:none}
+@media (max-width:760px){
+  .mnav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:9;background:var(--surface);border-top:1px solid var(--line);padding:8px max(16px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));justify-content:space-around}
+  .mnav a{text-decoration:none;font-size:12px;font-weight:700;color:var(--muted);padding:6px 10px;border-radius:10px}
+  .mnav a.on{color:var(--accent)}
+  main{padding-bottom:70px}
+}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;padding:12px 20px;font-weight:800;font-size:14px;cursor:pointer;text-decoration:none;background:var(--ink);color:var(--bg);transition:transform .15s}
+.btn:hover{transform:translateY(-1px)}
+.btn.acc{background:var(--accent);color:var(--accent-ink)}
+.btn.hot{background:var(--hot);color:#fff}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--line)}
+.btn.sm{padding:8px 14px;font-size:13px}
+.btn[disabled]{opacity:.45;cursor:not-allowed;transform:none}
+.chip{border:0;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);border-radius:999px;padding:8px 14px;font-weight:700;font-size:13px;cursor:pointer;color:var(--muted);white-space:nowrap}
+.chip.on{background:var(--ink);color:var(--bg);box-shadow:none}
+
+/* stars */
+.stars{display:inline-flex;gap:2px;vertical-align:middle}
+.stars svg{width:14px;height:14px}
+.stars .f{fill:var(--hot)}
+.stars .e{fill:var(--line)}
+.stars.lg svg{width:20px;height:20px}
+
+/* hero */
+.hero{padding-block:44px 28px;display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center}
+.hero h1{font-size:clamp(56px,11vw,148px);font-weight:900;line-height:.86;letter-spacing:-.04em}
+.hero h1 span{display:block;color:transparent;-webkit-text-stroke:2px var(--ink)}
+.hero p{font-size:18px;max-width:30em;color:var(--muted);margin:22px 0 0}
+.count{display:flex;gap:10px;margin-top:22px;font-family:var(--mono);font-weight:700;font-size:15px}
+.count b{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;box-shadow:inset 0 0 0 1.5px var(--line);color:var(--muted);font-weight:700}
+.count b.on{background:var(--hot);color:#fff;box-shadow:none}
+.hero-cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
+.hero-facts{display:flex;gap:26px;flex-wrap:wrap;margin-top:28px}
+.hero-facts div{display:flex;flex-direction:column}
+.hero-facts strong{font-family:var(--display);font-size:22px}
+.hero-facts span{font-size:12px;color:var(--muted)}
+.deck{position:relative;height:420px}
+.deck .card{position:absolute;width:236px;top:20px;left:50%;transition:transform .4s}
+.deck .card:nth-child(1){transform:translateX(-95%) rotate(-9deg) translateY(30px)}
+.deck .card:nth-child(2){transform:translateX(-50%) rotate(1deg);z-index:2}
+.deck .card:nth-child(3){transform:translateX(-5%) rotate(10deg) translateY(36px)}
+.deck:hover .card:nth-child(1){transform:translateX(-110%) rotate(-13deg) translateY(24px)}
+.deck:hover .card:nth-child(3){transform:translateX(10%) rotate(14deg) translateY(30px)}
+@media (max-width:900px){.hero{grid-template-columns:1fr}.deck{height:360px;overflow:hidden}.deck .card{width:200px}}
+
+/* filters */
+.filters{display:flex;flex-direction:column;gap:12px;padding-block:20px;border-top:1px solid var(--line)}
+.frow{display:flex;gap:8px;align-items:center;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.frow .eyebrow{min-width:92px}
+.search{display:flex;align-items:center;gap:8px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);border-radius:999px;padding:0 14px;max-width:420px}
+.search input{border:0;background:transparent;padding:11px 0;outline:none;width:100%}
+.sec-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:34px 0 16px;flex-wrap:wrap}
+.sec-head h2{font-size:24px}
+
+/* cards = fases */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
+.card{display:flex;flex-direction:column;background:var(--surface);border-radius:18px;text-decoration:none;box-shadow:var(--shadow);overflow:hidden;transition:transform .18s,box-shadow .18s;position:relative}
+.card:hover{transform:translateY(-4px)}
+.cover{--h:260;aspect-ratio:4/4.3;position:relative;padding:14px;display:flex;flex-direction:column;justify-content:space-between;color:#fff;overflow:hidden;
+  background:
+   radial-gradient(120% 80% at 85% 0%,hsl(calc(var(--h) + 40) 95% 62% / .9),transparent 60%),
+   radial-gradient(90% 70% at 0% 100%,hsl(calc(var(--h) - 30) 90% 55% / .85),transparent 65%),
+   linear-gradient(160deg,hsl(var(--h) 70% 30%),hsl(calc(var(--h) + 20) 75% 12%))}
+.cover::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,.07) 0 2px,transparent 2px 14px);mix-blend-mode:overlay;pointer-events:none}
+.cover-top{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}
+.lvl{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;background:rgba(0,0,0,.35);padding:5px 8px;border-radius:6px;backdrop-filter:blur(4px)}
+.orient{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;font-weight:700;background:rgba(0,0,0,.35);padding:4px 7px;border-radius:6px}
+.orient i{display:inline-block;border:1.5px solid #fff;border-radius:2px}
+.orient i.h{width:14px;height:9px}.orient i.v{width:9px;height:14px}
+.cover-title{position:relative;z-index:1;display:flex;flex-direction:column;gap:2px}
+.cover-title .artist{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;opacity:.85}
+.cover-title .song{font-family:var(--display);font-weight:900;font-size:26px;line-height:.95;text-transform:uppercase;word-break:break-word;text-shadow:0 2px 18px rgba(0,0,0,.35)}
+.cover-title .song{overflow-wrap:normal;word-break:normal;hyphens:none}
+.cover-title .song.long{font-size:20px}
+.cover-title .song.xl{font-size:16px}
+.stamp{position:absolute;right:12px;top:46px;z-index:2;font-family:var(--display);font-weight:900;font-size:18px;letter-spacing:.1em;border:3px solid #fff;padding:2px 10px;border-radius:8px;transform:rotate(-12deg);background:rgba(14,155,100,.85)}
+.lockveil{position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,rgba(10,8,16,.25),rgba(10,8,16,.6));display:grid;place-items:center}
+.lockveil span{display:flex;flex-direction:column;align-items:center;gap:6px;font-weight:800;font-size:12px;text-align:center;padding:0 12px}
+.lockveil svg{width:26px;height:26px;fill:#fff}
+.card-body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px;flex:1}
+.card-body .row{display:flex;justify-content:space-between;align-items:center}
+.xp{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--accent)}
+.card-body h3{font-family:var(--body);font-weight:800;font-size:15px;line-height:1.25;letter-spacing:0}
+.card-body .meta{font-size:12px;color:var(--muted)}
+.card-body .foot{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:8px;border-top:1px dashed var(--line);font-size:12px;gap:8px}
+.state{font-weight:800;font-size:11px;padding:3px 8px;border-radius:999px;white-space:nowrap}
+.state.done{background:color-mix(in srgb,var(--good) 18%,transparent);color:var(--good)}
+.state.open{background:var(--accent-soft);color:var(--accent)}
+.state.pay{background:color-mix(in srgb,var(--hot) 15%,transparent);color:var(--hot)}
+.state.pre{background:var(--surface-2);color:var(--muted)}
+
+/* teachers */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.tcard{display:flex;gap:14px;align-items:center;background:var(--surface);border-radius:var(--r);padding:16px;text-decoration:none;box-shadow:var(--shadow)}
+.ava{--h:260;width:56px;height:56px;border-radius:16px;flex:none;display:grid;place-items:center;font-family:var(--display);font-weight:900;color:#fff;font-size:18px;background:linear-gradient(135deg,hsl(var(--h) 85% 58%),hsl(calc(var(--h) + 50) 85% 45%))}
+.ava.lg{width:96px;height:96px;border-radius:26px;font-size:30px}
+.tcard strong{display:block;font-size:15px}
+.tcard small{color:var(--muted);font-size:12px}
+
+/* teacher page */
+.thead{display:grid;grid-template-columns:auto 1fr auto;gap:22px;align-items:center;padding-block:34px 20px}
+.thead h1{font-size:clamp(30px,5vw,50px);font-weight:900}
+.thead p{margin:8px 0 0;max-width:60ch;color:var(--muted)}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.tag{font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;background:var(--surface-2)}
+@media (max-width:700px){.thead{grid-template-columns:1fr}}
+.plans{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.plan{background:var(--surface);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:10px;box-shadow:inset 0 0 0 1px var(--line)}
+.plan.owned{box-shadow:inset 0 0 0 2px var(--good)}
+.plan h3{font-size:16px}
+.plan .price{font-family:var(--display);font-weight:900;font-size:28px}
+.plan .price small{font-family:var(--body);font-size:13px;font-weight:600;color:var(--muted)}
+.plan ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:4px;font-size:13px}
+.plan li{display:flex;justify-content:space-between;gap:8px}
+
+/* trilha (skill tree) */
+.tree{position:relative;background:var(--surface);border-radius:20px;padding:22px;overflow-x:auto;box-shadow:inset 0 0 0 1px var(--line)}
+.tree-in{position:relative;display:grid;grid-template-columns:repeat(4,minmax(170px,1fr));gap:26px;min-width:760px}
+.tree svg.links{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.tree svg.links path{fill:none;stroke:var(--line);stroke-width:2.5}
+.tree svg.links path.ok{stroke:var(--accent);stroke-dasharray:none}
+.tree svg.links path.wait{stroke-dasharray:5 6}
+.tcol{display:flex;flex-direction:column;gap:18px;position:relative;z-index:1}
+.tcol>.eyebrow{display:flex;gap:8px;align-items:center}
+.node{display:flex;gap:10px;align-items:center;background:var(--bg);border-radius:14px;padding:10px;text-decoration:none;box-shadow:inset 0 0 0 1.5px var(--line)}
+.node .dot{--h:260;width:42px;height:42px;border-radius:12px;flex:none;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,hsl(var(--h) 80% 55%),hsl(calc(var(--h) + 40) 80% 35%))}
+.node .dot svg{width:18px;height:18px;fill:#fff}
+.node b{display:block;font-size:12.5px;line-height:1.2}
+.node.st-done{box-shadow:inset 0 0 0 2px var(--good)}
+.node.st-open{box-shadow:inset 0 0 0 2px var(--accent)}
+.node.st-lock-pre{opacity:.6}
+.node.st-lock-pre .dot,.node.st-lock-pay .dot{filter:grayscale(.75)}
+
+/* aula */
+.lesson{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:26px;padding-block:26px}
+@media (max-width:980px){.lesson{grid-template-columns:minmax(0,1fr)}}
+.player{background:#07060A;border-radius:20px;overflow:hidden;position:relative}
+.stage{position:relative;display:flex;justify-content:center;background:#07060A}
+.stage canvas,.stage video{display:block;width:100%;height:auto;max-height:72vh;object-fit:contain}
+.stage.v canvas,.stage.v video{width:auto;height:72vh;max-width:100%}
+.stage.mirror video{transform:scaleX(-1)}
+.player:fullscreen{display:flex;flex-direction:column}
+.player:fullscreen .stage{flex:1;min-height:0}
+.player:fullscreen .stage canvas,.player:fullscreen .stage video{width:100%;height:100%;max-height:none;object-fit:contain}
+@media (orientation:portrait){.player.crop:fullscreen .stage canvas,.player.crop:fullscreen .stage video{object-fit:cover}}
+.veil{position:absolute;inset:0;display:grid;place-items:center;background:rgba(7,6,10,.72);color:#fff;text-align:center;padding:20px}
+.veil div{display:flex;flex-direction:column;gap:10px;align-items:center;max-width:380px}
+.veil h3{font-size:20px}
+.ctrl{display:flex;align-items:center;gap:8px;padding:10px 12px;color:#fff;flex-wrap:wrap;background:#07060A}
+.ctrl button{background:rgba(255,255,255,.09);border:0;color:#fff;border-radius:999px;padding:8px 12px;font-weight:700;font-size:12px;cursor:pointer}
+.ctrl button.on{background:#fff;color:#07060A}
+.ctrl .play{width:40px;height:40px;padding:0;display:grid;place-items:center;background:var(--hot)}
+.ctrl .play svg{width:16px;height:16px;fill:#fff}
+.ctrl input[type=range]{flex:1;min-width:120px;accent-color:#FF5E95}
+.ctrl .time{font-family:var(--mono);font-size:12px;opacity:.8}
+.side{display:flex;flex-direction:column;gap:16px;min-width:0}
+.panel{background:var(--surface);border-radius:var(--r);padding:18px;box-shadow:inset 0 0 0 1px var(--line);display:flex;flex-direction:column;gap:12px}
+.panel h2{font-size:22px;line-height:1.1}
+.panel h4{margin:0;font-size:13px;font-weight:800}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:13px}
+.kv dt{color:var(--muted)}.kv dd{margin:0;font-weight:700;text-align:right}
+.req{display:flex;flex-direction:column;gap:6px}
+.req a{display:flex;align-items:center;gap:8px;font-size:13px;text-decoration:none;padding:8px 10px;border-radius:10px;background:var(--bg)}
+.req a .ok{color:var(--good);font-weight:900}.req a .no{color:var(--muted);font-weight:900}
+.phone-wrap{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}
+.phone{width:196px;aspect-ratio:9/19.5;border-radius:30px;background:#0A0910;padding:8px;box-shadow:0 0 0 2px var(--line),var(--shadow);flex:none;position:relative}
+.phone canvas{width:100%;height:100%;border-radius:23px;display:block;background:#000}
+.phone::before{content:"";position:absolute;top:13px;left:50%;transform:translateX(-50%);width:54px;height:14px;border-radius:10px;background:#0A0910;z-index:1}
+.phone-info{flex:1;min-width:160px;display:flex;flex-direction:column;gap:10px;font-size:13px}
+
+/* studio */
+.studio-head{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;padding-block:30px 8px}
+.studio-head h1{font-size:clamp(28px,4.5vw,44px);font-weight:900}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px}
+@media (max-width:860px){.kpis{grid-template-columns:repeat(2,1fr)}.kpi .v{font-size:19px}}
+.kpi{min-width:0;background:var(--surface);border-radius:var(--r);padding:16px;box-shadow:inset 0 0 0 1px var(--line)}
+.kpi .v{font-family:var(--display);font-weight:900;font-size:26px;margin-top:6px;font-variant-numeric:tabular-nums}
+.kpi .s{font-size:12px;color:var(--muted)}
+.kpi.main{background:var(--ink);color:var(--bg);box-shadow:none}
+.kpi.main .eyebrow,.kpi.main .s{color:color-mix(in srgb,var(--bg) 65%,transparent)}
+.two{display:grid;grid-template-columns:1.3fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:860px){.two{grid-template-columns:1fr}}
+.chart svg{width:100%;height:auto;display:block}
+.chart .bar{fill:var(--accent-soft)}.chart .bar.cur{fill:var(--accent)}
+.chart .grid line{stroke:var(--line)}
+.chart text{fill:var(--muted);font-family:var(--mono);font-size:11px}
+.chart text.val{fill:var(--ink);font-weight:700}
+.mix{display:flex;flex-direction:column;gap:10px}
+.mix .r{display:grid;grid-template-columns:1fr auto;gap:4px 10px;font-size:13px}
+.mix .track{grid-column:1/-1;height:8px;border-radius:99px;background:var(--surface-2);overflow:hidden}
+.mix .track i{display:block;height:100%;background:var(--hot);border-radius:99px}
+.tablebox{overflow-x:auto;background:var(--surface);border-radius:var(--r);box-shadow:inset 0 0 0 1px var(--line)}
+table{border-collapse:collapse;width:100%;font-size:13px;min-width:680px}
+th{text-align:left;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:12px 14px;border-bottom:1px solid var(--line)}
+td{padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono)}
+.pbar{width:80px;height:6px;border-radius:9px;background:var(--surface-2);display:inline-block;vertical-align:middle;overflow:hidden;margin-right:6px}
+.pbar i{display:block;height:100%;background:var(--good)}
+.seg{display:inline-flex;flex-wrap:wrap;max-width:100%;background:var(--surface-2);border-radius:999px;padding:3px}
+.seg button{border:0;background:transparent;border-radius:999px;padding:8px 14px;font-weight:800;font-size:13px;cursor:pointer;color:var(--muted)}
+.seg button.on{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.turmas{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.turma{background:var(--surface);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:inset 0 0 0 1px var(--line)}
+.turma .lchips{display:flex;flex-wrap:wrap;gap:6px}
+.lchip{font-size:11.5px;font-weight:700;padding:4px 8px;border-radius:8px;background:var(--bg)}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.field>label,.field>.lab{font-size:12px;font-weight:800;color:var(--muted)}
+.inp{width:100%;border:0;background:var(--bg);box-shadow:inset 0 0 0 1.5px var(--line);border-radius:10px;padding:10px 12px;outline:none}
+.inp:focus{box-shadow:inset 0 0 0 2px var(--accent)}
+.money{display:flex;align-items:center;background:var(--bg);box-shadow:inset 0 0 0 1.5px var(--line);border-radius:10px;padding-left:12px}
+.money span{font-weight:800;color:var(--muted);font-size:13px}
+.money .inp{box-shadow:none;background:transparent;font-family:var(--mono);font-weight:700}
+.lrow{display:grid;grid-template-columns:44px minmax(0,1fr) 150px 110px auto;gap:12px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line)}
+.lrow:last-child{border-bottom:0}
+.lrow .mini{--h:260;width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,hsl(var(--h) 80% 55%),hsl(calc(var(--h) + 40) 80% 30%))}
+.lrow b{display:block;font-size:14px}
+.lrow small{color:var(--muted);font-size:12px}
+.lrow .acts{display:flex;gap:6px}
+@media (max-width:760px){.lrow{grid-template-columns:44px minmax(0,1fr)}.lrow>*:nth-child(n+3){grid-column:1/-1}}
+
+/* form */
+.form{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:26px;padding-block:24px 60px}
+@media (max-width:900px){.form{grid-template-columns:minmax(0,1fr)}}
+.fsec{background:var(--surface);border-radius:var(--r);padding:20px;box-shadow:inset 0 0 0 1px var(--line);display:flex;flex-direction:column;gap:14px}
+.fsec h3{font-size:15px;display:flex;align-items:center;gap:10px}
+.fsec h3 em{font-style:normal;font-family:var(--mono);font-size:11px;color:var(--accent);background:var(--accent-soft);padding:3px 7px;border-radius:6px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:560px){.fgrid{grid-template-columns:1fr}}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.tiles.two-c{grid-template-columns:repeat(2,1fr)}
+@media (max-width:640px){.tiles{grid-template-columns:repeat(2,1fr)}}
+.tile{position:relative;cursor:pointer}
+.tile input{position:absolute;opacity:0;pointer-events:none}
+.tile>span{display:flex;flex-direction:column;gap:6px;padding:14px;border-radius:12px;background:var(--bg);box-shadow:inset 0 0 0 1.5px var(--line);height:100%}
+.tile input:checked+span{box-shadow:inset 0 0 0 2.5px var(--accent);background:var(--accent-soft)}
+.tile input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+.tile b{font-size:13px;font-family:var(--mono);letter-spacing:.06em}
+.tile small{font-size:12px;color:var(--muted)}
+.shape{border:2px solid currentColor;border-radius:4px;opacity:.8}
+.shape.h{width:46px;height:28px}.shape.v{width:24px;height:40px}
+.switch{display:flex;gap:12px;align-items:flex-start;padding:14px;border-radius:12px;background:var(--bg);cursor:pointer}
+.switch input{width:40px;height:22px;appearance:none;-webkit-appearance:none;background:var(--line);border-radius:99px;position:relative;flex:none;cursor:pointer;margin:2px 0 0}
+.switch input::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .15s}
+.switch input:checked{background:var(--accent)}
+.switch input:checked::after{transform:translateX(18px)}
+.crop-demo{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.cd{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;color:var(--muted);font-weight:700}
+.cd .ph{width:54px;height:112px;border-radius:10px;background:#000;box-shadow:0 0 0 2px var(--line);position:relative;overflow:hidden;display:grid;place-items:center}
+.cd .ph i{display:block;background:linear-gradient(135deg,#7B5CFF,#FF4F8B)}
+.cd .ph i.lb{width:100%;aspect-ratio:16/9}
+.cd .ph i.cr{height:100%;aspect-ratio:16/9}
+.cd.on{color:var(--accent)}.cd.on .ph{box-shadow:0 0 0 2.5px var(--accent)}
+.checks{display:flex;flex-direction:column;gap:6px;max-height:300px;overflow:auto}
+.checks label{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;background:var(--bg);font-size:13px;cursor:pointer}
+.checks input{accent-color:var(--accent);width:16px;height:16px}
+.drop{border:2px dashed var(--line);border-radius:14px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:6px;align-items:center;cursor:pointer;background:var(--bg)}
+.drop:hover{border-color:var(--accent)}
+.drop strong{font-size:14px}
+.preview-col{position:sticky;top:86px;align-self:start;display:flex;flex-direction:column;gap:12px}
+.calc{font-size:13px;display:flex;flex-direction:column;gap:4px;padding:12px;border-radius:10px;background:var(--bg)}
+.calc div{display:flex;justify-content:space-between}
+.calc .net{font-weight:800;color:var(--good)}
+.err{color:var(--hot);font-weight:700;font-size:13px}
+
+/* trilha do aluno */
+.me{display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center;padding-block:34px 10px}
+.rank{width:120px;height:120px;border-radius:30px;background:conic-gradient(var(--hot) calc(var(--p)*1%),var(--surface-2) 0);display:grid;place-items:center}
+.rank div{width:96px;height:96px;border-radius:22px;background:var(--bg);display:grid;place-items:center;text-align:center;font-family:var(--display);font-weight:900;font-size:13px}
+.rank small{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);font-weight:500}
+.me h1{font-size:clamp(28px,5vw,44px);font-weight:900}
+
+/* modal + toast */
+.modal{position:fixed;inset:0;z-index:20;background:rgba(10,8,16,.55);display:grid;place-items:center;padding:20px max(16px,env(safe-area-inset-right,0px)) 20px max(16px,env(safe-area-inset-left,0px))}
+.sheet{background:var(--surface);border-radius:22px;width:min(480px,100%);padding:22px;display:flex;flex-direction:column;gap:14px;max-height:90vh;overflow:auto;box-shadow:0 30px 80px rgba(0,0,0,.4)}
+.opt{display:flex;gap:12px;align-items:center;padding:14px;border-radius:14px;background:var(--bg);cursor:pointer;box-shadow:inset 0 0 0 1.5px var(--line)}
+.opt:has(input:checked){box-shadow:inset 0 0 0 2.5px var(--accent)}
+.opt input{accent-color:var(--accent)}
+.opt div{flex:1}
+.opt b{display:block}
+.opt small{color:var(--muted)}
+.opt .p{font-family:var(--display);font-weight:900;font-size:18px}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(140%);z-index:30;background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:14px;font-weight:700;font-size:14px;transition:transform .3s;max-width:calc(100% - 32px)}
+.toast{visibility:hidden}
+.toast.show{transform:translateX(-50%) translateY(0);visibility:visible}
+footer{padding-block:40px 60px;color:var(--muted);font-size:12px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--line);margin-top:50px}
+footer button{background:none;border:0;color:var(--accent);font-weight:700;cursor:pointer;padding:0}
+.empty{padding:30px;text-align:center;color:var(--muted);background:var(--surface);border-radius:var(--r)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header class="top"><div class="wrap">
+  <a class="logo" href="#explorar"><i></i>MOVRA</a>
+  <nav class="nav" id="nav">
+    <a href="#explorar" data-r="explorar">Explorar</a>
+    <a href="#professores" data-r="professores">Professores</a>
+    <a href="#trilha" data-r="trilha">Minha trilha</a>
+  </nav>
+  <div class="role" id="role">
+    <a href="#explorar" data-role="aluno">Aluno</a>
+    <a href="#studio" data-role="prof">Professor</a>
+  </div>
+</div></header>
+<main id="app"></main>
+<nav class="mnav" id="mnav">
+  <a href="#explorar" data-r="explorar">Explorar</a>
+  <a href="#professores" data-r="professores">Professores</a>
+  <a href="#trilha" data-r="trilha">Trilha</a>
+  <a href="#studio" data-r="studio">Studio</a>
+</nav>
+<div class="modal" id="modal" hidden></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ---------- constantes ---------- */
+const FEE = 0.10;
+const LEVELS = [
+  {k:'INICIANTE', d:'Primeiro contato, passos base'},
+  {k:'BÁSICO', d:'Já conhece a base e segue contagem'},
+  {k:'INTERMEDIÁRIO', d:'Coreografia completa, ritmo real'},
+  {k:'AVANÇADO', d:'Velocidade, detalhes e performance'}
+];
+const MODS = {kpop:'K-pop', jazzfunk:'Jazz Funk', autoral:'Coreografia Autoral'};
+const CATS = {fundamentos:'Fundamentos', tecnica:'Técnica', coreografia:'Coreografia', performance:'Performance'};
+const RANKS = [[0,'Trainee'],[300,'Pré-debut'],[900,'Rookie'],[1800,'Idol'],[3200,'Ace']];
+const STORE = 'movra-demo-v1';
+
+const $ = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+const esc = s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const brl = v=>Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const xpOf = l=>[60,120,220,360][l.level];
+const parseDur = d=>{const [m,s]=String(d||'10:00').split(':').map(Number);return (m||0)*60+(s||0)||600};
+const fmtT = s=>`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`;
+const initials = n=>n.split(' ').map(p=>p[0]).slice(0,2).join('');
+
+/* ---------- dados fake ---------- */
+function L(id,teacherId,artist,song,modality,category,level,o){
+  return Object.assign({id,teacherId,artist,song,title:artist?`${artist} - ${song}`:song,modality,category,level,
+    orientation:'h',cropMobile:true,price:15,duration:'15:00',bpm:110,turmaId:null,prereq:{mode:'all',ids:[]},hue:260,created:'2026-10-01'},o);
+}
+function seed(){
+  const teachers = [
+    {id:'bia',name:'Bia Hwang',city:'São Paulo, SP',hue:262,rating:'4,9',styles:['kpop'],
+      bio:'Ex-trainee em Seul, dá aula de K-pop há 7 anos. Quebra cada coreografia em blocos de 8 tempos, com versão lenta e espelhada.',
+      pricing:{mode:'turmas',passPrice:55,billing:'mensal'},
+      turmas:[
+        {id:'t-bia-1',name:'Turma Iniciante',price:25,schedule:'Seg e Qua · 19h30',note:'Aula nova toda segunda'},
+        {id:'t-bia-2',name:'Turma Intermediário',price:30,schedule:'Ter e Qui · 20h',note:'Coreos completas de comeback'},
+        {id:'t-bia-3',name:'Turma Avançado',price:45,schedule:'Sábado · 10h',note:'Velocidade real e formação'}]},
+    {id:'rafa',name:'Rafa Mendes',city:'Rio de Janeiro, RJ',hue:330,rating:'4,8',styles:['jazzfunk'],
+      bio:'Jazz Funk com atitude: isolamento, olhar e presença de palco. Coreógrafa de clipes e shows no Rio.',
+      pricing:{mode:'passe',passPrice:50,billing:'mensal'},turmas:[]},
+    {id:'kai',name:'Kaique Sato',city:'Belo Horizonte, MG',hue:200,rating:'4,9',styles:['kpop','autoral'],
+      bio:'Coreografias de boy group e criação autoral. Foco em limpeza de movimento, popping leve e waves.',
+      pricing:{mode:'turmas',passPrice:60,billing:'mensal'},
+      turmas:[
+        {id:'t-kai-1',name:'Turma Básico',price:30,schedule:'Terça · 19h',note:'Base de boy group'},
+        {id:'t-kai-2',name:'Turma Performance',price:40,schedule:'Sexta · 20h',note:'Coreo + câmera + palco'}]},
+    {id:'lia',name:'Lia Moon',city:'Curitiba, PR',hue:20,rating:'5,0',styles:['kpop','jazzfunk'],
+      bio:'Girl group e Jazz Funk. Gravo tudo na vertical, pensado pra você treinar com o celular apoiado no espelho.',
+      pricing:{mode:'passe',passPrice:65,billing:'mensal'},turmas:[]}
+  ];
+  const lessons = [
+    L('b1','bia','','Groove K-pop: Bounce e Hit','kpop','fundamentos',0,{price:0,duration:'14:20',bpm:110,hue:262}),
+    L('b2','bia','','Contagem de 8 e Musicalidade','kpop','fundamentos',0,{price:12,duration:'11:05',bpm:100,hue:280,turmaId:'t-bia-1'}),
+    L('b3','bia','NewJeans','Super Shy','kpop','coreografia',1,{price:15,duration:'18:40',bpm:150,hue:200,orientation:'v',turmaId:'t-bia-1',prereq:{mode:'all',ids:['b1']}}),
+    L('b4','bia','ITZY','WANNABE','kpop','coreografia',1,{price:15,duration:'21:10',bpm:122,hue:310,turmaId:'t-bia-1',prereq:{mode:'all',ids:['b1','b2']}}),
+    L('b5','bia','LE SSERAFIM','ANTIFRAGILE','kpop','coreografia',2,{price:20,duration:'24:30',bpm:105,hue:350,turmaId:'t-bia-2',prereq:{mode:'any',ids:['b3','b4']}}),
+    L('b6','bia','ATEEZ','BAD','kpop','coreografia',2,{price:20,duration:'26:15',bpm:120,hue:15,cropMobile:false,turmaId:'t-bia-2',prereq:{mode:'all',ids:['b4']}}),
+    L('b7','bia','aespa','Supernova','kpop','coreografia',2,{price:20,duration:'22:50',bpm:120,hue:230,orientation:'v',turmaId:'t-bia-2',prereq:{mode:'all',ids:['b5']}}),
+    L('b8','bia','Stray Kids','S-Class','kpop','coreografia',3,{price:28,duration:'31:00',bpm:105,hue:0,turmaId:'t-bia-3',prereq:{mode:'all',ids:['b6','b7']}}),
+    L('b9','bia','ATEEZ','WORK','kpop','coreografia',3,{price:28,duration:'29:40',bpm:125,hue:40,orientation:'v',turmaId:'t-bia-3',prereq:{mode:'all',ids:['b6']}}),
+    L('r1','rafa','','Isolamentos de Jazz Funk','jazzfunk','tecnica',0,{price:10,duration:'12:30',bpm:96,hue:330}),
+    L('r2','rafa','','Atitude, Olhar e Hair Flip','jazzfunk','performance',1,{price:12,duration:'15:10',bpm:100,hue:300,orientation:'v',prereq:{mode:'all',ids:['r1']}}),
+    L('r3','rafa','Doja Cat','Paint The Town Red','jazzfunk','coreografia',1,{price:18,duration:'19:20',bpm:100,hue:355,orientation:'v',prereq:{mode:'all',ids:['r1']}}),
+    L('r6','rafa','','Chão e Transições','jazzfunk','tecnica',2,{price:15,duration:'17:00',bpm:90,hue:275,cropMobile:false,prereq:{mode:'all',ids:['r1']}}),
+    L('r4','rafa','Tinashe','Nasty','jazzfunk','coreografia',2,{price:22,duration:'23:45',bpm:112,hue:320,prereq:{mode:'all',ids:['r2','r3']}}),
+    L('r5','rafa','Beyoncé','Partition','jazzfunk','coreografia',3,{price:30,duration:'28:30',bpm:98,hue:40,prereq:{mode:'all',ids:['r4']}}),
+    L('k1','kai','','Waves e Popping Leve','kpop','tecnica',0,{price:0,duration:'13:15',bpm:100,hue:190}),
+    L('k2','kai','BOYNEXTDOOR','Earth, Wind & Fire','kpop','coreografia',1,{price:15,duration:'19:00',bpm:118,hue:160,turmaId:'t-kai-1',prereq:{mode:'all',ids:['k1']}}),
+    L('k3','kai','SEVENTEEN','MAESTRO','kpop','coreografia',2,{price:22,duration:'27:20',bpm:115,hue:215,turmaId:'t-kai-2',prereq:{mode:'all',ids:['k2']}}),
+    L('k4','kai','ENHYPEN','Bite Me','kpop','coreografia',2,{price:22,duration:'24:00',bpm:110,hue:345,orientation:'v',turmaId:'t-kai-2',prereq:{mode:'all',ids:['k2']}}),
+    L('k5','kai','','Coreografia Autoral: Neon','autoral','coreografia',3,{price:30,duration:'33:10',bpm:128,hue:170,cropMobile:false,turmaId:'t-kai-2',prereq:{mode:'all',ids:['k3','k4']}}),
+    L('l1','lia','','Linhas e Extensões','jazzfunk','tecnica',0,{price:10,duration:'12:00',bpm:95,hue:20,orientation:'v'}),
+    L('l2','lia','IVE','HEYA','kpop','coreografia',1,{price:16,duration:'20:30',bpm:115,hue:45,orientation:'v',prereq:{mode:'all',ids:['l1']}}),
+    L('l5','lia','','Freestyle Guiado de Jazz Funk','jazzfunk','performance',2,{price:18,duration:'16:40',bpm:100,hue:5,prereq:{mode:'all',ids:['l1']}}),
+    L('l3','lia','BLACKPINK','Shut Down','kpop','coreografia',2,{price:22,duration:'25:10',bpm:110,hue:330,orientation:'v',prereq:{mode:'all',ids:['l2']}}),
+    L('l4','lia','BABYMONSTER','SHEESH','kpop','coreografia',3,{price:28,duration:'27:00',bpm:130,hue:0,prereq:{mode:'any',ids:['l3','l5']}})
+  ];
+  // alunos fake por professor
+  const NAMES=['Ana Luiza','Bruna','Camila','Carol','Duda','Gabi','Giovanna','Isa','Júlia','Larissa','Lara','Letícia','Malu','Manu','Mariana','Nina','Pedro','Rafaela','Sofia','Thaís','Vitória','Yasmin','Kaio','Lucas','Mel','Helena','Clara','Enzo','Lívia','Hana','Jade','Luan'];
+  const SUR=['Alves','Barbosa','Costa','Dias','Ferreira','Gomes','Kim','Lima','Moraes','Nunes','Oliveira','Park','Ramos','Souza','Tanaka','Vieira'];
+  let seedN=7; const rnd=()=>{seedN=(seedN*16807)%2147483647;return (seedN-1)/2147483646};
+  const MONTHS=['mai','jun','jul','ago','set','out','nov'];
+  const students=[];
+  const counts={bia:27,rafa:19,kai:14,lia:22};
+  for(const t of teachers){
+    for(let i=0;i<counts[t.id];i++){
+      const name=`${NAMES[Math.floor(rnd()*NAMES.length)]} ${SUR[Math.floor(rnd()*SUR.length)]}`;
+      let plan,paid;
+      const tl=lessons.filter(l=>l.teacherId===t.id&&l.price>0);
+      if(rnd()<.18){const n=1+Math.floor(rnd()*2);const ids=[...tl].sort(()=>rnd()-.5).slice(0,n).map(l=>l.id);plan={type:'avulso',ids};paid=ids.reduce((a,id)=>a+lessons.find(l=>l.id===id).price,0)}
+      else if(t.pricing.mode==='turmas'){const w=rnd();const tm=t.turmas[w<.45?0:w<.8?1:Math.min(2,t.turmas.length-1)];plan={type:'turma',id:tm.id};paid=tm.price}
+      else{plan={type:'passe'};paid=t.pricing.passPrice}
+      students.push({id:`s-${t.id}-${i}`,teacherId:t.id,name,plan,paid,since:MONTHS[Math.floor(rnd()*MONTHS.length)],progress:Math.round(rnd()*100)});
+    }
+  }
+  return {v:1,teachers,lessons,students,me:'bia',done:['b1','b2','k1'],access:{turmas:['t-bia-1'],passes:[],lessons:[]}};
+}
+
+let S;
+function load(){try{const raw=localStorage.getItem(STORE);if(raw){const d=JSON.parse(raw);if(d&&d.v===1){S=d;return}}}catch(e){} S=seed()}
+const videoBlobs={}; // vídeos enviados nesta sessão (não persistem)
+function save(){try{localStorage.setItem(STORE,JSON.stringify(S))}catch(e){}}
+load();
+
+/* ---------- regras ---------- */
+const teacher=id=>S.teachers.find(t=>t.id===id);
+const lesson=id=>S.lessons.find(l=>l.id===id);
+const tLessons=tid=>S.lessons.filter(l=>l.teacherId===tid);
+const turmaOf=l=>{const t=teacher(l.teacherId);return t.turmas.find(x=>x.id===l.turmaId)};
+function prereqOk(l){const ids=(l.prereq?.ids||[]).filter(lesson);if(!ids.length)return true;return l.prereq.mode==='any'?ids.some(id=>S.done.includes(id)):ids.every(id=>S.done.includes(id))}
+function hasAccess(l){
+  if(!l.price) return true;
+  if(S.access.lessons.includes(l.id)) return true;
+  const t=teacher(l.teacherId);
+  if(t.pricing.mode==='passe') return S.access.passes.includes(t.id);
+  return !!(l.turmaId&&S.access.turmas.includes(l.turmaId));
+}
+function status(l){if(S.done.includes(l.id))return'done';if(!prereqOk(l))return'lock-pre';if(!hasAccess(l))return'lock-pay';return'open'}
+function stateLabel(l,st){return{done:['done','Concluída'],open:['open',l.price?'Liberada':'Grátis'],'lock-pay':['pay',brl(l.price)],'lock-pre':['pre','Bloqueada']}[st]}
+function xpTotal(){return S.done.map(lesson).filter(Boolean).reduce((a,l)=>a+xpOf(l),0)}
+function rankOf(xp){let r=RANKS[0],next=null;for(let i=0;i<RANKS.length;i++){if(xp>=RANKS[i][0]){r=RANKS[i];next=RANKS[i+1]||null}}return{name:r[1],from:r[0],next}}
+
+/* ---------- peças de UI ---------- */
+const STAR='<path d="M12 2.6l2.8 6 6.5.7-4.9 4.4 1.4 6.4L12 16.9 6.2 20.1l1.4-6.4L2.7 9.3l6.5-.7z"/>';
+function stars(level,lg){let s='';for(let i=0;i<4;i++)s+=`<svg viewBox="0 0 24 24" class="${i<=level?'f':'e'}" aria-hidden="true">${STAR}</svg>`;return`<span class="stars${lg?' lg':''}" role="img" aria-label="${level+1} de 4 estrelas">${s}</span>`}
+const LOCK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0110 0v3h1a1 1 0 011 1v9a1 1 0 01-1 1H6a1 1 0 01-1-1v-9a1 1 0 011-1h1zm2 0h6V7a3 3 0 00-6 0v3z"/></svg>';
+const CHECK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 16.2L5.3 12l-1.4 1.4 5.6 5.6L20.1 8.4 18.7 7z"/></svg>';
+const PLAY='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg>';
+const PAUSE='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h4v16H6zm8 0h4v16h-4z"/></svg>';
+const orient=l=>`<span class="orient"><i class="${l.orientation}"></i>${l.orientation==='v'?'VERT':'HORIZ'}</span>`;
+
+function card(l){
+  const t=teacher(l.teacherId),st=status(l),[cls,lab]=stateLabel(l,st);
+  const reqNames=(l.prereq.ids||[]).map(lesson).filter(Boolean).map(x=>x.song);
+  const veil=st==='lock-pre'?`<div class="lockveil"><span>${LOCK}Complete ${l.prereq.mode==='any'?'uma de':''} ${esc(reqNames.join(l.prereq.mode==='any'?' ou ':' + '))}</span></div>`:'';
+  return `<a class="card st-${st}" href="#aula-${l.id}">
+    <div class="cover" style="--h:${l.hue}">
+      <div class="cover-top"><span class="lvl">${LEVELS[l.level].k}</span>${orient(l)}</div>
+      <div class="cover-title"><span class="artist">${esc(l.artist||MODS[l.modality])}</span><span class="song${songCls(l.song)}">${esc(l.song)}</span></div>
+      ${st==='done'?'<span class="stamp">CLEAR</span>':''}${veil}
+    </div>
+    <div class="card-body">
+      <div class="row">${stars(l.level)}<span class="xp">+${xpOf(l)} XP</span></div>
+      <h3>${esc(l.title)}</h3>
+      <div class="meta">${MODS[l.modality]} · ${CATS[l.category]} · ${esc(l.duration)}</div>
+      <div class="foot"><span>${esc(t.name)}</span><span class="state ${cls}">${lab}</span></div>
+    </div></a>`;
+}
+function songCls(s){const w=Math.max(...s.split(/\s+/).map(x=>x.length));return w>11||s.length>26?' xl':w>8||s.length>16?' long':''}
+function tcard(t){
+  const n=tLessons(t.id).length;
+  return `<a class="tcard" href="#prof-${t.id}"><span class="ava" style="--h:${t.hue}">${initials(t.name)}</span>
+  <span><strong>${esc(t.name)}</strong><small>${t.styles.map(s=>MODS[s]).join(' · ')} · ${n} aulas · ★ ${t.rating}</small><br><small>${pricingLine(t)}</small></span></a>`;
+}
+function pricingLine(t){
+  if(t.pricing.mode==='passe')return`Valor fixo ${brl(t.pricing.passPrice)}${t.pricing.billing==='mensal'?'/mês':''}, tudo liberado`;
+  const ps=t.turmas.map(x=>x.price);return ps.length?`Turmas de ${brl(Math.min(...ps))} a ${brl(Math.max(...ps))}`:'Aulas avulsas';
+}
+
+/* ---------- views ---------- */
+const UI={mod:'all',cat:'all',lvl:'all',q:''};
+function vExplorar(){
+  const feat=['b3','b4','k3'].map(lesson).filter(Boolean);
+  return `<section class="wrap hero">
+    <div>
+      <div class="eyebrow">K-pop · Jazz Funk · Coreografias</div>
+      <h1>MOVRA<span>5678</span></h1>
+      <p>Aulas de dança organizadas como fases. Cada coreografia tem dificuldade em estrelas, XP e pré-requisitos, e cada professor define o próprio preço.</p>
+      <div class="count" id="count" aria-hidden="true">${[1,2,3,4,5,6,7,8].map(n=>`<b>${n}</b>`).join('')}</div>
+      <div class="hero-cta"><a class="btn acc" href="#aulas">Explorar aulas</a><a class="btn ghost" href="#studio">Sou professor</a></div>
+      <div class="hero-facts">
+        <div><strong>${S.teachers.length}</strong><span>professores</span></div>
+        <div><strong>${S.lessons.length}</strong><span>aulas no ar</span></div>
+        <div><strong>90%</strong><span>do valor fica com o professor</span></div>
+      </div>
+    </div>
+    <div class="deck">${feat.map(card).join('')}</div>
+  </section>
+  <section class="wrap" id="aulas">
+    <div class="filters">
+      <div class="search"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 3a7 7 0 015.6 11.2l4.6 4.6-1.4 1.4-4.6-4.6A7 7 0 1110 3zm0 2a5 5 0 100 10 5 5 0 000-10z"/></svg><input id="q" type="search" placeholder="Buscar artista, música ou professor" value="${esc(UI.q)}" aria-label="Buscar"></div>
+      <div class="frow"><span class="eyebrow">Modalidade</span>${chips('mod',{all:'Todas',...MODS})}</div>
+      <div class="frow"><span class="eyebrow">Categoria</span>${chips('cat',{all:'Todas',...CATS})}</div>
+      <div class="frow"><span class="eyebrow">Dificuldade</span>${chips('lvl',{all:'Todas',0:'★ Iniciante',1:'★★ Básico',2:'★★★ Intermediário',3:'★★★★ Avançado'})}</div>
+    </div>
+    <div class="sec-head"><h2>Aulas</h2><span class="muted" id="cnt"></span></div>
+    <div class="grid" id="lgrid"></div>
+    <div class="sec-head"><h2>Professores</h2><a href="#professores" class="muted">Ver todos</a></div>
+    <div class="tgrid">${S.teachers.map(tcard).join('')}</div>
+  </section>`;
+}
+function chips(k,map){return Object.entries(map).map(([v,lab])=>`<button class="chip${String(UI[k])===v?' on':''}" data-act="filter" data-k="${k}" data-v="${v}">${lab}</button>`).join('')}
+function renderGrid(){
+  const q=UI.q.trim().toLowerCase();
+  const list=S.lessons.filter(l=>(UI.mod==='all'||l.modality===UI.mod)&&(UI.cat==='all'||l.category===UI.cat)&&(UI.lvl==='all'||l.level==UI.lvl)&&
+    (!q||`${l.title} ${teacher(l.teacherId).name}`.toLowerCase().includes(q)));
+  const g=$('#lgrid');if(!g)return;
+  g.innerHTML=list.length?list.map(card).join(''):'<div class="empty">Nenhuma aula com esses filtros.</div>';
+  $('#cnt').textContent=`${list.length} ${list.length===1?'aula':'aulas'}`;
+}
+
+function vProfessores(){
+  return `<section class="wrap"><div class="sec-head" style="margin-top:34px"><h2>Professores</h2></div><div class="tgrid">${S.teachers.map(tcard).join('')}</div></section>`;
+}
+
+function vProf(id){
+  const t=teacher(id);if(!t)return notFound();
+  const ls=tLessons(id);
+  let plans='';
+  if(t.pricing.mode==='passe'){
+    const own=S.access.passes.includes(t.id);
+    plans=`<div class="plan${own?' owned':''}"><span class="eyebrow">Valor fixo</span><h3>Todas as aulas liberadas</h3>
+      <div class="price">${brl(t.pricing.passPrice)} <small>${t.pricing.billing==='mensal'?'/mês':'pagamento único'}</small></div>
+      <ul><li><span>Aulas incluídas</span><b>${ls.length}</b></li><li><span>Novas aulas</span><b>inclusas</b></li></ul>
+      ${own?'<span class="state done" style="align-self:start">Você tem acesso</span>':`<button class="btn acc" data-act="buy" data-kind="passe" data-id="${t.id}">Assinar</button>`}</div>`;
+  } else {
+    plans=t.turmas.map(tm=>{const inc=ls.filter(l=>l.turmaId===tm.id);const own=S.access.turmas.includes(tm.id);
+      return `<div class="plan${own?' owned':''}"><span class="eyebrow">${esc(tm.schedule)}</span><h3>${esc(tm.name)}</h3>
+      <div class="price">${brl(tm.price)} <small>${t.pricing.billing==='mensal'?'/mês':'pagamento único'}</small></div>
+      <ul>${inc.map(l=>`<li><span>${esc(l.title)}</span>${stars(l.level)}</li>`).join('')||'<li class="muted">Sem aulas ainda</li>'}</ul>
+      <small class="muted">${esc(tm.note||'')}</small>
+      ${own?'<span class="state done" style="align-self:start">Você está nessa turma</span>':`<button class="btn acc" data-act="buy" data-kind="turma" data-id="${tm.id}">Entrar na turma</button>`}</div>`}).join('');
+    const loose=ls.filter(l=>!l.turmaId&&l.price>0);
+    if(loose.length)plans+=`<div class="plan"><span class="eyebrow">Avulsas</span><h3>Fora das turmas</h3><ul>${loose.map(l=>`<li><span>${esc(l.title)}</span><b>${brl(l.price)}</b></li>`).join('')}</ul></div>`;
+  }
+  return `<section class="wrap">
+    <div class="thead"><span class="ava lg" style="--h:${t.hue}">${initials(t.name)}</span>
+      <div><div class="eyebrow">${esc(t.city)} · ★ ${t.rating}</div><h1>${esc(t.name)}</h1><p>${esc(t.bio)}</p>
+      <div class="tags">${t.styles.map(s=>`<span class="tag">${MODS[s]}</span>`).join('')}<span class="tag">${ls.length} aulas</span></div></div>
+      <div></div></div>
+    <div class="sec-head"><h2>${t.pricing.mode==='passe'?'Plano':'Turmas'}</h2><span class="muted">10% de cada pagamento é a taxa MOVRA</span></div>
+    <div class="plans">${plans}</div>
+    <div class="sec-head"><h2>Trilha</h2><span class="muted">As linhas mostram o que precisa ser concluído antes</span></div>
+    ${tree(ls)}
+    <div class="sec-head"><h2>Todas as aulas</h2></div>
+    <div class="grid">${ls.map(card).join('')}</div>
+  </section>`;
+}
+function tree(ls){
+  const cols=[0,1,2,3].map(lv=>`<div class="tcol"><div class="eyebrow">${stars(lv)} ${LEVELS[lv].k}</div>${ls.filter(l=>l.level===lv).map(l=>{const st=status(l);
+    return `<a class="node st-${st}" href="#aula-${l.id}" data-node="${l.id}"><span class="dot" style="--h:${l.hue}">${st==='done'?CHECK:st.startsWith('lock')?LOCK:PLAY}</span><span><b>${esc(l.title)}</b><small class="muted">${stateLabel(l,st)[1]}</small></span></a>`}).join('')}</div>`).join('');
+  return `<div class="tree"><div class="tree-in" id="tree"><svg class="links" id="links"></svg>${cols}</div></div>`;
+}
+function drawLinks(){
+  const box=$('#tree'),svg=$('#links');if(!box||!svg)return;
+  const b=box.getBoundingClientRect();let d='';
+  $$('[data-node]',box).forEach(n=>{const l=lesson(n.dataset.node);(l.prereq.ids||[]).forEach(pid=>{const p=box.querySelector(`[data-node="${pid}"]`);if(!p)return;
+    const a=p.getBoundingClientRect(),c=n.getBoundingClientRect();
+    const x1=a.right-b.left,y1=a.top+a.height/2-b.top,x2=c.left-b.left,y2=c.top+c.height/2-b.top;
+    let path;if(x2>x1+4){const m=(x2-x1)/2;path=`M${x1} ${y1} C${x1+m} ${y1} ${x2-m} ${y2} ${x2} ${y2}`}
+    else{const sx=a.left+a.width/2-b.left,sy=a.bottom-b.top,ex=c.left+c.width/2-b.left,ey=c.top-b.top;path=`M${sx} ${sy} C${sx} ${sy+20} ${ex} ${ey-20} ${ex} ${ey}`}
+    d+=`<path d="${path}" class="${S.done.includes(pid)?'ok':'wait'}"/>`})});
+  svg.innerHTML=d;
+}
+
+function vAula(id){
+  const l=lesson(id);if(!l)return notFound();
+  const t=teacher(l.teacherId),st=status(l),tm=turmaOf(l);
+  const reqs=(l.prereq.ids||[]).map(lesson).filter(Boolean);
+  let cta='';
+  if(st==='done')cta=`<span class="state done" style="align-self:start;font-size:13px;padding:6px 12px">Fase concluída · +${xpOf(l)} XP</span><button class="btn ghost sm" data-act="undone" data-id="${l.id}">Refazer do zero</button>`;
+  else if(st==='open')cta=`<button class="btn hot" data-act="done" data-id="${l.id}">Marcar como concluída · +${xpOf(l)} XP</button>`;
+  else if(st==='lock-pay')cta=`<button class="btn acc" data-act="buy" data-kind="lesson" data-id="${l.id}">Desbloquear</button><small class="muted">Prévia grátis de 15 segundos no player.</small>`;
+  else cta=`<small class="muted">Conclua os pré-requisitos para liberar esta fase.</small>${hasAccess(l)?'':`<button class="btn ghost sm" data-act="buy" data-kind="lesson" data-id="${l.id}">Já garantir acesso</button>`}`;
+  const fullRule=l.orientation==='v'?'Vídeo vertical: ocupa a tela inteira do celular.':l.cropMobile?'Horizontal com crop: em tela cheia no celular em pé, o vídeo é cortado no centro e ocupa a tela toda.':'Horizontal sem crop: em tela cheia no celular em pé, aparece inteiro com faixas pretas.';
+  return `<section class="wrap lesson">
+    <div style="display:flex;flex-direction:column;gap:18px;min-width:0">
+      <div class="player${l.orientation==='h'&&l.cropMobile||l.orientation==='v'?' crop':''}" id="player">
+        <div class="stage ${l.orientation}" id="stage"></div>
+        <div class="veil" id="veil" hidden></div>
+        <div class="ctrl">
+          <button class="play" data-act="play" aria-label="Tocar" id="playBtn">${PLAY}</button>
+          <input type="range" id="seek" min="0" max="1000" value="0" aria-label="Posição">
+          <span class="time" id="time">0:00</span>
+          <button data-act="speed" data-v="0.5">0.5x</button><button data-act="speed" data-v="0.75">0.75x</button><button data-act="speed" data-v="1" class="on">1x</button>
+          <button data-act="mirror" id="mirBtn">Espelhar</button>
+          <button data-act="fs">Tela cheia</button>
+        </div>
+      </div>
+      <div class="panel">
+        <h4>Como fica no celular</h4>
+        <div class="phone-wrap">
+          <div class="phone"><canvas id="phoneCanvas" width="360" height="780"></canvas></div>
+          <div class="phone-info">
+            <div class="seg"><button class="on" data-act="phone" data-v="app">No app</button><button data-act="phone" data-v="full">Tela cheia</button></div>
+            <p style="margin:0">${fullRule}</p>
+            <p class="muted" style="margin:0">Quem decide é o professor, na hora de subir a aula.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <aside class="side">
+      <div class="panel">
+        <div class="eyebrow">${MODS[l.modality]} · ${CATS[l.category]}</div>
+        <h2>${esc(l.title)}</h2>
+        <div style="display:flex;gap:10px;align-items:center">${stars(l.level,1)}<b style="font-family:var(--mono);font-size:12px">${LEVELS[l.level].k}</b></div>
+        <a href="#prof-${t.id}" class="tcard" style="box-shadow:none;background:var(--bg);padding:10px"><span class="ava" style="--h:${t.hue};width:40px;height:40px;font-size:14px;border-radius:12px">${initials(t.name)}</span><span><strong>${esc(t.name)}</strong><small>${esc(t.city)}</small></span></a>
+        <dl class="kv">
+          <dt>Duração</dt><dd class="mono">${esc(l.duration)}</dd>
+          <dt>Andamento</dt><dd class="mono">${l.bpm} BPM</dd>
+          <dt>Formato</dt><dd>${l.orientation==='v'?'Vertical':'Horizontal'}</dd>
+          <dt>Recompensa</dt><dd class="mono">+${xpOf(l)} XP</dd>
+          <dt>Acesso</dt><dd>${!l.price?'Grátis':t.pricing.mode==='passe'?`Valor fixo ${brl(t.pricing.passPrice)} ou ${brl(l.price)} avulsa`:tm?`${esc(tm.name)} ou ${brl(l.price)} avulsa`:`${brl(l.price)} avulsa`}</dd>
+        </dl>
+        ${cta}
+      </div>
+      <div class="panel">
+        <h4>Pré-requisitos ${reqs.length>1?`<span class="muted" style="font-weight:600">· ${l.prereq.mode==='any'?'concluir pelo menos uma':'concluir todas'}</span>`:''}</h4>
+        ${reqs.length?`<div class="req">${reqs.map(r=>`<a href="#aula-${r.id}"><span class="${S.done.includes(r.id)?'ok':'no'}">${S.done.includes(r.id)?'✓':'○'}</span><span style="flex:1">${esc(r.title)}</span>${stars(r.level)}</a>`).join('')}</div>`:'<small class="muted">Nenhum. Pode começar por aqui.</small>'}
+      </div>
+    </aside>
+  </section>`;
+}
+
+function vTrilha(){
+  const xp=xpTotal(),rk=rankOf(xp),p=rk.next?Math.round((xp-rk.from)/(rk.next[0]-rk.from)*100):100;
+  const open=S.lessons.filter(l=>status(l)==='open');
+  const done=S.done.map(lesson).filter(Boolean);
+  const buyable=S.lessons.filter(l=>status(l)==='lock-pay').slice(0,8);
+  return `<section class="wrap">
+    <div class="me"><div class="rank" style="--p:${p}"><div><span>${rk.name}<small>${xp} XP</small></span></div></div>
+      <div><div class="eyebrow">Sua trilha</div><h1>${done.length} ${done.length===1?'fase concluída':'fases concluídas'}</h1>
+      <p class="muted" style="margin:6px 0 0">${rk.next?`Faltam ${rk.next[0]-xp} XP para virar ${rk.next[1]}.`:'Rank máximo alcançado.'}</p></div></div>
+    <div class="sec-head"><h2>Prontas para jogar</h2><span class="muted">${open.length} liberadas</span></div>
+    <div class="grid">${open.map(card).join('')||'<div class="empty">Nada liberado agora. Desbloqueie uma turma ou conclua pré-requisitos.</div>'}</div>
+    <div class="sec-head"><h2>Concluídas</h2></div>
+    <div class="grid">${done.map(card).join('')||'<div class="empty">Conclua sua primeira aula para ela aparecer aqui.</div>'}</div>
+    <div class="sec-head"><h2>Para desbloquear</h2></div>
+    <div class="grid">${buyable.map(card).join('')}</div>
+  </section>`;
+}
+
+/* ---------- studio do professor ---------- */
+function planLabel(s){const t=teacher(s.teacherId);if(s.plan.type==='passe')return'Valor fixo';if(s.plan.type==='turma'){const tm=t.turmas.find(x=>x.id===s.plan.id);return tm?tm.name:'Turma removida'}return`${s.plan.ids.length} ${s.plan.ids.length>1?'aulas avulsas':'aula avulsa'}`}
+function vStudio(){
+  const t=teacher(S.me),ls=tLessons(t.id),st=S.students.filter(s=>s.teacherId===t.id);
+  const gross=st.reduce((a,s)=>a+s.paid,0),fee=gross*FEE,net=gross-fee;
+  const months=['jun','jul','ago','set','out','nov'],fac=[.46,.55,.63,.71,.86,1];
+  const vals=fac.map(f=>Math.round(gross*f));
+  const max=Math.max(...vals,1),W=560,H=220,pad=28,bw=(W-pad*2)/vals.length;
+  const ticks=[0,.5,1].map(f=>Math.round(max*f));
+  const chart=`<svg viewBox="0 0 ${W} ${H+30}" role="img" aria-label="Receita bruta por mês">
+    <g class="grid">${ticks.map(v=>{const y=H-(v/max)*(H-30);return`<line x1="${pad}" x2="${W-pad}" y1="${y}" y2="${y}"/><text x="${pad-4}" y="${y-4}">${v}</text>`}).join('')}</g>
+    ${vals.map((v,i)=>{const h=(v/max)*(H-30),x=pad+i*bw+bw*.18,w=bw*.64,y=H-h;return`<rect class="bar${i===vals.length-1?' cur':''}" x="${x}" y="${y}" width="${w}" height="${h}" rx="6"/><text class="val" x="${x+w/2}" y="${y-6}" text-anchor="middle">${brl(v).replace(',00','')}</text><text x="${x+w/2}" y="${H+18}" text-anchor="middle">${months[i]}</text>`}).join('')}
+  </svg>`;
+  const groups={};st.forEach(s=>{const k=planLabel(s);groups[k]=groups[k]||{n:0,sum:0};groups[k].n++;groups[k].sum+=s.paid});
+  const mix=Object.entries(groups).sort((a,b)=>b[1].sum-a[1].sum).map(([k,g])=>`<div class="r"><span><b>${esc(k)}</b> · ${g.n} ${g.n>1?'alunos':'aluno'}</span><span class="mono">${brl(g.sum)}</span><div class="track"><i style="width:${gross?g.sum/gross*100:0}%"></i></div></div>`).join('');
+  const rows=st.slice().sort((a,b)=>b.paid-a.paid).map(s=>`<tr><td><b>${esc(s.name)}</b></td><td>${esc(planLabel(s))}</td><td class="n">${brl(s.paid)}</td><td class="n">${brl(s.paid*FEE)}</td><td class="n"><b>${brl(s.paid*(1-FEE))}</b></td><td><span class="pbar"><i style="width:${s.progress}%"></i></span><span class="mono">${s.progress}%</span></td><td>${esc(s.since)}</td></tr>`).join('');
+  const pr=t.pricing;
+  const turmas=pr.mode==='turmas'?`<div class="turmas">${t.turmas.map(tm=>{const inc=ls.filter(l=>l.turmaId===tm.id);const n=st.filter(s=>s.plan.type==='turma'&&s.plan.id===tm.id).length;
+    return `<div class="turma">
+      <div class="field"><label for="tn-${tm.id}">Nome da turma</label><input class="inp" id="tn-${tm.id}" value="${esc(tm.name)}" data-bind="turma:${tm.id}:name"></div>
+      <div class="fgrid">
+        <div class="field"><label for="tp-${tm.id}">Preço</label><div class="money"><span>R$</span><input class="inp" id="tp-${tm.id}" type="number" min="0" step="1" value="${tm.price}" data-bind="turma:${tm.id}:price"></div></div>
+        <div class="field"><label for="ts-${tm.id}">Quando</label><input class="inp" id="ts-${tm.id}" value="${esc(tm.schedule)}" data-bind="turma:${tm.id}:schedule"></div>
+      </div>
+      <div class="field"><span class="lab">Coreografias da turma (${inc.length})</span><div class="lchips">${inc.map(l=>`<span class="lchip">${esc(l.title)}</span>`).join('')||'<span class="muted" style="font-size:12px">Escolha a turma de cada aula na lista abaixo.</span>'}</div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center"><small class="muted">${n} ${n===1?'aluno':'alunos'} · você recebe ${brl(tm.price*(1-FEE))}</small><button class="btn ghost sm" data-act="delturma" data-id="${tm.id}">${PEND.del===tm.id?'Confirmar':'Remover'}</button></div>
+    </div>`}).join('')}
+    <button class="turma" data-act="addturma" style="border:2px dashed var(--line);background:transparent;cursor:pointer;place-items:center;justify-content:center;min-height:160px;font-weight:800;color:var(--muted)">+ Nova turma</button></div>`
+    :`<div class="turma" style="max-width:420px">
+      <div class="field"><label for="pp">Valor fixo (todas as aulas liberadas)</label><div class="money"><span>R$</span><input class="inp" id="pp" type="number" min="0" value="${pr.passPrice}" data-bind="pass"></div></div>
+      <div class="calc"><div><span>Aluno paga</span><span class="mono">${brl(pr.passPrice)}</span></div><div><span>Taxa MOVRA (10%)</span><span class="mono">−${brl(pr.passPrice*FEE)}</span></div><div class="net"><span>Você recebe</span><span class="mono">${brl(pr.passPrice*(1-FEE))}</span></div></div>
+    </div>`;
+  const lrows=ls.map(l=>`<div class="lrow"><span class="mini" style="--h:${l.hue}"></span>
+    <div style="min-width:0"><b>${esc(l.title)}</b><small>${stars(l.level)} ${LEVELS[l.level].k} · ${l.orientation==='v'?'vertical':'horizontal'+(l.cropMobile?' + crop':'')} · ${(l.prereq.ids||[]).length} pré-req.</small></div>
+    ${pr.mode==='turmas'?`<select class="inp" data-bind="lturma:${l.id}" aria-label="Turma">${`<option value="">Avulsa</option>`+t.turmas.map(tm=>`<option value="${tm.id}"${l.turmaId===tm.id?' selected':''}>${esc(tm.name)}</option>`).join('')}</select>`:'<small class="muted">No valor fixo</small>'}
+    <div class="money"><span>R$</span><input class="inp" type="number" min="0" value="${l.price}" data-bind="lprice:${l.id}" aria-label="Preço avulso"></div>
+    <div class="acts"><a class="btn ghost sm" href="#editar-${l.id}">Editar</a><a class="btn ghost sm" href="#aula-${l.id}">Ver</a><button class="btn ghost sm" data-act="dellesson" data-id="${l.id}">${PEND.del===l.id?'Confirmar':'Excluir'}</button></div></div>`).join('');
+  return `<section class="wrap">
+    <div class="studio-head"><div><div class="eyebrow">Studio do professor · demonstração</div><h1>Olá, ${esc(t.name.split(' ')[0])}</h1></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><select class="inp" style="width:auto" data-bind="me" aria-label="Entrar como">${S.teachers.map(x=>`<option value="${x.id}"${x.id===t.id?' selected':''}>Entrar como ${esc(x.name)}</option>`).join('')}</select><a class="btn hot" href="#nova-aula">+ Subir aula</a></div></div>
+    <div class="kpis">
+      <div class="kpi"><div class="eyebrow">Alunos ativos</div><div class="v">${st.length}</div><div class="s">${ls.length} aulas publicadas</div></div>
+      <div class="kpi"><div class="eyebrow">Receita bruta · nov</div><div class="v">${brl(gross)}</div><div class="s">ticket médio ${brl(st.length?gross/st.length:0)}</div></div>
+      <div class="kpi"><div class="eyebrow">Taxa MOVRA · 10%</div><div class="v">−${brl(fee)}</div><div class="s">descontada de cada pagamento</div></div>
+      <div class="kpi main"><div class="eyebrow">Você recebe</div><div class="v">${brl(net)}</div><div class="s">repasse do mês</div></div>
+    </div>
+    <div class="two">
+      <div class="panel chart"><h4>Receita bruta por mês</h4>${chart}</div>
+      <div class="panel"><h4>De onde vem o dinheiro</h4><div class="mix">${mix||'<span class="muted">Sem alunos ainda.</span>'}</div></div>
+    </div>
+    <div class="sec-head"><h2>Turmas e preços</h2><div class="seg"><button class="${pr.mode==='turmas'?'on':''}" data-act="mode" data-v="turmas">Dividir em turmas</button><button class="${pr.mode==='passe'?'on':''}" data-act="mode" data-v="passe">Valor fixo</button></div></div>
+    <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap"><span class="muted" style="font-size:13px">Cobrança:</span><div class="seg"><button class="${pr.billing==='mensal'?'on':''}" data-act="billing" data-v="mensal">Mensal</button><button class="${pr.billing==='unico'?'on':''}" data-act="billing" data-v="unico">Pagamento único</button></div></div>
+    ${turmas}
+    <div class="sec-head"><h2>Aulas</h2><span class="muted">Preço avulso: o aluno pode comprar só essa aula</span></div>
+    <div class="tablebox">${lrows||'<div class="empty">Nenhuma aula. Suba a primeira.</div>'}</div>
+    <div class="sec-head"><h2>Alunos e pagamentos</h2><span class="muted">${st.length} alunos</span></div>
+    <div class="tablebox"><table><thead><tr><th>Aluno</th><th>Plano</th><th class="n">Paga</th><th class="n">Taxa</th><th class="n">Você recebe</th><th>Progresso</th><th>Desde</th></tr></thead><tbody>${rows}</tbody></table></div>
+  </section>`;
+}
+
+/* ---------- formulário de aula ---------- */
+let D=null;
+function newDraft(edit){
+  if(edit)return JSON.parse(JSON.stringify(edit));
+  return {id:null,teacherId:S.me,artist:'',song:'',freeTitle:false,modality:'kpop',category:'coreografia',level:0,orientation:'h',cropMobile:true,
+    price:15,duration:'',bpm:'',turmaId:'',prereq:{mode:'all',ids:[]},hue:Math.floor(Math.random()*360)};
+}
+function vForm(editId){
+  const ed=editId?lesson(editId):null; if(editId&&!ed)return notFound();
+  D=newDraft(ed); if(ed){D.freeTitle=!ed.artist;S.me=ed.teacherId}
+  const t=teacher(D.teacherId);
+  const others=tLessons(t.id).filter(l=>l.id!==D.id);
+  const r=(n,v,cur)=>`${String(cur)===String(v)?'checked':''} name="${n}" value="${v}"`;
+  return `<section class="wrap"><div class="studio-head"><div><div class="eyebrow">Studio · ${esc(t.name)}</div><h1>${ed?'Editar aula':'Subir aula'}</h1></div><a class="btn ghost" href="#studio">Voltar ao studio</a></div>
+  <form class="form" id="lform" novalidate>
+   <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+    <div class="fsec"><h3><em>01</em>Vídeo</h3>
+      <label class="drop" for="vfile"><strong id="vname">${videoBlobs[D.id]?'Vídeo carregado':'Escolher vídeo da aula'}</strong><small class="muted">MP4 ou MOV. O formato é detectado sozinho, e você pode trocar abaixo.</small></label>
+      <input type="file" id="vfile" accept="video/*" hidden>
+    </div>
+    <div class="fsec"><h3><em>02</em>Título</h3>
+      <div class="fgrid" id="ktitle"${D.freeTitle?' hidden':''}>
+        <div class="field"><label for="artist">Artista / grupo</label><input class="inp" id="artist" name="artist" placeholder="ATEEZ" value="${esc(D.artist)}"></div>
+        <div class="field"><label for="song">Música</label><input class="inp" id="song" name="song" placeholder="BAD" value="${esc(D.freeTitle?'':D.song)}"></div>
+      </div>
+      <div class="field" id="ftitle"${D.freeTitle?'':' hidden'}><label for="ftitle-in">Título da aula</label><input class="inp" id="ftitle-in" name="ftitle" placeholder="Isolamentos de tronco" value="${esc(D.freeTitle?D.song:'')}"></div>
+      <label class="switch"><input type="checkbox" name="freeTitle" id="freeTitle" ${D.freeTitle?'checked':''}><span><b>Aula técnica (título livre)</b><br><small class="muted">Para aulas sem música específica, como fundamentos e técnica.</small></span></label>
+      <div class="muted" style="font-size:13px">Aparece como: <b id="tprev" style="color:var(--ink)"></b></div>
+    </div>
+    <div class="fsec"><h3><em>03</em>Dificuldade</h3>
+      <div class="tiles">${LEVELS.map((lv,i)=>`<label class="tile"><input type="radio" ${r('level',i,D.level)}><span>${stars(i)}<b>${lv.k}</b><small>${lv.d}</small></span></label>`).join('')}</div>
+    </div>
+    <div class="fsec"><h3><em>04</em>Modalidade e categoria</h3>
+      <div class="field"><span class="lab">Modalidade</span><div class="tiles" style="grid-template-columns:repeat(3,1fr)">${Object.entries(MODS).map(([k,v])=>`<label class="tile"><input type="radio" ${r('modality',k,D.modality)}><span><b>${v}</b></span></label>`).join('')}</div></div>
+      <div class="field"><span class="lab">Categoria de aprendizado</span><div class="tiles">${Object.entries(CATS).map(([k,v])=>`<label class="tile"><input type="radio" ${r('category',k,D.category)}><span><b>${v}</b></span></label>`).join('')}</div></div>
+    </div>
+    <div class="fsec"><h3><em>05</em>Formato do vídeo</h3>
+      <div class="tiles two-c">
+        <label class="tile"><input type="radio" ${r('orientation','h',D.orientation)}><span><i class="shape h"></i><b>HORIZONTAL</b><small>16:9, gravado deitado</small></span></label>
+        <label class="tile"><input type="radio" ${r('orientation','v',D.orientation)}><span><i class="shape v"></i><b>VERTICAL</b><small>9:16, gravado em pé</small></span></label>
+      </div>
+      <div id="cropBox"${D.orientation==='h'?'':' hidden'} style="display:flex;flex-direction:column;gap:12px">
+        <label class="switch"><input type="checkbox" name="cropMobile" ${D.cropMobile?'checked':''}><span><b>Crop vertical em tela cheia no celular</b><br><small class="muted">Quando o aluno abrir no celular em pé e tocar em tela cheia, o vídeo ocupa a tela toda, cortando as laterais. Deixe desligado se tiver gente dançando nas pontas.</small></span></label>
+        <div class="crop-demo"><div class="cd" id="cdOff"><span class="ph"><i class="lb"></i></span>Sem crop</div><div class="cd" id="cdOn"><span class="ph"><i class="cr"></i></span>Com crop</div></div>
+      </div>
+    </div>
+    <div class="fsec"><h3><em>06</em>Preço e turma</h3>
+      <div class="fgrid">
+        <div class="field"><label for="price">Preço da aula avulsa</label><div class="money"><span>R$</span><input class="inp" id="price" name="price" type="number" min="0" step="1" value="${D.price}"></div><small class="muted">Coloque 0 para deixar grátis.</small></div>
+        ${t.pricing.mode==='turmas'?`<div class="field"><label for="turma">Turma</label><select class="inp" id="turma" name="turmaId"><option value="">Nenhuma (só avulsa)</option>${t.turmas.map(tm=>`<option value="${tm.id}"${D.turmaId===tm.id?' selected':''}>${esc(tm.name)} · ${brl(tm.price)}</option>`).join('')}</select></div>`:`<div class="field"><span class="lab">Turma</span><small class="muted" style="padding-top:8px">Você cobra valor fixo de ${brl(t.pricing.passPrice)}: esta aula entra liberada para quem paga.</small></div>`}
+        <div class="field"><label for="duration">Duração</label><input class="inp mono" id="duration" name="duration" placeholder="18:40" value="${esc(D.duration)}"></div>
+        <div class="field"><label for="bpm">BPM da música</label><input class="inp mono" id="bpm" name="bpm" type="number" placeholder="120" value="${esc(D.bpm)}"></div>
+      </div>
+      <div class="calc" id="calc"></div>
+    </div>
+    <div class="fsec"><h3><em>07</em>Pré-requisitos</h3>
+      <small class="muted">O aluno só consegue fazer esta aula depois de concluir as que você marcar.</small>
+      <div class="tiles two-c">
+        <label class="tile"><input type="radio" ${r('pmode','all',D.prereq.mode==='any'?'any':'all')}><span><b>TODAS</b><small>Precisa concluir todas as marcadas</small></span></label>
+        <label class="tile"><input type="radio" ${r('pmode','any',D.prereq.mode)}><span><b>PELO MENOS UMA</b><small>Qualquer uma das marcadas libera</small></span></label>
+      </div>
+      <div class="checks">${others.map(o=>`<label><input type="checkbox" name="pre" value="${o.id}" ${D.prereq.ids.includes(o.id)?'checked':''}><span style="flex:1">${esc(o.title)}</span>${stars(o.level)}</label>`).join('')||'<small class="muted">Você ainda não tem outras aulas.</small>'}</div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button class="btn hot" type="submit">${ed?'Salvar alterações':'Publicar aula'}</button><span class="err" id="ferr"></span></div>
+   </div>
+   <div class="preview-col"><div class="eyebrow">Pré-visualização do card</div><div id="pcard"></div></div>
+  </form></section>`;
+}
+function readForm(){
+  const f=$('#lform');if(!f)return;const fd=new FormData(f);
+  D.freeTitle=fd.get('freeTitle')==='on';
+  if(D.freeTitle){D.artist='';D.song=(fd.get('ftitle')||'').trim()}else{D.artist=(fd.get('artist')||'').trim();D.song=(fd.get('song')||'').trim()}
+  D.title=D.artist?`${D.artist} - ${D.song}`:D.song;
+  D.level=Number(fd.get('level'));D.modality=fd.get('modality');D.category=fd.get('category');D.orientation=fd.get('orientation');
+  D.cropMobile=fd.get('cropMobile')==='on';D.price=Math.max(0,Number(fd.get('price'))||0);
+  D.turmaId=fd.get('turmaId')||null;D.duration=(fd.get('duration')||'').trim();D.bpm=fd.get('bpm');
+  D.prereq={mode:fd.get('pmode')||'all',ids:fd.getAll('pre')};
+}
+function formPreview(){
+  readForm();
+  $('#ktitle').hidden=D.freeTitle;$('#ftitle').hidden=!D.freeTitle;
+  $('#tprev').textContent=D.title||'(preencha artista e música)';
+  $('#cropBox').hidden=D.orientation!=='h';
+  $('#cdOn').classList.toggle('on',D.cropMobile);$('#cdOff').classList.toggle('on',!D.cropMobile);
+  const t=teacher(D.teacherId);
+  $('#calc').innerHTML=D.price?`<div><span>Aluno paga (avulsa)</span><span class="mono">${brl(D.price)}</span></div><div><span>Taxa MOVRA (10%)</span><span class="mono">−${brl(D.price*FEE)}</span></div><div class="net"><span>Você recebe</span><span class="mono">${brl(D.price*(1-FEE))}</span></div>`:'<div><span>Aula grátis</span><span>sem cobrança</span></div>';
+  const fake=Object.assign({},D,{id:D.id||'__p',title:D.title||'ARTISTA - MÚSICA',song:D.song||'MÚSICA',artist:D.freeTitle?'':(D.artist||'ARTISTA'),duration:D.duration||'--:--',bpm:Number(D.bpm)||110});
+  const prev=S.lessons;S.lessons=[...prev.filter(l=>l.id!==fake.id),fake];
+  $('#pcard').innerHTML=card(fake).replace('<a ','<div ').replace(/<\/a>$/,'</div>');
+  S.lessons=prev;
+}
+function submitForm(){
+  readForm();
+  if(!D.song){$('#ferr').textContent=D.freeTitle?'Escreva o título da aula.':'Preencha artista e música para montar o título.';return}
+  if(!D.freeTitle&&!D.artist){$('#ferr').textContent='Preencha o artista ou grupo.';return}
+  if(D.duration&&!/^\d{1,3}:\d{2}$/.test(D.duration)){$('#ferr').textContent='Duração no formato minutos:segundos, por exemplo 18:40.';return}
+  const data={teacherId:D.teacherId,artist:D.artist,song:D.song,title:D.title,modality:D.modality,category:D.category,level:D.level,orientation:D.orientation,
+    cropMobile:D.orientation==='h'?D.cropMobile:true,price:D.price,duration:D.duration||'15:00',bpm:Number(D.bpm)||110,turmaId:teacher(D.teacherId).pricing.mode==='turmas'?D.turmaId:null,
+    prereq:D.prereq,hue:D.hue};
+  let id=D.id;
+  if(id){Object.assign(lesson(id),data)}else{id='n'+Date.now().toString(36);S.lessons.push(Object.assign({id,created:new Date().toISOString().slice(0,10)},data))}
+  if(D.blob){videoBlobs[id]=D.blob}
+  save();toast(D.id?'Aula atualizada':'Aula publicada');location.hash='aula-'+id;
+}
+
+/* ---------- player ---------- */
+let P=null;
+function stopPlayer(){if(P){cancelAnimationFrame(P.raf);if(P.video)P.video.pause();P=null}}
+function mountPlayer(l){
+  const stage=$('#stage');const v=l.orientation==='v';const W=v?540:960,H=v?960:540;
+  const st=status(l);
+  P={l,W,H,t:0,playing:false,speed:1,mirror:false,phoneFull:false,last:performance.now(),limit:(st==='lock-pay'||st==='lock-pre')?15:null};
+  if(videoBlobs[l.id]){P.video=document.createElement('video');P.video.src=videoBlobs[l.id];P.video.playsInline=true;P.video.loop=true;stage.appendChild(P.video);P.src=P.video;P.dur=1}
+  else{P.canvas=document.createElement('canvas');P.canvas.width=W;P.canvas.height=H;stage.appendChild(P.canvas);P.ctx=P.canvas.getContext('2d');P.src=P.canvas;P.dur=parseDur(l.duration)}
+  P.pc=$('#phoneCanvas');P.pctx=P.pc.getContext('2d');
+  if(P.ctx)drawScene(P.ctx,W,H,0,l,false);
+  P.raf=requestAnimationFrame(loop);
+}
+function loop(now){
+  if(!P)return;const dt=Math.min(.1,(now-P.last)/1000);P.last=now;
+  if(P.video){P.t=P.video.currentTime;P.dur=P.video.duration||1}
+  else if(P.playing){P.t+=dt*P.speed;if(P.t>=P.dur)P.t=0}
+  if(P.limit&&P.t>=P.limit){setPlaying(false);P.t=0;if(P.video)P.video.currentTime=0;showVeil()}
+  if(P.ctx)drawScene(P.ctx,P.W,P.H,P.t,P.l,P.mirror);
+  drawPhone();
+  const seek=$('#seek');if(seek&&document.activeElement!==seek)seek.value=Math.round(P.t/P.dur*1000);
+  const tm=$('#time');if(tm)tm.textContent=`${fmtT(P.t)} / ${fmtT(P.dur)}`;
+  P.raf=requestAnimationFrame(loop);
+}
+function setPlaying(on){if(!P)return;P.playing=on;if(P.video){on?P.video.play().catch(()=>{}):P.video.pause()}
+  const b=$('#playBtn');if(b){b.innerHTML=on?PAUSE:PLAY;b.setAttribute('aria-label',on?'Pausar':'Tocar')}}
+function showVeil(){const l=P.l,st=status(l),vl=$('#veil');if(!vl)return;
+  vl.innerHTML=`<div><h3>Fim da prévia</h3><p style="margin:0;opacity:.8">${st==='lock-pre'?'Conclua os pré-requisitos e libere o acesso para assistir completa.':'Desbloqueie para assistir a aula completa.'}</p>${hasAccess(l)?'':`<button class="btn hot" data-act="buy" data-kind="lesson" data-id="${l.id}">Desbloquear</button>`}<button class="btn ghost sm" style="color:#fff" data-act="veiloff">Ver prévia de novo</button></div>`;vl.hidden=false}
+
+function drawScene(ctx,W,H,t,l,mirror){
+  const hue=l.hue,beat=t*(l.bpm||110)/60,cnt=Math.floor(beat)%8,s=Math.min(W,H);
+  let g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,`hsl(${hue} 55% 20%)`);g.addColorStop(1,`hsl(${hue+30} 60% 5%)`);ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  const sx=W/2+Math.sin(t*.7)*W*.18;const rg=ctx.createRadialGradient(sx,-H*.1,10,sx,H*.5,H*.9);rg.addColorStop(0,'rgba(255,255,255,.28)');rg.addColorStop(1,'rgba(255,255,255,0)');ctx.fillStyle=rg;ctx.fillRect(0,0,W,H);
+  const fy=H*.8;ctx.strokeStyle=`hsla(${hue+40},90%,70%,.25)`;ctx.lineWidth=1;
+  for(let i=0;i<7;i++){const y=fy+(H-fy)*Math.pow(i/6,1.7);ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}
+  for(let i=-8;i<=8;i++){ctx.beginPath();ctx.moveTo(W/2+i*W*.05,fy);ctx.lineTo(W/2+i*W*.16,H);ctx.stroke()}
+  ctx.save();if(mirror){ctx.translate(W,0);ctx.scale(-1,1)}
+  dancer(ctx,W/2,fy,s*.62,beat,hue);ctx.restore();
+  // contagem
+  const r=s*.028,gap=r*2.9,x0=W/2-gap*3.5,y0=H-r*2.2;
+  ctx.font=`700 ${Math.round(r*1.1)}px "JetBrains Mono",monospace`;ctx.textAlign='center';ctx.textBaseline='middle';
+  for(let i=0;i<8;i++){ctx.beginPath();ctx.arc(x0+i*gap,y0,r,0,Math.PI*2);ctx.fillStyle=i===cnt?'#FF4F8B':'rgba(255,255,255,.12)';ctx.fill();ctx.fillStyle='#fff';ctx.fillText(String(i+1),x0+i*gap,y0+1)}
+  ctx.textAlign='left';ctx.textBaseline='top';ctx.fillStyle='rgba(255,255,255,.9)';ctx.font=`900 ${Math.round(s*.04)}px Unbounded,sans-serif`;ctx.fillText(l.song.toUpperCase(),s*.05,s*.05);
+  ctx.font=`500 ${Math.round(s*.024)}px "JetBrains Mono",monospace`;ctx.fillStyle='rgba(255,255,255,.6)';ctx.fillText(`${(l.artist||MODS[l.modality]).toUpperCase()} · ${l.bpm||110} BPM · DEMO MOVRA`,s*.05,s*.05+s*.055);
+}
+function dancer(ctx,cx,fy,size,beat,hue){
+  const u=size/8,s=Math.sin(beat*Math.PI),pat=Math.floor(beat/8)%4,hit=Math.pow(Math.abs(s),.5);
+  const bob=Math.abs(Math.sin(beat*Math.PI))*u*.35;
+  let lu,lf,ru,rf,ll,lk,rl,rk,lean=0;
+  if(pat===0){lu=.4+1.3*(s*.5+.5);lf=lu+.9;ru=.4+1.3*(.5-s*.5);rf=ru+.9;ll=.18;lk=-.25*hit;rl=.18;rk=-.25*hit}
+  else if(pat===1){lu=2.7+.35*s;lf=lu+.5*s;ru=2.7-.35*s;rf=ru-.5*s;ll=.12+.25*Math.max(0,s);lk=-.5*Math.max(0,s);rl=.12+.25*Math.max(0,-s);rk=-.5*Math.max(0,-s);lean=.08*s}
+  else if(pat===2){lean=.18*s;lu=.5;lf=2.2+.4*s;ru=.5;rf=2.2-.4*s;ll=.1+.45*Math.max(0,s);lk=-.6*Math.max(0,s);rl=.1+.45*Math.max(0,-s);rk=-.6*Math.max(0,-s)}
+  else{ru=2.1+.25*hit;rf=2.2+.2*hit;lu=.25+.5*hit;lf=1.4;ll=.25;lk=-.2;rl=.25;rk=-.2;lean=-.06}
+  const thigh=u*1.7,shin=u*1.7,torso=u*2.4,ua=u*1.3,fa=u*1.15,hr=u*.55;
+  const hipY=fy-thigh-shin+bob*1.2,hx=cx;
+  const shX=hx+Math.sin(lean)*torso,shY=hipY-Math.cos(lean)*torso;
+  const seg=(x,y,a,len,side)=>[x+side*Math.sin(a)*len,y+Math.cos(a)*len];
+  ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#fff';ctx.lineWidth=u*.42;
+  ctx.shadowColor=`hsl(${hue+40} 100% 70%)`;ctx.shadowBlur=u*.9;
+  const draw=pts=>{ctx.beginPath();ctx.moveTo(pts[0][0],pts[0][1]);for(const p of pts.slice(1))ctx.lineTo(p[0],p[1]);ctx.stroke()};
+  const lK=seg(hx-u*.35,hipY,ll,thigh,-1),lF=seg(lK[0],lK[1],ll+lk,shin,-1);
+  const rK=seg(hx+u*.35,hipY,rl,thigh,1),rF=seg(rK[0],rK[1],rl+rk,shin,1);
+  draw([[hx-u*.35,hipY],lK,[lF[0],Math.min(lF[1],fy)]]);draw([[hx+u*.35,hipY],rK,[rF[0],Math.min(rF[1],fy)]]);
+  draw([[hx,hipY],[shX,shY]]);
+  const lE=seg(shX-u*.5,shY,lu,ua,-1),lH=seg(lE[0],lE[1],lf,fa,-1);
+  const rE=seg(shX+u*.5,shY,ru,ua,1),rH=seg(rE[0],rE[1],rf,fa,1);
+  draw([[shX-u*.5,shY],lE,lH]);draw([[shX+u*.5,shY],rE,rH]);draw([[shX-u*.5,shY],[shX+u*.5,shY]]);
+  ctx.beginPath();ctx.arc(shX+Math.sin(lean)*hr*1.6,shY-hr*1.7,hr,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
+  ctx.shadowBlur=0;
+  ctx.beginPath();ctx.ellipse(cx,fy+u*.1,u*1.6,u*.22,0,0,Math.PI*2);ctx.fillStyle='rgba(0,0,0,.35)';ctx.fill();
+}
+function fit(ctx,src,sw,sh,x,y,w,h,cover){
+  const k=cover?Math.max(w/sw,h/sh):Math.min(w/sw,h/sh),dw=sw*k,dh=sh*k;
+  ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();ctx.drawImage(src,x+(w-dw)/2,y+(h-dh)/2,dw,dh);ctx.restore();
+}
+function drawPhone(){
+  if(!P||!P.pctx)return;const c=P.pctx,w=P.pc.width,h=P.pc.height,l=P.l;
+  const sw=P.video?P.video.videoWidth:P.W,sh=P.video?P.video.videoHeight:P.H;
+  c.fillStyle='#000';c.fillRect(0,0,w,h);if(!sw)return;
+  if(P.phoneFull){
+    fit(c,P.src,sw,sh,0,0,w,h,l.orientation==='v'||l.cropMobile);
+    c.fillStyle='rgba(0,0,0,.45)';c.fillRect(0,h-64,w,64);c.fillStyle='#fff';c.font='700 18px Manrope,sans-serif';c.textAlign='left';c.textBaseline='middle';
+    c.fillText(l.orientation==='v'?'Vertical · tela toda':l.cropMobile?'Crop vertical ativo':'Sem crop · faixas pretas',20,h-32);
+  } else {
+    c.fillStyle='#121019';c.fillRect(0,0,w,h);
+    const top=60,boxH=l.orientation==='v'?h*.64:w*sh/sw;
+    fit(c,P.src,sw,sh,0,top,w,boxH,l.orientation==='v');
+    let y=top+boxH+30;c.fillStyle='#fff';c.textAlign='left';c.textBaseline='top';c.font='800 22px Manrope,sans-serif';
+    const words=l.title;c.fillText(words.length>24?words.slice(0,23)+'…':words,20,y);y+=34;
+    c.fillStyle='#FF4F8B';for(let i=0;i<4;i++){c.globalAlpha=i<=l.level?1:.25;c.font='22px sans-serif';c.fillText('★',20+i*24,y)}c.globalAlpha=1;y+=36;
+    c.fillStyle='rgba(255,255,255,.55)';c.font='500 16px Manrope,sans-serif';c.fillText(teacher(l.teacherId).name+' · '+l.duration,20,y);y+=40;
+    for(let i=0;i<3&&y<h-40;i++){c.fillStyle='rgba(255,255,255,.08)';c.beginPath();c.roundRect?c.roundRect(20,y,w-40,46,12):c.rect(20,y,w-40,46);c.fill();y+=58}
+  }
+}
+
+/* ---------- modal de compra ---------- */
+function openBuy(kind,id){
+  let l=null,t,opts=[];
+  if(kind==='lesson'){l=lesson(id);t=teacher(l.teacherId)}else if(kind==='turma'){t=S.teachers.find(x=>x.turmas.some(tm=>tm.id===id))}else t=teacher(id);
+  const per=t.pricing.billing==='mensal'?'/mês':'';
+  if(t.pricing.mode==='turmas'){t.turmas.forEach(tm=>{if(kind==='turma'&&tm.id!==id)return;if(l&&l.turmaId!==tm.id)return;const n=tLessons(t.id).filter(x=>x.turmaId===tm.id).length;opts.push({k:'turma',id:tm.id,name:tm.name,sub:`${n} aulas · ${tm.schedule}`,price:tm.price,per})})}
+  else if(kind!=='turma')opts.push({k:'passe',id:t.id,name:'Valor fixo · todas as aulas',sub:`${tLessons(t.id).length} aulas liberadas`,price:t.pricing.passPrice,per});
+  if(l&&l.price)opts.push({k:'lesson',id:l.id,name:'Só esta aula',sub:l.title,price:l.price,per:''});
+  const m=$('#modal');
+  m.innerHTML=`<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="mt"><div class="eyebrow">${esc(t.name)}</div><h2 id="mt" style="font-size:22px">Escolha como desbloquear</h2>
+    <form id="buyf" style="display:flex;flex-direction:column;gap:10px">${opts.map((o,i)=>`<label class="opt"><input type="radio" name="o" value="${i}" ${i===0?'checked':''}><div><b>${esc(o.name)}</b><small>${esc(o.sub)}</small></div><span class="p">${brl(o.price)}<small style="font-size:11px;font-family:var(--body)">${o.per}</small></span></label>`).join('')}
+    <div class="calc" id="bcalc"></div>
+    <div style="display:flex;gap:10px;justify-content:flex-end"><button type="button" class="btn ghost" data-act="close">Cancelar</button><button class="btn hot" type="submit">Pagar (simulação)</button></div></form>
+    <small class="muted">Demonstração: nenhum pagamento é feito.</small></div>`;
+  m.hidden=false;
+  const upd=()=>{const o=opts[Number(new FormData($('#buyf')).get('o'))];$('#bcalc').innerHTML=`<div><span>Total</span><span class="mono">${brl(o.price)}</span></div><div><span>Vai para ${esc(t.name.split(' ')[0])} (90%)</span><span class="mono">${brl(o.price*(1-FEE))}</span></div><div><span>Taxa MOVRA (10%)</span><span class="mono">${brl(o.price*FEE)}</span></div>`};
+  upd();$('#buyf').addEventListener('change',upd);
+  $('#buyf').addEventListener('submit',e=>{e.preventDefault();const o=opts[Number(new FormData(e.target).get('o'))];
+    if(o.k==='turma')S.access.turmas.push(o.id);else if(o.k==='passe')S.access.passes.push(o.id);else S.access.lessons.push(o.id);
+    S.students.push({id:'s-me-'+Date.now(),teacherId:t.id,name:'Você (demo)',plan:o.k==='turma'?{type:'turma',id:o.id}:o.k==='passe'?{type:'passe'}:{type:'avulso',ids:[o.id]},paid:o.price,since:'nov',progress:0});
+    save();closeModal();toast(`Desbloqueado: ${o.name}`);route();});
+}
+function closeModal(){const m=$('#modal');m.hidden=true;m.innerHTML=''}
+
+/* ---------- ações ---------- */
+const PEND={del:null};
+let toastT;
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2600)}
+const A={
+  filter(el){UI[el.dataset.k]=el.dataset.v;$$(`[data-act="filter"][data-k="${el.dataset.k}"]`).forEach(b=>b.classList.toggle('on',b===el));renderGrid()},
+  buy(el){openBuy(el.dataset.kind,el.dataset.id)},
+  close(){closeModal()},
+  done(el){const before=new Set(S.lessons.filter(l=>status(l)==='open').map(l=>l.id));S.done.push(el.dataset.id);save();
+    const nw=S.lessons.filter(l=>status(l)==='open'&&!before.has(l.id)&&l.id!==el.dataset.id);
+    toast(`+${xpOf(lesson(el.dataset.id))} XP${nw.length?` · liberou ${nw.map(l=>l.song).join(', ')}`:''}`);route()},
+  undone(el){S.done=S.done.filter(id=>id!==el.dataset.id);save();route()},
+  play(){if(!P)return;$('#veil').hidden=true;setPlaying(!P.playing)},
+  veiloff(){$('#veil').hidden=true;setPlaying(true)},
+  speed(el){if(!P)return;P.speed=Number(el.dataset.v);if(P.video)P.video.playbackRate=P.speed;$$('[data-act="speed"]').forEach(b=>b.classList.toggle('on',b===el))},
+  mirror(el){if(!P)return;P.mirror=!P.mirror;el.classList.toggle('on',P.mirror);$('#stage').classList.toggle('mirror',P.mirror)},
+  fs(){const p=$('#player');if(document.fullscreenElement){document.exitFullscreen?.()}else{(p.requestFullscreen?.()||Promise.reject()).catch(()=>{P&&(P.phoneFull=true,syncPhoneSeg());toast('Tela cheia indisponível aqui: veja a simulação no celular ao lado')})}},
+  phone(el){if(!P)return;P.phoneFull=el.dataset.v==='full';syncPhoneSeg()},
+  mode(el){teacher(S.me).pricing.mode=el.dataset.v;save();route()},
+  billing(el){teacher(S.me).pricing.billing=el.dataset.v;save();route()},
+  addturma(){const t=teacher(S.me);t.turmas.push({id:'t-'+Date.now().toString(36),name:`Turma ${['Iniciante','Básico','Intermediário','Avançado'][Math.min(3,t.turmas.length)]}`,price:30,schedule:'Defina dia e horário',note:''});save();route()},
+  delturma(el){const id=el.dataset.id;if(PEND.del!==id){PEND.del=id;route();return}PEND.del=null;const t=teacher(S.me);t.turmas=t.turmas.filter(x=>x.id!==id);S.lessons.forEach(l=>{if(l.turmaId===id)l.turmaId=null});save();toast('Turma removida');route()},
+  dellesson(el){const id=el.dataset.id;if(PEND.del!==id){PEND.del=id;route();return}PEND.del=null;S.lessons=S.lessons.filter(l=>l.id!==id);S.lessons.forEach(l=>{l.prereq.ids=l.prereq.ids.filter(x=>x!==id)});S.done=S.done.filter(x=>x!==id);save();toast('Aula excluída');route()},
+  reset(){if(PEND.del!=='__reset'){PEND.del='__reset';$('#resetBtn').textContent='Clique de novo para confirmar';return}PEND.del=null;S=seed();save();toast('Demonstração reiniciada');route()}
+};
+function syncPhoneSeg(){$$('[data-act="phone"]').forEach(b=>b.classList.toggle('on',(b.dataset.v==='full')===P.phoneFull))}
+
+document.addEventListener('click',e=>{
+  const el=e.target.closest('[data-act]');
+  if(e.target.id==='modal'){closeModal();return}
+  if(!el)return;e.preventDefault();A[el.dataset.act]?.(el);
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#modal').hidden)closeModal()});
+document.addEventListener('input',e=>{
+  if(e.target.id==='q'){UI.q=e.target.value;renderGrid();return}
+  if(e.target.id==='seek'&&P){const t=e.target.value/1000*P.dur;P.t=t;if(P.video)P.video.currentTime=t;return}
+  if(e.target.closest('#lform'))formPreview();
+});
+document.addEventListener('change',e=>{
+  const el=e.target;
+  if(el.closest('#lform')){
+    if(el.id==='vfile'&&el.files[0]){const f=el.files[0],url=URL.createObjectURL(f);D.blob=url;$('#vname').textContent=f.name;
+      const v=document.createElement('video');v.preload='metadata';v.src=url;v.onloadedmetadata=()=>{const ori=v.videoWidth>=v.videoHeight?'h':'v';
+        $(`#lform input[name="orientation"][value="${ori}"]`).checked=true;if(isFinite(v.duration))$('#duration').value=fmtT(v.duration);formPreview();toast(`Detectado: vídeo ${ori==='h'?'horizontal':'vertical'}`)}}
+    formPreview();return;
+  }
+  const b=el.dataset.bind;if(!b)return;const [k,id,f]=b.split(':');const t=teacher(S.me);
+  if(k==='me'){S.me=el.value;save();route();return}
+  if(k==='turma'){const tm=t.turmas.find(x=>x.id===id);tm[f]=f==='price'?Math.max(0,Number(el.value)||0):el.value}
+  if(k==='pass')t.pricing.passPrice=Math.max(0,Number(el.value)||0);
+  if(k==='lturma')lesson(id).turmaId=el.value||null;
+  if(k==='lprice')lesson(id).price=Math.max(0,Number(el.value)||0);
+  save();toast('Salvo');route();
+});
+document.addEventListener('submit',e=>{if(e.target.id==='lform'){e.preventDefault();submitForm()}});
+
+/* ---------- roteador ---------- */
+function notFound(){return`<section class="wrap"><div class="empty" style="margin-top:40px">Página não encontrada. <a href="#explorar">Voltar para Explorar</a></div></section>`}
+let ticker;
+function route(){
+  stopPlayer();clearInterval(ticker);
+  const h=(location.hash.slice(1)||'explorar');let html,key=h;
+  if(h==='explorar'||h==='aulas'){html=vExplorar();key='explorar'}
+  else if(h==='professores')html=vProfessores();
+  else if(h==='trilha')html=vTrilha();
+  else if(h==='studio')html=vStudio();
+  else if(h==='nova-aula'){html=vForm(null);key='studio'}
+  else if(h.startsWith('editar-')){html=vForm(h.slice(7));key='studio'}
+  else if(h.startsWith('prof-')){html=vProf(h.slice(5));key='professores'}
+  else if(h.startsWith('aula-')){html=vAula(h.slice(5));key='explorar'}
+  else html=notFound();
+  $('#app').innerHTML=html+`<div class="wrap"><footer><span>MOVRA · demonstração com professores, alunos e aulas fictícios. Taxa da plataforma: 10% de cada pagamento.</span><button id="resetBtn" data-act="reset">Reiniciar demonstração</button></footer></div>`;
+  $$('[data-r]').forEach(a=>a.classList.toggle('on',a.dataset.r===key));
+  const prof=key==='studio';$$('#role a').forEach(a=>a.classList.toggle('on',(a.dataset.role==='prof')===prof));
+  if(key==='explorar'&&$('#lgrid')){renderGrid();if(h==='aulas')$('#aulas').scrollIntoView();else window.scrollTo(0,0);
+    if(!matchMedia('(prefers-reduced-motion: reduce)').matches){let i=0;const bs=$$('#count b');ticker=setInterval(()=>{bs.forEach((b,j)=>b.classList.toggle('on',j===i));i=(i+1)%8},60000/118)}}
+  else window.scrollTo(0,0);
+  if(h.startsWith('aula-')&&lesson(h.slice(5)))mountPlayer(lesson(h.slice(5)));
+  if($('#tree'))requestAnimationFrame(drawLinks);
+  if($('#lform'))formPreview();
+}
+window.addEventListener('hashchange',()=>{PEND.del=null;route()});
+window.addEventListener('resize',()=>{if($('#tree'))drawLinks()});
+if(document.fonts)document.fonts.ready.then(()=>{if($('#tree'))drawLinks()});
+route();
+</script>
