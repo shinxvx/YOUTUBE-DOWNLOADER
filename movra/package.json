@@ -1,0 +1,13 @@
+{
+  "name": "movra",
+  "version": "0.2.0",
+  "private": true,
+  "type": "commonjs",
+  "description": "MOVRA by Speed: aulas de dança online",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "dependencies": {
+    "better-sqlite3": "11.7.0",
+    "express": "4.21.2"
+  }
+}

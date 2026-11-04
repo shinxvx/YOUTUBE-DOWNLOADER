@@ -44,6 +44,10 @@ h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.
 .nav{display:flex;gap:4px;margin-left:8px}
 .nav a{text-decoration:none;padding:8px 12px;border-radius:999px;font-weight:600;font-size:14px;color:var(--muted)}
 .nav a.on,.nav a:hover{color:var(--ink);background:var(--surface-2)}
+.acct{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700}
+.acct button,.acct a{background:none;border:0;cursor:pointer;color:var(--muted);font-weight:700;padding:6px 8px;text-decoration:none}
+.acct .who{max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
 .role{margin-left:auto;display:flex;background:var(--surface-2);border-radius:999px;padding:3px}
 .role a{text-decoration:none;font-size:13px;font-weight:700;padding:7px 14px;border-radius:999px;color:var(--muted)}
 .role a.on{background:var(--ink);color:var(--bg)}
@@ -375,6 +379,7 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--m
 footer{padding-block:40px 60px;color:var(--muted);font-size:12px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--line);margin-top:50px}
 footer button{background:none;border:0;color:var(--accent);font-weight:700;cursor:pointer;padding:0}
 .empty{padding:30px;text-align:center;color:var(--muted);background:var(--surface);border-radius:var(--r)}
+@media (max-width:560px){.acct .who{display:none}.top .role{display:none}.acct{margin-left:auto}.logo .lg{height:34px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 
@@ -388,6 +393,7 @@ footer button{background:none;border:0;color:var(--accent);font-weight:700;curso
     <a href="#inicio" data-role="aluno">Aluno</a>
     <a href="#studio" data-role="prof">Professor</a>
   </div>
+  <div class="acct" id="acct"></div>
 </div></header>
 <main id="app"></main>
 <nav class="mnav" id="mnav">
@@ -412,7 +418,6 @@ const LEVELS = [
 const MODS = {kpop:'K-pop', jazzfunk:'Jazz Funk', autoral:'Coreografia Autoral'};
 const CATS = {fundamentos:'Fundamentos', tecnica:'Técnica', coreografia:'Coreografia', performance:'Performance'};
 const RANKS = [[0,'Trainee'],[300,'Pré-debut'],[900,'Rookie'],[1800,'Idol'],[3200,'Ace']];
-const STORE = 'movra-demo-v2';
 
 const $ = (s,r=document)=>r.querySelector(s);
 const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
@@ -424,82 +429,20 @@ const fmtT = s=>`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}
 const initials = n=>n.split(' ').map(p=>p[0]).slice(0,2).join('');
 
 /* ---------- dados fake ---------- */
-function L(id,teacherId,artist,song,modality,category,level,o){
-  return Object.assign({id,teacherId,artist,song,title:artist?`${artist} - ${song}`:song,modality,category,level,
-    orientation:'h',cropMobile:true,price:15,duration:'15:00',bpm:110,turmaId:null,prereq:{mode:'all',ids:[]},hue:260,created:'2026-10-01'},o);
+let S={teachers:[],lessons:[],students:[],done:[],access:{turmas:[],passes:[],lessons:[]},user:null,studio:null,me:null,pagamentoReal:false};
+const videoBlobs={}; // vídeo escolhido no formulário toca só neste navegador (envio para o Drive ainda não ligado)
+let DONO_TID=null;
+const qTid=()=>DONO_TID?'?tid='+encodeURIComponent(DONO_TID):'';
+async function api(method,url,body){
+  const r=await fetch(url,{method,headers:body?{'Content-Type':'application/json'}:{},body:body?JSON.stringify(body):undefined,credentials:'same-origin'});
+  let j={};try{j=await r.json()}catch(e){}
+  if(!r.ok){const err=new Error(j.erro||'Não deu certo agora. Tente de novo.');err.status=r.status;throw err}
+  return j;
 }
-function seed(){
-  const teachers = [
-    {id:'yago',name:'Yago Tiger',city:'Aulas online',hue:262,styles:['kpop'],photo:null,
-      bio:'Coreografias de boy group de K-pop, quebradas em blocos de 8 tempos, com versão lenta e espelhada.',
-      pricing:{mode:'turmas',passPrice:60,billing:'mensal'},
-      turmas:[
-        {id:'t-yago-1',name:'Turma Iniciante',price:25,schedule:'Seg e Qua · 19h30',note:'Aula nova toda segunda'},
-        {id:'t-yago-2',name:'Turma Intermediário',price:30,schedule:'Ter e Qui · 20h',note:'Coreos completas de comeback'},
-        {id:'t-yago-3',name:'Turma Avançado',price:45,schedule:'Sábado · 10h',note:'Velocidade real e formação'}]},
-    {id:'mila',name:'Mila Fernandes',city:'Aulas online',hue:330,styles:['kpop'],photo:null,
-      bio:'Coreografias de girl group de K-pop, gravadas na vertical para treinar com o celular apoiado no espelho.',
-      pricing:{mode:'passe',passPrice:50,billing:'mensal'},turmas:[]},
-    {id:'bela',name:'Bela Góes',city:'Aulas online',hue:20,styles:['jazzfunk','autoral'],photo:null,
-      bio:'Jazz Funk e coreografias: isolamento, atitude, chão e presença de palco.',
-      pricing:{mode:'turmas',passPrice:65,billing:'mensal'},
-      turmas:[
-        {id:'t-bela-1',name:'Turma Básico',price:30,schedule:'Terça · 19h',note:'Base do Jazz Funk'},
-        {id:'t-bela-2',name:'Turma Avançado',price:45,schedule:'Sexta · 20h',note:'Coreo completa + performance'}]}
-  ];
-  const lessons = [
-    L('y1','yago','','Groove K-pop: Bounce e Hit','kpop','fundamentos',0,{price:0,duration:'14:20',bpm:110,hue:262}),
-    L('y2','yago','','Contagem de 8 e Musicalidade','kpop','fundamentos',0,{price:0,duration:'11:05',bpm:100,hue:280}),
-    L('y3','yago','BOYNEXTDOOR','Earth, Wind & Fire','kpop','coreografia',1,{price:15,duration:'19:00',bpm:118,hue:160,turmaId:'t-yago-1',prereq:{mode:'all',ids:['y1']}}),
-    L('y4','yago','ENHYPEN','Bite Me','kpop','coreografia',1,{price:15,duration:'21:10',bpm:110,hue:345,orientation:'v',turmaId:'t-yago-1',prereq:{mode:'all',ids:['y1','y2']}}),
-    L('y5','yago','ATEEZ','BAD','kpop','coreografia',2,{price:20,duration:'26:15',bpm:120,hue:15,cropMobile:false,turmaId:'t-yago-2',prereq:{mode:'any',ids:['y3','y4']}}),
-    L('y6','yago','SEVENTEEN','MAESTRO','kpop','coreografia',2,{price:20,duration:'27:20',bpm:115,hue:215,turmaId:'t-yago-2',prereq:{mode:'all',ids:['y4']}}),
-    L('y7','yago','ATEEZ','WORK','kpop','coreografia',2,{price:20,duration:'24:30',bpm:125,hue:40,orientation:'v',turmaId:'t-yago-2',prereq:{mode:'all',ids:['y5']}}),
-    L('y8','yago','Stray Kids','S-Class','kpop','coreografia',3,{price:28,duration:'31:00',bpm:105,hue:0,turmaId:'t-yago-3',prereq:{mode:'all',ids:['y6','y7']}}),
-    L('y9','yago','','Coreografia Autoral: Neon','autoral','coreografia',3,{price:30,duration:'33:10',bpm:128,hue:170,cropMobile:false,turmaId:'t-yago-3',prereq:{mode:'all',ids:['y8']}}),
-    L('m1','mila','','Linhas, Extensões e Expressão','kpop','fundamentos',0,{price:0,duration:'12:00',bpm:95,hue:330,orientation:'v'}),
-    L('m2','mila','NewJeans','Super Shy','kpop','coreografia',1,{price:0,duration:'18:40',bpm:150,hue:200,orientation:'v'}),
-    L('m3','mila','ITZY','WANNABE','kpop','coreografia',1,{price:15,duration:'21:10',bpm:122,hue:310,prereq:{mode:'all',ids:['m1']}}),
-    L('m4','mila','IVE','HEYA','kpop','coreografia',1,{price:16,duration:'20:30',bpm:115,hue:45,orientation:'v',prereq:{mode:'all',ids:['m1']}}),
-    L('m5','mila','LE SSERAFIM','ANTIFRAGILE','kpop','coreografia',2,{price:20,duration:'24:30',bpm:105,hue:350,prereq:{mode:'any',ids:['m3','m4']}}),
-    L('m6','mila','aespa','Supernova','kpop','coreografia',2,{price:20,duration:'22:50',bpm:120,hue:230,orientation:'v',prereq:{mode:'all',ids:['m2']}}),
-    L('m7','mila','BLACKPINK','Shut Down','kpop','coreografia',2,{price:22,duration:'25:10',bpm:110,hue:300,orientation:'v',prereq:{mode:'all',ids:['m5']}}),
-    L('m8','mila','BABYMONSTER','SHEESH','kpop','coreografia',3,{price:28,duration:'27:00',bpm:130,hue:5,prereq:{mode:'any',ids:['m6','m7']}}),
-    L('g1','bela','','Isolamentos de Jazz Funk','jazzfunk','tecnica',0,{price:0,duration:'12:30',bpm:96,hue:20}),
-    L('g2','bela','','Atitude, Olhar e Hair Flip','jazzfunk','performance',0,{price:0,duration:'15:10',bpm:100,hue:300,orientation:'v'}),
-    L('g3','bela','Doja Cat','Paint The Town Red','jazzfunk','coreografia',1,{price:18,duration:'19:20',bpm:100,hue:355,orientation:'v',turmaId:'t-bela-1',prereq:{mode:'all',ids:['g1']}}),
-    L('g4','bela','','Chão e Transições','jazzfunk','tecnica',1,{price:15,duration:'17:00',bpm:90,hue:275,cropMobile:false,turmaId:'t-bela-1',prereq:{mode:'all',ids:['g1']}}),
-    L('g5','bela','Tinashe','Nasty','jazzfunk','coreografia',2,{price:22,duration:'23:45',bpm:112,hue:320,turmaId:'t-bela-1',prereq:{mode:'all',ids:['g2','g3']}}),
-    L('g6','bela','','Freestyle Guiado de Jazz Funk','jazzfunk','performance',2,{price:18,duration:'16:40',bpm:100,hue:10,turmaId:'t-bela-2',prereq:{mode:'all',ids:['g4']}}),
-    L('g7','bela','Beyoncé','Partition','jazzfunk','coreografia',3,{price:30,duration:'28:30',bpm:98,hue:40,turmaId:'t-bela-2',prereq:{mode:'all',ids:['g5']}}),
-    L('g8','bela','','Coreografia Autoral: Brasa','autoral','coreografia',3,{price:30,duration:'30:00',bpm:120,hue:15,turmaId:'t-bela-2',prereq:{mode:'any',ids:['g6','g7']}})
-  ];
-  // alunos fake por professor
-  const NAMES=['Ana Luiza','Bruna','Camila','Carol','Duda','Gabi','Giovanna','Isa','Júlia','Larissa','Lara','Letícia','Malu','Manu','Mariana','Nina','Pedro','Rafaela','Sofia','Thaís','Vitória','Yasmin','Kaio','Lucas','Mel','Helena','Clara','Enzo','Lívia','Hana','Jade','Luan'];
-  const SUR=['Alves','Barbosa','Costa','Dias','Ferreira','Gomes','Kim','Lima','Moraes','Nunes','Oliveira','Park','Ramos','Souza','Tanaka','Vieira'];
-  let seedN=7; const rnd=()=>{seedN=(seedN*16807)%2147483647;return (seedN-1)/2147483646};
-  const MONTHS=['mai','jun','jul','ago','set','out','nov'];
-  const students=[];
-  const counts={yago:27,mila:22,bela:19};
-  for(const t of teachers){
-    for(let i=0;i<counts[t.id];i++){
-      const name=`${NAMES[Math.floor(rnd()*NAMES.length)]} ${SUR[Math.floor(rnd()*SUR.length)]}`;
-      let plan,paid;
-      const tl=lessons.filter(l=>l.teacherId===t.id&&l.price>0);
-      if(rnd()<.18){const n=1+Math.floor(rnd()*2);const ids=[...tl].sort(()=>rnd()-.5).slice(0,n).map(l=>l.id);plan={type:'avulso',ids};paid=ids.reduce((a,id)=>a+lessons.find(l=>l.id===id).price,0)}
-      else if(t.pricing.mode==='turmas'){const w=rnd();const tm=t.turmas[w<.45?0:w<.8?1:Math.min(2,t.turmas.length-1)];plan={type:'turma',id:tm.id};paid=tm.price}
-      else{plan={type:'passe'};paid=t.pricing.passPrice}
-      students.push({id:`s-${t.id}-${i}`,teacherId:t.id,name,plan,paid,since:MONTHS[Math.floor(rnd()*MONTHS.length)],progress:Math.round(rnd()*100)});
-    }
-  }
-  return {v:2,teachers,lessons,students,me:'yago',done:['y1'],access:{turmas:[],passes:[],lessons:[]}};
-}
-
-let S;
-function load(){try{const raw=localStorage.getItem(STORE);if(raw){const d=JSON.parse(raw);if(d&&d.v===2){S=d;return}}}catch(e){} S=seed()}
-const videoBlobs={}; // vídeos enviados nesta sessão (não persistem)
-function save(){try{localStorage.setItem(STORE,JSON.stringify(S))}catch(e){}}
-load();
+async function refresh(){const j=await api('GET','/api/estado'+qTid());S=Object.assign(j,{students:j.studio?j.studio.students:[],me:j.studio?j.studio.teacherId:null})}
+async function apos(promessa,msg){try{await promessa;await refresh();if(msg)toast(msg);route(true)}catch(e){toast(e.message)}}
+const salvarPrecos=t=>api('PUT','/api/professor/precos'+qTid(),{pricing:t.pricing,turmas:t.turmas});
+const salvarAula=l=>api('POST','/api/professor/aula'+qTid(),l);
 
 /* ---------- regras ---------- */
 const teacher=id=>S.teachers.find(t=>t.id===id);
@@ -566,6 +509,7 @@ function pricingLine(t){
 
 /* ---------- views ---------- */
 const UI={mod:'all',cat:'all',lvl:'all',q:'',tid:null,tab:'aulas'};
+const vis=()=>S.teachers.filter(t=>tLessons(t.id).length);
 function vExplorar(){
   return `<section class="wrap hero">
     <div>
@@ -574,16 +518,16 @@ function vExplorar(){
       <p>Escolha um professor e comece pelas aulas grátis. Depois, libere as turmas e conclua cada coreografia como uma fase, com estrelas, XP e pré-requisitos.</p>
       <div class="hero-cta"><a class="btn acc" href="#professores">Ver professores</a><a class="btn ghost" href="#studio">Sou professor</a></div>
       <div class="hero-facts">
-        <div><strong>${S.teachers.length}</strong><span>professores</span></div>
+        <div><strong>${vis().length}</strong><span>professores</span></div>
         <div><strong>${S.lessons.length}</strong><span>aulas no ar</span></div>
         <div><strong>${S.lessons.filter(l=>!l.price).length}</strong><span>aulas grátis</span></div>
       </div>
     </div>
-    <div class="deck">${S.teachers.slice(0,3).map(pcard).join('')}</div>
+    <div class="deck">${vis().slice(0,3).map(pcard).join('')}</div>
   </section>
   <section class="wrap" id="professores">
     <div class="sec-head"><h2>Professores</h2><span class="muted">Toque num professor para ver as aulas dele</span></div>
-    <div class="pgrid">${S.teachers.map(pcard).join('')}</div>
+    <div class="pgrid">${vis().map(pcard).join('')||'<div class="empty">Os professores aparecem aqui assim que publicarem a primeira aula.</div>'}</div>
     <div class="sec-head"><h2>Como funciona</h2></div>
     <ol class="steps">
       <li><b>Escolha o professor</b><span>Cada professor tem a própria aba de aulas, turmas e preço.</span></li>
@@ -728,6 +672,7 @@ function vAula(id){
 }
 
 function vTrilha(){
+  if(!S.user)return gate('Sua trilha','Entre ou crie sua conta para salvar as aulas que você concluiu, o XP e o seu rank.','aluno');
   const xp=xpTotal(),rk=rankOf(xp),p=rk.next?Math.round((xp-rk.from)/(rk.next[0]-rk.from)*100):100;
   const open=S.lessons.filter(l=>status(l)==='open');
   const done=S.done.map(lesson).filter(Boolean);
@@ -747,8 +692,15 @@ function vTrilha(){
 
 /* ---------- studio do professor ---------- */
 function planLabel(s){const t=teacher(s.teacherId);if(s.plan.type==='passe')return'Valor fixo';if(s.plan.type==='turma'){const tm=t.turmas.find(x=>x.id===s.plan.id);return tm?tm.name:'Turma removida'}return`${s.plan.ids.length} ${s.plan.ids.length>1?'aulas avulsas':'aula avulsa'}`}
+function gate(titulo,texto,papel){
+  return `<section class="wrap"><div class="empty" style="margin-top:40px;display:flex;flex-direction:column;gap:12px;align-items:center">
+    <h2 style="font-size:22px">${titulo}</h2><p style="margin:0;max-width:46ch">${texto}</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center"><button class="btn acc" data-act="auth" data-m="entrar" data-p="${papel}">Entrar</button><button class="btn ghost" data-act="auth" data-m="cadastro" data-p="${papel}">Criar conta${papel==='professor'?' de professor':''}</button></div></div></section>`;
+}
 function vStudio(){
-  const t=teacher(S.me),ls=tLessons(t.id),st=S.students.filter(s=>s.teacherId===t.id);
+  if(!S.user)return gate('Área do professor','Entre com sua conta de professor para subir aulas, montar turmas, ver os alunos e receber.','professor');
+  if(!S.studio)return gate('Esta conta é de aluno','Para dar aula na MOVRA, saia e crie uma conta de professor com outro e-mail.','professor');
+  const t=teacher(S.me),sd=S.studio,ls=tLessons(t.id),st=S.students.filter(s=>s.teacherId===t.id);
   const gross=st.reduce((a,s)=>a+s.paid,0),fee=gross*FEE,net=gross-fee;
   const months=['jun','jul','ago','set','out','nov'],fac=[.46,.55,.63,.71,.86,1];
   const vals=fac.map(f=>Math.round(gross*f));
@@ -760,7 +712,7 @@ function vStudio(){
   </svg>`;
   const groups={};st.forEach(s=>{const k=planLabel(s);groups[k]=groups[k]||{n:0,sum:0};groups[k].n++;groups[k].sum+=s.paid});
   const mix=Object.entries(groups).sort((a,b)=>b[1].sum-a[1].sum).map(([k,g])=>`<div class="r"><span><b>${esc(k)}</b> · ${g.n} ${g.n>1?'alunos':'aluno'}</span><span class="mono">${brl(g.sum)}</span><div class="track"><i style="width:${gross?g.sum/gross*100:0}%"></i></div></div>`).join('');
-  const rows=st.slice().sort((a,b)=>b.paid-a.paid).map(s=>`<tr><td><b>${esc(s.name)}</b></td><td>${esc(planLabel(s))}</td><td class="n">${brl(s.paid)}</td><td class="n">${brl(s.paid*FEE)}</td><td class="n"><b>${brl(s.paid*(1-FEE))}</b></td><td><span class="pbar"><i style="width:${s.progress}%"></i></span><span class="mono">${s.progress}%</span></td><td>${esc(s.since)}</td></tr>`).join('');
+  const rows=st.slice().sort((a,b)=>b.paid-a.paid).map(s=>`<tr><td><b>${esc(s.name)}</b>${s.demo?' <small class="muted">fictício</small>':''}</td><td>${esc(planLabel(s))}</td><td class="n">${brl(s.paid)}</td><td class="n">${brl(s.paid*FEE)}</td><td class="n"><b>${brl(s.paid*(1-FEE))}</b></td><td><span class="pbar"><i style="width:${s.progress}%"></i></span><span class="mono">${s.progress}%</span></td><td>${esc(s.since)}</td></tr>`).join('');
   const pr=t.pricing;
   const turmas=pr.mode==='turmas'?`<div class="turmas">${t.turmas.map(tm=>{const inc=ls.filter(l=>l.turmaId===tm.id);const n=st.filter(s=>s.plan.type==='turma'&&s.plan.id===tm.id).length;
     return `<div class="turma">
@@ -783,8 +735,8 @@ function vStudio(){
     <div class="money"><span>R$</span><input class="inp" type="number" min="0" value="${l.price}" data-bind="lprice:${l.id}" aria-label="Preço avulso"></div>
     <div class="acts"><a class="btn ghost sm" href="#editar-${l.id}">Editar</a><a class="btn ghost sm" href="#aula-${l.id}">Ver</a><button class="btn ghost sm" data-act="dellesson" data-id="${l.id}">${PEND.del===l.id?'Confirmar':'Excluir'}</button></div></div>`).join('');
   return `<section class="wrap">
-    <div class="studio-head"><div><div class="eyebrow">Studio do professor · demonstração</div><h1>Olá, ${esc(t.name.split(' ')[0])}</h1></div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><select class="inp" style="width:auto" data-bind="me" aria-label="Entrar como">${S.teachers.map(x=>`<option value="${x.id}"${x.id===t.id?' selected':''}>Entrar como ${esc(x.name)}</option>`).join('')}</select><a class="btn hot" href="#nova-aula">+ Subir aula</a></div></div>
+    <div class="studio-head"><div><div class="eyebrow">Studio do professor</div><h1>Olá, ${esc(t.name.split(' ')[0])}</h1></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">${S.user.papel==='dono'?`<select class="inp" style="width:auto" data-bind="me" aria-label="Ver professor">${S.teachers.map(x=>`<option value="${x.id}"${x.id===t.id?' selected':''}>Ver ${esc(x.name)}</option>`).join('')}</select>`:''}<a class="btn hot" href="#nova-aula">+ Subir aula</a></div></div>
     <div class="kpis">
       <div class="kpi"><div class="eyebrow">Alunos ativos</div><div class="v">${st.length}</div><div class="s">${ls.length} aulas publicadas</div></div>
       <div class="kpi"><div class="eyebrow">Receita bruta · nov</div><div class="v">${brl(gross)}</div><div class="s">ticket médio ${brl(st.length?gross/st.length:0)}</div></div>
@@ -792,13 +744,24 @@ function vStudio(){
       <div class="kpi main"><div class="eyebrow">Você recebe</div><div class="v">${brl(net)}</div><div class="s">repasse do mês</div></div>
     </div>
     <div class="two">
-      <div class="panel chart"><h4>Receita bruta por mês</h4>${chart}</div>
+      <div class="panel chart"><h4>Receita bruta por mês${st.some(s=>s.demo)?' <span class="muted" style="font-weight:600">· inclui alunos fictícios da demonstração</span>':''}</h4>${chart}</div>
       <div class="panel"><h4>De onde vem o dinheiro</h4><div class="mix">${mix||'<span class="muted">Sem alunos ainda.</span>'}</div></div>
     </div>
     <div class="sec-head"><h2>Seu perfil</h2><span class="muted">É o que o aluno vê no card</span></div>
     <div class="profile"><label class="pphoto prof-up" for="photoIn">${photo(t)}<span class="up">Trocar foto</span></label><input type="file" id="photoIn" accept="image/*" hidden>
       <div class="field" style="flex:1;min-width:220px"><label for="bioIn">Apresentação</label><textarea class="inp" id="bioIn" rows="3" data-bind="bio">${esc(t.bio)}</textarea>
       <small class="muted">Os vídeos das aulas vão para a pasta MOVRA no Google Drive (ligação em andamento).</small></div></div>
+    <div class="sec-head"><h2>Recebimentos</h2><span class="muted">Você recebe 90% de cada pagamento</span></div>
+    <div class="two">
+      <div class="panel"><h4>Mercado Pago</h4>${sd.mpConectado?`<span class="state done" style="align-self:start">Conta conectada</span><p style="margin:0;font-size:14px">Os 90% de cada pagamento caem direto na sua conta Mercado Pago, na hora. O saque você faz pelo app do Mercado Pago.</p>`
+        :sd.oauth?`<p style="margin:0;font-size:14px">Conecte sua conta Mercado Pago para receber os 90% direto e na hora, sem precisar pedir saque.</p><a class="btn acc" style="align-self:start" href="/api/professor/mp/conectar${qTid()}">Conectar Mercado Pago</a>`
+        :`<p style="margin:0;font-size:14px">A conexão direta com o Mercado Pago ainda está sendo ligada pela MOVRA. Enquanto isso, o dinheiro fica no seu saldo e você pede o saque pelo Pix.</p>`}</div>
+      <div class="panel"><h4>Saldo para saque</h4><div class="kpi" style="box-shadow:none;padding:0;background:none"><div class="v">${brl(sd.saldo)}</div><div class="s">já com a taxa de 10% descontada</div></div>
+        <div class="field"><label for="pixIn">Sua chave Pix</label><input class="inp" id="pixIn" placeholder="CPF, e-mail, telefone ou chave aleatória" value="${esc(sd.pixKey)}" data-bind="pix"></div>
+        <button class="btn hot" style="align-self:start" data-act="saque"${sd.saldo>=10&&sd.pixKey?'':' disabled'}>Pedir saque de ${brl(sd.saldo)}</button>
+        <small class="muted">Mínimo de R$ 10,00. O Pix cai na sua chave depois que a MOVRA confirmar.</small></div>
+    </div>
+    ${sd.saques.length?`<div class="tablebox" style="margin-top:14px"><table><thead><tr><th>Saque</th><th class="n">Valor</th><th>Chave Pix</th><th>Situação</th></tr></thead><tbody>${sd.saques.map(w=>`<tr><td>${new Date(w.criado).toLocaleDateString('pt-BR')}</td><td class="n">${brl(w.valor)}</td><td>${esc(w.pix)}</td><td><span class="state ${w.status==='pago'?'done':w.status==='pedido'?'open':'pay'}">${{pedido:'Pedido',pago:'Pago',recusado:'Recusado'}[w.status]}</span>${w.obs?` <small class="muted">${esc(w.obs)}</small>`:''}</td></tr>`).join('')}</tbody></table></div>`:''}
     <div class="sec-head"><h2>Turmas e preços</h2><div class="seg"><button class="${pr.mode==='turmas'?'on':''}" data-act="mode" data-v="turmas">Dividir em turmas</button><button class="${pr.mode==='passe'?'on':''}" data-act="mode" data-v="passe">Valor fixo</button></div></div>
     <p class="muted" style="font-size:13px;margin:0 0 14px">Cobrança sempre mensal: o aluno paga todo mês para manter o acesso.</p>
     ${turmas}
@@ -817,8 +780,10 @@ function newDraft(edit){
     price:15,duration:'',bpm:'',turmaId:'',prereq:{mode:'all',ids:[]},hue:Math.floor(Math.random()*360)};
 }
 function vForm(editId){
+  if(!S.studio)return gate('Área do professor','Entre com sua conta de professor para subir aulas.','professor');
   const ed=editId?lesson(editId):null; if(editId&&!ed)return notFound();
-  D=newDraft(ed); if(ed){D.freeTitle=!ed.artist;S.me=ed.teacherId}
+  if(ed&&ed.teacherId!==S.me)return notFound();
+  D=newDraft(ed); if(ed){D.freeTitle=!ed.artist}
   const t=teacher(D.teacherId);
   const others=tLessons(t.id).filter(l=>l.id!==D.id);
   const r=(n,v,cur)=>`${String(cur)===String(v)?'checked':''} name="${n}" value="${v}"`;
@@ -907,10 +872,9 @@ function submitForm(){
   const data={teacherId:D.teacherId,artist:D.artist,song:D.song,title:D.title,modality:D.modality,category:D.category,level:D.level,orientation:D.orientation,
     cropMobile:D.orientation==='h'?D.cropMobile:true,price:D.price,duration:D.duration||'15:00',bpm:Number(D.bpm)||110,turmaId:teacher(D.teacherId).pricing.mode==='turmas'?D.turmaId:null,
     prereq:D.prereq,hue:D.hue};
-  let id=D.id;
-  if(id){Object.assign(lesson(id),data)}else{id='n'+Date.now().toString(36);S.lessons.push(Object.assign({id,created:new Date().toISOString().slice(0,10)},data))}
-  if(D.blob){videoBlobs[id]=D.blob}
-  save();toast(D.id?'Aula atualizada':'Aula publicada');location.hash='aula-'+id;
+  const btn=$('#lform button[type=submit]');btn.disabled=true;
+  salvarAula(Object.assign({id:D.id||undefined},data)).then(async r=>{if(D.blob)videoBlobs[r.id]=D.blob;await refresh();toast(D.id?'Aula atualizada':'Aula publicada');location.hash='aula-'+r.id})
+    .catch(e=>{$('#ferr').textContent=e.message;btn.disabled=false});
 }
 
 /* ---------- player ---------- */
@@ -1016,17 +980,83 @@ function openBuy(kind,id){
   m.innerHTML=`<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="mt"><div class="eyebrow">${esc(t.name)}</div><h2 id="mt" style="font-size:22px">Escolha como desbloquear</h2>
     <form id="buyf" style="display:flex;flex-direction:column;gap:10px">${opts.map((o,i)=>`<label class="opt"><input type="radio" name="o" value="${i}" ${i===0?'checked':''}><div><b>${esc(o.name)}</b><small>${esc(o.sub)}</small></div><span class="p">${brl(o.price)}<small style="font-size:11px;font-family:var(--body)">${o.per}</small></span></label>`).join('')}
     <div class="calc" id="bcalc"></div>
-    <div style="display:flex;gap:10px;justify-content:flex-end"><button type="button" class="btn ghost" data-act="close">Cancelar</button><button class="btn hot" type="submit">Pagar (simulação)</button></div></form>
-    <small class="muted">Demonstração: nenhum pagamento é feito.</small></div>`;
+    <div style="display:flex;gap:10px;justify-content:flex-end"><button type="button" class="btn ghost" data-act="close">Cancelar</button><button class="btn hot" type="submit">${S.pagamentoReal||t.mpConectado?'Pagar com Pix ou cartão':'Continuar'}</button></div><span class="err" id="berr"></span></form>
+    <small class="muted">${S.pagamentoReal||t.mpConectado?'Você vai para o Mercado Pago e escolhe Pix, cartão de crédito ou de débito. O acesso é liberado assim que o pagamento é aprovado.':'Modo demonstração: o Mercado Pago ainda não foi ligado, nenhum dinheiro é cobrado.'}</small></div>`;
   m.hidden=false;
   const upd=()=>{const o=opts[Number(new FormData($('#buyf')).get('o'))];$('#bcalc').innerHTML=`<div><span>Total</span><span class="mono">${brl(o.price)}</span></div><div><span>Vai para ${esc(t.name.split(' ')[0])} (90%)</span><span class="mono">${brl(o.price*(1-FEE))}</span></div><div><span>Taxa MOVRA (10%)</span><span class="mono">${brl(o.price*FEE)}</span></div>`};
   upd();$('#buyf').addEventListener('change',upd);
-  $('#buyf').addEventListener('submit',e=>{e.preventDefault();const o=opts[Number(new FormData(e.target).get('o'))];
-    if(o.k==='turma')S.access.turmas.push(o.id);else if(o.k==='passe')S.access.passes.push(o.id);else S.access.lessons.push(o.id);
-    S.students.push({id:'s-me-'+Date.now(),teacherId:t.id,name:'Você (demo)',plan:o.k==='turma'?{type:'turma',id:o.id}:o.k==='passe'?{type:'passe'}:{type:'avulso',ids:[o.id]},paid:o.price,since:'nov',progress:0});
-    save();closeModal();toast(`Desbloqueado: ${o.name}`);if(UI.tab==='planos')UI.tab='aulas';route(true);});
+  $('#buyf').addEventListener('submit',async e=>{e.preventDefault();const o=opts[Number(new FormData(e.target).get('o'))];
+    if(!S.user){closeModal();openAuth('cadastro','aluno',()=>openBuy(kind,id),'Crie sua conta para liberar as aulas.');return}
+    const b=e.target.querySelector('button[type=submit]');b.disabled=true;b.textContent='Abrindo pagamento…';
+    try{const r=await api('POST','/api/pagar',{kind:o.k,ref:o.id});if(r.url){location.href=r.url;return}closeModal();location.hash='pago-'+r.id}
+    catch(err){$('#berr').textContent=err.message;b.disabled=false;b.textContent='Tentar de novo'}});
 }
-function closeModal(){const m=$('#modal');m.hidden=true;m.innerHTML=''}
+function closeModal(){const m=$('#modal');m.hidden=true;m.innerHTML='';m._depois=null}
+function openAuth(modo,papel,depois,aviso){
+  const m=$('#modal'),cad=modo==='cadastro';
+  m.innerHTML=`<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="at">
+    <div class="seg" style="align-self:start"><button class="${cad?'':'on'}" data-act="auth" data-m="entrar" data-p="${papel}">Entrar</button><button class="${cad?'on':''}" data-act="auth" data-m="cadastro" data-p="${papel}">Criar conta</button></div>
+    <h2 id="at" style="font-size:22px">${cad?(papel==='professor'?'Conta de professor':'Criar conta'):'Entrar na MOVRA'}</h2>${aviso?`<p class="muted" style="margin:0">${esc(aviso)}</p>`:''}
+    <form id="authf" style="display:flex;flex-direction:column;gap:12px">
+      ${cad?`<div class="field"><label for="anome">Nome</label><input class="inp" id="anome" name="nome" autocomplete="name" required></div>`:''}
+      <div class="field"><label for="aemail">E-mail</label><input class="inp" id="aemail" name="email" type="email" autocomplete="email" required></div>
+      <div class="field"><label for="asenha">Senha</label><input class="inp" id="asenha" name="senha" type="password" autocomplete="${cad?'new-password':'current-password'}" minlength="6" required></div>
+      ${cad?`<div class="tiles two-c"><label class="tile"><input type="radio" name="papel" value="aluno" ${papel!=='professor'?'checked':''}><span><b>SOU ALUNO</b><small>Quero fazer aulas</small></span></label><label class="tile"><input type="radio" name="papel" value="professor" ${papel==='professor'?'checked':''}><span><b>SOU PROFESSOR</b><small>Quero dar aulas</small></span></label></div>`:''}
+      <span class="err" id="aerr"></span>
+      <div style="display:flex;gap:10px;justify-content:flex-end"><button type="button" class="btn ghost" data-act="close">Cancelar</button><button class="btn acc" type="submit">${cad?'Criar conta':'Entrar'}</button></div>
+    </form></div>`;
+  m.hidden=false;m._depois=depois;
+  setTimeout(()=>$(cad?'#anome':'#aemail')?.focus(),30);
+  $('#authf').addEventListener('submit',async e=>{e.preventDefault();const fd=Object.fromEntries(new FormData(e.target));const b=e.target.querySelector('button[type=submit]');b.disabled=true;
+    try{await api('POST',cad?'/api/cadastro':'/api/entrar',fd);await refresh();const fn=m._depois;closeModal();toast(cad?'Conta criada':'Você entrou');route(true);if(fn)fn()}
+    catch(err){$('#aerr').textContent=err.message;b.disabled=false}});
+}
+function renderAcct(){
+  const a=$('#acct');if(!a)return;
+  a.innerHTML=S.user?`${S.user.papel==='dono'?'<a href="#dono">Painel</a>':''}<span class="who" title="${esc(S.user.email)}">${esc(S.user.nome.split(' ')[0])}</span><button data-act="sair">Sair</button>`:`<button data-act="auth" data-m="entrar" data-p="aluno">Entrar</button>`;
+}
+
+/* ---------- retorno do pagamento ---------- */
+let pagoTimer;
+function vPago(id){return `<section class="wrap"><div class="panel" style="max-width:560px;margin:40px auto 0" id="pagoBox"><h2>Conferindo o pagamento…</h2><p class="muted" style="margin:0">Só um instante.</p></div></section>`}
+async function checarPago(id,tent=0){
+  clearTimeout(pagoTimer);const box=$('#pagoBox');if(!box)return;
+  if(!S.user){box.innerHTML=`<h2>Entre para ver o pagamento</h2><button class="btn acc" style="align-self:start" data-act="auth" data-m="entrar" data-p="aluno">Entrar</button>`;return}
+  let r;try{r=await api('GET','/api/pagamento/'+encodeURIComponent(id))}catch(e){box.innerHTML=`<h2>Não achamos esse pagamento</h2><p style="margin:0">${esc(e.message)}</p><a class="btn ghost" style="align-self:start" href="#inicio">Voltar</a>`;return}
+  const volta=`<a class="btn acc" style="align-self:start" href="#prof-${r.teacherId}">Ir para as aulas</a>`;
+  if(r.status==='aprovado'){await refresh();box.innerHTML=`<span class="state done" style="align-self:start">Pagamento aprovado</span><h2>${esc(r.titulo)}</h2><p style="margin:0">${brl(r.valor)}${r.demo?' · demonstração, nada foi cobrado':''}. As aulas já estão liberadas.</p>${volta}`;return}
+  if(r.status==='pendente'&&r.demo){box.innerHTML=`<span class="state open" style="align-self:start">Modo demonstração</span><h2>${esc(r.titulo)}</h2><p style="margin:0">O Mercado Pago ainda não foi ligado. Aqui o aluno pagaria ${brl(r.valor)} com Pix ou cartão. Para testar, simule a aprovação.</p><button class="btn hot" style="align-self:start" data-act="simular" data-id="${esc(id)}">Simular pagamento aprovado</button>`;return}
+  if(r.status==='pendente'){box.innerHTML=`<span class="state open" style="align-self:start">Aguardando confirmação</span><h2>${esc(r.titulo)}</h2><p style="margin:0">Assim que o Mercado Pago confirmar, as aulas são liberadas. Pix costuma cair em segundos; esta página atualiza sozinha.</p>${volta}`;
+    if(tent<60)pagoTimer=setTimeout(()=>checarPago(id,tent+1),4000);return}
+  box.innerHTML=`<span class="state pay" style="align-self:start">${r.status==='estornado'?'Pagamento estornado':'Pagamento não aprovado'}</span><h2>${esc(r.titulo)}</h2><p style="margin:0">Nenhuma aula foi liberada. Você pode tentar de novo com outro meio de pagamento.</p>${volta}`;
+}
+
+/* ---------- painel do dono ---------- */
+function vDono(){
+  if(!S.user||S.user.papel!=='dono')return gate('Painel do dono','Entre com a conta de dono da MOVRA.','aluno');
+  return `<section class="wrap"><div class="studio-head"><div><div class="eyebrow">Painel do dono</div><h1>MOVRA</h1></div><a class="btn ghost" href="#studio">Ver studio dos professores</a></div><div id="donoBox"><div class="empty">Carregando…</div></div></section>`;
+}
+const dt=ms=>ms?new Date(ms).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
+const METODO={pix:'Pix',bank_transfer:'Pix',credit_card:'Crédito',debit_card:'Débito',account_money:'Saldo MP',prepaid_card:'Pré-pago'};
+async function carregarDono(){
+  const box=$('#donoBox');if(!box)return;let d;
+  try{d=await api('GET','/api/dono/resumo')}catch(e){box.innerHTML=`<div class="empty">${esc(e.message)}</div>`;return}
+  const T=d.totais,c=d.config;
+  box.innerHTML=`${c.mercadoPago?'':`<div class="gate" style="margin-top:16px"><div><b>Pagamentos em modo demonstração</b><span>Falta colocar a chave do Mercado Pago (MP_ACCESS_TOKEN no .env do servidor). Até lá, as compras são simuladas e entram nos números abaixo${T.pagamentosDemo?` (${T.pagamentosDemo} simuladas)`:''}.</span></div></div>`}
+    ${c.mercadoPago&&!c.conexaoProfessores?`<div class="gate ok" style="margin-top:16px"><div><b>Mercado Pago ligado</b><span>Todo pagamento cai na conta da MOVRA e o professor pede saque. Para a divisão automática (90% direto na conta do professor), falta MP_CLIENT_ID e MP_CLIENT_SECRET.</span></div></div>`:''}
+    <div class="kpis">
+      <div class="kpi"><div class="eyebrow">Vendido · mês</div><div class="v">${brl(T.vendidoMes)}</div><div class="s">total ${brl(T.vendido)}</div></div>
+      <div class="kpi main"><div class="eyebrow">Taxa MOVRA · mês</div><div class="v">${brl(T.taxaMovraMes)}</div><div class="s">total ${brl(T.taxaMovra)}</div></div>
+      <div class="kpi"><div class="eyebrow">Tarifa Mercado Pago</div><div class="v">−${brl(T.tarifaMp)}</div><div class="s">sai da sua parte (pagamentos pela conta MOVRA)</div></div>
+      <div class="kpi"><div class="eyebrow">A repassar</div><div class="v">${brl(T.aRepassar)}</div><div class="s">${T.saquesPedidos} ${T.saquesPedidos===1?'saque pedido':'saques pedidos'} · ${T.alunos} alunos com conta</div></div>
+    </div>
+    <div class="sec-head"><h2>Saques</h2><span class="muted">Mande o Pix para a chave e marque como pago</span></div>
+    <div class="tablebox">${d.saques.length?`<table><thead><tr><th>Pedido</th><th>Professor</th><th class="n">Valor</th><th>Chave Pix</th><th>Situação</th><th></th></tr></thead><tbody>${d.saques.map(w=>`<tr><td>${dt(w.criado)}</td><td><b>${esc(w.professor)}</b></td><td class="n"><b>${brl(w.valor)}</b></td><td><span class="mono">${esc(w.pix)}</span> <button class="btn ghost sm" data-act="copiar" data-v="${esc(w.pix)}">Copiar</button></td><td><span class="state ${w.status==='pago'?'done':w.status==='pedido'?'open':'pay'}">${{pedido:'Pedido',pago:'Pago',recusado:'Recusado'}[w.status]}</span></td><td>${w.status==='pedido'?`<div class="acts" style="display:flex;gap:6px"><button class="btn acc sm" data-act="dsaque" data-id="${w.id}" data-st="pago">${PEND.del===w.id+'p'?'Confirmar pago':'Marcar pago'}</button><button class="btn ghost sm" data-act="dsaque" data-id="${w.id}" data-st="recusado">${PEND.del===w.id+'r'?'Confirmar':'Recusar'}</button></div>`:dt(w.resolvido)}</td></tr>`).join('')}</tbody></table>`:'<div class="empty">Nenhum saque pedido.</div>'}</div>
+    <div class="sec-head"><h2>Professores</h2></div>
+    <div class="tablebox"><table><thead><tr><th>Professor</th><th class="n">Aulas</th><th class="n">Alunos</th><th class="n">Vendido</th><th class="n">Saldo</th><th>Recebe por</th><th>Na vitrine</th><th></th></tr></thead><tbody>${d.professores.map(t=>`<tr><td><b>${esc(t.nome)}</b>${t.demo?' <small class="muted">demonstração</small>':''}</td><td class="n">${t.aulas}</td><td class="n">${t.alunos}</td><td class="n">${brl(t.vendido)}</td><td class="n"><b>${brl(t.saldo)}</b></td><td>${t.mp?'Mercado Pago dele':t.pix?'Pix '+esc(t.pix):'<span class="muted">sem chave Pix</span>'}</td><td><button class="chip${t.ativo?' on':''}" data-act="dprof" data-id="${t.id}" data-v="${t.ativo?0:1}">${t.ativo?'Visível':'Escondido'}</button></td><td><button class="btn ghost sm" data-act="dverstudio" data-id="${t.id}">Abrir studio</button></td></tr>`).join('')}</tbody></table></div>
+    <div class="sec-head"><h2>Pagamentos</h2><span class="muted">Últimos 100</span></div>
+    <div class="tablebox">${d.pagamentos.length?`<table><thead><tr><th>Data</th><th>Aluno</th><th>Professor</th><th>Item</th><th class="n">Valor</th><th class="n">Taxa 10%</th><th>Meio</th><th>Situação</th></tr></thead><tbody>${d.pagamentos.map(p=>`<tr><td>${dt(p.criado)}</td><td>${esc(p.aluno)}<br><small class="muted">${esc(p.email)}</small></td><td>${esc(p.professor)}</td><td>${esc(p.titulo)}</td><td class="n">${brl(p.valor)}</td><td class="n">${brl(p.taxa)}</td><td>${p.demo?'<small class="muted">simulado</small>':METODO[p.metodo]||esc(p.metodo||'')}${p.split?' <small class="muted">· dividido</small>':''}</td><td><span class="state ${p.status==='aprovado'?'done':p.status==='pendente'?'open':'pay'}">${esc(p.status)}</span></td></tr>`).join('')}</tbody></table>`:'<div class="empty">Nenhum pagamento ainda.</div>'}</div>`;
+}
 
 /* ---------- ações ---------- */
 const PEND={del:null};
@@ -1037,21 +1067,31 @@ const A={
   buy(el){openBuy(el.dataset.kind,el.dataset.id)},
   tab(el){UI.tab=el.dataset.v;route(true);const t=$('.tabs');if(t)t.scrollIntoView({block:'start'})},
   close(){closeModal()},
-  done(el){const before=new Set(S.lessons.filter(l=>status(l)==='open').map(l=>l.id));S.done.push(el.dataset.id);save();
-    const nw=S.lessons.filter(l=>status(l)==='open'&&!before.has(l.id)&&l.id!==el.dataset.id);
-    toast(`+${xpOf(lesson(el.dataset.id))} XP${nw.length?` · liberou ${nw.map(l=>l.song).join(', ')}`:''}`);route()},
-  undone(el){S.done=S.done.filter(id=>id!==el.dataset.id);save();route()},
+  async done(el){if(!S.user){openAuth('cadastro','aluno',null,'Crie sua conta para salvar seu progresso.');return}
+    const id=el.dataset.id,before=new Set(S.lessons.filter(l=>status(l)==='open').map(l=>l.id));
+    try{await api('POST','/api/progresso',{lessonId:id,done:true});await refresh()}catch(e){toast(e.message);return}
+    const nw=S.lessons.filter(l=>status(l)==='open'&&!before.has(l.id)&&l.id!==id);
+    toast(`+${xpOf(lesson(id))} XP${nw.length?` · liberou ${nw.map(l=>l.song).join(', ')}`:''}`);route(true)},
+  undone(el){apos(api('POST','/api/progresso',{lessonId:el.dataset.id,done:false}))},
+  auth(el){const m=$('#modal');openAuth(el.dataset.m,el.dataset.p||'aluno',m.hidden?null:m._depois)},
+  async sair(){await api('POST','/api/sair').catch(()=>{});DONO_TID=null;await refresh();toast('Você saiu');route(true)},
+  simular(el){el.disabled=true;api('POST','/api/pagar/simular',{id:el.dataset.id}).then(()=>checarPago(el.dataset.id)).catch(e=>{toast(e.message);el.disabled=false})},
+  saque(el){el.disabled=true;apos(api('POST','/api/professor/saque'+qTid(),{}),'Saque pedido. Você vê a situação logo abaixo.')},
+  dsaque(el){const k=el.dataset.id+(el.dataset.st==='pago'?'p':'r');if(PEND.del!==k){PEND.del=k;carregarDono();return}PEND.del=null;
+    api('POST','/api/dono/saque/'+el.dataset.id,{status:el.dataset.st}).then(()=>{toast(el.dataset.st==='pago'?'Saque marcado como pago':'Saque recusado');carregarDono()}).catch(e=>toast(e.message))},
+  dprof(el){api('POST','/api/dono/professor/'+el.dataset.id,{ativo:el.dataset.v==='1'}).then(async()=>{await refresh();carregarDono()}).catch(e=>toast(e.message))},
+  async dverstudio(el){DONO_TID=el.dataset.id;await refresh();location.hash='studio'},
+  copiar(el){const v=el.dataset.v;(navigator.clipboard?navigator.clipboard.writeText(v):Promise.reject()).then(()=>toast('Chave copiada')).catch(()=>toast(v))},
   play(){if(!P)return;$('#veil').hidden=true;setPlaying(!P.playing)},
   veiloff(){$('#veil').hidden=true;setPlaying(true)},
   speed(el){if(!P)return;P.speed=Number(el.dataset.v);if(P.video)P.video.playbackRate=P.speed;$$('[data-act="speed"]').forEach(b=>b.classList.toggle('on',b===el))},
   mirror(el){if(!P)return;P.mirror=!P.mirror;el.classList.toggle('on',P.mirror);$('#stage').classList.toggle('mirror',P.mirror)},
   fs(){const p=$('#player');if(document.fullscreenElement){document.exitFullscreen?.()}else{(p.requestFullscreen?.()||Promise.reject()).catch(()=>{P&&(P.phoneFull=true,syncPhoneSeg());toast('Tela cheia indisponível aqui: veja a simulação no celular ao lado')})}},
   phone(el){if(!P)return;P.phoneFull=el.dataset.v==='full';syncPhoneSeg()},
-  mode(el){teacher(S.me).pricing.mode=el.dataset.v;save();route()},
-  addturma(){const t=teacher(S.me);t.turmas.push({id:'t-'+Date.now().toString(36),name:`Turma ${['Iniciante','Básico','Intermediário','Avançado'][Math.min(3,t.turmas.length)]}`,price:30,schedule:'Defina dia e horário',note:''});save();route()},
-  delturma(el){const id=el.dataset.id;if(PEND.del!==id){PEND.del=id;route();return}PEND.del=null;const t=teacher(S.me);t.turmas=t.turmas.filter(x=>x.id!==id);S.lessons.forEach(l=>{if(l.turmaId===id)l.turmaId=null});save();toast('Turma removida');route()},
-  dellesson(el){const id=el.dataset.id;if(PEND.del!==id){PEND.del=id;route();return}PEND.del=null;S.lessons=S.lessons.filter(l=>l.id!==id);S.lessons.forEach(l=>{l.prereq.ids=l.prereq.ids.filter(x=>x!==id)});S.done=S.done.filter(x=>x!==id);save();toast('Aula excluída');route()},
-  reset(){if(PEND.del!=='__reset'){PEND.del='__reset';$('#resetBtn').textContent='Clique de novo para confirmar';return}PEND.del=null;S=seed();save();toast('Demonstração reiniciada');route()}
+  mode(el){const t=teacher(S.me);t.pricing.mode=el.dataset.v;apos(salvarPrecos(t),'Salvo')},
+  addturma(){const t=teacher(S.me);t.turmas.push({id:'t-'+Date.now().toString(36),name:`Turma ${['Iniciante','Básico','Intermediário','Avançado'][Math.min(3,t.turmas.length)]}`,price:30,schedule:'Defina dia e horário',note:''});apos(salvarPrecos(t),'Turma criada')},
+  delturma(el){const id=el.dataset.id;if(PEND.del!==id){PEND.del=id;route(true);return}PEND.del=null;const t=teacher(S.me);t.turmas=t.turmas.filter(x=>x.id!==id);apos(salvarPrecos(t),'Turma removida')},
+  dellesson(el){const id=el.dataset.id;if(PEND.del!==id){PEND.del=id;route(true);return}PEND.del=null;apos(api('DELETE','/api/professor/aula/'+encodeURIComponent(id)+qTid()),'Aula excluída')}
 };
 function syncPhoneSeg(){$$('[data-act="phone"]').forEach(b=>b.classList.toggle('on',(b.dataset.v==='full')===P.phoneFull))}
 
@@ -1074,15 +1114,14 @@ document.addEventListener('change',e=>{
         $(`#lform input[name="orientation"][value="${ori}"]`).checked=true;if(isFinite(v.duration))$('#duration').value=fmtT(v.duration);formPreview();toast(`Detectado: vídeo ${ori==='h'?'horizontal':'vertical'}`)}}
     formPreview();return;
   }
-  if(el.id==='photoIn'&&el.files[0]){resizePhoto(el.files[0]).then(url=>{teacher(S.me).photo=url;save();toast('Foto atualizada');route(true)}).catch(()=>toast('Não deu para ler essa imagem. Tente um JPG ou PNG.'));return}
+  if(el.id==='photoIn'&&el.files[0]){resizePhoto(el.files[0]).then(url=>apos(api('PUT','/api/professor/perfil'+qTid(),{photo:url}),'Foto atualizada')).catch(()=>toast('Não deu para ler essa imagem. Tente um JPG ou PNG.'));return}
   const b=el.dataset.bind;if(!b)return;const [k,id,f]=b.split(':');const t=teacher(S.me);
-  if(k==='me'){S.me=el.value;save();route();return}
-  if(k==='turma'){const tm=t.turmas.find(x=>x.id===id);tm[f]=f==='price'?Math.max(0,Number(el.value)||0):el.value}
-  if(k==='pass')t.pricing.passPrice=Math.max(0,Number(el.value)||0);
-  if(k==='bio')t.bio=el.value.slice(0,400);
-  if(k==='lturma')lesson(id).turmaId=el.value||null;
-  if(k==='lprice')lesson(id).price=Math.max(0,Number(el.value)||0);
-  save();toast('Salvo');route(true);
+  if(k==='me'){DONO_TID=el.value;apos(Promise.resolve());return}
+  if(k==='turma'){const tm=t.turmas.find(x=>x.id===id);tm[f]=f==='price'?Math.max(0,Number(el.value)||0):el.value;apos(salvarPrecos(t),'Salvo');return}
+  if(k==='pass'){t.pricing.passPrice=Math.max(0,Number(el.value)||0);apos(salvarPrecos(t),'Salvo');return}
+  if(k==='bio'){apos(api('PUT','/api/professor/perfil'+qTid(),{bio:el.value.slice(0,400)}),'Salvo');return}
+  if(k==='pix'){apos(api('PUT','/api/professor/perfil'+qTid(),{pixKey:el.value}),'Chave Pix salva');return}
+  if(k==='lturma'||k==='lprice'){const l=Object.assign({},lesson(id));if(k==='lturma')l.turmaId=el.value||null;else l.price=Math.max(0,Number(el.value)||0);apos(salvarAula(l),'Salvo')}
 });
 document.addEventListener('submit',e=>{if(e.target.id==='lform'){e.preventDefault();submitForm()}});
 
@@ -1091,17 +1130,21 @@ function resizePhoto(file){return new Promise((ok,bad)=>{const img=new Image();i
 function notFound(){return`<section class="wrap"><div class="empty" style="margin-top:40px">Página não encontrada. <a href="#explorar">Voltar para Explorar</a></div></section>`}
 let ticker;
 function route(keep){
-  stopPlayer();clearInterval(ticker);
+  stopPlayer();clearInterval(ticker);clearTimeout(pagoTimer);
   const h=(location.hash.slice(1)||'inicio');let html,key=h;UI.tid=null;
   if(['inicio','explorar','aulas','professores'].includes(h)){html=vExplorar();key='inicio'}
   else if(h==='trilha')html=vTrilha();
+  else if(h==='dono')html=vDono();
+  else if(h.startsWith('pago-')){html=vPago(h.slice(5));key='inicio'}
+  else if(h==='studio-mp-ok'||h==='studio-mp-erro'){toast(h==='studio-mp-ok'?'Mercado Pago conectado':'Não deu para conectar o Mercado Pago. Tente de novo.');location.replace('#studio');return}
   else if(h==='studio')html=vStudio();
   else if(h==='nova-aula'){html=vForm(null);key='studio'}
   else if(h.startsWith('editar-')){html=vForm(h.slice(7));key='studio'}
   else if(h.startsWith('prof-')){html=vProf(h.slice(5));key='inicio'}
   else if(h.startsWith('aula-')){html=vAula(h.slice(5));key='inicio'}
   else html=notFound();
-  $('#app').innerHTML=html+`<div class="wrap"><footer><span>MOVRA · demonstração com professores, alunos e aulas fictícios. Taxa da plataforma: 10% de cada pagamento.</span><button id="resetBtn" data-act="reset">Reiniciar demonstração</button></footer></div>`;
+  $('#app').innerHTML=html+`<div class="wrap"><footer><span>MOVRA by Speed · Taxa da plataforma: 10% de cada pagamento.${S.pagamentoReal?'':' Pagamentos em modo demonstração.'}</span><span>Professores e aulas de demonstração.</span></footer></div>`;
+  renderAcct();
   fillLogos();
   $$('[data-r]').forEach(a=>a.classList.toggle('on',a.dataset.r===key));
   const prof=key==='studio';$$('#role a').forEach(a=>a.classList.toggle('on',(a.dataset.role==='prof')===prof));
@@ -1110,9 +1153,15 @@ function route(keep){
   if(h.startsWith('aula-')&&lesson(h.slice(5)))mountPlayer(lesson(h.slice(5)));
   if($('#tree'))requestAnimationFrame(drawLinks);
   if($('#lform'))formPreview();
+  if($('#donoBox'))carregarDono();
+  if($('#pagoBox'))checarPago(h.slice(5));
 }
 window.addEventListener('hashchange',()=>{PEND.del=null;UI.tab='aulas';UI.lvl='all';UI.cat='all';route()});
 window.addEventListener('resize',()=>{if($('#tree'))drawLinks()});
 if(document.fonts)document.fonts.ready.then(()=>{if($('#tree'))drawLinks()});
-route();
+(async()=>{
+  try{await refresh()}catch(e){toast('Sem conexão com o servidor. Recarregue a página.')}
+  if(location.pathname.replace(/\/$/,'')==='/dono'&&!location.hash)history.replaceState(null,'','/#dono');
+  route();
+})();
 </script>
