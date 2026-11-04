@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Painel da loja · Dehleec</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#f7eada">
+<link rel="icon" href="/img/favicon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Allura&family=Cormorant+Garamond:wght@400;500;600&family=Montserrat:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/loja.css?v=1">
+<link rel="stylesheet" href="/admin.css?v=1">
+</head>
+<body class="adm">
+<div id="entrar" class="entrar" hidden>
+  <form id="fLogin" class="cartao">
+    <img src="/img/logo.png" alt="dehleec">
+    <h1>Painel da loja</h1>
+    <div id="lMsg"></div>
+    <div class="campo"><label for="lEmail">E-mail</label><input type="email" id="lEmail" autocomplete="username"></div>
+    <div class="campo"><label for="lSenha">Senha</label><input type="password" id="lSenha" autocomplete="current-password"></div>
+    <button class="btn cheio">Entrar</button>
+    <div id="lDemo"></div>
+    <p class="parc"><a href="/">← voltar para a loja</a></p>
+  </form>
+</div>
+<div id="painel" hidden>
+  <header class="topo"><div class="wrap">
+    <a class="marca" href="/" target="_blank" title="Abrir a loja"><img src="/img/logo.png" alt="dehleec"></a>
+    <nav class="abas" id="abas">
+      <a href="#resumo">Resumo</a><a href="#pedidos">Pedidos</a><a href="#produtos">Produtos</a><a href="#config">Configurações</a>
+    </nav>
+    <div class="acoes"><button class="btn linha peq" id="sair">Sair</button></div>
+  </div></header>
+  <main class="wrap pagina" id="conteudo"></main>
+</div>
+<div class="veu" id="veu" hidden><div class="folha" id="folha"></div></div>
+<div class="toast" id="toast" role="status"></div>
+<script src="/admin.js?v=1"></script>
+</body>
+</html>

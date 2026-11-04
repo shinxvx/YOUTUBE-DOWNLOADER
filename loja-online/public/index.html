@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Dehleec · Semijoias e Beleza</title>
+<meta name="description" content="Dehleec Espaço Beleza e Bem Estar: semijoias com garantia de 1 ano, perfumes, maquiagem e skincare. Pix ou cartão e entrega pelos Correios para todo o Brasil.">
+<meta name="theme-color" content="#f7eada">
+<link rel="icon" href="/img/favicon.png">
+<link rel="apple-touch-icon" href="/img/icone-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Allura&family=Cormorant+Garamond:wght@400;500;600&family=Montserrat:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/loja.css?v=1">
+</head>
+<body>
+<div class="faixa" id="faixa">Semijoias com <b>garantia de 1 ano</b> · Parcele em até <b>6x sem juros</b> · Entrega pelos Correios</div>
+<header class="topo">
+  <div class="wrap">
+    <button class="ic so-cel" id="bMenu" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <a class="marca" href="#/" aria-label="Início"><img src="/img/logo.png" alt="dehleec · Espaço Beleza e Bem Estar"></a>
+    <nav class="menu" id="menu"></nav>
+    <div class="acoes">
+      <form class="busca" id="busca" role="search"><input type="search" id="q" placeholder="Buscar produtos" aria-label="Buscar"><button class="ic" aria-label="Buscar"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg></button></form>
+      <button class="ic so-cel" id="bBusca" aria-label="Buscar"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg></button>
+      <a class="ic" id="lInsta" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".6"/></svg></a>
+      <a class="ic" href="#/sacola" aria-label="Sacola"><svg viewBox="0 0 24 24"><path d="M5 8h14l-1.2 12H6.2z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg><span class="bolha" id="nSacola"></span></a>
+    </div>
+  </div>
+</header>
+<main id="app"><div class="carregando">Carregando…</div></main>
+<footer class="rod">
+  <div class="wrap">
+    <div>
+      <img src="/img/logo.png" alt="dehleec">
+      <p id="fFrase">Realçando sua essência, cuidando do seu bem-estar.</p>
+    </div>
+    <div>
+      <h4>Loja</h4>
+      <ul id="fCats"></ul>
+    </div>
+    <div>
+      <h4>Atendimento</h4>
+      <ul>
+        <li><a id="fInsta" target="_blank" rel="noopener">Instagram</a></li>
+        <li id="fZap" hidden><a target="_blank" rel="noopener">WhatsApp</a></li>
+        <li>Pagamento: Pix, cartão de crédito ou débito</li>
+        <li>Envio pelos Correios (PAC e SEDEX)</li>
+        <li>Semijoias com garantia de 1 ano</li>
+      </ul>
+    </div>
+  </div>
+  <div class="direitos" id="direitos"></div>
+</footer>
+<div class="demo" id="demo" hidden>Loja em demonstração: os pagamentos são simulados. <a href="/admin">Ver painel da loja</a><button id="fDemo" aria-label="Fechar aviso">×</button></div>
+<div class="toast" id="toast" role="status"></div>
+<script src="/loja.js?v=1"></script>
+</body>
+</html>
