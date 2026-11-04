@@ -154,7 +154,7 @@ h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.
 .pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px}
 .pcard{position:relative;aspect-ratio:3/4;border-radius:22px;overflow:hidden;text-decoration:none;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;box-shadow:var(--shadow);max-width:100%;isolation:isolate}
 .pphoto{position:absolute;inset:0;display:block;overflow:hidden;z-index:-1}
-.pphoto img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}
+.pphoto img{width:100%;height:100%;object-fit:cover;object-position:center 22%;display:block;transition:transform .5s}
 .pcard:hover .pphoto img,.pcard:hover .ph-gen b{transform:scale(1.05)}
 .ph-gen{--h:260;position:absolute;inset:0;display:grid;place-items:center;align-content:center;gap:6px;overflow:hidden;
   background:radial-gradient(90% 70% at 80% 10%,hsl(calc(var(--h) + 40) 95% 62%),transparent 60%),radial-gradient(80% 60% at 0% 90%,hsl(calc(var(--h) - 30) 90% 50%),transparent 65%),linear-gradient(160deg,hsl(var(--h) 70% 32%),hsl(calc(var(--h) + 20) 75% 10%))}
@@ -206,23 +206,6 @@ h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.
 .plan ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:4px;font-size:13px}
 .plan li{display:flex;justify-content:space-between;gap:8px}
 
-/* trilha (skill tree) */
-.tree{position:relative;background:var(--surface);border-radius:20px;padding:22px;overflow-x:auto;box-shadow:inset 0 0 0 1px var(--line)}
-.tree-in{position:relative;display:grid;grid-template-columns:repeat(4,minmax(170px,1fr));gap:26px;min-width:760px}
-.tree svg.links{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
-.tree svg.links path{fill:none;stroke:var(--line);stroke-width:2.5}
-.tree svg.links path.ok{stroke:var(--accent);stroke-dasharray:none}
-.tree svg.links path.wait{stroke-dasharray:5 6}
-.tcol{display:flex;flex-direction:column;gap:18px;position:relative;z-index:1}
-.tcol>.eyebrow{display:flex;gap:8px;align-items:center}
-.node{display:flex;gap:10px;align-items:center;background:var(--bg);border-radius:14px;padding:10px;text-decoration:none;box-shadow:inset 0 0 0 1.5px var(--line)}
-.node .dot{--h:260;width:42px;height:42px;border-radius:12px;flex:none;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,hsl(var(--h) 80% 55%),hsl(calc(var(--h) + 40) 80% 35%))}
-.node .dot svg{width:18px;height:18px;fill:#fff}
-.node b{display:block;font-size:12.5px;line-height:1.2}
-.node.st-done{box-shadow:inset 0 0 0 2px var(--good)}
-.node.st-open{box-shadow:inset 0 0 0 2px var(--accent)}
-.node.st-lock-pre{opacity:.6}
-.node.st-lock-pre .dot,.node.st-lock-pay .dot{filter:grayscale(.75)}
 
 /* aula */
 .lesson{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:26px;padding-block:26px}
@@ -265,7 +248,7 @@ h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.
 .studio-head{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;padding-block:30px 8px}
 .studio-head h1{font-size:clamp(28px,4.5vw,44px);font-weight:900}
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px}
-@media (max-width:860px){.kpis{grid-template-columns:repeat(2,1fr)}.kpi .v{font-size:19px}}
+@media (max-width:860px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.kpi .v{font-size:clamp(15px,4.4vw,19px);overflow-wrap:anywhere}}
 .kpi{min-width:0;background:var(--surface);border-radius:var(--r);padding:16px;box-shadow:inset 0 0 0 1px var(--line)}
 .kpi .v{font-family:var(--display);font-weight:900;font-size:26px;margin-top:6px;font-variant-numeric:tabular-nums}
 .kpi .s{font-size:12px;color:var(--muted)}
@@ -293,9 +276,7 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--m
 .seg{display:inline-flex;flex-wrap:wrap;max-width:100%;background:var(--surface-2);border-radius:999px;padding:3px}
 .seg button{border:0;background:transparent;border-radius:999px;padding:8px 14px;font-weight:800;font-size:13px;cursor:pointer;color:var(--muted)}
 .seg button.on{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
-.turmas{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
 .turma{background:var(--surface);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:inset 0 0 0 1px var(--line)}
-.turma .lchips{display:flex;flex-wrap:wrap;gap:6px}
 .lchip{font-size:11.5px;font-weight:700;padding:4px 8px;border-radius:8px;background:var(--bg)}
 .field{display:flex;flex-direction:column;gap:6px;min-width:0}
 .field>label,.field>.lab{font-size:12px;font-weight:800;color:var(--muted)}
@@ -387,7 +368,7 @@ footer button{background:none;border:0;color:var(--accent);font-weight:700;curso
   <a class="logo" href="#inicio" aria-label="MOVRA by Speed, início"><img class="lg lg-l" data-logo="l" alt="MOVRA by Speed"><img class="lg lg-d" data-logo="d" alt=""></a>
   <nav class="nav" id="nav">
     <a href="#inicio" data-r="inicio">Professores</a>
-    <a href="#trilha" data-r="trilha">Minha trilha</a>
+    <a href="#trilha" data-r="trilha">Meu progresso</a>
   </nav>
   <div class="role" id="role">
     <a href="#inicio" data-role="aluno">Aluno</a>
@@ -398,7 +379,7 @@ footer button{background:none;border:0;color:var(--accent);font-weight:700;curso
 <main id="app"></main>
 <nav class="mnav" id="mnav">
   <a href="#inicio" data-r="inicio">Professores</a>
-  <a href="#trilha" data-r="trilha">Trilha</a>
+  <a href="#trilha" data-r="trilha">Progresso</a>
   <a href="#studio" data-r="studio">Studio</a>
 </nav>
 <div class="modal" id="modal" hidden></div>
@@ -441,23 +422,20 @@ async function api(method,url,body){
 }
 async function refresh(){const j=await api('GET','/api/estado'+qTid());S=Object.assign(j,{students:j.studio?j.studio.students:[],me:j.studio?j.studio.teacherId:null})}
 async function apos(promessa,msg){try{await promessa;await refresh();if(msg)toast(msg);route(true)}catch(e){toast(e.message)}}
-const salvarPrecos=t=>api('PUT','/api/professor/precos'+qTid(),{pricing:t.pricing,turmas:t.turmas});
+const salvarPrecos=t=>api('PUT','/api/professor/precos'+qTid(),{pricing:t.pricing});
 const salvarAula=l=>api('POST','/api/professor/aula'+qTid(),l);
 
 /* ---------- regras ---------- */
 const teacher=id=>S.teachers.find(t=>t.id===id);
 const lesson=id=>S.lessons.find(l=>l.id===id);
 const tLessons=tid=>S.lessons.filter(l=>l.teacherId===tid);
-const turmaOf=l=>{const t=teacher(l.teacherId);return t.turmas.find(x=>x.id===l.turmaId)};
-function prereqOk(l){const ids=(l.prereq?.ids||[]).filter(lesson);if(!ids.length)return true;return l.prereq.mode==='any'?ids.some(id=>S.done.includes(id)):ids.every(id=>S.done.includes(id))}
 function hasAccess(l){
   if(!l.price) return true;
   if(S.access.lessons.includes(l.id)) return true;
   const t=teacher(l.teacherId);
-  if(t.pricing.mode==='passe') return S.access.passes.includes(t.id);
-  return !!(l.turmaId&&S.access.turmas.includes(l.turmaId));
+  return S.access.passes.includes(t.id);
 }
-function status(l){if(S.done.includes(l.id))return'done';if(!prereqOk(l))return'lock-pre';if(!hasAccess(l))return'lock-pay';return'open'}
+function status(l){if(S.done.includes(l.id))return'done';if(!hasAccess(l))return'lock-pay';return'open'}
 function stateLabel(l,st){return{done:['done','Concluída'],open:['open',l.price?'Liberada':'Grátis'],'lock-pay':['pay',brl(l.price)],'lock-pre':['pre','Bloqueada']}[st]}
 function xpTotal(){return S.done.map(lesson).filter(Boolean).reduce((a,l)=>a+xpOf(l),0)}
 function rankOf(xp){let r=RANKS[0],next=null;for(let i=0;i<RANKS.length;i++){if(xp>=RANKS[i][0]){r=RANKS[i];next=RANKS[i+1]||null}}return{name:r[1],from:r[0],next}}
@@ -473,8 +451,7 @@ const orient=l=>`<span class="orient"><i class="${l.orientation}"></i>${l.orient
 
 function card(l){
   const t=teacher(l.teacherId),st=status(l),[cls,lab]=stateLabel(l,st);
-  const reqNames=(l.prereq.ids||[]).map(lesson).filter(Boolean).map(x=>x.song);
-  const veil=st==='lock-pre'?`<div class="lockveil"><span>${LOCK}Complete ${l.prereq.mode==='any'?'uma de':''} ${esc(reqNames.join(l.prereq.mode==='any'?' ou ':' + '))}</span></div>`:'';
+  const veil='';
   return `<a class="card st-${st}" href="#aula-${l.id}">
     <div class="cover" style="--h:${l.hue}">
       <div class="cover-top"><span class="lvl">${LEVELS[l.level].k}</span>${orient(l)}</div>
@@ -490,8 +467,8 @@ function card(l){
 }
 function songCls(s){const w=Math.max(...s.split(/\s+/).map(x=>x.length));return w>11||s.length>26?' xl':w>8||s.length>16?' long':''}
 function photo(t){return t.photo?`<img src="${t.photo}" alt="Foto de ${esc(t.name)}">`:`<span class="ph-gen" style="--h:${t.hue}"><b>${initials(t.name)}</b><small>foto do professor</small></span>`}
-function tAccess(t){if(S.access.passes.includes(t.id))return'Valor fixo';const tm=t.turmas.find(x=>S.access.turmas.includes(x.id));return tm?tm.name:null}
-function fromPrice(t){if(t.pricing.mode==='passe')return`${brl(t.pricing.passPrice)}/mês · tudo liberado`;const ps=t.turmas.map(x=>x.price);return ps.length?`Turmas a partir de ${brl(Math.min(...ps))}`:'Aulas avulsas'}
+function tAccess(t){return S.access.passes.includes(t.id)?'Mensalidade':null}
+function fromPrice(t){return `${brl(t.pricing.passPrice)}/mês · todas as aulas`}
 function pcard(t){const ls=tLessons(t.id),free=ls.filter(l=>!l.price).length,acc=tAccess(t);
   return `<a class="pcard" href="#prof-${t.id}"><span class="pphoto">${photo(t)}</span>
   <span class="pinfo"><span class="ptags">${t.styles.map(s=>`<i>${MODS[s]}</i>`).join('')}${free?`<i class="free">${free} grátis</i>`:''}</span>
@@ -502,10 +479,7 @@ function tcard(t){
   return `<a class="tcard" href="#prof-${t.id}"><span class="ava" style="--h:${t.hue}">${initials(t.name)}</span>
   <span><strong>${esc(t.name)}</strong><small>${t.styles.map(s=>MODS[s]).join(' · ')} · ${n} aulas</small><br><small>${pricingLine(t)}</small></span></a>`;
 }
-function pricingLine(t){
-  if(t.pricing.mode==='passe')return`Valor fixo ${brl(t.pricing.passPrice)}/mês, tudo liberado`;
-  const ps=t.turmas.map(x=>x.price);return ps.length?`Turmas de ${brl(Math.min(...ps))} a ${brl(Math.max(...ps))}`:'Aulas avulsas';
-}
+function pricingLine(t){return fromPrice(t)}
 
 /* ---------- views ---------- */
 const UI={mod:'all',cat:'all',lvl:'all',q:'',tid:null,tab:'aulas'};
@@ -515,7 +489,7 @@ function vExplorar(){
     <div>
       <div class="eyebrow">K-pop · Jazz Funk · Coreografias</div>
       <h1 class="hero-logo"><img class="lg lg-l" data-logo="l" alt="MOVRA by Speed"><img class="lg lg-d" data-logo="d" alt=""></h1>
-      <p>Escolha um professor e comece pelas aulas grátis. Depois, libere as turmas e conclua cada coreografia como uma fase, com estrelas, XP e pré-requisitos.</p>
+      <p>Escolha um professor e comece pelas aulas grátis. Depois, assine a mensalidade para liberar tudo ou compre só a aula que você quer.</p>
       <div class="hero-cta"><a class="btn acc" href="#professores">Ver professores</a><a class="btn ghost" href="#studio">Sou professor</a></div>
       <div class="hero-facts">
         <div><strong>${vis().length}</strong><span>professores</span></div>
@@ -530,10 +504,10 @@ function vExplorar(){
     <div class="pgrid">${vis().map(pcard).join('')||'<div class="empty">Os professores aparecem aqui assim que publicarem a primeira aula.</div>'}</div>
     <div class="sec-head"><h2>Como funciona</h2></div>
     <ol class="steps">
-      <li><b>Escolha o professor</b><span>Cada professor tem a própria aba de aulas, turmas e preço.</span></li>
+      <li><b>Escolha o professor</b><span>Cada professor tem a própria aba de aulas e define o próprio preço.</span></li>
       <li><b>Comece grátis</b><span>O professor deixa algumas aulas abertas para você experimentar.</span></li>
-      <li><b>Libere o acesso</b><span>Entre numa turma ou pague o valor fixo para liberar as outras aulas.</span></li>
-      <li><b>Zere as fases</b><span>Conclua as aulas para ganhar XP e destravar as próximas.</span></li>
+      <li><b>Libere o acesso</b><span>A mensalidade libera todas as aulas, inclusive as novas. Ou compre uma aula avulsa.</span></li>
+      <li><b>Zere as fases</b><span>Faça na ordem que quiser. Cada aula concluída vale XP e sobe o seu rank.</span></li>
     </ol>
   </section>`;
 }
@@ -554,31 +528,19 @@ function vProfessores(){
 function vProf(id){
   const t=teacher(id);if(!t)return notFound();
   const ls=tLessons(id);
-  let plans='';
-  if(t.pricing.mode==='passe'){
-    const own=S.access.passes.includes(t.id);
-    plans=`<div class="plan${own?' owned':''}"><span class="eyebrow">Valor fixo</span><h3>Todas as aulas liberadas</h3>
+  const own=S.access.passes.includes(t.id),pagas=ls.filter(l=>l.price>0);
+  const plans=`<div class="plan${own?' owned':''}"><span class="eyebrow">Mensalidade</span><h3>Todas as aulas de ${esc(t.name.split(' ')[0])}</h3>
       <div class="price">${brl(t.pricing.passPrice)} <small>/mês</small></div>
-      <ul><li><span>Aulas incluídas</span><b>${ls.length}</b></li><li><span>Novas aulas</span><b>inclusas</b></li></ul>
-      ${own?'<span class="state done" style="align-self:start">Você tem acesso</span>':`<button class="btn acc" data-act="buy" data-kind="passe" data-id="${t.id}">Assinar</button>`}</div>`;
-  } else {
-    plans=t.turmas.map(tm=>{const inc=ls.filter(l=>l.turmaId===tm.id);const own=S.access.turmas.includes(tm.id);
-      return `<div class="plan${own?' owned':''}"><span class="eyebrow">${esc(tm.schedule)}</span><h3>${esc(tm.name)}</h3>
-      <div class="price">${brl(tm.price)} <small>/mês</small></div>
-      <ul>${inc.map(l=>`<li><span>${esc(l.title)}</span>${stars(l.level)}</li>`).join('')||'<li class="muted">Sem aulas ainda</li>'}</ul>
-      <small class="muted">${esc(tm.note||'')}</small>
-      ${own?'<span class="state done" style="align-self:start">Você está nessa turma</span>':`<button class="btn acc" data-act="buy" data-kind="turma" data-id="${tm.id}">Entrar na turma</button>`}</div>`}).join('');
-    const loose=ls.filter(l=>!l.turmaId&&l.price>0);
-    if(loose.length)plans+=`<div class="plan"><span class="eyebrow">Avulsas</span><h3>Fora das turmas</h3><ul>${loose.map(l=>`<li><span>${esc(l.title)}</span><b>${brl(l.price)}</b></li>`).join('')}</ul></div>`;
-  }
+      <ul><li><span>Aulas já postadas</span><b>${ls.length}</b></li><li><span>Aulas novas que ele lançar</span><b>inclusas</b></li><li><span>Todas as dificuldades</span><b>${stars(3)}</b></li></ul>
+      ${own?'<span class="state done" style="align-self:start">Você tem acesso</span>':`<button class="btn acc" data-act="buy" data-kind="passe" data-id="${t.id}">Assinar mensalidade</button>`}</div>
+    ${pagas.length?`<div class="plan"><span class="eyebrow">Avulso</span><h3>Só a aula que você quer</h3><p class="muted" style="margin:0;font-size:13px">Sem mensalidade: pague uma vez e a aula fica liberada para sempre.</p><ul>${pagas.slice(0,8).map(l=>`<li><span>${esc(l.title)}</span><b>${brl(l.price)}</b></li>`).join('')}</ul>${pagas.length>8?`<small class="muted">e mais ${pagas.length-8} aulas</small>`:''}</div>`:''}`;
   UI.tid=t.id;
   const free=ls.filter(l=>!l.price),acc=tAccess(t),tab=UI.tab;
-  const gate=acc?`<div class="gate ok"><div><b>Você tem acesso: ${esc(acc)}</b><span>As aulas liberadas aparecem com o selo azul. Conclua as fases para destravar as próximas.</span></div></div>`
-    :`<div class="gate"><div><b>Libere as aulas de ${esc(t.name.split(' ')[0])}</b><span>${free.length?`${free.length} ${free.length>1?'aulas grátis estão abertas':'aula grátis está aberta'} para você começar agora. `:''}As outras precisam de ${t.pricing.mode==='passe'?`acesso por ${brl(t.pricing.passPrice)}/mês`:'uma turma'}.</span></div><button class="btn hot" data-act="tab" data-v="planos">${t.pricing.mode==='passe'?'Liberar tudo':'Ver turmas'}</button></div>`;
-  const tabs=[['aulas',`Aulas (${ls.length})`],['trilha','Trilha'],['planos',t.pricing.mode==='passe'?'Acesso':'Turmas']];
+  const gate=acc?`<div class="gate ok"><div><b>Você tem acesso: ${esc(acc)}</b><span>Todas as aulas estão liberadas, inclusive as novas que forem postadas. Faça na ordem que quiser.</span></div></div>`
+    :`<div class="gate"><div><b>Libere as aulas de ${esc(t.name.split(' ')[0])}</b><span>${free.length?`${free.length} ${free.length>1?'aulas grátis estão abertas':'aula grátis está aberta'} para você começar agora. `:''}A mensalidade de ${brl(t.pricing.passPrice)} libera todas, ou compre só a aula que quiser.</span></div><button class="btn hot" data-act="tab" data-v="planos">Ver mensalidade</button></div>`;
+  const tabs=[['aulas',`Aulas (${ls.length})`],['planos','Mensalidade']];
   let body='';
-  if(tab==='planos')body=`<div class="sec-head"><h2>${t.pricing.mode==='passe'?'Acesso':'Turmas'}</h2><span class="muted">10% de cada pagamento é a taxa MOVRA</span></div><div class="plans">${plans}</div>`;
-  else if(tab==='trilha')body=`<div class="sec-head"><h2>Trilha</h2><span class="muted">As linhas mostram o que precisa ser concluído antes</span></div>${tree(ls)}`;
+  if(tab==='planos')body=`<div class="sec-head"><h2>Mensalidade</h2><span class="muted">Cobrança mensal, cancele quando quiser</span></div><div class="plans">${plans}</div>`;
   else body=`${free.length?`<div class="sec-head"><h2>Comece grátis</h2><span class="muted">Liberadas para todo mundo</span></div><div class="grid">${free.map(card).join('')}</div>`:''}
     <div class="sec-head"><h2>Todas as aulas</h2><span class="muted" id="cnt"></span></div>
     <div class="filters" style="border-top:0;padding-top:0">
@@ -596,32 +558,13 @@ function vProf(id){
     ${body}
   </section>`;
 }
-function tree(ls){
-  const cols=[0,1,2,3].map(lv=>`<div class="tcol"><div class="eyebrow">${stars(lv)} ${LEVELS[lv].k}</div>${ls.filter(l=>l.level===lv).map(l=>{const st=status(l);
-    return `<a class="node st-${st}" href="#aula-${l.id}" data-node="${l.id}"><span class="dot" style="--h:${l.hue}">${st==='done'?CHECK:st.startsWith('lock')?LOCK:PLAY}</span><span><b>${esc(l.title)}</b><small class="muted">${stateLabel(l,st)[1]}</small></span></a>`}).join('')}</div>`).join('');
-  return `<div class="tree"><div class="tree-in" id="tree"><svg class="links" id="links"></svg>${cols}</div></div>`;
-}
-function drawLinks(){
-  const box=$('#tree'),svg=$('#links');if(!box||!svg)return;
-  const b=box.getBoundingClientRect();let d='';
-  $$('[data-node]',box).forEach(n=>{const l=lesson(n.dataset.node);(l.prereq.ids||[]).forEach(pid=>{const p=box.querySelector(`[data-node="${pid}"]`);if(!p)return;
-    const a=p.getBoundingClientRect(),c=n.getBoundingClientRect();
-    const x1=a.right-b.left,y1=a.top+a.height/2-b.top,x2=c.left-b.left,y2=c.top+c.height/2-b.top;
-    let path;if(x2>x1+4){const m=(x2-x1)/2;path=`M${x1} ${y1} C${x1+m} ${y1} ${x2-m} ${y2} ${x2} ${y2}`}
-    else{const sx=a.left+a.width/2-b.left,sy=a.bottom-b.top,ex=c.left+c.width/2-b.left,ey=c.top-b.top;path=`M${sx} ${sy} C${sx} ${sy+20} ${ex} ${ey-20} ${ex} ${ey}`}
-    d+=`<path d="${path}" class="${S.done.includes(pid)?'ok':'wait'}"/>`})});
-  svg.innerHTML=d;
-}
-
 function vAula(id){
   const l=lesson(id);if(!l)return notFound();
-  const t=teacher(l.teacherId),st=status(l),tm=turmaOf(l);
-  const reqs=(l.prereq.ids||[]).map(lesson).filter(Boolean);
+  const t=teacher(l.teacherId),st=status(l);
   let cta='';
   if(st==='done')cta=`<span class="state done" style="align-self:start;font-size:13px;padding:6px 12px">Fase concluída · +${xpOf(l)} XP</span><button class="btn ghost sm" data-act="undone" data-id="${l.id}">Refazer do zero</button>`;
   else if(st==='open')cta=`<button class="btn hot" data-act="done" data-id="${l.id}">Marcar como concluída · +${xpOf(l)} XP</button>`;
-  else if(st==='lock-pay')cta=`<button class="btn acc" data-act="buy" data-kind="lesson" data-id="${l.id}">Desbloquear</button><small class="muted">Prévia grátis de 15 segundos no player.</small>`;
-  else cta=`<small class="muted">Conclua os pré-requisitos para liberar esta fase.</small>${hasAccess(l)?'':`<button class="btn ghost sm" data-act="buy" data-kind="lesson" data-id="${l.id}">Já garantir acesso</button>`}`;
+  else cta=`<button class="btn acc" data-act="buy" data-kind="lesson" data-id="${l.id}">Desbloquear</button><small class="muted">Prévia grátis de 15 segundos no player.</small>`;
   const fullRule=l.orientation==='v'?'Vídeo vertical: ocupa a tela inteira do celular.':l.cropMobile?'Horizontal com crop: em tela cheia no celular em pé, o vídeo é cortado no centro e ocupa a tela toda.':'Horizontal sem crop: em tela cheia no celular em pé, aparece inteiro com faixas pretas.';
   return `<section class="wrap lesson">
     <div style="display:flex;flex-direction:column;gap:18px;min-width:0">
@@ -659,30 +602,26 @@ function vAula(id){
           <dt>Duração</dt><dd class="mono">${esc(l.duration)}</dd>
           <dt>Formato</dt><dd>${l.orientation==='v'?'Vertical':'Horizontal'}</dd>
           <dt>Recompensa</dt><dd class="mono">+${xpOf(l)} XP</dd>
-          <dt>Acesso</dt><dd>${!l.price?'Grátis':t.pricing.mode==='passe'?`Valor fixo ${brl(t.pricing.passPrice)} ou ${brl(l.price)} avulsa`:tm?`${esc(tm.name)} ou ${brl(l.price)} avulsa`:`${brl(l.price)} avulsa`}</dd>
+          <dt>Acesso</dt><dd>${!l.price?'Grátis':`Mensalidade ${brl(t.pricing.passPrice)} ou ${brl(l.price)} avulsa`}</dd>
         </dl>
         ${cta}
-      </div>
-      <div class="panel">
-        <h4>Pré-requisitos ${reqs.length>1?`<span class="muted" style="font-weight:600">· ${l.prereq.mode==='any'?'concluir pelo menos uma':'concluir todas'}</span>`:''}</h4>
-        ${reqs.length?`<div class="req">${reqs.map(r=>`<a href="#aula-${r.id}"><span class="${S.done.includes(r.id)?'ok':'no'}">${S.done.includes(r.id)?'✓':'○'}</span><span style="flex:1">${esc(r.title)}</span>${stars(r.level)}</a>`).join('')}</div>`:'<small class="muted">Nenhum. Pode começar por aqui.</small>'}
       </div>
     </aside>
   </section>`;
 }
 
 function vTrilha(){
-  if(!S.user)return gate('Sua trilha','Entre ou crie sua conta para salvar as aulas que você concluiu, o XP e o seu rank.','aluno');
+  if(!S.user)return gate('Seu progresso','Entre ou crie sua conta para salvar as aulas que você concluiu, o XP e o seu rank.','aluno');
   const xp=xpTotal(),rk=rankOf(xp),p=rk.next?Math.round((xp-rk.from)/(rk.next[0]-rk.from)*100):100;
   const open=S.lessons.filter(l=>status(l)==='open');
   const done=S.done.map(lesson).filter(Boolean);
   const buyable=S.lessons.filter(l=>status(l)==='lock-pay').slice(0,8);
   return `<section class="wrap">
     <div class="me"><div class="rank" style="--p:${p}"><div><span>${rk.name}<small>${xp} XP</small></span></div></div>
-      <div><div class="eyebrow">Sua trilha</div><h1>${done.length} ${done.length===1?'fase concluída':'fases concluídas'}</h1>
+      <div><div class="eyebrow">Seu progresso</div><h1>${done.length} ${done.length===1?'fase concluída':'fases concluídas'}</h1>
       <p class="muted" style="margin:6px 0 0">${rk.next?`Faltam ${rk.next[0]-xp} XP para virar ${rk.next[1]}.`:'Rank máximo alcançado.'}</p></div></div>
     <div class="sec-head"><h2>Prontas para jogar</h2><span class="muted">${open.length} liberadas</span></div>
-    <div class="grid">${open.map(card).join('')||'<div class="empty">Nada liberado agora. Desbloqueie uma turma ou conclua pré-requisitos.</div>'}</div>
+    <div class="grid">${open.map(card).join('')||'<div class="empty">Nada liberado agora. Assine a mensalidade de um professor ou compre uma aula.</div>'}</div>
     <div class="sec-head"><h2>Concluídas</h2></div>
     <div class="grid">${done.map(card).join('')||'<div class="empty">Conclua sua primeira aula para ela aparecer aqui.</div>'}</div>
     <div class="sec-head"><h2>Para desbloquear</h2></div>
@@ -691,14 +630,14 @@ function vTrilha(){
 }
 
 /* ---------- studio do professor ---------- */
-function planLabel(s){const t=teacher(s.teacherId);if(s.plan.type==='passe')return'Valor fixo';if(s.plan.type==='turma'){const tm=t.turmas.find(x=>x.id===s.plan.id);return tm?tm.name:'Turma removida'}return`${s.plan.ids.length} ${s.plan.ids.length>1?'aulas avulsas':'aula avulsa'}`}
+function planLabel(s){if(s.plan.type==='passe'||s.plan.type==='turma')return'Mensalidade';return`${s.plan.ids.length} ${s.plan.ids.length>1?'aulas avulsas':'aula avulsa'}`}
 function gate(titulo,texto,papel){
   return `<section class="wrap"><div class="empty" style="margin-top:40px;display:flex;flex-direction:column;gap:12px;align-items:center">
     <h2 style="font-size:22px">${titulo}</h2><p style="margin:0;max-width:46ch">${texto}</p>
     <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center"><button class="btn acc" data-act="auth" data-m="entrar" data-p="${papel}">Entrar</button><button class="btn ghost" data-act="auth" data-m="cadastro" data-p="${papel}">Criar conta${papel==='professor'?' de professor':''}</button></div></div></section>`;
 }
 function vStudio(){
-  if(!S.user)return gate('Área do professor','Entre com sua conta de professor para subir aulas, montar turmas, ver os alunos e receber.','professor');
+  if(!S.user)return gate('Área do professor','Entre com sua conta de professor para subir aulas, definir a mensalidade, ver os alunos e receber.','professor');
   if(!S.studio)return gate('Esta conta é de aluno','Para dar aula na MOVRA, saia e crie uma conta de professor com outro e-mail.','professor');
   const t=teacher(S.me),sd=S.studio,ls=tLessons(t.id),st=S.students.filter(s=>s.teacherId===t.id);
   const gross=st.reduce((a,s)=>a+s.paid,0),fee=gross*FEE,net=gross-fee;
@@ -714,24 +653,13 @@ function vStudio(){
   const mix=Object.entries(groups).sort((a,b)=>b[1].sum-a[1].sum).map(([k,g])=>`<div class="r"><span><b>${esc(k)}</b> · ${g.n} ${g.n>1?'alunos':'aluno'}</span><span class="mono">${brl(g.sum)}</span><div class="track"><i style="width:${gross?g.sum/gross*100:0}%"></i></div></div>`).join('');
   const rows=st.slice().sort((a,b)=>b.paid-a.paid).map(s=>`<tr><td><b>${esc(s.name)}</b>${s.demo?' <small class="muted">fictício</small>':''}</td><td>${esc(planLabel(s))}</td><td class="n">${brl(s.paid)}</td><td class="n">${brl(s.paid*FEE)}</td><td class="n"><b>${brl(s.paid*(1-FEE))}</b></td><td><span class="pbar"><i style="width:${s.progress}%"></i></span><span class="mono">${s.progress}%</span></td><td>${esc(s.since)}</td></tr>`).join('');
   const pr=t.pricing;
-  const turmas=pr.mode==='turmas'?`<div class="turmas">${t.turmas.map(tm=>{const inc=ls.filter(l=>l.turmaId===tm.id);const n=st.filter(s=>s.plan.type==='turma'&&s.plan.id===tm.id).length;
-    return `<div class="turma">
-      <div class="field"><label for="tn-${tm.id}">Nome da turma</label><input class="inp" id="tn-${tm.id}" value="${esc(tm.name)}" data-bind="turma:${tm.id}:name"></div>
-      <div class="fgrid">
-        <div class="field"><label for="tp-${tm.id}">Preço</label><div class="money"><span>R$</span><input class="inp" id="tp-${tm.id}" type="number" min="0" step="1" value="${tm.price}" data-bind="turma:${tm.id}:price"></div></div>
-        <div class="field"><label for="ts-${tm.id}">Quando</label><input class="inp" id="ts-${tm.id}" value="${esc(tm.schedule)}" data-bind="turma:${tm.id}:schedule"></div>
-      </div>
-      <div class="field"><span class="lab">Coreografias da turma (${inc.length})</span><div class="lchips">${inc.map(l=>`<span class="lchip">${esc(l.title)}</span>`).join('')||'<span class="muted" style="font-size:12px">Escolha a turma de cada aula na lista abaixo.</span>'}</div></div>
-      <div style="display:flex;justify-content:space-between;align-items:center"><small class="muted">${n} ${n===1?'aluno':'alunos'} · você recebe ${brl(tm.price*(1-FEE))}</small><button class="btn ghost sm" data-act="delturma" data-id="${tm.id}">${PEND.del===tm.id?'Confirmar':'Remover'}</button></div>
-    </div>`}).join('')}
-    <button class="turma" data-act="addturma" style="border:2px dashed var(--line);background:transparent;cursor:pointer;place-items:center;justify-content:center;min-height:160px;font-weight:800;color:var(--muted)">+ Nova turma</button></div>`
-    :`<div class="turma" style="max-width:420px">
-      <div class="field"><label for="pp">Valor fixo (todas as aulas liberadas)</label><div class="money"><span>R$</span><input class="inp" id="pp" type="number" min="0" value="${pr.passPrice}" data-bind="pass"></div></div>
-      <div class="calc"><div><span>Aluno paga</span><span class="mono">${brl(pr.passPrice)}</span></div><div><span>Taxa MOVRA (10%)</span><span class="mono">−${brl(pr.passPrice*FEE)}</span></div><div class="net"><span>Você recebe</span><span class="mono">${brl(pr.passPrice*(1-FEE))}</span></div></div>
+  const mensal=`<div class="turma" style="max-width:460px">
+      <div class="field"><label for="pp">Mensalidade (libera todas as aulas, inclusive as novas)</label><div class="money"><span>R$</span><input class="inp" id="pp" type="number" min="0" value="${pr.passPrice}" data-bind="pass"></div></div>
+      <div class="calc"><div><span>Aluno paga por mês</span><span class="mono">${brl(pr.passPrice)}</span></div><div><span>Taxa MOVRA (10%)</span><span class="mono">−${brl(pr.passPrice*FEE)}</span></div><div class="net"><span>Você recebe</span><span class="mono">${brl(pr.passPrice*(1-FEE))}</span></div></div>
     </div>`;
   const lrows=ls.map(l=>`<div class="lrow"><span class="mini" style="--h:${l.hue}"></span>
-    <div style="min-width:0"><b>${esc(l.title)}</b><small>${stars(l.level)} ${LEVELS[l.level].k} · ${l.orientation==='v'?'vertical':'horizontal'+(l.cropMobile?' + crop':'')} · ${(l.prereq.ids||[]).length} pré-req.</small></div>
-    ${pr.mode==='turmas'?`<select class="inp" data-bind="lturma:${l.id}" aria-label="Turma">${`<option value="">Avulsa</option>`+t.turmas.map(tm=>`<option value="${tm.id}"${l.turmaId===tm.id?' selected':''}>${esc(tm.name)}</option>`).join('')}</select>`:'<small class="muted">No valor fixo</small>'}
+    <div style="min-width:0"><b>${esc(l.title)}</b><small>${stars(l.level)} ${LEVELS[l.level].k} · ${l.orientation==='v'?'vertical':'horizontal'+(l.cropMobile?' + crop':'')} </small></div>
+    <small class="muted">${l.price?'Avulsa ou na mensalidade':'Grátis para todos'}</small>
     <div class="money"><span>R$</span><input class="inp" type="number" min="0" value="${l.price}" data-bind="lprice:${l.id}" aria-label="Preço avulso"></div>
     <div class="acts"><a class="btn ghost sm" href="#editar-${l.id}">Editar</a><a class="btn ghost sm" href="#aula-${l.id}">Ver</a><button class="btn ghost sm" data-act="dellesson" data-id="${l.id}">${PEND.del===l.id?'Confirmar':'Excluir'}</button></div></div>`).join('');
   return `<section class="wrap">
@@ -762,10 +690,9 @@ function vStudio(){
         <small class="muted">Mínimo de R$ 10,00. O Pix cai na sua chave depois que a MOVRA confirmar.</small></div>
     </div>
     ${sd.saques.length?`<div class="tablebox" style="margin-top:14px"><table><thead><tr><th>Saque</th><th class="n">Valor</th><th>Chave Pix</th><th>Situação</th></tr></thead><tbody>${sd.saques.map(w=>`<tr><td>${new Date(w.criado).toLocaleDateString('pt-BR')}</td><td class="n">${brl(w.valor)}</td><td>${esc(w.pix)}</td><td><span class="state ${w.status==='pago'?'done':w.status==='pedido'?'open':'pay'}">${{pedido:'Pedido',pago:'Pago',recusado:'Recusado'}[w.status]}</span>${w.obs?` <small class="muted">${esc(w.obs)}</small>`:''}</td></tr>`).join('')}</tbody></table></div>`:''}
-    <div class="sec-head"><h2>Turmas e preços</h2><div class="seg"><button class="${pr.mode==='turmas'?'on':''}" data-act="mode" data-v="turmas">Dividir em turmas</button><button class="${pr.mode==='passe'?'on':''}" data-act="mode" data-v="passe">Valor fixo</button></div></div>
-    <p class="muted" style="font-size:13px;margin:0 0 14px">Cobrança sempre mensal: o aluno paga todo mês para manter o acesso.</p>
-    ${turmas}
-    <div class="sec-head"><h2>Aulas</h2><span class="muted">Preço avulso: o aluno pode comprar só essa aula</span></div>
+    <div class="sec-head"><h2>Mensalidade</h2><span class="muted">Poste quantas aulas quiser, quando quiser</span></div>
+    ${mensal}
+    <div class="sec-head"><h2>Aulas</h2><span class="muted">Preço avulso: quem não assina pode comprar só essa aula</span></div>
     <div class="tablebox">${lrows||'<div class="empty">Nenhuma aula. Suba a primeira.</div>'}</div>
     <div class="sec-head"><h2>Alunos e pagamentos</h2><span class="muted">${st.length} alunos</span></div>
     <div class="tablebox"><table><thead><tr><th>Aluno</th><th>Plano</th><th class="n">Paga</th><th class="n">Taxa</th><th class="n">Você recebe</th><th>Progresso</th><th>Desde</th></tr></thead><tbody>${rows}</tbody></table></div>
@@ -777,7 +704,7 @@ let D=null;
 function newDraft(edit){
   if(edit)return JSON.parse(JSON.stringify(edit));
   return {id:null,teacherId:S.me,artist:'',song:'',freeTitle:false,modality:'kpop',category:'coreografia',level:0,orientation:'h',cropMobile:true,
-    price:15,duration:'',bpm:'',turmaId:'',prereq:{mode:'all',ids:[]},hue:Math.floor(Math.random()*360)};
+    price:5,duration:'',hue:Math.floor(Math.random()*360)};
 }
 function vForm(editId){
   if(!S.studio)return gate('Área do professor','Entre com sua conta de professor para subir aulas.','professor');
@@ -785,7 +712,6 @@ function vForm(editId){
   if(ed&&ed.teacherId!==S.me)return notFound();
   D=newDraft(ed); if(ed){D.freeTitle=!ed.artist}
   const t=teacher(D.teacherId);
-  const others=tLessons(t.id).filter(l=>l.id!==D.id);
   const r=(n,v,cur)=>`${String(cur)===String(v)?'checked':''} name="${n}" value="${v}"`;
   return `<section class="wrap"><div class="studio-head"><div><div class="eyebrow">Studio · ${esc(t.name)}</div><h1>${ed?'Editar aula':'Subir aula'}</h1></div><a class="btn ghost" href="#studio">Voltar ao studio</a></div>
   <form class="form" id="lform" novalidate>
@@ -820,21 +746,13 @@ function vForm(editId){
         <div class="crop-demo"><div class="cd" id="cdOff"><span class="ph"><i class="lb"></i></span>Sem crop</div><div class="cd" id="cdOn"><span class="ph"><i class="cr"></i></span>Com crop</div></div>
       </div>
     </div>
-    <div class="fsec"><h3><em>06</em>Preço e turma</h3>
+    <div class="fsec"><h3><em>06</em>Preço avulso</h3>
       <div class="fgrid">
         <div class="field"><label for="price">Preço da aula avulsa</label><div class="money"><span>R$</span><input class="inp" id="price" name="price" type="number" min="0" step="1" value="${D.price}"></div><small class="muted">Coloque 0 para deixar grátis.</small></div>
-        ${t.pricing.mode==='turmas'?`<div class="field"><label for="turma">Turma</label><select class="inp" id="turma" name="turmaId"><option value="">Nenhuma (só avulsa)</option>${t.turmas.map(tm=>`<option value="${tm.id}"${D.turmaId===tm.id?' selected':''}>${esc(tm.name)} · ${brl(tm.price)}</option>`).join('')}</select></div>`:`<div class="field"><span class="lab">Turma</span><small class="muted" style="padding-top:8px">Você cobra valor fixo de ${brl(t.pricing.passPrice)}: esta aula entra liberada para quem paga.</small></div>`}
+        <div class="field"><span class="lab">Mensalidade</span><small class="muted" style="padding-top:8px">Quem paga a sua mensalidade de ${brl(t.pricing.passPrice)} já tem esta aula liberada.</small></div>
         <div class="field"><label for="duration">Duração</label><input class="inp mono" id="duration" name="duration" placeholder="18:40" value="${esc(D.duration)}"></div>
       </div>
       <div class="calc" id="calc"></div>
-    </div>
-    <div class="fsec"><h3><em>07</em>Pré-requisitos</h3>
-      <small class="muted">O aluno só consegue fazer esta aula depois de concluir as que você marcar.</small>
-      <div class="tiles two-c">
-        <label class="tile"><input type="radio" ${r('pmode','all',D.prereq.mode==='any'?'any':'all')}><span><b>TODAS</b><small>Precisa concluir todas as marcadas</small></span></label>
-        <label class="tile"><input type="radio" ${r('pmode','any',D.prereq.mode)}><span><b>PELO MENOS UMA</b><small>Qualquer uma das marcadas libera</small></span></label>
-      </div>
-      <div class="checks">${others.map(o=>`<label><input type="checkbox" name="pre" value="${o.id}" ${D.prereq.ids.includes(o.id)?'checked':''}><span style="flex:1">${esc(o.title)}</span>${stars(o.level)}</label>`).join('')||'<small class="muted">Você ainda não tem outras aulas.</small>'}</div>
     </div>
     <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button class="btn hot" type="submit">${ed?'Salvar alterações':'Publicar aula'}</button><span class="err" id="ferr"></span></div>
    </div>
@@ -848,8 +766,7 @@ function readForm(){
   D.title=D.artist?`${D.artist} - ${D.song}`:D.song;
   D.level=Number(fd.get('level'));D.modality=fd.get('modality');D.category=fd.get('category');D.orientation=fd.get('orientation');
   D.cropMobile=fd.get('cropMobile')==='on';D.price=Math.max(0,Number(fd.get('price'))||0);
-  D.turmaId=fd.get('turmaId')||null;D.duration=(fd.get('duration')||'').trim();
-  D.prereq={mode:fd.get('pmode')||'all',ids:fd.getAll('pre')};
+  D.duration=(fd.get('duration')||'').trim();
 }
 function formPreview(){
   readForm();
@@ -870,8 +787,7 @@ function submitForm(){
   if(!D.freeTitle&&!D.artist){$('#ferr').textContent='Preencha o artista ou grupo.';return}
   if(D.duration&&!/^\d{1,3}:\d{2}$/.test(D.duration)){$('#ferr').textContent='Duração no formato minutos:segundos, por exemplo 18:40.';return}
   const data={teacherId:D.teacherId,artist:D.artist,song:D.song,title:D.title,modality:D.modality,category:D.category,level:D.level,orientation:D.orientation,
-    cropMobile:D.orientation==='h'?D.cropMobile:true,price:D.price,duration:D.duration||'15:00',bpm:Number(D.bpm)||110,turmaId:teacher(D.teacherId).pricing.mode==='turmas'?D.turmaId:null,
-    prereq:D.prereq,hue:D.hue};
+    cropMobile:D.orientation==='h'?D.cropMobile:true,price:D.price,duration:D.duration||'15:00',bpm:Number(D.bpm)||110,hue:D.hue};
   const btn=$('#lform button[type=submit]');btn.disabled=true;
   salvarAula(Object.assign({id:D.id||undefined},data)).then(async r=>{if(D.blob)videoBlobs[r.id]=D.blob;await refresh();toast(D.id?'Aula atualizada':'Aula publicada');location.hash='aula-'+r.id})
     .catch(e=>{$('#ferr').textContent=e.message;btn.disabled=false});
@@ -883,7 +799,7 @@ function stopPlayer(){if(P){cancelAnimationFrame(P.raf);if(P.video)P.video.pause
 function mountPlayer(l){
   const stage=$('#stage');const v=l.orientation==='v';const W=v?540:960,H=v?960:540;
   const st=status(l);
-  P={l,W,H,t:0,playing:false,speed:1,mirror:false,phoneFull:false,last:performance.now(),limit:(st==='lock-pay'||st==='lock-pre')?15:null};
+  P={l,W,H,t:0,playing:false,speed:1,mirror:false,phoneFull:false,last:performance.now(),limit:st==='lock-pay'?15:null};
   if(videoBlobs[l.id]){P.video=document.createElement('video');P.video.src=videoBlobs[l.id];P.video.playsInline=true;P.video.loop=true;stage.appendChild(P.video);P.src=P.video;P.dur=1}
   else{P.canvas=document.createElement('canvas');P.canvas.width=W;P.canvas.height=H;stage.appendChild(P.canvas);P.ctx=P.canvas.getContext('2d');P.src=P.canvas;P.dur=parseDur(l.duration)}
   P.pc=$('#phoneCanvas');P.pctx=P.pc.getContext('2d');
@@ -904,7 +820,7 @@ function loop(now){
 function setPlaying(on){if(!P)return;P.playing=on;if(P.video){on?P.video.play().catch(()=>{}):P.video.pause()}
   const b=$('#playBtn');if(b){b.innerHTML=on?PAUSE:PLAY;b.setAttribute('aria-label',on?'Pausar':'Tocar')}}
 function showVeil(){const l=P.l,st=status(l),vl=$('#veil');if(!vl)return;
-  vl.innerHTML=`<div><h3>Fim da prévia</h3><p style="margin:0;opacity:.8">${st==='lock-pre'?'Conclua os pré-requisitos e libere o acesso para assistir completa.':'Desbloqueie para assistir a aula completa.'}</p>${hasAccess(l)?'':`<button class="btn hot" data-act="buy" data-kind="lesson" data-id="${l.id}">Desbloquear</button>`}<button class="btn ghost sm" style="color:#fff" data-act="veiloff">Ver prévia de novo</button></div>`;vl.hidden=false}
+  vl.innerHTML=`<div><h3>Fim da prévia</h3><p style="margin:0;opacity:.8">Assine a mensalidade ou compre esta aula para assistir completa.</p>${hasAccess(l)?'':`<button class="btn hot" data-act="buy" data-kind="lesson" data-id="${l.id}">Desbloquear</button>`}<button class="btn ghost sm" style="color:#fff" data-act="veiloff">Ver prévia de novo</button></div>`;vl.hidden=false}
 
 function drawScene(ctx,W,H,t,l,mirror){
   const hue=l.hue,beat=t*(l.bpm||110)/60,s=Math.min(W,H);
@@ -971,11 +887,10 @@ function drawPhone(){
 /* ---------- modal de compra ---------- */
 function openBuy(kind,id){
   let l=null,t,opts=[];
-  if(kind==='lesson'){l=lesson(id);t=teacher(l.teacherId)}else if(kind==='turma'){t=S.teachers.find(x=>x.turmas.some(tm=>tm.id===id))}else t=teacher(id);
+  if(kind==='lesson'){l=lesson(id);t=teacher(l.teacherId)}else t=teacher(id);
   const per='/mês';
-  if(t.pricing.mode==='turmas'){t.turmas.forEach(tm=>{if(kind==='turma'&&tm.id!==id)return;if(l&&l.turmaId!==tm.id)return;const n=tLessons(t.id).filter(x=>x.turmaId===tm.id).length;opts.push({k:'turma',id:tm.id,name:tm.name,sub:`${n} aulas · ${tm.schedule}`,price:tm.price,per})})}
-  else if(kind!=='turma')opts.push({k:'passe',id:t.id,name:'Valor fixo · todas as aulas',sub:`${tLessons(t.id).length} aulas liberadas`,price:t.pricing.passPrice,per});
-  if(l&&l.price)opts.push({k:'lesson',id:l.id,name:'Só esta aula',sub:l.title,price:l.price,per:''});
+  opts.push({k:'passe',id:t.id,name:'Mensalidade · todas as aulas',sub:`${tLessons(t.id).length} aulas hoje + as novas que forem postadas`,price:t.pricing.passPrice,per});
+  if(l&&l.price)opts.push({k:'lesson',id:l.id,name:'Só esta aula',sub:`${l.title} · fica liberada para sempre`,price:l.price,per:''});
   const m=$('#modal');
   m.innerHTML=`<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="mt"><div class="eyebrow">${esc(t.name)}</div><h2 id="mt" style="font-size:22px">Escolha como desbloquear</h2>
     <form id="buyf" style="display:flex;flex-direction:column;gap:10px">${opts.map((o,i)=>`<label class="opt"><input type="radio" name="o" value="${i}" ${i===0?'checked':''}><div><b>${esc(o.name)}</b><small>${esc(o.sub)}</small></div><span class="p">${brl(o.price)}<small style="font-size:11px;font-family:var(--body)">${o.per}</small></span></label>`).join('')}
@@ -1088,9 +1003,6 @@ const A={
   mirror(el){if(!P)return;P.mirror=!P.mirror;el.classList.toggle('on',P.mirror);$('#stage').classList.toggle('mirror',P.mirror)},
   fs(){const p=$('#player');if(document.fullscreenElement){document.exitFullscreen?.()}else{(p.requestFullscreen?.()||Promise.reject()).catch(()=>{P&&(P.phoneFull=true,syncPhoneSeg());toast('Tela cheia indisponível aqui: veja a simulação no celular ao lado')})}},
   phone(el){if(!P)return;P.phoneFull=el.dataset.v==='full';syncPhoneSeg()},
-  mode(el){const t=teacher(S.me);t.pricing.mode=el.dataset.v;apos(salvarPrecos(t),'Salvo')},
-  addturma(){const t=teacher(S.me);t.turmas.push({id:'t-'+Date.now().toString(36),name:`Turma ${['Iniciante','Básico','Intermediário','Avançado'][Math.min(3,t.turmas.length)]}`,price:30,schedule:'Defina dia e horário',note:''});apos(salvarPrecos(t),'Turma criada')},
-  delturma(el){const id=el.dataset.id;if(PEND.del!==id){PEND.del=id;route(true);return}PEND.del=null;const t=teacher(S.me);t.turmas=t.turmas.filter(x=>x.id!==id);apos(salvarPrecos(t),'Turma removida')},
   dellesson(el){const id=el.dataset.id;if(PEND.del!==id){PEND.del=id;route(true);return}PEND.del=null;apos(api('DELETE','/api/professor/aula/'+encodeURIComponent(id)+qTid()),'Aula excluída')}
 };
 function syncPhoneSeg(){$$('[data-act="phone"]').forEach(b=>b.classList.toggle('on',(b.dataset.v==='full')===P.phoneFull))}
@@ -1117,11 +1029,10 @@ document.addEventListener('change',e=>{
   if(el.id==='photoIn'&&el.files[0]){resizePhoto(el.files[0]).then(url=>apos(api('PUT','/api/professor/perfil'+qTid(),{photo:url}),'Foto atualizada')).catch(()=>toast('Não deu para ler essa imagem. Tente um JPG ou PNG.'));return}
   const b=el.dataset.bind;if(!b)return;const [k,id,f]=b.split(':');const t=teacher(S.me);
   if(k==='me'){DONO_TID=el.value;apos(Promise.resolve());return}
-  if(k==='turma'){const tm=t.turmas.find(x=>x.id===id);tm[f]=f==='price'?Math.max(0,Number(el.value)||0):el.value;apos(salvarPrecos(t),'Salvo');return}
   if(k==='pass'){t.pricing.passPrice=Math.max(0,Number(el.value)||0);apos(salvarPrecos(t),'Salvo');return}
   if(k==='bio'){apos(api('PUT','/api/professor/perfil'+qTid(),{bio:el.value.slice(0,400)}),'Salvo');return}
   if(k==='pix'){apos(api('PUT','/api/professor/perfil'+qTid(),{pixKey:el.value}),'Chave Pix salva');return}
-  if(k==='lturma'||k==='lprice'){const l=Object.assign({},lesson(id));if(k==='lturma')l.turmaId=el.value||null;else l.price=Math.max(0,Number(el.value)||0);apos(salvarAula(l),'Salvo')}
+  if(k==='lprice'){const l=Object.assign({},lesson(id));l.price=Math.max(0,Number(el.value)||0);apos(salvarAula(l),'Salvo')}
 });
 document.addEventListener('submit',e=>{if(e.target.id==='lform'){e.preventDefault();submitForm()}});
 
@@ -1151,14 +1062,11 @@ function route(keep){
   if($('#lgrid'))renderGrid();
   if(!keep){if(h==='professores')$('#professores').scrollIntoView();else window.scrollTo(0,0)}
   if(h.startsWith('aula-')&&lesson(h.slice(5)))mountPlayer(lesson(h.slice(5)));
-  if($('#tree'))requestAnimationFrame(drawLinks);
   if($('#lform'))formPreview();
   if($('#donoBox'))carregarDono();
   if($('#pagoBox'))checarPago(h.slice(5));
 }
 window.addEventListener('hashchange',()=>{PEND.del=null;UI.tab='aulas';UI.lvl='all';UI.cat='all';route()});
-window.addEventListener('resize',()=>{if($('#tree'))drawLinks()});
-if(document.fonts)document.fonts.ready.then(()=>{if($('#tree'))drawLinks()});
 (async()=>{
   try{await refresh()}catch(e){toast('Sem conexão com o servidor. Recarregue a página.')}
   if(location.pathname.replace(/\/$/,'')==='/dono'&&!location.hash)history.replaceState(null,'','/#dono');

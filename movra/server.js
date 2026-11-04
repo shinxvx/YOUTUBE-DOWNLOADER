@@ -74,6 +74,35 @@ if (!db.prepare('select count(*) n from teachers').get().n) {
   tx();
   console.log('banco criado com dados de demonstração');
 }
+// 04/11/2026 (pedido do dono): sem turmas e sem pré-requisitos. Cada professor tem UMA mensalidade (todas as aulas,
+// inclusive as novas) e preço avulso por aula. Converte o que já existia, uma vez só.
+db.exec('create table if not exists meta(k text primary key, v text)');
+if (!db.prepare("select 1 from meta where k='sem_turmas'").get()) {
+  const DEMO = { yago: [45, 5], mila: [50, 6], bela: [55, 6] }; // mensalidade e avulso dos professores de demonstração
+  db.transaction(() => {
+    for (const t of allT()) {
+      const d = t.demo && DEMO[t.id];
+      t.pricing = { mode: 'passe', passPrice: d ? d[0] : (t.pricing && t.pricing.passPrice) || 50, billing: 'mensal' };
+      t.turmas = []; putT(t);
+      for (const r of db.prepare('select id, dados from demo_students where teacher_id=?').all(t.id)) {
+        const st = JSON.parse(r.dados);
+        if (st.plan.type !== 'avulso') { st.plan = { type: 'passe' }; st.paid = t.pricing.passPrice; }
+        else if (d) st.paid = st.plan.ids.length * d[1];
+        db.prepare('update demo_students set dados=? where id=?').run(JSON.stringify(st), r.id);
+      }
+    }
+    for (const l of allL()) {
+      const d = DEMO[l.teacherId] && getT(l.teacherId).demo && DEMO[l.teacherId];
+      l.turmaId = null; l.prereq = { mode: 'all', ids: [] };
+      if (d && l.price > 0) l.price = d[1];
+      putL(l);
+    }
+    // quem tinha turma passa a ter a mensalidade do professor até a mesma data
+    db.prepare("update access set kind='passe', ref=teacher_id where kind='turma'").run();
+    db.prepare("insert into meta values('sem_turmas', ?)").run(String(agora()));
+  })();
+  console.log('convertido: sem turmas e sem pré-requisitos');
+}
 // contas fixas (vêm do .env): dono e professores de demonstração
 function garanteConta(email, nome, senha, papel, teacherId) {
   if (!email || !senha) return;
@@ -85,7 +114,6 @@ garanteConta(process.env.DONO_EMAIL, 'Dono MOVRA', process.env.DONO_SENHA, 'dono
 if (process.env.DEMO_SENHA) for (const t of allT().filter(t => t.demo)) garanteConta(`${t.id}@demo.movra`, t.name, process.env.DEMO_SENHA, 'professor', t.id);
 
 /* ---------------- regras ---------------- */
-function teacherOfTurma(turmaId) { return allT().find(t => (t.turmas || []).some(x => x.id === turmaId)); }
 function activeAccess(userId) {
   return db.prepare('select * from access where user_id=? and (expira is null or expira>?)').all(userId, agora());
 }
@@ -99,14 +127,9 @@ function publicTeacher(t) {
   return Object.assign(pub, { mpConectado: !!(mp && mp.access_token) });
 }
 function preco(kind, ref) {
-  if (kind === 'turma') {
-    const t = teacherOfTurma(ref); if (!t || t.pricing.mode !== 'turmas') return null;
-    const tm = t.turmas.find(x => x.id === ref);
-    return { t, valor: r2(tm.price), titulo: `${t.name} · ${tm.name} (mensal)` };
-  }
   if (kind === 'passe') {
-    const t = getT(ref); if (!t || t.pricing.mode !== 'passe') return null;
-    return { t, valor: r2(t.pricing.passPrice), titulo: `${t.name} · todas as aulas (mensal)` };
+    const t = getT(ref); if (!t) return null;
+    return { t, valor: r2(t.pricing.passPrice), titulo: `${t.name} · mensalidade (todas as aulas)` };
   }
   if (kind === 'lesson') {
     const l = getL(ref); if (!l || !(l.price > 0)) return null;
@@ -188,7 +211,7 @@ app.post('/api/cadastro', (req, res) => {
     tid = nome.toLowerCase().normalize('NFD').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 24) || 'prof';
     while (getT(tid)) tid += '-' + crypto.randomBytes(2).toString('hex');
     const t = { id: tid, name: nome, city: 'Aulas online', hue: Math.floor(Math.random() * 360), styles: ['kpop'], photo: null,
-      bio: 'Professor(a) na MOVRA.', pricing: { mode: 'passe', passPrice: 50, billing: 'mensal' }, turmas: [], pixKey: '', mp: null, demo: false };
+      bio: 'Professor(a) na MOVRA.', pricing: { mode: 'passe', passPrice: 45, billing: 'mensal' }, turmas: [], pixKey: '', mp: null, demo: false };
     db.prepare('insert into teachers(id, dados, ordem) values(?,?,?)').run(tid, JSON.stringify(t), agora());
   }
   const id = uid('u_');
@@ -220,7 +243,7 @@ function studioData(tid) {
     const p = a.payment_id ? db.prepare('select valor, criado from payments where id=?').get(a.payment_id) : null;
     const s = porAluno.get(a.uid) || { id: a.uid, teacherId: tid, name: a.nome, plan: null, paid: 0, since: '', progress: 0, real: true };
     if (a.kind === 'lesson') { s.plan = s.plan && s.plan.type !== 'avulso' ? s.plan : { type: 'avulso', ids: [...(s.plan?.ids || []), a.ref] }; }
-    else s.plan = a.kind === 'turma' ? { type: 'turma', id: a.ref } : { type: 'passe' };
+    else s.plan = { type: 'passe' };
     s.paid = r2(s.paid + (p ? p.valor : 0));
     s.since = new Date(a.criado).toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '');
     porAluno.set(a.uid, s);
@@ -255,7 +278,7 @@ app.get('/api/estado', (req, res) => {
 app.post('/api/progresso', precisa(), (req, res) => {
   const l = getL(req.body.lessonId); if (!l) return res.status(404).json({ erro: 'Aula não encontrada.' });
   if (req.body.done) {
-    const ok = !(l.price > 0) || activeAccess(req.user.id).some(a => (a.kind === 'lesson' && a.ref === l.id) || (a.kind === 'turma' && a.ref === l.turmaId) || (a.kind === 'passe' && a.ref === l.teacherId));
+    const ok = !(l.price > 0) || activeAccess(req.user.id).some(a => (a.kind === 'lesson' && a.ref === l.id) || (a.kind === 'passe' && a.ref === l.teacherId));
     if (!ok && req.user.papel === 'aluno') return res.status(403).json({ erro: 'Libere o acesso a esta aula primeiro.' });
     db.prepare('insert or ignore into progress values(?,?,?)').run(req.user.id, l.id, agora());
   } else db.prepare('delete from progress where user_id=? and lesson_id=?').run(req.user.id, l.id);
@@ -366,14 +389,9 @@ app.put('/api/professor/perfil', prof, (req, res) => {
 });
 app.put('/api/professor/precos', prof, (req, res) => {
   const t = getT(tidDe(req)); if (!t) return res.status(404).json({ erro: 'Professor não encontrado.' });
-  const { pricing, turmas } = req.body || {};
-  if (pricing) t.pricing = { mode: pricing.mode === 'turmas' ? 'turmas' : 'passe', passPrice: Math.max(0, r2(pricing.passPrice)), billing: 'mensal' };
-  if (Array.isArray(turmas)) {
-    t.turmas = turmas.slice(0, 20).map(x => ({ id: /^t-[\w-]{1,40}$/.test(x.id) ? x.id : 't-' + crypto.randomBytes(4).toString('hex'),
-      name: String(x.name || 'Turma').slice(0, 60), price: Math.max(0, r2(x.price)), schedule: String(x.schedule || '').slice(0, 80), note: String(x.note || '').slice(0, 120) }));
-    const ids = new Set(t.turmas.map(x => x.id));
-    for (const l of allL().filter(l => l.teacherId === t.id && l.turmaId && !ids.has(l.turmaId))) { l.turmaId = null; putL(l); }
-  }
+  const v = Number(req.body?.pricing?.passPrice);
+  if (!Number.isFinite(v) || v < 0) return res.status(400).json({ erro: 'Mensalidade inválida.' });
+  t.pricing = { mode: 'passe', passPrice: r2(v), billing: 'mensal' }; t.turmas = [];
   putT(t); res.json({ ok: true });
 });
 const LVL = [0, 1, 2, 3], MODS = ['kpop', 'jazzfunk', 'autoral'], CATS = ['fundamentos', 'tecnica', 'coreografia', 'performance'];
@@ -384,15 +402,13 @@ app.post('/api/professor/aula', prof, (req, res) => {
   if (old && old.teacherId !== tid) return res.status(403).json({ erro: 'Essa aula é de outro professor.' });
   const song = String(b.song || '').trim().slice(0, 80), artist = String(b.artist || '').trim().slice(0, 60);
   if (!song) return res.status(400).json({ erro: 'Escreva o título da aula.' });
-  const minhas = new Set(allL().filter(l => l.teacherId === tid).map(l => l.id));
   const l = Object.assign(old || { id: 'n' + crypto.randomBytes(5).toString('hex'), created: new Date().toISOString().slice(0, 10) }, {
     teacherId: tid, artist, song, title: artist ? `${artist} - ${song}` : song,
     modality: MODS.includes(b.modality) ? b.modality : 'kpop', category: CATS.includes(b.category) ? b.category : 'coreografia',
     level: LVL.includes(Number(b.level)) ? Number(b.level) : 0, orientation: b.orientation === 'v' ? 'v' : 'h',
     cropMobile: b.orientation === 'v' ? true : !!b.cropMobile, price: Math.max(0, r2(b.price)),
     duration: /^\d{1,3}:\d{2}$/.test(b.duration || '') ? b.duration : '15:00', bpm: 110,
-    turmaId: t.pricing.mode === 'turmas' && (t.turmas || []).some(x => x.id === b.turmaId) ? b.turmaId : null,
-    prereq: { mode: b.prereq?.mode === 'any' ? 'any' : 'all', ids: (b.prereq?.ids || []).filter(id => minhas.has(id) && id !== (old && old.id)).slice(0, 10) },
+    turmaId: null, prereq: { mode: 'all', ids: [] },
     hue: Number.isFinite(Number(b.hue)) ? Number(b.hue) % 360 : 260
   });
   putL(l); res.json({ ok: true, id: l.id });
@@ -401,7 +417,6 @@ app.delete('/api/professor/aula/:id', prof, (req, res) => {
   const tid = tidDe(req), l = getL(req.params.id);
   if (!l || l.teacherId !== tid) return res.status(404).json({ erro: 'Aula não encontrada.' });
   db.prepare('delete from lessons where id=?').run(l.id);
-  for (const o of allL().filter(o => o.teacherId === tid && o.prereq.ids.includes(l.id))) { o.prereq.ids = o.prereq.ids.filter(x => x !== l.id); putL(o); }
   res.json({ ok: true });
 });
 app.post('/api/professor/saque', prof, (req, res) => {
