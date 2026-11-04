@@ -1013,7 +1013,7 @@ function openAuth(modo,papel,depois,aviso){
 }
 function renderAcct(){
   const a=$('#acct');if(!a)return;
-  a.innerHTML=S.user?`${S.user.papel==='dono'?'<a href="#dono">Painel</a>':''}<span class="who" title="${esc(S.user.email)}">${esc(S.user.nome.split(' ')[0])}</span><button data-act="sair">Sair</button>`:`<button data-act="auth" data-m="entrar" data-p="aluno">Entrar</button>`;
+  a.innerHTML=S.user?`${S.user.papel==='dono'?'<a href="/dono">Painel</a>':''}<span class="who" title="${esc(S.user.email)}">${esc(S.user.nome.split(' ')[0])}</span><button data-act="sair">Sair</button>`:`<button data-act="auth" data-m="entrar" data-p="aluno">Entrar</button>`;
 }
 
 /* ---------- retorno do pagamento ---------- */
@@ -1040,7 +1040,7 @@ const dt=ms=>ms?new Date(ms).toLocaleString('pt-BR',{day:'2-digit',month:'2-digi
 const METODO={pix:'Pix',bank_transfer:'Pix',credit_card:'Crédito',debit_card:'Débito',account_money:'Saldo MP',prepaid_card:'Pré-pago'};
 async function carregarDono(){
   const box=$('#donoBox');if(!box)return;let d;
-  try{d=await api('GET','/api/dono/resumo')}catch(e){box.innerHTML=`<div class="empty">${esc(e.message)}</div>`;return}
+  try{d=await api('GET','/api/dono/resumo')}catch(e){box.innerHTML=`<div class="empty">Não deu para abrir o painel. Abra pelo endereço <a href="/dono">movra.speedco.com.br/dono</a> (pede o código do seu e-mail).</div>`;return}
   const T=d.totais,c=d.config;
   box.innerHTML=`${c.mercadoPago?'':`<div class="gate" style="margin-top:16px"><div><b>Pagamentos em modo demonstração</b><span>Falta colocar a chave do Mercado Pago (MP_ACCESS_TOKEN no .env do servidor). Até lá, as compras são simuladas e entram nos números abaixo${T.pagamentosDemo?` (${T.pagamentosDemo} simuladas)`:''}.</span></div></div>`}
     ${c.mercadoPago&&!c.conexaoProfessores?`<div class="gate ok" style="margin-top:16px"><div><b>Mercado Pago ligado</b><span>Todo pagamento cai na conta da MOVRA e o professor pede saque. Para a divisão automática (90% direto na conta do professor), falta MP_CLIENT_ID e MP_CLIENT_SECRET.</span></div></div>`:''}
