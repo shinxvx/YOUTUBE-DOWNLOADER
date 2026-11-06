@@ -1,7 +1,7 @@
 'use strict';
 // Páginas da NINEFOX v2 (06/11/2026, dono: "mais inovador, está xoxo e tudo igual"; institucional diferente das vitrines).
 // Identidade (kit do dono): laranja #FF5A1F em destaque (botão laranja = texto preto), preto #151515, branco quente #F5F2EC,
-// Space Grotesk 500/700 + Inter 400/500/600; logos SEMPRE pelos SVGs de /marca. Nada de preço antigo/desconto/selo que a fonte não confirme.
+// Sora 500/600/700 (títulos e preços, escolha do dono 06/11) + Inter 400/500/600 (texto, selos, etiquetas); logos SEMPRE pelos SVGs de /marca. Nada de preço antigo/desconto/selo que a fonte não confirme.
 // Vitrines: faixa correndo, "achado do momento" girando, cômodos (SHOP) / tipos e coleções (TCG), prateleiras, selo de menor preço em 7 dias,
 // preço por booster (TCG), cards holográficos (TCG). Institucional: escuro, painel "ao vivo" com os números reais dos robôs, mosaico animado.
 const { SITES } = require('./sites');
@@ -51,13 +51,13 @@ function cabeca(titulo, descricao, tema, corpoCls) {
 <title>${esc(titulo)}</title><meta name="description" content="${esc(descricao)}"><meta name="theme-color" content="${tema}">
 <link rel="icon" href="/marca/favicon.svg" type="image/svg+xml"><link rel="icon" href="/marca/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/marca/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@500;600;700&display=swap">
 <style>${CSS_BASE}`;
 }
 
 const CSS_BASE = `
 :root{--or:#FF5A1F;--bk:#151515;--iv:#F5F2EC;--wh:#FFFFFF;--mu:#5E5A54;--mud:#BDB7AE;--li:#E3DED5;--lid:#2C2C2C;
---fh:"Space Grotesk",Arial,sans-serif;--fb:"Inter",Arial,sans-serif;--rc:16px;--rk:10px;--gut:16px;--max:1240px}
+--fh:"Sora",Arial,sans-serif;--fb:"Inter",Arial,sans-serif;--rc:16px;--rk:10px;--gut:16px;--max:1240px}
 @media (min-width:1024px){:root{--gut:32px}}
 *{box-sizing:border-box}[hidden]{display:none!important}
 html{scroll-behavior:smooth}
