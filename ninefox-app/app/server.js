@@ -13,6 +13,7 @@ const MARCA = path.join(__dirname, 'marca');
 const TIPOS = { svg: 'image/svg+xml', png: 'image/png', ico: 'image/x-icon' };
 const CSP = "default-src 'none'; img-src 'self' https://cf.shopee.com.br https://down-br.img.susercontent.com; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'";
 const log = (...a) => console.log(new Date().toISOString(), ...a);
+const lista = (v) => String(v || '').split(',').map((s) => s.trim().toLowerCase()).filter(Boolean);
 let _vm = { em: 0, v: '' };
 function versaoMarca() { // muda quando qualquer arquivo de app/marca muda (relida no máximo 1x por minuto)
   if (Date.now() - _vm.em < 60000) return _vm.v;
@@ -39,6 +40,9 @@ const servidor = http.createServer((req, res) => {
     let site = siteDoHost(req.headers.host);
     if (!site && process.env.DEV === '1') site = SITES[u.searchParams.get('site')] || SITES.inst; // teste local
     if (!site) return enviar(res, 404, 'text/plain; charset=utf-8', 'site não encontrado');
+    // HOSTS_EMBREVE: endereços que ainda NÃO estão liberados pelo dono -> página "em breve" (site completo só nas prévias trancadas)
+    if (lista(process.env.HOSTS_EMBREVE).includes(String(req.headers.host || '').toLowerCase().replace(/:\d+$/, '')))
+      return enviar(res, 200, 'text/html; charset=utf-8', paginas.emBreve(site).replace(/(\/marca\/[a-z0-9-]+\.(?:svg|png|ico))"/g, `$1?v=${versaoMarca()}"`), { 'Cache-Control': 'no-cache', 'Content-Security-Policy': CSP, 'X-Robots-Tag': 'noindex' });
     if (u.pathname !== '/') return enviar(res, 404, 'text/html; charset=utf-8', '<!doctype html><meta charset="utf-8"><title>Não encontrado</title><p style="font-family:sans-serif">Página não encontrada. <a href="/">Voltar</a></p>');
     const html = site.tipo === 'vitrine' ? paginas.vitrine(site, ofertas.carregar(site))
       : paginas.institucional(site, { whatsapp: String(process.env.CONTATO_WHATSAPP || '').replace(/\D/g, ''), email: process.env.CONTATO_EMAIL || '', rodape: process.env.RODAPE_EMPRESA || '' },

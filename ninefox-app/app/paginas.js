@@ -423,4 +423,19 @@ ${feed ? `<ul>${feed}</ul>` : '<p class="rod">Os robôs começam a trabalhar ass
 </body></html>`;
 }
 
-module.exports = { vitrine, institucional, boosters, colecao };
+// ======================= EM BREVE (domínio ainda não liberado pelo dono) =======================
+function emBreve(site) {
+  const logo = site.tipo === 'vitrine' ? `${site.logo}-negativa.svg` : 'ninefox-logo-negativa.svg';
+  const [w, h] = site.tipo === 'vitrine' ? [1042, 393] : [1042, 371];
+  return cabeca(`${site.nome} — em breve`, site.descricao, '#151515') + `
+body{background:var(--bk);color:var(--iv);min-height:100vh;display:grid;place-items:center;overflow:hidden}
+main{position:relative;text-align:center;padding:32px 16px}
+main .logo{width:min(420px,80vw);margin:0 auto}
+main p{margin:28px 0 0;font:500 clamp(20px,3vw,28px) var(--fh);letter-spacing:-.01em}
+main p span{color:var(--or)}
+.raposa{position:fixed;right:-10vw;bottom:-14vh;width:min(46vw,560px);opacity:.08;pointer-events:none}
+</style></head><body><img class="raposa" src="/marca/ninefox-icone-principal.svg" alt="" width="324" height="371">
+<main><img class="logo" src="/marca/${logo}" alt="${esc(site.nome)}" width="${w}" height="${h}"><p>em breve<span>.</span></p></main></body></html>`;
+}
+
+module.exports = { vitrine, institucional, emBreve, boosters, colecao };
