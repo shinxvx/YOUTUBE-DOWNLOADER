@@ -116,7 +116,8 @@ const pendentes = new Map(); // fotos enviadas mas ainda não salvas num produto
 let importacao = { rodando: false, msg: '', feitos: 0, total: 0 };
 async function baixarFoto(url, destino, largura) {
   if (fs.existsSync(destino)) return;
-  const r = await fetch(`${url}=w${largura}`, { signal: AbortSignal.timeout(45000) });
+  const r = await fetch(`${url}=w${largura}-rj`, // -rj: o Google entrega em JPEG mesmo se a original for PNG
+    { signal: AbortSignal.timeout(45000) });
   if (!r.ok) throw new Error(`foto ${r.status}`);
   const b = Buffer.from(await r.arrayBuffer());
   if (b[0] !== 0xff || b[1] !== 0xd8) throw new Error('foto não é JPEG');
@@ -127,7 +128,7 @@ async function importarAlbum(link) {
   try {
     const { titulo, grupos } = await lerAlbum(link);
     const ignorar = new Set(config.albumIgnorar); const fotosIgnorar = new Set(config.fotosIgnorar);
-    const fila = []; let novos = 0, atualizados = 0;
+    const fila = []; let novos = 0, atualizados = 0, baixadas = 0, falhas = 0;
     for (const g of grupos) {
       const linhas = g.texto.split('\n').map((s) => s.trim()).filter(Boolean);
       if (!linhas.length || /^pedimos|^aten[cç][aã]o|^aviso/i.test(linhas[0]) || linhas[0].length > 70) continue; // recado do fornecedor
@@ -154,7 +155,8 @@ async function importarAlbum(link) {
           await baixarFoto(f.url, fotoArq(id, true), 520);
           const esc = Math.min(1, 1200 / Math.max(f.w, f.h));
           if (!p.fotos.some((x) => x.id === id)) p.fotos.push({ id, w: Math.round(f.w * esc), h: Math.round(f.h * esc), src: f.src });
-        } catch (e) { log('foto falhou', f.src, e.message); }
+          baixadas++;
+        } catch (e) { falhas++; log('foto falhou', f.src, e.message); }
         importacao.feitos++;
         if (importacao.feitos % 25 === 0) salvarProdutos();
       }
@@ -163,7 +165,7 @@ async function importarAlbum(link) {
     produtos = produtos.filter((p) => p.fotos.length || !p.origem);
     salvarProdutos();
     config.albumUrl = link; salvarConfig();
-    importacao = { rodando: false, ok: true, msg: `Álbum "${titulo || 'sem nome'}": ${novos} produto(s) novo(s), ${atualizados} com fotos novas, ${fila.length} foto(s) baixada(s).`, feitos: fila.length, total: fila.length, fim: Date.now() };
+    importacao = { rodando: false, ok: true, msg: `Álbum "${titulo || 'sem nome'}": ${novos} produto(s) novo(s), ${atualizados} com fotos novas, ${baixadas} foto(s) baixada(s)${falhas ? `, ${falhas} não baixaram (tente de novo depois)` : ''}.`, feitos: fila.length, total: fila.length, fim: Date.now() };
     log('importação', importacao.msg);
   } catch (e) {
     log('importação falhou', e);
