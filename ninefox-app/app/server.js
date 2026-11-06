@@ -24,9 +24,10 @@ const servidor = http.createServer((req, res) => {
     if (req.method !== 'GET' && req.method !== 'HEAD') return enviar(res, 405, 'text/plain; charset=utf-8', 'método não permitido');
     const u = new URL(req.url, 'http://x');
     if (u.pathname === '/saude') return enviar(res, 200, 'application/json', JSON.stringify({ ok: true, api: ofertas.pronta() }));
-    const m = /^\/marca\/([a-z0-9-]+\.(svg|png|ico))$/.exec(u.pathname);
+    const m = /^\/(marca|exemplo)\/([a-z0-9-]+\.(svg|png|ico))$/.exec(u.pathname);
     if (m) {
-      let b; try { b = fs.readFileSync(path.join(MARCA, m[1])); } catch { return enviar(res, 404, 'text/plain; charset=utf-8', 'não encontrado'); }
+      let b; try { b = fs.readFileSync(path.join(__dirname, m[1], m[2])); } catch { return enviar(res, 404, 'text/plain; charset=utf-8', 'não encontrado'); }
+      m[2] = m[3];
       return enviar(res, 200, TIPOS[m[2]], b, { 'Cache-Control': 'public, max-age=86400' });
     }
     let site = siteDoHost(req.headers.host);
@@ -34,7 +35,8 @@ const servidor = http.createServer((req, res) => {
     if (!site) return enviar(res, 404, 'text/plain; charset=utf-8', 'site não encontrado');
     if (u.pathname !== '/') return enviar(res, 404, 'text/html; charset=utf-8', '<!doctype html><meta charset="utf-8"><title>Não encontrado</title><p style="font-family:sans-serif">Página não encontrada. <a href="/">Voltar</a></p>');
     const html = site.tipo === 'vitrine' ? paginas.vitrine(site, ofertas.carregar(site))
-      : paginas.institucional(site, { whatsapp: String(process.env.CONTATO_WHATSAPP || '').replace(/\D/g, ''), email: process.env.CONTATO_EMAIL || '', rodape: process.env.RODAPE_EMPRESA || '' });
+      : paginas.institucional(site, { whatsapp: String(process.env.CONTATO_WHATSAPP || '').replace(/\D/g, ''), email: process.env.CONTATO_EMAIL || '', rodape: process.env.RODAPE_EMPRESA || '' },
+        ofertas.resumo([SITES.shop, SITES.tcg]));
     return enviar(res, 200, 'text/html; charset=utf-8', html, { 'Cache-Control': 'no-cache', 'Content-Security-Policy': CSP });
   } catch (e) { log('erro', e.message); enviar(res, 500, 'text/plain; charset=utf-8', 'erro'); }
 });

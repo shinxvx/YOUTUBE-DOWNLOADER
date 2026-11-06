@@ -22,13 +22,13 @@ const SITES = {
     ofertas: {
       precoMin: 8, precoMax: 600, notaMin: 4.6, vendasMin: 100, max: 160,
       bloquear: /sexy|sensual|erotic|adulto|arma|simulacro|faca tatica|remedio|medicament|cigarro|vape|narguil/,
+      // categorias = CÔMODOS (o site navega por cômodo, com ilustração própria de cada um)
       grupos: [
-        { cat: 'decoração', palavras: ['decoração sala', 'quadro decorativo', 'vaso decorativo', 'espelho decorativo', 'almofada decorativa'] },
-        { cat: 'iluminação', palavras: ['luminária led', 'fita led', 'abajur', 'luminária de mesa'] },
-        { cat: 'organização', palavras: ['organizador', 'caixa organizadora', 'prateleira', 'organizador de gaveta'] },
-        { cat: 'cozinha', palavras: ['utensílios de cozinha', 'potes herméticos', 'organizador de cozinha', 'porta temperos'] },
-        { cat: 'cama e banho', palavras: ['jogo de cama', 'toalha de banho', 'tapete banheiro', 'cortina'] },
-        { cat: 'plantas', palavras: ['planta artificial', 'vaso para plantas', 'jardim vertical'] },
+        { cat: 'sala', palavras: ['quadro decorativo sala', 'almofada decorativa', 'tapete sala', 'luminária de chão', 'vaso decorativo'] },
+        { cat: 'cozinha', palavras: ['potes herméticos', 'utensílios de cozinha silicone', 'porta temperos', 'organizador de cozinha'] },
+        { cat: 'quarto', palavras: ['jogo de cama', 'abajur', 'cortina blackout', 'organizador guarda roupa'] },
+        { cat: 'banheiro', palavras: ['tapete banheiro', 'toalha de banho', 'organizador banheiro', 'kit banheiro'] },
+        { cat: 'varanda', palavras: ['planta artificial', 'vaso para plantas', 'luminária solar jardim', 'jardim vertical'] },
       ],
     },
   },

@@ -60,6 +60,20 @@ async function atualizar(site) {
   }
   const pontos = (i) => i.desconto * 0.6 + Math.log10(i.vendas + 1) * 8 + i.nota * 4;
   const itens = [...vistos.values()].sort((a, b) => pontos(b) - pontos(a)).slice(0, c.max || 150);
+  // histórico de preço (8 dias) para o selo "menor preço em 7 dias" (só quando há 3+ dias de histórico: nunca inventar)
+  // e "chegou agora" (visto pela 1ª vez nas últimas 24 h)
+  const hf = path.join(DATA, site.id + '-hist.json'); let H = null; try { H = JSON.parse(fs.readFileSync(hf, 'utf8')); } catch { /* novo */ }
+  const agora = Date.now(), lim = agora - 8 * 864e5;
+  if (!H || !H.itens) H = { inicio: agora, itens: {} };
+  for (const it of itens) {
+    const h = H.itens[it.id] || { primeira: agora, precos: [] };
+    h.precos = h.precos.filter((p) => p[0] >= lim); h.precos.push([agora, it.preco]); H.itens[it.id] = h;
+    const sete = h.precos.filter((p) => p[0] >= agora - 7 * 864e5);
+    it.menor7 = agora - h.primeira >= 3 * 864e5 && sete.length >= 3 && it.preco <= Math.min(...sete.map((p) => p[1]));
+    it.novo = h.primeira - H.inicio > 3600e3 && agora - h.primeira < 864e5; // na 1ª carga nada é "novo"
+  }
+  for (const [k, h] of Object.entries(H.itens)) if (!h.precos.some((p) => p[0] >= lim)) delete H.itens[k];
+  fs.writeFileSync(hf, JSON.stringify(H));
   const res = { em: new Date().toISOString(), itens, erros, ultimoErro };
   if (itens.length) { const f = path.join(DATA, site.id + '.json'); fs.writeFileSync(f + '.tmp', JSON.stringify(res)); fs.renameSync(f + '.tmp', f); }
   return { ok: true, total: itens.length, erros, ultimoErro };
@@ -74,4 +88,16 @@ function carregar(site) {
   return { em: '', itens: [], exemplo: false };
 }
 
-module.exports = { pronta, atualizar, carregar, item };
+// números do painel "ao vivo" do institucional (só o que os robôs realmente fizeram)
+function resumo(sites) {
+  const r = { total: 0, em: '', exemplo: false, ultimos: [], porSite: {} };
+  for (const s of sites) {
+    const d = carregar(s); r.total += d.itens.length; r.porSite[s.id] = d.itens.length; if (d.exemplo) r.exemplo = true;
+    if (d.em > r.em) r.em = d.em;
+    r.ultimos.push(...d.itens.slice(0, 3).map((i) => ({ nome: i.nome, preco: i.preco, frente: s.nome })));
+  }
+  r.ultimos = r.ultimos.slice(0, 5);
+  return r;
+}
+
+module.exports = { pronta, atualizar, carregar, item, resumo };
