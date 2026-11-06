@@ -13,6 +13,12 @@ const MARCA = path.join(__dirname, 'marca');
 const TIPOS = { svg: 'image/svg+xml', png: 'image/png', ico: 'image/x-icon' };
 const CSP = "default-src 'none'; img-src 'self' https://cf.shopee.com.br https://down-br.img.susercontent.com; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'";
 const log = (...a) => console.log(new Date().toISOString(), ...a);
+let _vm = { em: 0, v: '' };
+function versaoMarca() { // muda quando qualquer arquivo de app/marca muda (relida no máximo 1x por minuto)
+  if (Date.now() - _vm.em < 60000) return _vm.v;
+  try { const h = require('crypto').createHash('md5'); for (const f of fs.readdirSync(MARCA).sort()) { const s = fs.statSync(path.join(MARCA, f)); h.update(f + s.size + s.mtimeMs); } _vm = { em: Date.now(), v: h.digest('hex').slice(0, 8) }; } catch { /* sem pasta */ }
+  return _vm.v;
+}
 
 function enviar(res, cod, tipo, corpo, extra = {}) {
   res.writeHead(cod, { 'Content-Type': tipo, 'Content-Length': Buffer.byteLength(corpo), 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'strict-origin-when-cross-origin', ...extra });
@@ -37,7 +43,8 @@ const servidor = http.createServer((req, res) => {
     const html = site.tipo === 'vitrine' ? paginas.vitrine(site, ofertas.carregar(site))
       : paginas.institucional(site, { whatsapp: String(process.env.CONTATO_WHATSAPP || '').replace(/\D/g, ''), email: process.env.CONTATO_EMAIL || '', rodape: process.env.RODAPE_EMPRESA || '' },
         ofertas.resumo([SITES.shop, SITES.tcg]));
-    return enviar(res, 200, 'text/html; charset=utf-8', html, { 'Cache-Control': 'no-cache', 'Content-Security-Policy': CSP });
+    // ?v=<versão da pasta marca>: logo nova aparece na hora, mesmo para quem tem a antiga no cache do navegador
+    return enviar(res, 200, 'text/html; charset=utf-8', html.replace(/(\/marca\/[a-z0-9-]+\.(?:svg|png|ico))"/g, `$1?v=${versaoMarca()}"`), { 'Cache-Control': 'no-cache', 'Content-Security-Policy': CSP });
   } catch (e) { log('erro', e.message); enviar(res, 500, 'text/plain; charset=utf-8', 'erro'); }
 });
 servidor.listen(PORTA, () => log('NINEFOX no ar na porta', PORTA, '| API Shopee NINEFOX:', ofertas.pronta() ? 'ligada' : 'SEM CHAVES (mostra "ofertas chegando")'));
