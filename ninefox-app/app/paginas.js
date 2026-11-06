@@ -256,7 +256,7 @@ ${prateleiras.map(([t, l], k) => `<section class="in prat rv" aria-labelledby="p
 <div class="acoes">${zapBtn('or')}${site.insta ? `<a class="btn ln" href="${esc(site.insta)}" target="_blank" rel="noopener">${ic('ig')}Instagram</a>` : ''}</div></div></section>
 </main>
 ${site.zap ? `<a class="btn or flutua" href="${esc(site.zap)}" target="_blank" rel="noopener">${ic('zap')}receba no zap</a>` : ''}
-<footer><div class="in"><div><b>Links de afiliado:</b> podemos receber uma comissão se você comprar por eles, sem custo a mais para você.<br>Preços e disponibilidade são da Shopee no horário indicado e podem mudar.</div>
+<footer><div class="in"><div><b>Links de afiliado:</b> podemos receber uma comissão se você comprar por eles, sem custo a mais para você.<br>Preços e disponibilidade são da Shopee no horário indicado e podem mudar.${process.env.RODAPE_EMPRESA ? `<br><b>NINEFOX</b> · ${esc(process.env.RODAPE_EMPRESA)}` : ''}</div>
 <div class="marcas"><a href="${esc(urlDe(SITES.inst))}">NINEFOX</a><a href="${esc(urlDe(SITES.shop))}">NINEFOX SHOP</a><a href="${esc(urlDe(SITES.tcg))}">NINEFOX TCG</a></div></div></footer>
 <script type="application/json" id="top">${topJSON}</script>
 <script>
@@ -292,6 +292,15 @@ ${JS_REVELA}
 }
 
 // ======================= INSTITUCIONAL =======================
+// sistemas abertos feitos pela NINEFOX (06/11/2026: vieram da Speed — SPEED Cortes -> HitSlice, SPEED Downloader -> FoxGrab)
+const SISTEMAS = [
+  { nome: 'HitSlice', logo: 'hitslice', w: 636, url: process.env.URL_HITSLICE || 'https://hitslice.ninefox.com.br',
+    txt: 'Cole um link do YouTube ou envie um vídeo: a IA encontra os melhores momentos e entrega cortes verticais com gancho e legenda, prontos para TikTok, Reels e Shorts.',
+    tags: ['IA', 'cortes verticais', 'legenda automática'] },
+  { nome: 'FoxGrab', logo: 'foxgrab', w: 671, url: process.env.URL_FOXGRAB || 'https://foxgrab.ninefox.com.br',
+    txt: 'Baixe vídeos do YouTube, TikTok e Instagram em MP4 (até 4K) ou MP3 (até 320 kbps). Grátis, sem cadastro e sem marca d’água.',
+    tags: ['grátis', 'MP4 até 4K', 'MP3'] },
+];
 function institucional(site, cfg, vivo) {
   const contato = cfg.whatsapp ? `https://wa.me/${cfg.whatsapp}` : cfg.email ? `mailto:${cfg.email}` : '';
   const btnContato = (cls, txt = 'fale com a gente') => (contato ? `<a class="btn ${cls}" href="${esc(contato)}"${cfg.whatsapp ? ' target="_blank" rel="noopener"' : ''}>${txt} ${ic('seta')}</a>` : `<span class="btn ${cls}" aria-disabled="true">contato em breve</span>`);
@@ -363,6 +372,15 @@ body{background:var(--bk);color:var(--iv)}
 .proj .n{font:700 64px var(--fh);letter-spacing:-.04em;line-height:1;margin-top:auto}.proj .n small{display:block;font:500 15px var(--fb);letter-spacing:0;color:var(--mu)}.proj.e .n small{color:var(--mud)}
 .proj .ir{position:absolute;right:28px;bottom:28px;width:56px;height:56px;border-radius:50%;background:var(--or);color:var(--bk);display:grid;place-items:center;transition:transform .3s}
 .proj:hover .ir{transform:rotate(-45deg)}
+/* sistemas (HitSlice, FoxGrab) */
+.apps{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:48px}
+.app{display:flex;flex-direction:column;gap:16px;border-radius:24px;padding:32px;background:var(--wh);border:1px solid var(--li);text-decoration:none;color:var(--bk);transition:transform .3s,border-color .3s}
+.app:hover{transform:translateY(-4px);border-color:var(--bk)}
+.app .logo{height:56px;width:auto;align-self:flex-start}.app p{margin:0;color:var(--mu);font-size:17px;max-width:460px}
+.app .tg{display:flex;gap:8px;flex-wrap:wrap}.app .tg span{font:600 12px var(--fb);padding:6px 10px;border-radius:999px;background:var(--iv);border:1px solid var(--li)}
+.app .ir{display:inline-flex;align-items:center;gap:8px;font-weight:600;margin-top:auto}
+@media (max-width:980px){.apps{grid-template-columns:1fr}}
+@media (max-width:640px){.app{padding:24px}.app .logo{height:44px}}
 /* passos */
 .passos{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
 .passos div{border-top:2px solid var(--bk);padding-top:20px}
@@ -381,7 +399,7 @@ footer a{color:var(--iv)}footer b{color:var(--iv)}footer .marcas{display:flex;ga
 <a class="pular" href="#solucoes">pular para o conteúdo</a>
 <header class="topo dk" style="background:transparent"><div class="in">
 <a href="/" aria-label="NINEFOX, início"><img class="logo" src="/marca/ninefox-logo-negativa.svg" alt="NINEFOX" width="1042" height="371"></a>
-<nav aria-label="Principal"><a class="lk" href="#solucoes">soluções</a><a class="lk" href="#projetos">projetos</a><a class="lk" href="#contato">contato</a>${btnContato('or')}</nav>
+<nav aria-label="Principal"><a class="lk" href="#solucoes">soluções</a><a class="lk" href="#projetos">projetos</a><a class="lk" href="#sistemas">sistemas</a><a class="lk" href="#contato">contato</a>${btnContato('or')}</nav>
 </div></header>
 <main>
 <section class="hero dk" aria-labelledby="t1">
@@ -410,6 +428,8 @@ ${feed ? `<ul>${feed}</ul>` : '<p class="rod">Os robôs começam a trabalhar ass
 <a class="proj rv" href="${esc(urlDe(SITES.shop))}"><img class="logo" src="/marca/ninefox-shop-principal.svg" alt="NINEFOX SHOP" width="1042" height="393"><p>Achados de casa e decoração da Shopee, conferidos todos os dias.</p><div class="n">${contaShop}<small>ofertas no radar agora</small></div><span class="ir">${ic('seta')}</span></a>
 <a class="proj e rv" href="${esc(urlDe(SITES.tcg))}"><img class="logo" src="/marca/ninefox-tcg-negativa.svg" alt="NINEFOX TCG" width="1042" height="393"><p>Boosters, boxes e acessórios de TCG, com preço por booster calculado.</p><div class="n">${contaTcg}<small>ofertas no radar agora</small></div><span class="ir">${ic('seta')}</span></a>
 </div></section>
+<section class="in sec" id="sistemas" aria-labelledby="t3b" style="padding-top:0"><h2 class="g rv" id="t3b">sistemas que a gente fez</h2><p class="lead rv">Ferramentas abertas, feitas pela NINEFOX, que qualquer pessoa pode usar.</p>
+<div class="apps">${SISTEMAS.map((s) => `<a class="app rv" href="${esc(s.url)}" target="_blank" rel="noopener"><img class="logo" src="/marca/${s.logo}-escuro.svg" alt="${esc(s.nome)}" width="${s.w}" height="176"><p>${esc(s.txt)}</p><div class="tg">${s.tags.map((t) => `<span>${esc(t)}</span>`).join('')}</div><span class="ir">abrir ${ic('seta')}</span></a>`).join('')}</div></section>
 <section class="in sec" aria-labelledby="t4" style="padding-top:0"><h2 class="g rv" id="t4">como trabalhamos</h2>
 <div class="passos"><div class="rv"><b>01</b><h3>Conversa</h3><p>Você conta o problema. A gente entende o dia a dia antes de falar de tecnologia.</p></div>
 <div class="rv"><b>02</b><h3>Protótipo</h3><p>Uma primeira versão para você usar e ajustar, sem esperar meses.</p></div>

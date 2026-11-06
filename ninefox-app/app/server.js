@@ -37,6 +37,10 @@ const servidor = http.createServer((req, res) => {
       m[2] = m[3];
       return enviar(res, 200, TIPOS[m[2]], b, { 'Cache-Control': 'public, max-age=86400' });
     }
+    // REDIRECIONAR="host=https://novo,host2=https://novo2": endereços antigos (ex.: produtos que saíram da Speed) -> 301 mantendo caminho e ?query
+    const hostReq = String(req.headers.host || '').toLowerCase().replace(/:\d+$/, '');
+    const red = lista(process.env.REDIRECIONAR).map((x) => x.split('=')).find(([h]) => h === hostReq);
+    if (red && /^https:\/\/[a-z0-9.-]+$/.test(red[1] || '')) { res.writeHead(301, { Location: red[1] + req.url, 'Cache-Control': 'public, max-age=3600' }); return res.end(); }
     let site = siteDoHost(req.headers.host);
     if (!site && process.env.DEV === '1') site = SITES[u.searchParams.get('site')] || SITES.inst; // teste local
     if (!site) return enviar(res, 404, 'text/plain; charset=utf-8', 'site não encontrado');
