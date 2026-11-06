@@ -1,5 +1,5 @@
 'use strict';
-// NINEFOX SPORTS (06/11/2026): vitrine de tênis e materiais esportivos + painel /admin para cadastrar produtos.
+// Vitrine de tênis e materiais esportivos (modelo para vender, cada cliente põe nome/logo/cor no painel) + painel /admin.
 // Sem dependências. Dados em DATA_DIR (produtos.json, config.json, fotos/). Pedido pela sacola -> WhatsApp.
 const http = require('http');
 const fs = require('fs');
@@ -13,8 +13,7 @@ const FOTOS = path.join(DATA, 'fotos');
 const PUB = path.join(__dirname, 'public');
 const SENHA = process.env.ADMIN_SENHA || '';
 const SEGREDO = crypto.createHash('sha256').update('nf-sports|' + (process.env.SEGREDO || SENHA)).digest();
-const RODAPE = process.env.RODAPE_EMPRESA || '';
-const ENDERECO = (process.env.ENDERECO || 'https://sports.ninefox.com.br').replace(/\/$/, '');
+const ENDERECO = (process.env.ENDERECO || '').replace(/\/$/, '');
 fs.mkdirSync(FOTOS, { recursive: true });
 const log = (...a) => console.log(new Date().toISOString(), ...a);
 
@@ -32,11 +31,12 @@ function ler(nome, padrao) { try { return JSON.parse(fs.readFileSync(path.join(D
 function gravar(nome, obj) { const f = path.join(DATA, nome); fs.writeFileSync(f + '.tmp', JSON.stringify(obj, null, 1)); fs.renameSync(f + '.tmp', f); }
 let produtos = ler('produtos.json', []);
 let config = Object.assign({
-  nome: 'NINEFOX SPORTS', whatsapp: '', instagram: '', aviso: '',
+  nome: 'Loja Demo', nome2: 'Sports', cor: '#C8F031', logo: null, rodape: '', whatsapp: '', instagram: '', aviso: '',
   titulo: 'Tênis e roupa esportiva pra ir mais longe.',
   subtitulo: 'Catálogo 2026 com os modelos que mais saem: corrida, casual, skate e treino. Escolha o modelo e a numeração e mande o pedido direto pelo WhatsApp.',
   albumUrl: '', albumIgnorar: [], fotosIgnorar: [],
 }, ler('config.json', {}));
+if (config.nome === 'NINEFOX SPORTS') Object.assign(config, { nome: 'Loja Demo', nome2: 'Sports' }); // identidade antiga (06/11/2026)
 const salvarProdutos = () => gravar('produtos.json', produtos);
 const salvarConfig = () => gravar('config.json', config);
 
@@ -92,7 +92,7 @@ function limpar(p) { // normaliza o que veio do formulário
 const publico = (p) => ({ id: p.id, nome: p.nome, categoria: p.categoria, marca: p.marca, tamanhos: p.tamanhos, descricao: p.descricao, preco: p.preco, precoDe: p.precoDe, destaque: p.destaque, novo: p.novo, fotos: p.fotos.map((f) => ({ id: f.id, w: f.w, h: f.h })), numeros: p.numeros, letras: p.letras });
 function catalogo() {
   return {
-    loja: { nome: config.nome, whatsapp: config.whatsapp, instagram: config.instagram, aviso: config.aviso, titulo: config.titulo, subtitulo: config.subtitulo, rodape: RODAPE },
+    loja: { nome: config.nome, whatsapp: config.whatsapp, instagram: config.instagram, aviso: config.aviso, titulo: config.titulo, subtitulo: config.subtitulo, rodape: config.rodape },
     categorias: CATEGORIAS,
     produtos: produtos.filter((p) => p.ativo && p.fotos.length).map(publico),
   };
@@ -204,6 +204,21 @@ function corpo(req, limite) {
   });
 }
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+function corSobre(hex) { // texto preto ou branco em cima da cor principal
+  const n = parseInt(hex.slice(1), 16); const c = [n >> 16, (n >> 8) & 255, n & 255].map((v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; });
+  return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2] > 0.3 ? '#151515' : '#ffffff';
+}
+const iniciais = (n) => String(n || '').trim().split(/\s+/).slice(0, 2).map((w) => w[0] || '').join('').toUpperCase() || 'L';
+function logoHtml() {
+  const n = esc(config.nome), n2 = esc(config.nome2 || '');
+  if (config.logo) return `<img class="logo-img" src="/logo?v=${config.logo.v}" alt="${n}">`;
+  return `<span class="logo-mono">${esc(iniciais(config.nome))}</span><span class="logo-txt"><b>${n}</b>${n2 ? `<i>${n2}</i>` : ''}</span>`;
+}
+function temaHtml() {
+  const v = config.logo ? config.logo.v : crypto.createHash('md5').update(config.nome + config.cor).digest('hex').slice(0, 6);
+  return `<link rel="icon" href="${config.logo ? '/logo' : '/favicon.svg'}?v=${v}"><style>:root:root{--laranja:${config.cor};--sobre:${corSobre(config.cor)}}</style><meta name="theme-color" content="#151515">`;
+}
+const nomeCompleto = () => [config.nome, config.nome2].filter(Boolean).join(' ');
 let versao = '';
 function versaoArquivos() { // muda quando qualquer arquivo de public/ muda (cache do navegador)
   const h = crypto.createHash('md5');
@@ -212,14 +227,16 @@ function versaoArquivos() { // muda quando qualquer arquivo de public/ muda (cac
 }
 function pagina(nome, req) {
   if (!versao || Date.now() % 60000 < 2000) versao = versaoArquivos();
-  let html = fs.readFileSync(path.join(PUB, nome), 'utf8').replace(/(\/(?:[a-z-]+)\.(?:css|js))"/g, `$1?v=${versao}"`);
+  let html = fs.readFileSync(path.join(PUB, nome), 'utf8').replace(/(\/(?:[a-z-]+)\.(?:css|js))"/g, `$1?v=${versao}"`)
+    .replaceAll('<!--LOGO-->', logoHtml()).replace('<!--TEMA-->', temaHtml());
   if (nome === 'index.html') {
     const c = catalogo();
     const u = new URL(req.url, 'http://x'); const pid = u.searchParams.get('p'); const prod = pid && c.produtos.find((p) => p.id === pid);
-    const titulo = prod ? `${prod.nome} | ${config.nome}` : `${config.nome} | Tênis e materiais esportivos`;
+    const titulo = prod ? `${prod.nome} | ${nomeCompleto()}` : `${nomeCompleto()} | Tênis e materiais esportivos`;
+    const base = ENDERECO || `https://${String(req.headers.host || '').replace(/[^a-z0-9.:-]/gi, '')}`;
     const desc = prod ? `${prod.nome}${prod.tamanhos ? ' · ' + prod.tamanhos.replace(/\n/g, ' · ') : ''}. Peça pelo WhatsApp.` : config.subtitulo;
-    const img = prod ? `${ENDERECO}/f/${prod.fotos[0].id}.jpg` : (c.produtos[0] ? `${ENDERECO}/f/${c.produtos[0].fotos[0].id}.jpg` : '');
-    html = html.replace('<!--SEO-->', `<title>${esc(titulo)}</title><meta name="description" content="${esc(desc)}"><link rel="canonical" href="${ENDERECO}/${prod ? '?p=' + prod.id : ''}"><meta property="og:type" content="website"><meta property="og:title" content="${esc(titulo)}"><meta property="og:description" content="${esc(desc)}"><meta property="og:url" content="${ENDERECO}/${prod ? '?p=' + prod.id : ''}">${img ? `<meta property="og:image" content="${img}">` : ''}<meta name="twitter:card" content="summary_large_image">`)
+    const img = prod ? `${base}/f/${prod.fotos[0].id}.jpg` : (c.produtos[0] ? `${base}/f/${c.produtos[0].fotos[0].id}.jpg` : '');
+    html = html.replace('<!--SEO-->', `<title>${esc(titulo)}</title><meta name="description" content="${esc(desc)}"><link rel="canonical" href="${base}/${prod ? '?p=' + prod.id : ''}"><meta property="og:type" content="website"><meta property="og:title" content="${esc(titulo)}"><meta property="og:description" content="${esc(desc)}"><meta property="og:url" content="${base}/${prod ? '?p=' + prod.id : ''}">${img ? `<meta property="og:image" content="${img}">` : ''}<meta name="twitter:card" content="summary_large_image">`)
       .replace('<!--DADOS-->', `<script id="dados" type="application/json">${JSON.stringify(c).replace(/</g, '\\u003c')}</script>`);
   }
   return html;
@@ -231,20 +248,30 @@ async function rota(req, res) {
   if (m === 'GET' && (p === '/' || p === '/index.html')) return enviar(res, 200, TIPOS.html, pagina('index.html', req), { 'Cache-Control': 'no-cache' });
   if (m === 'GET' && (p === '/admin' || p === '/admin/')) return enviar(res, 200, TIPOS.html, pagina('admin.html', req), { 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' });
   if (m === 'GET' && p === '/api/catalogo') return json(res, 200, catalogo());
-  if (m === 'GET' && p === '/robots.txt') return enviar(res, 200, TIPOS.txt, `User-agent: *\nDisallow: /admin\nDisallow: /api/\nSitemap: ${ENDERECO}/sitemap.xml\n`);
+  const base = ENDERECO || `https://${String(req.headers.host || '').replace(/[^a-z0-9.:-]/gi, '')}`;
+  if (m === 'GET' && p === '/robots.txt') return enviar(res, 200, TIPOS.txt, `User-agent: *\nDisallow: /admin\nDisallow: /api/\nSitemap: ${base}/sitemap.xml\n`);
   if (m === 'GET' && p === '/sitemap.xml') {
-    const urls = [`${ENDERECO}/`, ...produtos.filter((x) => x.ativo && x.fotos.length).map((x) => `${ENDERECO}/?p=${x.id}`)];
+    const urls = [`${base}/`, ...produtos.filter((x) => x.ativo && x.fotos.length).map((x) => `${base}/?p=${x.id}`)];
     return enviar(res, 200, TIPOS.xml, `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map((x) => `<url><loc>${esc(x)}</loc></url>`).join('')}</urlset>`);
   }
+  if (m === 'GET' && p === '/logo') {
+    let b; try { b = fs.readFileSync(path.join(DATA, 'logo.' + (config.logo && config.logo.tipo))); } catch { return enviar(res, 404, TIPOS.txt, 'sem logo'); }
+    return enviar(res, 200, config.logo.tipo === 'png' ? TIPOS.png : TIPOS.jpg, b, { 'Cache-Control': 'public, max-age=31536000, immutable' });
+  }
+  if (m === 'GET' && p === '/favicon.svg') {
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="${config.cor}"/><text x="32" y="41" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="800" font-size="${iniciais(config.nome).length > 1 ? 24 : 30}" fill="${corSobre(config.cor)}">${esc(iniciais(config.nome))}</text></svg>`;
+    return enviar(res, 200, TIPOS.svg, svg, { 'Cache-Control': 'public, max-age=86400' });
+  }
+  if (m === 'GET' && p === '/favicon.ico') { res.writeHead(302, { Location: config.logo ? `/logo?v=${config.logo.v}` : '/favicon.svg' }); return res.end(); }
   let f = /^\/f\/([a-f0-9]{12,40})(-p)?\.jpg$/.exec(p);
   if (m === 'GET' && f) {
     let b; try { b = fs.readFileSync(fotoArq(f[1], !!f[2])); } catch { return enviar(res, 404, TIPOS.txt, 'não encontrado'); }
     return enviar(res, 200, TIPOS.jpg, b, { 'Cache-Control': 'public, max-age=31536000, immutable' });
   }
-  f = /^\/((?:marca\/)?[a-z0-9-]+\.(css|js|svg|png|ico|json))$/.exec(p);
+  f = /^\/([a-z0-9-]+\.(css|js|svg|png|ico|json))$/.exec(p);
   if (m === 'GET' && f) {
     let b; try { b = fs.readFileSync(path.join(PUB, f[1])); } catch { return enviar(res, 404, TIPOS.txt, 'não encontrado'); }
-    return enviar(res, 200, TIPOS[f[2]], b, { 'Cache-Control': u.searchParams.has('v') || f[1].startsWith('marca/') ? 'public, max-age=31536000, immutable' : 'public, max-age=300' });
+    return enviar(res, 200, TIPOS[f[2]], b, { 'Cache-Control': u.searchParams.has('v') ? 'public, max-age=31536000, immutable' : 'public, max-age=300' });
   }
 
   // ----- admin -----
@@ -275,10 +302,25 @@ async function rota(req, res) {
     }
     if (m === 'PUT' && acao === 'config') {
       const c = await corpo(req, 20000);
-      for (const k of ['nome', 'aviso', 'titulo', 'subtitulo', 'instagram']) if (k in c) config[k] = String(c[k] || '').trim().slice(0, 300);
+      for (const k of ['aviso', 'titulo', 'subtitulo', 'instagram', 'rodape']) if (k in c) config[k] = String(c[k] || '').trim().slice(0, 300);
+      if ('nome' in c) { const n = String(c.nome || '').trim().slice(0, 40); if (!n) return json(res, 400, { erro: 'Dê um nome à loja.' }); config.nome = n; }
+      if ('nome2' in c) config.nome2 = String(c.nome2 || '').trim().slice(0, 24);
+      if ('cor' in c) { if (!/^#[0-9a-f]{6}$/i.test(c.cor)) return json(res, 400, { erro: 'Cor inválida.' }); config.cor = c.cor.toLowerCase(); }
       if ('whatsapp' in c) config.whatsapp = String(c.whatsapp || '').replace(/\D/g, '').slice(0, 15);
       if (config.instagram && !/^https:\/\//.test(config.instagram)) config.instagram = 'https://instagram.com/' + config.instagram.replace(/^@/, '');
       salvarConfig(); return json(res, 200, { ok: true });
+    }
+    if (m === 'POST' && acao === 'logo') {
+      const { dados, remover } = await corpo(req, 4 * 1024 * 1024);
+      if (remover) { config.logo = null; salvarConfig(); return json(res, 200, { ok: true }); }
+      const mm = /^data:image\/(png|jpeg);base64,([A-Za-z0-9+/=]+)$/.exec(String(dados || ''));
+      const b = mm && Buffer.from(mm[2], 'base64');
+      const ok = b && b.length > 50 && (mm[1] === 'png' ? b.readUInt32BE(0) === 0x89504e47 : b[0] === 0xff && b[1] === 0xd8);
+      if (!ok) return json(res, 400, { erro: 'Logo precisa ser PNG ou JPG.' });
+      const tipo = mm[1] === 'png' ? 'png' : 'jpg';
+      fs.writeFileSync(path.join(DATA, 'logo.' + tipo), b);
+      config.logo = { tipo, v: crypto.createHash('md5').update(b).digest('hex').slice(0, 8) }; salvarConfig();
+      return json(res, 200, { ok: true, logo: config.logo });
     }
     if (m === 'POST' && acao === 'foto') {
       const { grande, mini, w, h } = await corpo(req, 12 * 1024 * 1024);
@@ -335,5 +377,5 @@ if (process.argv[2] === 'importar' && process.argv[3]) { // node server.js impor
 } else {
   http.createServer((req, res) => {
     rota(req, res).catch((e) => { log('erro', req.method, req.url, e.message); if (!res.headersSent) json(res, e.cod || 500, { erro: e.cod ? e.message : 'Erro no servidor.' }); });
-  }).listen(PORTA, () => log(`NINEFOX SPORTS na porta ${PORTA}, ${produtos.length} produtos, admin ${SENHA ? 'com senha' : 'SEM SENHA (bloqueado)'}`));
+  }).listen(PORTA, () => log(`Loja na porta ${PORTA}, ${produtos.length} produtos, admin ${SENHA ? 'com senha' : 'SEM SENHA (bloqueado)'}`));
 }

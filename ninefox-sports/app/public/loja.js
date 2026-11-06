@@ -22,6 +22,7 @@
   if (nums.length) $('#nNumeracao').textContent = `${nums[0]}–${nums[nums.length - 1]}`;
   $('#ano').textContent = new Date().getFullYear();
   $('#rodapeEmp').textContent = loja.rodape || '';
+  $('#nomeRodape').textContent = loja.nome || '';
   const avisos = (loja.aviso ? loja.aviso.split('|') : ['Catálogo 2026 atualizado', loja.whatsapp ? 'Pedido direto pelo WhatsApp' : 'Pedido pela sacola', nums.length ? `Numeração ${nums[0]} ao ${nums[nums.length - 1]}` : '', `${produtos.length} modelos`, 'Masculino e feminino']).map((s) => s.trim()).filter(Boolean);
   const umaVolta = avisos.map((a) => `<span>${esc(a)}</span>`).join('');
   $('#avisoTrilho').innerHTML = umaVolta.repeat(4) + umaVolta.repeat(4);
@@ -209,7 +210,7 @@
     const n = sacola.reduce((s, i) => s + i.qtd, 0);
     $('#contSacola').textContent = n; $('#contSacola').hidden = !n;
     const el = $('#itens');
-    if (!sacola.length) { el.innerHTML = '<div class="sacola-vazia"><img src="/marca/raposa.svg" alt="" width="50" height="60"><p>Sua sacola está vazia.<br>Abra um produto e escolha a numeração.</p></div>'; }
+    if (!sacola.length) { el.innerHTML = '<div class="sacola-vazia"><svg class="vazio-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><p>Sua sacola está vazia.<br>Abra um produto e escolha a numeração.</p></div>'; }
     else el.innerHTML = sacola.map((i, k) => { const p = produtos.find((x) => x.id === i.id); return `<div class="item"><img src="${foto(p.fotos[0], true)}" alt=""><div><h3>${esc(p.nome)}</h3><p>${i.tam ? `${/^\d/.test(i.tam) ? 'Nº' : 'Tam.'} ${esc(i.tam)}` : ''}${i.obs ? ` · ${esc(i.obs)}` : ''}${p.preco ? ` · ${real(p.preco)}` : ''}</p><div class="qtd"><button data-k="${k}" data-d="-1" aria-label="Menos">−</button><span>${i.qtd}</span><button data-k="${k}" data-d="1" aria-label="Mais">+</button></div></div><button class="tirar" data-tirar="${k}" aria-label="Tirar da sacola"><svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></button></div>`; }).join('');
     const comPreco = sacola.every((i) => produtos.find((x) => x.id === i.id).preco);
     const soma = sacola.reduce((s, i) => s + (produtos.find((x) => x.id === i.id).preco || 0) * i.qtd, 0);

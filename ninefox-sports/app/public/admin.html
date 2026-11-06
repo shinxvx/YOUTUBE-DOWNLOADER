@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Admin | NINEFOX SPORTS</title>
-<link rel="icon" href="/marca/favicon.svg" type="image/svg+xml">
+<title>Painel da loja</title>
+<!--TEMA-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@500;600;700;800&display=swap">
@@ -16,9 +16,8 @@
 
 <section class="entrar" id="telaEntrar" hidden>
   <form class="entrar-caixa" id="formEntrar">
-    <img src="/marca/raposa.svg" alt="" width="46" height="56">
+    <div class="logo"><!--LOGO--></div>
     <h1>Painel da loja</h1>
-    <p>NINEFOX SPORTS</p>
     <label class="campo"><span>Senha</span><input type="password" id="senha" autocomplete="current-password" required></label>
     <button class="btn btn-laranja largo">Entrar</button>
     <p class="erro" id="erroEntrar" role="alert"></p>
@@ -28,7 +27,7 @@
 <div id="telaPainel" hidden>
   <header class="adm-topo">
     <div class="in adm-topo-in">
-      <a href="/" class="logo" target="_blank" rel="noopener"><img src="/marca/raposa.svg" alt="" width="26" height="31"><span class="logo-txt"><b>NINEFOX</b><i>SPORTS</i></span></a>
+      <a href="/" class="logo" target="_blank" rel="noopener"><!--LOGO--></a>
       <nav class="abas" role="tablist">
         <button role="tab" data-aba="produtos" aria-selected="true">Produtos</button>
         <button role="tab" data-aba="album" aria-selected="false">Importar do álbum</button>
@@ -69,11 +68,22 @@
     <section data-painel="config" hidden>
       <h1>Configurações da loja</h1>
       <form class="cartao grade-form" id="formConfig">
+        <p class="secao-t">Identidade da loja</p>
+        <label class="campo"><span>Nome da loja</span><input id="cNome" maxlength="40" required></label>
+        <label class="campo"><span>Segunda linha do nome <small>opcional, ex.: SPORTS, CALÇADOS</small></span><input id="cNome2" maxlength="24"></label>
+        <div class="campo largo"><span>Logo <small>PNG ou JPG; com fundo transparente fica melhor. Sem logo, aparecem as iniciais + o nome.</small></span>
+          <div class="logo-ed"><div class="logo-prev" id="logoPrev"></div>
+            <label class="btn btn-linha"><input type="file" id="cLogo" accept="image/png,image/jpeg,image/webp" hidden>Enviar logo</label>
+            <button type="button" class="link perigo" id="tirarLogo">Tirar logo</button></div></div>
+        <div class="campo largo"><span>Cor principal <small>botões, destaques e faixa do topo</small></span>
+          <div class="cor-ed"><input type="color" id="cCor"><div class="cores-prontas" id="coresProntas"></div></div></div>
+        <label class="campo largo"><span>Dados da empresa no rodapé <small>razão social, CNPJ, endereço, e-mail</small></span><input id="cRodape" maxlength="300" placeholder="Minha Loja LTDA · CNPJ 00.000.000/0001-00 · Rua Exemplo, 100 – São Paulo/SP"></label>
+        <p class="secao-t">Contato e textos</p>
         <label class="campo"><span>WhatsApp dos pedidos <small>DDI + DDD + número, ex.: 5511999998888</small></span><input id="cZap" inputmode="numeric" placeholder="5511999998888"></label>
-        <label class="campo"><span>Instagram <small>link ou @</small></span><input id="cInsta" placeholder="@ninefox.sports"></label>
-        <label class="campo largo"><span>Título do topo <small>a última palavra fica laranja</small></span><input id="cTitulo" maxlength="120"></label>
+        <label class="campo"><span>Instagram <small>link ou @</small></span><input id="cInsta" placeholder="@sualoja"></label>
+        <label class="campo largo"><span>Título do topo <small>a última palavra fica na cor principal</small></span><input id="cTitulo" maxlength="120"></label>
         <label class="campo largo"><span>Texto abaixo do título</span><textarea id="cSub" rows="3" maxlength="300"></textarea></label>
-        <label class="campo largo"><span>Faixa laranja de avisos <small>separe com | (vazio = automático)</small></span><input id="cAviso" maxlength="300" placeholder="Frete para todo o Brasil | Pix ou cartão | Troca em 7 dias"></label>
+        <label class="campo largo"><span>Faixa colorida de avisos <small>separe com | (vazio = automático)</small></span><input id="cAviso" maxlength="300" placeholder="Frete para todo o Brasil | Pix ou cartão | Troca em 7 dias"></label>
         <div class="largo"><button class="btn btn-laranja">Salvar</button></div>
       </form>
     </section>

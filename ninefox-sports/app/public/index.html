@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#151515">
 <!--SEO-->
-<link rel="icon" href="/marca/favicon.svg" type="image/svg+xml">
+<!--TEMA-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@500;600;700;800&display=swap">
@@ -16,10 +16,7 @@
 
 <header class="topo" id="topo">
   <div class="in topo-in">
-    <a href="/" class="logo" aria-label="NINEFOX SPORTS, início">
-      <img src="/marca/raposa.svg" alt="" width="30" height="36">
-      <span class="logo-txt"><b>NINEFOX</b><i>SPORTS</i></span>
-    </a>
+    <a href="/" class="logo" aria-label="Início"><!--LOGO--></a>
     <label class="busca" for="q">
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <input id="q" type="search" placeholder="Buscar modelo, marca ou numeração" autocomplete="off" enterkeyhint="search">
@@ -75,7 +72,7 @@
       <p class="resultado" id="resultado" aria-live="polite"></p>
       <div class="grade" id="grade"></div>
       <div class="vazio" id="vazio" hidden>
-        <img src="/marca/raposa.svg" alt="" width="60" height="72">
+        <svg class="vazio-ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
         <p>Nada com esse filtro. <button class="link" id="limpar">Limpar filtros</button></p>
       </div>
     </div>
@@ -93,10 +90,10 @@
 
 <footer class="rodape">
   <div class="in rodape-in">
-    <a href="/" class="logo logo-rodape" aria-label="NINEFOX SPORTS"><img src="/marca/raposa.svg" alt="" width="30" height="36"><span class="logo-txt"><b>NINEFOX</b><i>SPORTS</i></span></a>
+    <a href="/" class="logo logo-rodape" aria-label="Início"><!--LOGO--></a>
     <div class="rodape-links" id="rodapeLinks"></div>
     <p class="rodape-emp" id="rodapeEmp"></p>
-    <p class="rodape-emp">Uma loja <a href="https://ninefox.com.br/" target="_blank" rel="noopener">NINEFOX</a> · © <span id="ano"></span></p>
+    <p class="rodape-emp">© <span id="ano"></span> <span id="nomeRodape"></span>. Todos os direitos reservados.</p>
   </div>
 </footer>
 

@@ -28,6 +28,8 @@
     $('#eCat').innerHTML = D.categorias.map((c) => `<option value="${c.id}">${esc(c.nome)}</option>`).join('');
     $('#listaMarcas').innerHTML = [...new Set(D.produtos.map((p) => p.marca).filter(Boolean))].sort().map((m) => `<option value="${esc(m)}">`).join('');
     const c = D.config;
+    $('#cNome').value = c.nome || ''; $('#cNome2').value = c.nome2 || ''; $('#cCor').value = c.cor || '#c8f031'; $('#cRodape').value = c.rodape || '';
+    previaLogo();
     $('#cZap').value = c.whatsapp || ''; $('#cInsta').value = c.instagram || ''; $('#cTitulo').value = c.titulo || ''; $('#cSub').value = c.subtitulo || ''; $('#cAviso').value = c.aviso || '';
     $('#albumUrl').value = c.albumUrl || '';
     lista();
@@ -163,9 +165,33 @@
   }
 
   // ---------- config ----------
+  const CORES = ['#c8f031', '#ff5a1f', '#e11d48', '#2563eb', '#16a34a', '#f59e0b', '#9333ea', '#06b6d4', '#ffffff'];
+  $('#coresProntas').innerHTML = CORES.map((c) => `<button type="button" data-cor="${c}" aria-label="Cor ${c}"></button>`).join('');
+  for (const b of document.querySelectorAll('#coresProntas button')) b.style.background = b.dataset.cor;
+  $('#coresProntas').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { $('#cCor').value = b.dataset.cor; corAoVivo(); } });
+  function corAoVivo() { document.documentElement.style.setProperty('--laranja', $('#cCor').value); }
+  $('#cCor').addEventListener('input', corAoVivo);
+  function previaLogo() {
+    const c = D.config; const el = $('#logoPrev');
+    if (c.logo) el.innerHTML = `<img class="logo-img" src="/logo?v=${c.logo.v}" alt="">`;
+    else { const ini = String(c.nome || '').trim().split(/\s+/).slice(0, 2).map((w) => w[0] || '').join('').toUpperCase(); el.innerHTML = `<span class="logo-mono">${esc(ini)}</span><span class="logo-txt"><b>${esc(c.nome)}</b>${c.nome2 ? `<i>${esc(c.nome2)}</i>` : ''}</span>`; }
+    $('#tirarLogo').hidden = !c.logo;
+  }
+  $('#cLogo').addEventListener('change', async (e) => {
+    const a = e.target.files[0]; e.target.value = ''; if (!a) return;
+    try {
+      const img = await carregarImg(a);
+      const esc2 = Math.min(1, 600 / Math.max(img.naturalWidth, img.naturalHeight));
+      const cv = document.createElement('canvas'); cv.width = Math.round(img.naturalWidth * esc2); cv.height = Math.round(img.naturalHeight * esc2);
+      cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+      const r = await api('logo', 'POST', { dados: cv.toDataURL('image/png') });
+      D.config.logo = r.logo; previaLogo(); toast('Logo salva');
+    } catch (er) { toast(er.message); }
+  });
+  $('#tirarLogo').addEventListener('click', async () => { try { await api('logo', 'POST', { remover: true }); D.config.logo = null; previaLogo(); toast('Logo tirada'); } catch (er) { toast(er.message); } });
   $('#formConfig').addEventListener('submit', async (e) => {
     e.preventDefault();
-    try { await api('config', 'PUT', { whatsapp: $('#cZap').value, instagram: $('#cInsta').value, titulo: $('#cTitulo').value, subtitulo: $('#cSub').value, aviso: $('#cAviso').value }); toast('Configurações salvas'); D = await api('tudo'); $('#cZap').value = D.config.whatsapp; $('#cInsta').value = D.config.instagram; }
+    try { await api('config', 'PUT', { nome: $('#cNome').value, nome2: $('#cNome2').value, cor: $('#cCor').value, rodape: $('#cRodape').value, whatsapp: $('#cZap').value, instagram: $('#cInsta').value, titulo: $('#cTitulo').value, subtitulo: $('#cSub').value, aviso: $('#cAviso').value }); toast('Configurações salvas'); D = await api('tudo'); $('#cZap').value = D.config.whatsapp; $('#cInsta').value = D.config.instagram; previaLogo(); }
     catch (er) { toast(er.message); }
   });
 
