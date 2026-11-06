@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#151515">
+<!--SEO-->
+<link rel="icon" href="/marca/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@500;600;700;800&display=swap">
+<link rel="stylesheet" href="/estilo.css">
+</head>
+<body>
+<div class="aviso" id="aviso" aria-label="Avisos da loja"><div class="aviso-trilho" id="avisoTrilho"></div></div>
+
+<header class="topo" id="topo">
+  <div class="in topo-in">
+    <a href="/" class="logo" aria-label="NINEFOX SPORTS, início">
+      <img src="/marca/raposa.svg" alt="" width="30" height="36">
+      <span class="logo-txt"><b>NINEFOX</b><i>SPORTS</i></span>
+    </a>
+    <label class="busca" for="q">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Buscar modelo, marca ou numeração" autocomplete="off" enterkeyhint="search">
+    </label>
+    <button class="btn-sacola" id="abrirSacola" aria-label="Abrir sacola">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+      <span>Sacola</span><b id="contSacola" hidden>0</b>
+    </button>
+  </div>
+</header>
+
+<main id="inicio">
+  <section class="hero">
+    <div class="in hero-in">
+      <div class="hero-txt">
+        <p class="selo-hero"><span></span>Catálogo 2026 atualizado</p>
+        <h1 id="heroTitulo">Tênis e roupa esportiva pra ir mais longe.</h1>
+        <p class="hero-sub" id="heroSub"></p>
+        <div class="hero-acoes">
+          <a class="btn btn-laranja" href="#catalogo">Ver catálogo <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <a class="btn btn-linha" id="heroZap" href="#" hidden>Falar no WhatsApp</a>
+        </div>
+        <dl class="numeros">
+          <div><dt id="nModelos">0</dt><dd>modelos no catálogo</dd></div>
+          <div><dt id="nNumeracao">34–45</dt><dd>numeração</dd></div>
+          <div><dt id="nMarcas">0</dt><dd>marcas</dd></div>
+        </dl>
+      </div>
+      <div class="hero-vitrine" id="heroVitrine" aria-hidden="true"></div>
+    </div>
+    <div class="faixa-marcas" aria-hidden="true"><div class="faixa-trilho" id="faixaMarcas"></div></div>
+  </section>
+
+  <section class="in cats" aria-label="Categorias" id="cats"></section>
+
+  <section class="in destaque-bloco" id="blocoDestaques" hidden>
+    <div class="titulo-bloco"><h2>Os mais pedidos</h2><p>Escolhidos a dedo pra começar.</p></div>
+    <div class="prateleira" id="prateleira"></div>
+  </section>
+
+  <section class="catalogo" id="catalogo">
+    <div class="filtros" id="filtros">
+      <div class="in filtros-in">
+        <div class="chips" id="chipsCat" role="tablist" aria-label="Categoria"></div>
+        <div class="filtros-dir">
+          <label class="sel"><span>Marca</span><select id="fMarca"><option value="">Todas</option></select></label>
+          <label class="sel"><span>Numeração</span><select id="fNum"><option value="">Todas</option></select></label>
+          <label class="sel"><span>Ordem</span><select id="fOrdem"><option value="">Destaques</option><option value="az">A–Z</option><option value="preco">Menor preço</option><option value="fotos">Mais fotos</option></select></label>
+        </div>
+      </div>
+    </div>
+    <div class="in">
+      <p class="resultado" id="resultado" aria-live="polite"></p>
+      <div class="grade" id="grade"></div>
+      <div class="vazio" id="vazio" hidden>
+        <img src="/marca/raposa.svg" alt="" width="60" height="72">
+        <p>Nada com esse filtro. <button class="link" id="limpar">Limpar filtros</button></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="in como" aria-labelledby="tComo">
+    <h2 id="tComo">Como comprar</h2>
+    <ol>
+      <li><b>1</b><h3>Escolha o modelo</h3><p>Abra o produto, veja todas as fotos e as cores disponíveis.</p></li>
+      <li><b>2</b><h3>Marque a numeração</h3><p>Escolha o tamanho e ponha na sacola. Dá para juntar vários pares.</p></li>
+      <li><b>3</b><h3>Mande o pedido</h3><p>A sacola vira uma mensagem pronta no WhatsApp. A gente confirma estoque, valor e entrega.</p></li>
+    </ol>
+  </section>
+</main>
+
+<footer class="rodape">
+  <div class="in rodape-in">
+    <a href="/" class="logo logo-rodape" aria-label="NINEFOX SPORTS"><img src="/marca/raposa.svg" alt="" width="30" height="36"><span class="logo-txt"><b>NINEFOX</b><i>SPORTS</i></span></a>
+    <div class="rodape-links" id="rodapeLinks"></div>
+    <p class="rodape-emp" id="rodapeEmp"></p>
+    <p class="rodape-emp">Uma loja <a href="https://ninefox.com.br/" target="_blank" rel="noopener">NINEFOX</a> · © <span id="ano"></span></p>
+  </div>
+</footer>
+
+<a class="zap-fixo" id="zapFixo" href="#" hidden aria-label="Falar no WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .5l-.3.5-.4.5c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l2 1c.3.1.5.2.5.3.1.1.1.7-.1 1.2z"/></svg></a>
+
+<!-- produto -->
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="mNome">
+  <div class="modal-fundo" data-fechar></div>
+  <div class="modal-caixa">
+    <button class="fechar" data-fechar aria-label="Fechar"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    <div class="galeria">
+      <div class="galeria-palco" id="palco"></div>
+      <button class="gal-seta esq" id="galAnt" aria-label="Foto anterior"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
+      <button class="gal-seta dir" id="galProx" aria-label="Próxima foto"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+      <span class="gal-cont" id="galCont"></span>
+      <div class="miniaturas" id="minis"></div>
+    </div>
+    <div class="info">
+      <p class="info-cat" id="mCat"></p>
+      <h2 id="mNome"></h2>
+      <p class="info-preco" id="mPreco"></p>
+      <div class="info-tam">
+        <p class="rot" id="mTamRot">Numeração</p>
+        <div class="tams" id="mTams"></div>
+        <p class="tam-txt" id="mTamTxt"></p>
+      </div>
+      <label class="obs"><span>Cor ou observação <small>(opcional)</small></span><input id="mObs" maxlength="80" placeholder="Ex.: a branca da 2ª foto"></label>
+      <p class="info-desc" id="mDesc"></p>
+      <div class="info-acoes">
+        <button class="btn btn-laranja" id="mAdd">Pôr na sacola</button>
+        <a class="btn btn-escuro" id="mZap" href="#" target="_blank" rel="noopener">Pedir agora no WhatsApp</a>
+      </div>
+      <p class="aviso-tam" id="mAvisoTam" hidden>Escolha a numeração primeiro.</p>
+      <button class="link compartilhar" id="mCompart">Copiar link deste produto</button>
+    </div>
+  </div>
+</div>
+
+<!-- sacola -->
+<div class="gaveta" id="gaveta" hidden role="dialog" aria-modal="true" aria-labelledby="tSacola">
+  <div class="modal-fundo" data-fechar></div>
+  <aside class="gaveta-caixa">
+    <div class="gaveta-topo"><h2 id="tSacola">Sua sacola</h2><button class="fechar" data-fechar aria-label="Fechar"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    <div class="gaveta-itens" id="itens"></div>
+    <div class="gaveta-pe">
+      <p class="total" id="total"></p>
+      <label class="obs"><span>Seu nome <small>(opcional)</small></span><input id="nomeCliente" maxlength="60" autocomplete="name"></label>
+      <a class="btn btn-laranja largo" id="enviarPedido" href="#" target="_blank" rel="noopener">Enviar pedido pelo WhatsApp</a>
+      <p class="mini-nota">O pedido abre no WhatsApp com tudo escrito. Valores e entrega são confirmados na conversa.</p>
+    </div>
+  </aside>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<!--DADOS-->
+<script src="/loja.js"></script>
+</body>
+</html>

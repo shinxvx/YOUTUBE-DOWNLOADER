@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Admin | NINEFOX SPORTS</title>
+<link rel="icon" href="/marca/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@500;600;700;800&display=swap">
+<link rel="stylesheet" href="/estilo.css">
+<link rel="stylesheet" href="/admin.css">
+</head>
+<body class="adm">
+
+<section class="entrar" id="telaEntrar" hidden>
+  <form class="entrar-caixa" id="formEntrar">
+    <img src="/marca/raposa.svg" alt="" width="46" height="56">
+    <h1>Painel da loja</h1>
+    <p>NINEFOX SPORTS</p>
+    <label class="campo"><span>Senha</span><input type="password" id="senha" autocomplete="current-password" required></label>
+    <button class="btn btn-laranja largo">Entrar</button>
+    <p class="erro" id="erroEntrar" role="alert"></p>
+  </form>
+</section>
+
+<div id="telaPainel" hidden>
+  <header class="adm-topo">
+    <div class="in adm-topo-in">
+      <a href="/" class="logo" target="_blank" rel="noopener"><img src="/marca/raposa.svg" alt="" width="26" height="31"><span class="logo-txt"><b>NINEFOX</b><i>SPORTS</i></span></a>
+      <nav class="abas" role="tablist">
+        <button role="tab" data-aba="produtos" aria-selected="true">Produtos</button>
+        <button role="tab" data-aba="album" aria-selected="false">Importar do álbum</button>
+        <button role="tab" data-aba="config" aria-selected="false">Configurações</button>
+      </nav>
+      <div class="adm-dir"><a class="link" href="/" target="_blank" rel="noopener">Ver loja ↗</a><button class="link" id="sair">Sair</button></div>
+    </div>
+  </header>
+
+  <main class="in adm-corpo">
+    <section data-painel="produtos">
+      <div class="barra">
+        <div>
+          <h1>Produtos</h1>
+          <p class="sub" id="resumo"></p>
+        </div>
+        <div class="barra-dir">
+          <label class="busca"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="busca" type="search" placeholder="Buscar"></label>
+          <select id="filtroCat" class="sel-adm"><option value="">Todas as categorias</option></select>
+          <button class="btn btn-laranja" id="novo">+ Novo produto</button>
+        </div>
+      </div>
+      <p class="dica">Arraste os cartões para mudar a ordem da loja. A primeira foto é a capa.</p>
+      <div class="lista" id="lista"></div>
+    </section>
+
+    <section data-painel="album" hidden>
+      <h1>Importar do álbum do Google Fotos</h1>
+      <p class="sub">Cole o link do álbum compartilhado. Cada texto do álbum (ex.: "Nike Dunk Premium / 34 ao 39") vira um produto com as fotos que vêm depois dele.
+      Produtos e fotos que você apagou aqui não voltam. Só entra o que é novo.</p>
+      <form class="cartao" id="formAlbum">
+        <label class="campo"><span>Link do álbum</span><input id="albumUrl" type="url" placeholder="https://photos.google.com/share/..." required></label>
+        <button class="btn btn-laranja">Buscar novidades</button>
+      </form>
+      <div class="cartao status" id="statusAlbum" hidden><div class="barra-prog"><i id="prog"></i></div><p id="msgAlbum"></p></div>
+    </section>
+
+    <section data-painel="config" hidden>
+      <h1>Configurações da loja</h1>
+      <form class="cartao grade-form" id="formConfig">
+        <label class="campo"><span>WhatsApp dos pedidos <small>DDI + DDD + número, ex.: 5511999998888</small></span><input id="cZap" inputmode="numeric" placeholder="5511999998888"></label>
+        <label class="campo"><span>Instagram <small>link ou @</small></span><input id="cInsta" placeholder="@ninefox.sports"></label>
+        <label class="campo largo"><span>Título do topo <small>a última palavra fica laranja</small></span><input id="cTitulo" maxlength="120"></label>
+        <label class="campo largo"><span>Texto abaixo do título</span><textarea id="cSub" rows="3" maxlength="300"></textarea></label>
+        <label class="campo largo"><span>Faixa laranja de avisos <small>separe com | (vazio = automático)</small></span><input id="cAviso" maxlength="300" placeholder="Frete para todo o Brasil | Pix ou cartão | Troca em 7 dias"></label>
+        <div class="largo"><button class="btn btn-laranja">Salvar</button></div>
+      </form>
+    </section>
+  </main>
+</div>
+
+<!-- editor -->
+<div class="modal" id="editor" hidden role="dialog" aria-modal="true" aria-labelledby="eTitulo">
+  <div class="modal-fundo" data-fechar></div>
+  <form class="editor-caixa" id="formProd">
+    <div class="editor-topo"><h2 id="eTitulo">Produto</h2><button type="button" class="fechar" data-fechar aria-label="Fechar"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    <div class="editor-corpo">
+      <div class="fotos-ed">
+        <p class="rot">Fotos <small id="nFotosEd"></small></p>
+        <div class="fotos-grade" id="fotosEd"></div>
+        <label class="enviar-foto"><input type="file" id="arquivos" accept="image/*" multiple hidden><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>Adicionar fotos</span></label>
+        <p class="mini" id="progFotos"></p>
+      </div>
+      <div class="campos">
+        <label class="campo"><span>Nome</span><input id="eNome" required maxlength="120"></label>
+        <div class="dois">
+          <label class="campo"><span>Categoria</span><select id="eCat"></select></label>
+          <label class="campo"><span>Marca</span><input id="eMarca" maxlength="40" list="listaMarcas"></label>
+        </div>
+        <datalist id="listaMarcas"></datalist>
+        <label class="campo"><span>Tamanhos / numeração <small>ex.: 34 ao 39 · Masculinos 38 ao 43 · P/M/G/GG</small></span><textarea id="eTam" rows="3" maxlength="400"></textarea></label>
+        <div class="dois">
+          <label class="campo"><span>Preço (R$) <small>vazio = "consultar"</small></span><input id="ePreco" inputmode="decimal" placeholder="199,90"></label>
+          <label class="campo"><span>Preço antigo <small>opcional</small></span><input id="ePrecoDe" inputmode="decimal"></label>
+        </div>
+        <label class="campo"><span>Descrição <small>opcional</small></span><textarea id="eDesc" rows="3" maxlength="1500"></textarea></label>
+        <div class="checks">
+          <label><input type="checkbox" id="eAtivo"> Aparece na loja</label>
+          <label><input type="checkbox" id="eDest"> Destaque (mais pedido)</label>
+          <label><input type="checkbox" id="eNovo"> Selo "Novo"</label>
+        </div>
+      </div>
+    </div>
+    <div class="editor-pe">
+      <button type="button" class="link perigo" id="apagar">Apagar produto</button>
+      <span class="erro" id="erroProd" role="alert"></span>
+      <button class="btn btn-laranja" id="salvar">Salvar</button>
+    </div>
+  </form>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="/admin.js"></script>
+</body>
+</html>
