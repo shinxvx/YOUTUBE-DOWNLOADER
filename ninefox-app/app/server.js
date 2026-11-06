@@ -8,7 +8,7 @@ const { SITES, siteDoHost } = require('./sites');
 const ofertas = require('./ofertas');
 const paginas = require('./paginas');
 
-const PORTA = Number(process.env.PORT) || 4190;
+const PORTA = Number(process.env.PORT) || 4191;
 const MARCA = path.join(__dirname, 'marca');
 const TIPOS = { svg: 'image/svg+xml', png: 'image/png', ico: 'image/x-icon' };
 const CSP = "default-src 'none'; img-src 'self' https://cf.shopee.com.br https://down-br.img.susercontent.com; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'";
