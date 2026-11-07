@@ -18,7 +18,7 @@ function troca(n, pares) {
 troca('app.js', [
   ['muitos: "Limite de 30 cortes por vídeo.",', 'muitos: "Limite de 30 cortes por vídeo.", assinar: "Seu vídeo grátis já foi usado. Ative a mensalidade para continuar.",'],
   ['muitos: "Limit of 30 clips per video.",', 'muitos: "Limit of 30 clips per video.", assinar: "Your free video was already used. Activate the monthly plan to continue.",'],
-  [/conta_dica: "[^"]*"/, 'conta_dica: "Create your account and clip 1 video for free to try it. After that, the monthly plan is R$ 59.90."'],
+  [/conta_dica: '[^']*'/, 'conta_dica: "Create your account and clip 1 video for free to try it. After that, the monthly plan is R$ 59.90."'],
   ['      abrirTarefa(j.id, true);\n    } catch (err) {\n', '      abrirTarefa(j.id, true);\n      atualizarPlano();\n    } catch (err) {\n      if (err.message === "assinar") atualizarPlano();\n'],
   ['    $("#hero").classList.remove("compacto");\n  }\n  $("#novo")', '    $("#hero").classList.remove("compacto");\n    desenharPlano();\n  }\n  $("#novo")'],
   ['    $("#conta").hidden = true; $("#conta-topo").hidden = false;\n    lerHash();\n  }\n  aplicarLingua();',
