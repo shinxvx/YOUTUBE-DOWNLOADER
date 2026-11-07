@@ -28,6 +28,7 @@ THREADS = os.environ.get("FFMPEG_THREADS", "4")
 LIB = os.path.join(os.environ.get("DADOS", "/data"), "ytdlp")
 
 # duração escolhida -> (mínimo, máximo) aceitos. O corte acaba numa frase, então nunca é exato.
+MAX_AUTO = int(os.environ.get("MAX_CORTES_AUTO", "20"))  # teto do Automático (pedido do dono 07/11/2026)
 ALVOS = {30: (20, 45), 60: (45, 80), 120: (90, 150), 150: (120, 185), 300: (230, 330)}  # 150 = "2–3 min" (07/11/2026)
 W_OUT, H_OUT = 1080, 1920
 
@@ -531,9 +532,9 @@ def escolher_cortes(frases, dur_video, alvo, qtd, titulo, aviso, genero="auto", 
     if total < lo:  # vídeo curto demais: um corte só com tudo
         return [{"start": 0, "end": len(frases) - 1, "hook_line": 0, "title": titulo[:60], "hook": "", "caption": "",
                  "score": 60, "why": ""}]
-    if not qtd:  # Automático: quantidade pela duração do vídeo, SEM teto (pedido do dono 07/11/2026; antes eram no máximo 10/15)
+    if not qtd:  # Automático: quantidade pela duração do vídeo, até MAX_AUTO (dono 07/11/2026: "limite de 20 cortes, senão enche o servidor")
         passo = alvo * (1.3 if genero == "podcast" else 1.6)  # podcast: um corte por história, mais denso
-        qtd = max(1, math.ceil(total / passo))
+        qtd = max(1, min(MAX_AUTO, math.ceil(total / passo)))
     # janelas de ~25 min (texto cabe folgado em qualquer IA) com sobreposição de um corte
     # janelas pelo TAMANHO do texto (o plano grátis da IA limita tokens por minuto), sobrepostas em ~1 corte
     janelas, i0 = [], 0

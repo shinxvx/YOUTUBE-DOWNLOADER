@@ -11,11 +11,11 @@ def frases_falsas(minutos):
     while t < minutos * 60:
         fr.append({"s": t, "e": t + 4.5, "t": "isso aqui é uma frase de teste que termina bem."}); t += 5
     return fr
-for alvo, mins, esperado_min in [(60, 30, 15), (150, 60, 12), (30, 120, 100)]:
+for alvo, mins, esperado_min in [(60, 30, 15), (150, 60, 12), (30, 120, 20)]:
     out = P.escolher_cortes(frases_falsas(mins), mins * 60, alvo, 0, "t", lambda c: None)
     lo, hi = P.ALVOS[alvo]
     durs = [P.duracao(frases_falsas(mins), c["start"], c["end"]) for c in out]
-    ok(f"automático {alvo}s em vídeo de {mins} min: {len(out)} cortes (antes no máx. 10), todos entre {lo}-{hi}s", len(out) >= esperado_min and all(lo * 0.8 <= d <= hi * 1.1 for d in durs))
+    ok(f"automático {alvo}s em vídeo de {mins} min: {len(out)} cortes (antes no máx. 10), todos entre {lo}-{hi}s", len(out) >= esperado_min and len(out) <= 20 and all(lo * 0.8 <= d <= hi * 1.1 for d in durs))
 ok("150 s = 2 a 3 min", P.ALVOS[150] == (120, 185))
 # gancho renderizado
 for pg, pl, faixa in [("meio", "baixo", (760, 1040)), ("meio", "meio", (600, 860)), ("baixo", "alto", (1330, 1500)), ("baixo", "baixo", (1150, 1310))]:

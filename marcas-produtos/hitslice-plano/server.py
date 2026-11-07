@@ -535,7 +535,7 @@ async def editar(tid: str, n: int, req: Request):
         if any(tt == tid for tt, _ in fila_ed) and sum(1 for tt, _ in fila_ed if tt == tid) >= 5:
             return JSONResponse({"erro": "fila"}, 429)
         if n == 0:
-            if len(t["cortes"]) >= 300:  # sem limite prático (pedido do dono 07/11/2026; antes 30)
+            if len(t["cortes"]) >= 30:  # máx. 30 cortes por vídeo contando os feitos à mão (dono 07/11/2026: não encher o servidor)
                 return JSONResponse({"erro": "muitos"}, 400)
             n = max([c["n"] for c in t["cortes"]] + [0]) + 1
             reg = {"n": n, "nome": f"corte{n:02d}", "nota": 0, "motivo": "", "versao": 0, "dur": round(dur, 1),
