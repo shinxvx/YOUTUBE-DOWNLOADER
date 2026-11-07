@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Cofre NINEFOX</title>
+<link rel="icon" href="/marca/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/cofre.css">
+</head>
+<body>
+<div id="entrada" class="entrada" hidden>
+  <form id="formEntrar" class="cartao-entrar">
+    <img src="/marca/ninefox-logo-negativa.svg" alt="NINEFOX" class="logo-entrar">
+    <h1>Cofre</h1>
+    <p>Tudo o que foi feito na NINEFOX, num lugar só.</p>
+    <label for="senha">Senha</label>
+    <input id="senha" type="password" autocomplete="current-password" required autofocus>
+    <button type="submit" class="btn-laranja">Entrar</button>
+    <p class="erro" id="erroEntrar" role="alert"></p>
+  </form>
+</div>
+
+<div id="app" hidden>
+  <header class="topo">
+    <div class="caixa topo-in">
+      <div class="marca"><img src="/marca/ninefox-icone-principal.svg" alt=""><span>Cofre <b>NINEFOX</b></span></div>
+      <nav class="abas" role="tablist">
+        <button role="tab" data-aba="sistemas" aria-selected="true">Sistemas</button>
+        <button role="tab" data-aba="linha" aria-selected="false">Linha do tempo</button>
+        <button role="tab" data-aba="pendencias" aria-selected="false">Pendências</button>
+        <button role="tab" data-aba="notas" aria-selected="false">Notas</button>
+        <button role="tab" data-aba="conta" aria-selected="false">Conta</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="caixa">
+    <section id="aba-sistemas" class="aba">
+      <div class="resumo" id="resumo"></div>
+      <div class="barra">
+        <input id="filtro" type="search" placeholder="Procurar sistema, link ou texto…" aria-label="Procurar">
+        <button id="checar" class="btn-borda">Conferir agora</button>
+      </div>
+      <div id="sistemas" class="sistemas"></div>
+    </section>
+
+    <section id="aba-linha" class="aba" hidden>
+      <div class="barra"><select id="filtroLinha" aria-label="Sistema"><option value="">Todos os sistemas</option></select></div>
+      <ol id="linha" class="linha"></ol>
+    </section>
+
+    <section id="aba-pendencias" class="aba" hidden>
+      <p class="sub">O que ainda falta, por sistema (vem das anotações de cada projeto).</p>
+      <div id="pendencias"></div>
+    </section>
+
+    <section id="aba-notas" class="aba" hidden>
+      <form id="formNota" class="nota-nova">
+        <select id="notaSistema" aria-label="Sistema"><option value="">Geral</option></select>
+        <textarea id="notaTexto" rows="3" placeholder="Anote uma ideia, um contato, um acesso…" required></textarea>
+        <button class="btn-laranja" type="submit">Guardar nota</button>
+      </form>
+      <div id="notas"></div>
+    </section>
+
+    <section id="aba-conta" class="aba" hidden>
+      <form id="formSenha" class="cartao">
+        <h2>Trocar a senha do cofre</h2>
+        <label for="atual">Senha atual</label><input id="atual" type="password" autocomplete="current-password" required>
+        <label for="nova">Senha nova</label><input id="nova" type="password" autocomplete="new-password" minlength="8" required>
+        <button class="btn-laranja" type="submit">Trocar</button>
+        <p class="msg" id="msgSenha" role="status"></p>
+      </form>
+      <button id="sair" class="btn-borda">Sair deste aparelho</button>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="/cofre.js"></script>
+</body>
+</html>

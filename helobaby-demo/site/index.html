@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Helo Baby — Loja de fraldas e produtos infantis</title>
+<meta name="description" content="Fraldas das melhores marcas, higiene e mamadeiras com preço justo. Duas lojas e entrega na região.">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="img/logo.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --azul:#5BB8E8; --azul-esc:#1F6E9C; --azul-claro:#EAF6FD;
+  --rosa:#F07FA8; --rosa-claro:#FDEEF4;
+  --tinta:#23313D; --cinza:#5E6B76; --linha:#E6ECF1; --fundo:#FBFDFF; --branco:#fff;
+  --raio:18px; --sombra:0 6px 24px rgba(31,110,156,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{font-family:Nunito,system-ui,sans-serif;color:var(--tinta);background:var(--fundo);line-height:1.5;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+a{color:inherit}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+.box{width:min(1160px,100% - 32px);margin-inline:auto}
+
+/* faixa demo + topo */
+.demo{background:var(--tinta);color:#fff;font-size:13px;text-align:center;padding:6px 12px}
+.demo b{color:#FFD3E2}
+.aviso{background:var(--azul-claro);color:var(--azul-esc);font-size:14px;font-weight:700}
+.aviso .box{display:flex;gap:22px;justify-content:center;padding:8px 0;flex-wrap:wrap}
+header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--linha)}
+header .box{display:flex;align-items:center;gap:20px;height:72px}
+.marca{display:flex;align-items:center;gap:10px;text-decoration:none}
+.marca img{width:52px;height:52px;border-radius:50%}
+.marca span{font-weight:800;font-size:20px;letter-spacing:.2px}
+.marca small{display:block;font-size:12px;color:var(--cinza);font-weight:600;margin-top:-4px}
+nav{display:flex;gap:22px;margin-left:auto;font-weight:700;font-size:15px}
+nav a{text-decoration:none;color:var(--cinza)}
+nav a:hover{color:var(--azul-esc)}
+.btn-sacola{position:relative;display:flex;align-items:center;gap:8px;background:var(--tinta);color:#fff;padding:10px 16px;border-radius:999px;font-weight:700}
+.btn-sacola .n{background:var(--rosa);color:#fff;font-size:12px;min-width:22px;height:22px;border-radius:11px;display:grid;place-items:center;padding:0 6px}
+
+/* hero */
+.hero{padding:48px 0 28px}
+.hero .box{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:40px;align-items:center}
+.selo{display:inline-flex;align-items:center;gap:8px;background:var(--rosa-claro);color:#B33A69;font-weight:800;font-size:13px;padding:6px 12px;border-radius:999px}
+h1{font-size:clamp(34px,5vw,54px);line-height:1.06;font-weight:800;margin:16px 0 14px;letter-spacing:-.5px}
+h1 em{font-style:normal;color:var(--azul-esc)}
+.hero p{font-size:18px;color:var(--cinza);max-width:520px}
+.acoes{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 22px;border-radius:999px;font-weight:800;text-decoration:none;font-size:16px}
+.btn-p{background:var(--azul-esc);color:#fff}
+.btn-p:hover{background:#185a80}
+.btn-s{background:#fff;border:2px solid var(--linha)}
+.btn-s:hover{border-color:var(--azul)}
+.numeros{display:flex;gap:28px;margin-top:30px;flex-wrap:wrap}
+.numeros b{display:block;font-size:24px;font-weight:800}
+.numeros span{font-size:14px;color:var(--cinza)}
+.destaque{background:#fff;border:1px solid var(--linha);border-radius:28px;padding:18px;box-shadow:var(--sombra);position:relative}
+.destaque .foto{border-radius:20px;overflow:hidden;aspect-ratio:1;background:var(--azul-claro)}
+.destaque .foto img{width:100%;height:100%;object-fit:cover}
+.destaque .info{display:flex;justify-content:space-between;align-items:end;gap:12px;padding:16px 6px 4px}
+.destaque h3{font-size:19px;line-height:1.2}
+.destaque .preco{font-size:28px;font-weight:800;color:var(--azul-esc);white-space:nowrap}
+.destaque .tag{position:absolute;top:30px;left:30px;background:var(--rosa);color:#fff;font-weight:800;font-size:13px;padding:6px 12px;border-radius:999px}
+
+/* seções */
+section{padding:44px 0}
+.titulo{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+h2{font-size:clamp(26px,3.4vw,34px);font-weight:800;letter-spacing:-.3px;line-height:1.15}
+.sub{color:var(--cinza);margin-top:4px}
+
+/* filtros */
+.filtros{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.chip{padding:9px 16px;border-radius:999px;border:2px solid var(--linha);background:#fff;font-weight:700;font-size:14px}
+.chip[aria-pressed="true"]{background:var(--tinta);border-color:var(--tinta);color:#fff}
+.busca{flex:1 1 220px;max-width:320px;position:relative}
+.busca input{width:100%;padding:11px 16px 11px 40px;border-radius:999px;border:2px solid var(--linha);font:inherit;font-size:15px;background:#fff}
+.busca input:focus{outline:none;border-color:var(--azul)}
+.busca svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--cinza)}
+
+/* produtos */
+.grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;margin-top:22px}
+.card{background:#fff;border:1px solid var(--linha);border-radius:var(--raio);overflow:hidden;display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s}
+.card:hover{transform:translateY(-3px);box-shadow:var(--sombra)}
+.card .foto{aspect-ratio:1;background:var(--azul-claro);overflow:hidden;position:relative}
+.card .foto img{width:100%;height:100%;object-fit:cover}
+.card .cat{position:absolute;top:10px;left:10px;background:rgba(255,255,255,.92);font-size:12px;font-weight:800;padding:4px 10px;border-radius:999px;color:var(--azul-esc)}
+.card .corpo{padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px;flex:1}
+.card h3{font-size:16px;line-height:1.25}
+.card p{font-size:13.5px;color:var(--cinza)}
+.opcoes{display:flex;gap:6px;flex-wrap:wrap}
+.op{padding:5px 11px;border:2px solid var(--linha);border-radius:10px;font-size:13px;font-weight:700;background:#fff}
+.op[aria-pressed="true"]{border-color:var(--azul-esc);color:var(--azul-esc);background:var(--azul-claro)}
+.card .rodape{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:6px}
+.card .preco{font-size:20px;font-weight:800}
+.card .preco.consulta{font-size:14px;color:var(--cinza);font-weight:700}
+.add{background:var(--azul-esc);color:#fff;font-weight:800;font-size:14px;padding:10px 14px;border-radius:12px;white-space:nowrap}
+.add:hover{background:#185a80}
+.add.ok{background:#2E9E6A}
+.vazio{text-align:center;color:var(--cinza);padding:40px 0}
+
+/* faixa promo */
+.promo{background:linear-gradient(120deg,var(--rosa-claro),var(--azul-claro));border-radius:28px;padding:36px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:center}
+.promo h2 span{color:#B33A69}
+.promo p{color:var(--cinza);margin-top:8px;max-width:560px}
+
+/* marcas */
+.marcas{display:flex;gap:12px;flex-wrap:wrap}
+.marcas span{background:#fff;border:1px solid var(--linha);border-radius:14px;padding:12px 18px;font-weight:800;color:var(--azul-esc)}
+
+/* como funciona */
+.passos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.passo{background:#fff;border:1px solid var(--linha);border-radius:var(--raio);padding:22px}
+.passo .num{width:40px;height:40px;border-radius:12px;background:var(--azul-claro);color:var(--azul-esc);display:grid;place-items:center;font-weight:800;font-size:18px;margin-bottom:12px}
+.passo h3{font-size:18px;margin-bottom:6px}
+.passo p{color:var(--cinza);font-size:15px}
+
+/* lojas */
+.lojas{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,.8fr);gap:18px}
+.loja{background:#fff;border:1px solid var(--linha);border-radius:var(--raio);padding:22px;display:flex;flex-direction:column;gap:10px}
+.loja h3{font-size:20px}
+.loja .lin{display:flex;gap:10px;color:var(--cinza);font-size:15px}
+.loja .lin svg{flex:none;margin-top:3px;color:var(--rosa)}
+.loja .btn{margin-top:auto;align-self:flex-start;padding:10px 16px;font-size:14px}
+.reel{border-radius:var(--raio);overflow:hidden;background:var(--azul-claro);min-height:220px;position:relative}
+.reel img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+
+/* rodapé */
+footer{background:var(--tinta);color:#C9D3DB;padding:36px 0;margin-top:30px;font-size:14px}
+footer .box{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
+footer b{color:#fff}
+footer a{color:#fff}
+
+/* sacola */
+.veu{position:fixed;inset:0;background:rgba(20,30,40,.4);z-index:40;opacity:0;pointer-events:none;transition:opacity .2s}
+.veu.aberto{opacity:1;pointer-events:auto}
+.sacola{position:fixed;top:0;right:0;height:100%;width:min(420px,100%);background:#fff;z-index:41;transform:translateX(100%);transition:transform .25s;display:flex;flex-direction:column}
+.sacola.aberta{transform:none}
+.sacola .cab{display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border-bottom:1px solid var(--linha)}
+.sacola .cab h3{font-size:20px}
+.fechar{width:38px;height:38px;border-radius:12px;background:var(--azul-claro);font-size:20px;font-weight:800}
+.itens{flex:1;overflow:auto;padding:12px 20px}
+.item{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--linha)}
+.item img{width:64px;height:64px;border-radius:12px;object-fit:cover}
+.item h4{font-size:14.5px;line-height:1.25}
+.item small{color:var(--cinza);font-size:13px}
+.qtd{display:flex;align-items:center;gap:6px}
+.qtd button{width:30px;height:30px;border-radius:9px;background:var(--azul-claro);font-weight:800}
+.sacola .pe{border-top:1px solid var(--linha);padding:16px 20px;display:flex;flex-direction:column;gap:10px}
+.sacola .pe .tot{display:flex;justify-content:space-between;font-weight:800;font-size:18px}
+.sacola .pe small{color:var(--cinza)}
+.entrega{display:flex;gap:8px}
+.entrega label{flex:1;border:2px solid var(--linha);border-radius:12px;padding:10px;font-weight:700;font-size:14px;display:flex;gap:8px;align-items:center;cursor:pointer}
+.entrega input{accent-color:var(--azul-esc)}
+.entrega label:has(input:checked){border-color:var(--azul-esc);background:var(--azul-claro)}
+.zap{background:#25D366;color:#073B1D;font-weight:800;padding:14px;border-radius:14px;text-align:center;font-size:16px;text-decoration:none;display:flex;justify-content:center;gap:8px;align-items:center}
+.zap[aria-disabled="true"]{opacity:.45;pointer-events:none}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);background:var(--tinta);color:#fff;padding:12px 18px;border-radius:14px;font-weight:700;opacity:0;transition:.25s;z-index:50;pointer-events:none;max-width:calc(100% - 32px)}
+.toast.on{opacity:1;transform:translateX(-50%)}
+.zap-fixo{position:fixed;right:16px;bottom:16px;z-index:30;width:58px;height:58px;border-radius:50%;background:#25D366;display:grid;place-items:center;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+
+@media (max-width:900px){
+  nav{display:none}
+  .hero .box{grid-template-columns:1fr;gap:28px}
+  .passos{grid-template-columns:1fr}
+  .lojas{grid-template-columns:1fr}
+  .promo{grid-template-columns:1fr;padding:26px}
+  header .box{gap:12px}
+  .btn-sacola{margin-left:auto}
+}
+@media (max-width:520px){
+  .marca span{font-size:18px}
+  .btn-sacola .txt{display:none}
+  .grade{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .card .corpo{padding:12px}
+  .card h3{font-size:14.5px}
+  .card p{display:none}
+  .card .rodape{flex-direction:column;align-items:stretch}
+  .add{text-align:center}
+  .hero{padding-top:28px}
+  .aviso .box{gap:12px;font-size:13px}
+}
+</style>
+</head>
+<body>
+<div class="demo">Site de <b>demonstração</b> feito para a Helo Baby — preços e fotos tirados do Instagram @lojashelobaby</div>
+<div class="aviso"><div class="box"><span>🚚 Entrega na região</span><span>📍 2 lojas físicas</span><span>💬 Pedido pelo WhatsApp</span></div></div>
+
+<header>
+  <div class="box">
+    <a class="marca" href="#topo"><img src="img/logo.jpg" alt="Helo Baby"><div><span>Helo Baby</span><small>Loja de fraldas</small></div></a>
+    <nav>
+      <a href="#produtos">Produtos</a>
+      <a href="#como">Como comprar</a>
+      <a href="#lojas">Nossas lojas</a>
+    </nav>
+    <button class="btn-sacola" id="abrirSacola" aria-label="Abrir sacola">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12l1 13H5L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+      <span class="txt">Sacola</span><span class="n" id="contador">0</span>
+    </button>
+  </div>
+</header>
+
+<main id="topo">
+  <div class="hero">
+    <div class="box">
+      <div>
+        <span class="selo">🧷 Fraldas das melhores marcas</span>
+        <h1>Tudo para o seu bebê, <em>com preço justo</em> e entrega rapidinho.</h1>
+        <p>Pacotes econômicos de fralda, higiene e mamadeiras. Escolha aqui, mande o pedido pelo WhatsApp e receba em casa ou retire numa das nossas duas lojas.</p>
+        <div class="acoes">
+          <a class="btn btn-p" href="#produtos">Ver produtos</a>
+          <a class="btn btn-s" href="#lojas">Onde estamos</a>
+        </div>
+        <div class="numeros">
+          <div><b>P ao XG</b><span>todos os tamanhos</span></div>
+          <div><b>2 lojas</b><span>e entrega na região</span></div>
+          <div><b>6+ marcas</b><span>Babysec, Pom Pom...</span></div>
+        </div>
+      </div>
+      <div class="destaque">
+        <span class="tag">Mega promoção</span>
+        <div class="foto"><img src="img/DMGIg_HuLW6.jpg" alt="Pacotão 100 fraldas Babysec"></div>
+        <div class="info">
+          <div><h3>Pacotão Super Econômico<br>100 fraldas Babysec</h3><span class="sub">Tamanhos M, G e XG</span></div>
+          <div class="preco">R$ 89,99</div>
+        </div>
+        <div class="acoes" style="margin-top:10px"><button class="btn btn-p" style="width:100%" data-add="babysec-100">Colocar na sacola</button></div>
+      </div>
+    </div>
+  </div>
+
+  <section id="produtos">
+    <div class="box">
+      <div class="titulo">
+        <div><h2>Nossos produtos</h2><p class="sub">Escolha o tamanho ou a cor e coloque na sacola.</p></div>
+      </div>
+      <div class="filtros" role="toolbar" aria-label="Filtrar produtos">
+        <button class="chip" data-cat="todos" aria-pressed="true">Todos</button>
+        <button class="chip" data-cat="fraldas" aria-pressed="false">Fraldas</button>
+        <button class="chip" data-cat="higiene" aria-pressed="false">Higiene</button>
+        <button class="chip" data-cat="mamadeiras" aria-pressed="false">Mamadeiras</button>
+        <label class="busca"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="busca" type="search" placeholder="Buscar: babysec, mamadeira..." aria-label="Buscar produto"></label>
+      </div>
+      <div class="grade" id="grade"></div>
+      <p class="vazio" id="vazio" hidden>Nenhum produto encontrado. Chama a gente no WhatsApp que a gente procura para você.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="box">
+      <div class="promo">
+        <div>
+          <h2>Pacotão <span>com 100 fraldas</span> por R$ 89,99</h2>
+          <p>Babysec ou Pom Pom, nos tamanhos M, G e XG. Sai bem mais em conta que pacote pequeno e a gente leva até você.</p>
+        </div>
+        <a class="btn btn-p" href="#produtos" data-filtro="fraldas">Ver pacotões</a>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:10px">
+    <div class="box">
+      <div class="titulo"><div><h2>Marcas que você encontra aqui</h2></div></div>
+      <div class="marcas"><span>Babysec</span><span>Pom Pom</span><span>Personal Baby</span><span>Piquitucho</span><span>Muriel Baby</span><span>Anplas</span></div>
+    </div>
+  </section>
+
+  <section id="como">
+    <div class="box">
+      <div class="titulo"><div><h2>Como comprar</h2><p class="sub">Sem cadastro e sem complicação.</p></div></div>
+      <div class="passos">
+        <div class="passo"><div class="num">1</div><h3>Escolha os produtos</h3><p>Coloque na sacola com o tamanho ou a cor que você quer.</p></div>
+        <div class="passo"><div class="num">2</div><h3>Mande no WhatsApp</h3><p>O pedido vai prontinho para a gente. Confirmamos o valor e a forma de pagamento.</p></div>
+        <div class="passo"><div class="num">3</div><h3>Receba ou retire</h3><p>Entregamos na região ou você retira na loja mais perto de você.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="lojas">
+    <div class="box">
+      <div class="titulo"><div><h2>Nossas lojas</h2><p class="sub">Visite uma das nossas unidades e conheça os produtos.</p></div></div>
+      <div class="lojas">
+        <div class="loja">
+          <h3>Loja 1</h3>
+          <div class="lin"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>Endereço da loja 1<br><small>(a loja informa)</small></span></div>
+          <div class="lin"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Seg a sáb · horário a confirmar</span></div>
+          <a class="btn btn-s" href="#" data-mapa>Ver no mapa</a>
+        </div>
+        <div class="loja">
+          <h3>Loja 2</h3>
+          <div class="lin"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>Endereço da loja 2<br><small>(a loja informa)</small></span></div>
+          <div class="lin"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Seg a sáb · horário a confirmar</span></div>
+          <a class="btn btn-s" href="#" data-mapa>Ver no mapa</a>
+        </div>
+        <div class="reel"><img src="img/DL7beEgOK8v.jpg" alt="Produtos na loja Helo Baby"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="box">
+    <div><b>Helo Baby</b> · Loja de fraldas e produtos infantis<br>Pacotes de fraldas tradicionais · Entrega na região</div>
+    <div><a href="https://www.instagram.com/lojashelobaby/" target="_blank" rel="noopener">@lojashelobaby</a></div>
+  </div>
+</footer>
+
+<a class="zap-fixo" href="#" id="zapFixo" aria-label="Falar no WhatsApp"><svg width="30" height="30" viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 2.9 2.9 0 0 0-.9 2.2 5 5 0 0 0 1.1 2.7 11.6 11.6 0 0 0 4.4 3.9c1.6.7 2.3.8 3.1.6a2.6 2.6 0 0 0 1.7-1.2 2.1 2.1 0 0 0 .2-1.2c-.1-.1-.3-.2-.5-.3z"/></svg></a>
+
+<div class="veu" id="veu"></div>
+<aside class="sacola" id="sacola" aria-label="Sacola" aria-hidden="true">
+  <div class="cab"><h3>Sua sacola</h3><button class="fechar" id="fecharSacola" aria-label="Fechar">×</button></div>
+  <div class="itens" id="itens"></div>
+  <div class="pe">
+    <div class="entrega">
+      <label><input type="radio" name="entrega" value="Entrega em casa" checked> Entregar em casa</label>
+      <label><input type="radio" name="entrega" value="Retirar na loja"> Retirar na loja</label>
+    </div>
+    <div class="tot"><span>Total</span><span id="total">R$ 0,00</span></div>
+    <small id="obsTotal" hidden>Itens com "consultar preço" a loja confirma no WhatsApp.</small>
+    <a class="zap" id="enviar" href="#" target="_blank" rel="noopener" aria-disabled="true">Enviar pedido no WhatsApp</a>
+  </div>
+</aside>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+// Número do WhatsApp da loja (deixe vazio na demonstração: o WhatsApp pergunta para quem enviar)
+const WHATSAPP = '';
+
+const PRODUTOS = [
+  { id:'babysec-100', nome:'Pacotão Super Econômico 100 fraldas Babysec', cat:'fraldas', img:'DMGIg_HuLW6', preco:89.99, desc:'100 fraldas Babysec por um preço que cabe no bolso.', ops:['M','G','XG'], tipo:'Tamanho' },
+  { id:'pompom-100', nome:'Pacotão Econômico 100 fraldas Pom Pom', cat:'fraldas', img:'DMIOXOPuK37', preco:89.99, desc:'Pacotão super econômico com 100 fraldas.', ops:['M','G','XG'], tipo:'Tamanho' },
+  { id:'babysec-hyper', nome:'Pacote Hyper Babysec', cat:'fraldas', img:'DL-IA7qOAhm', preco:null, desc:'O pacote maior da Babysec, para durar mais.', ops:['P','M','G','XG','XXG'], tipo:'Tamanho' },
+  { id:'babysec-galinha', nome:'Babysec Ultrasec Galinha Pintadinha', cat:'fraldas', img:'DL7f3YoOzTq', preco:null, desc:'Tecnologia de absorção e retenção com ótimo custo-benefício.', ops:['P','M','G','XG','XXG'], tipo:'Tamanho' },
+  { id:'personal-premium', nome:'Fralda Personal Baby Premium', cat:'fraldas', img:'DL7kEnouZ3m', preco:null, desc:'Absorção 3D de tecnologia japonesa, cobertura macia e respirável.', ops:['M','G','XG','XXG'], tipo:'Tamanho' },
+  { id:'piquitucho', nome:'Fraldas Piquitucho', cat:'fraldas', img:'DL7gY4KOJc_', preco:null, desc:'Conforto e cuidado para o seu piquitucho.', ops:['P','M','G','XG'], tipo:'Tamanho' },
+  { id:'economicos', nome:'Pacotes econômicos — grandes marcas', cat:'fraldas', img:'DL-H0u2OzxL', preco:null, desc:'Disponíveis nas 2 unidades e para entrega. Do P ao XG.', ops:['P','M','G','XG'], tipo:'Tamanho' },
+  { id:'muriel-kit', nome:'Kit Shampoo e Condicionador Muriel Baby', cat:'higiene', img:'DL7ki4buTs9', preco:null, desc:'Dermatologicamente testados, cuidam dos cabelos do bebê com delicadeza.', ops:[], tipo:'' },
+  { id:'muriel-locao', nome:'Loção Hidratante Muriel Baby', cat:'higiene', img:'DMLZgOSPcq8', preco:null, desc:'Hidratação delicada e eficaz para a pele do bebê.', ops:[], tipo:'' },
+  { id:'anplas-petita', nome:'Mamadeira Anplas Petita', cat:'mamadeiras', img:'DMLXsewP-dz', preco:6.99, desc:'Mamadeira leve e prática.', ops:['Rosa','Azul'], tipo:'Cor' },
+  { id:'anplas-kit', nome:'Kit Mamadeira Anplas — 3 peças', cat:'mamadeiras', img:'DMLT9Ysuwcb', preco:21.99, desc:'Kit com 3 mamadeiras.', ops:['Rosa','Azul'], tipo:'Cor' },
+];
+const NOME_CAT = { fraldas:'Fraldas', higiene:'Higiene', mamadeiras:'Mamadeiras' };
+const brl = (v) => v.toLocaleString('pt-BR', { style:'currency', currency:'BRL' });
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+const escolha = {};      // id -> opção escolhida
+let sacola = [];         // {id, op, q}
+try { sacola = JSON.parse(localStorage.getItem('helobaby-sacola') || '[]').filter((i) => PRODUTOS.some((p) => p.id === i.id)); } catch (e) { sacola = []; }
+const salvar = () => { try { localStorage.setItem('helobaby-sacola', JSON.stringify(sacola)); } catch (e) {} };
+
+let filtro = 'todos', termo = '';
+const semAcento = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+
+function desenhar() {
+  const t = semAcento(termo.trim());
+  const lista = PRODUTOS.filter((p) => (filtro === 'todos' || p.cat === filtro) && (!t || semAcento(p.nome + ' ' + p.desc + ' ' + p.cat).includes(t)));
+  $('#grade').innerHTML = lista.map((p) => `
+    <article class="card">
+      <div class="foto"><img src="img/${p.img}.jpg" alt="${esc(p.nome)}" loading="lazy"><span class="cat">${NOME_CAT[p.cat]}</span></div>
+      <div class="corpo">
+        <h3>${esc(p.nome)}</h3>
+        <p>${esc(p.desc)}</p>
+        ${p.ops.length ? `<div class="opcoes" role="group" aria-label="${p.tipo}">${p.ops.map((o) => `<button class="op" data-id="${p.id}" data-op="${esc(o)}" aria-pressed="${escolha[p.id] === o}">${esc(o)}</button>`).join('')}</div>` : ''}
+        <div class="rodape">
+          ${p.preco ? `<span class="preco">${brl(p.preco)}</span>` : `<span class="preco consulta">Consultar preço</span>`}
+          <button class="add" data-add="${p.id}">Colocar na sacola</button>
+        </div>
+      </div>
+    </article>`).join('');
+  $('#vazio').hidden = lista.length > 0;
+}
+
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('on'), 2200); }
+
+function adicionar(id, botao) {
+  const p = PRODUTOS.find((x) => x.id === id);
+  if (p.ops.length && !escolha[id]) {
+    toast(`Escolha ${p.tipo === 'Cor' ? 'a cor' : 'o tamanho'} primeiro`);
+    const g = document.querySelector(`.op[data-id="${id}"]`); if (g) g.parentElement.animate([{transform:'translateX(-4px)'},{transform:'translateX(4px)'},{transform:'none'}],{duration:250});
+    if (botao && botao.closest('.destaque')) { document.querySelector('#produtos').scrollIntoView(); }
+    return;
+  }
+  const op = escolha[id] || '';
+  const ja = sacola.find((i) => i.id === id && i.op === op);
+  if (ja) ja.q++; else sacola.push({ id, op, q: 1 });
+  salvar(); atualizarSacola();
+  toast('Adicionado à sacola ✓');
+  if (botao) { botao.classList.add('ok'); botao.textContent = 'Adicionado ✓'; setTimeout(() => { botao.classList.remove('ok'); botao.textContent = botao.closest('.destaque') ? 'Colocar na sacola' : 'Colocar na sacola'; }, 1200); }
+}
+
+function linkZap(texto) { return (WHATSAPP ? `https://wa.me/${WHATSAPP}` : 'https://wa.me/') + '?text=' + encodeURIComponent(texto); }
+
+function atualizarSacola() {
+  const n = sacola.reduce((s, i) => s + i.q, 0);
+  $('#contador').textContent = n;
+  let total = 0, consulta = false;
+  $('#itens').innerHTML = sacola.length ? sacola.map((i, k) => {
+    const p = PRODUTOS.find((x) => x.id === i.id);
+    if (p.preco) total += p.preco * i.q; else consulta = true;
+    return `<div class="item"><img src="img/${p.img}.jpg" alt=""><div><h4>${esc(p.nome)}</h4><small>${i.op ? p.tipo + ': ' + esc(i.op) + ' · ' : ''}${p.preco ? brl(p.preco) : 'consultar preço'}</small></div>
+      <div class="qtd"><button data-menos="${k}" aria-label="Menos">−</button><b>${i.q}</b><button data-mais="${k}" aria-label="Mais">+</button></div></div>`;
+  }).join('') : '<p class="vazio">Sua sacola está vazia.</p>';
+  $('#total').textContent = brl(total) + (consulta ? ' +' : '');
+  $('#obsTotal').hidden = !consulta;
+  const ent = document.querySelector('input[name=entrega]:checked').value;
+  const linhas = sacola.map((i) => { const p = PRODUTOS.find((x) => x.id === i.id); return `• ${i.q}x ${p.nome}${i.op ? ' (' + p.tipo.toLowerCase() + ' ' + i.op + ')' : ''} — ${p.preco ? brl(p.preco * i.q) : 'consultar preço'}`; });
+  const msg = `Olá, Helo Baby! Quero fazer este pedido:\n\n${linhas.join('\n')}\n\nTotal: ${brl(total)}${consulta ? ' + itens a consultar' : ''}\n${ent}`;
+  const a = $('#enviar'); a.href = linkZap(msg); a.setAttribute('aria-disabled', sacola.length ? 'false' : 'true');
+}
+
+function abrir(sim) {
+  $('#sacola').classList.toggle('aberta', sim); $('#veu').classList.toggle('aberto', sim);
+  $('#sacola').setAttribute('aria-hidden', sim ? 'false' : 'true');
+}
+
+document.addEventListener('click', (e) => {
+  const op = e.target.closest('.op');
+  if (op) { escolha[op.dataset.id] = op.dataset.op; document.querySelectorAll(`.op[data-id="${op.dataset.id}"]`).forEach((b) => b.setAttribute('aria-pressed', b === op)); return; }
+  const add = e.target.closest('[data-add]'); if (add) return adicionar(add.dataset.add, add);
+  const chip = e.target.closest('.chip'); if (chip) { filtro = chip.dataset.cat; document.querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', c === chip)); return desenhar(); }
+  const f = e.target.closest('[data-filtro]'); if (f) { const c = document.querySelector(`.chip[data-cat="${f.dataset.filtro}"]`); if (c) c.click(); return; }
+  const mais = e.target.closest('[data-mais]'); if (mais) { sacola[+mais.dataset.mais].q++; salvar(); return atualizarSacola(); }
+  const menos = e.target.closest('[data-menos]'); if (menos) { const k = +menos.dataset.menos; if (--sacola[k].q <= 0) sacola.splice(k, 1); salvar(); return atualizarSacola(); }
+  if (e.target.closest('[data-mapa]')) { e.preventDefault(); toast('Na versão final, abre o endereço no Google Maps'); }
+});
+$('#busca').addEventListener('input', (e) => { termo = e.target.value; desenhar(); });
+$('#abrirSacola').addEventListener('click', () => abrir(true));
+$('#fecharSacola').addEventListener('click', () => abrir(false));
+$('#veu').addEventListener('click', () => abrir(false));
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') abrir(false); });
+document.querySelectorAll('input[name=entrega]').forEach((r) => r.addEventListener('change', atualizarSacola));
+$('#zapFixo').href = linkZap('Olá, Helo Baby! Vim pelo site e queria uma informação.');
+$('#zapFixo').target = '_blank';
+
+desenhar(); atualizarSacola();
+</script>
+</body>
+</html>

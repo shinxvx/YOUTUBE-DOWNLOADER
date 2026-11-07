@@ -1,0 +1,16 @@
+# DEMO HELO BABY: site estático de demonstração. SEM porta: túnel "umbrel" -> http://helobaby-demo:80 = https://helobaby.speedco.com.br
+# Arquivos de site/ valem na hora. Deploy: docker compose up -d na pasta.
+services:
+  helobaby-demo:
+    image: nginx:1.27-alpine
+    container_name: helobaby-demo
+    restart: unless-stopped
+    read_only: true
+    tmpfs: [/var/cache/nginx, /var/run, /tmp]
+    mem_limit: 32m
+    volumes:
+      - ./site:/usr/share/nginx/html:ro
+    networks: [umbrel_main_network]
+networks:
+  umbrel_main_network:
+    external: true

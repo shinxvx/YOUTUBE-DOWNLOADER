@@ -1,0 +1,35 @@
+# COFRE NINEFOX: cofre.ninefox.com.br (senha). SEM porta: túnel "ninefox" (conta Cloudflare do dono) -> http://cofre-ninefox:4193.
+# Deploy: docker compose up -d na pasta (mudou app/: docker compose up -d --force-recreate cofre-ninefox). Dados em data/ (nunca apagar).
+# Roda como root SÓ para ler os arquivos 600 de senha dos outros apps (sem capabilities, disco só leitura, fontes só leitura).
+services:
+  cofre-ninefox:
+    image: node:22-alpine
+    container_name: cofre-ninefox
+    restart: unless-stopped
+    user: "0:0"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 96m
+    working_dir: /app
+    command: ["node", "/app/server.js"]
+    environment:
+      - TZ=America/Sao_Paulo
+      - PORT=4193
+      - DATA_DIR=/data
+      - FONTES=/fontes
+      - MARCA=/marca
+    volumes:
+      - ./app:/app:ro
+      - ./data:/data
+      - ./:/fontes/cofre-ninefox:ro
+      - ../ninefox:/fontes/ninefox:ro
+      - ../ninefox-sports:/fontes/ninefox-sports:ro
+      - ../cortes-speed:/fontes/cortes-speed:ro
+      - ../baixador:/fontes/baixador:ro
+      - ../helobaby-demo:/fontes/helobaby-demo:ro
+      - ../ninefox/app/marca:/marca:ro
+    networks: [umbrel_main_network]
+networks:
+  umbrel_main_network:
+    external: true
