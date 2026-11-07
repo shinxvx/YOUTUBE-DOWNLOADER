@@ -22,7 +22,7 @@
     "links": [ { "rotulo": "Painel", "url": "https://painel.ninefox.com.br" } ],
     "admin": { "url": "https://painel.ninefox.com.br", "obs": "Só senha (sem usuário).", "senhaDe": { "arquivo": "ninefox/segredos/painel-senha.txt" } },
     "tecnico": "Contêiner ninefox (app/painel.js). Hash da senha em data/painel-auth.json; senha em segredos/painel-senha.txt." },
-  { "id": "sports", "nome": "NINEFOX SPORTS (modelo de vitrine)", "grupo": "Lojas", "estado": "demo", "desde": "06/11/2026",
+  { "id": "sports", "nome": "Vitrine Esportiva (modelo, sports.ninefox)", "grupo": "Lojas", "estado": "demo", "desde": "06/11/2026",
     "logo": "/marca/ninefox-icone-principal.svg",
     "oque": "Vitrine de tênis e material esportivo com sacola pelo WhatsApp e painel para cadastrar produtos. Virou modelo para vender (sem marca).",
     "links": [ { "rotulo": "Loja", "url": "https://sports.ninefox.com.br" } ],
