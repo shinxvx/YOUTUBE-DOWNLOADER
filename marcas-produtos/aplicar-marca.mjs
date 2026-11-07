@@ -99,10 +99,11 @@ const especifico = marca === 'foxgrab' ? `
 .l1 { background: radial-gradient(circle, rgba(215, 255, 63, .30), transparent 65%); }
 .l2 { background: radial-gradient(circle, rgba(243, 241, 231, .10), transparent 65%); }
 .l3 { background: radial-gradient(circle, rgba(215, 255, 63, .14), transparent 65%); }
-.fundo::before, .fundo::after { content: ""; position: absolute; left: -10%; width: 120%; background: var(--m); transform: rotate(-9deg); pointer-events: none; }
-.fundo::before { top: 300px; height: 10px; opacity: .9; }
-.fundo::after { top: 330px; height: 2px; opacity: .5; }
-@media (max-width: 640px) { .fundo::before { top: 250px; height: 6px; } .fundo::after { top: 268px; } }
+/* diagonais só nos cantos (fundo é fixo: faixa larga cruzaria o texto ao rolar); some no celular */
+.fundo::before, .fundo::after { content: ""; position: absolute; right: -6%; width: 34%; background: var(--m); transform: rotate(-9deg); pointer-events: none; }
+.fundo::before { bottom: 14%; height: 10px; opacity: .55; }
+.fundo::after { bottom: calc(14% - 26px); height: 2px; opacity: .35; }
+@media (max-width: 1100px) { .fundo::before, .fundo::after { display: none; } }
 `;
 css += comum + especifico;
 grava('estilo.css', css); console.log('ok estilo.css');
