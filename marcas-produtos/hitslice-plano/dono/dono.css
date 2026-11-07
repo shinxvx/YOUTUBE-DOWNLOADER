@@ -1,0 +1,25 @@
+:root { --bg: #171717; --card: #22221F; --borda: rgba(243, 241, 231, .12); --txt: #F3F1E7; --sub: #BDBAB0; --m: #D7FF3F; --m-txt: #171717; --erro: #FF7A7A; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--txt); font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+header { display: flex; align-items: center; gap: 12px; padding: 16px; border-bottom: 1px solid var(--borda); }
+header img { width: 130px; height: auto; }
+header span { color: var(--sub); font-size: 13px; }
+main { max-width: 760px; margin: 0 auto; padding: 20px 16px 60px; }
+h1 { font-size: 22px; margin: 0 0 12px; }
+form { display: grid; gap: 10px; max-width: 360px; margin: 40px auto; }
+input { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--borda); background: var(--card); color: var(--txt); font: inherit; }
+button { padding: 10px 14px; border-radius: 10px; border: 1px solid var(--borda); background: var(--card); color: var(--txt); font: inherit; font-weight: 600; cursor: pointer; }
+button.pri, form button { background: var(--m); color: var(--m-txt); border-color: var(--m); }
+.erro { color: var(--erro); margin: 0; }
+.topo { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px; }
+#resumo, .dica { color: var(--sub); margin: 0 0 12px; }
+#busca { margin-bottom: 14px; }
+ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+li { background: var(--card); border: 1px solid var(--borda); border-radius: 14px; padding: 14px; display: grid; gap: 8px; }
+.linha1 { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.email { font-weight: 600; word-break: break-all; }
+.nome, .info { color: var(--sub); font-size: 13px; }
+.selo { font-size: 12px; font-weight: 700; padding: 2px 10px; border-radius: 99px; background: rgba(243, 241, 231, .08); color: var(--sub); white-space: nowrap; }
+.selo.ativo { background: var(--m); color: var(--m-txt); }
+.selo.venc { background: rgba(255, 122, 122, .15); color: var(--erro); }
+.acoes { display: flex; gap: 8px; flex-wrap: wrap; }

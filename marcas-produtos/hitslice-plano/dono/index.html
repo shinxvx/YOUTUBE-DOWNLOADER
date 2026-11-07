@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>HitSlice · painel do dono</title>
+<link rel="icon" href="/marca/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="dono.css?v=1">
+</head>
+<body>
+<header><img src="/marca/HitSlice-logo-negativa.svg" alt="HitSlice" width="1041" height="306"><span>painel do dono</span></header>
+<main>
+  <form id="entrar" hidden>
+    <h1>Entrar</h1>
+    <input id="senha" type="password" autocomplete="current-password" placeholder="Senha do painel" aria-label="Senha do painel" required>
+    <button type="submit">Entrar</button>
+    <p class="erro" id="erro-login" hidden></p>
+  </form>
+  <section id="painel" hidden>
+    <div class="topo">
+      <h1>Contas</h1>
+      <p id="resumo"></p>
+    </div>
+    <p class="dica">A pessoa paga a mensalidade (R$ <span id="preco"></span>) pelo WhatsApp. Confirmou o pagamento? Procure o e-mail dela e toque em <b>+30 dias</b>.</p>
+    <input id="busca" type="search" placeholder="Buscar por e-mail ou nome" aria-label="Buscar">
+    <ul id="lista"></ul>
+  </section>
+</main>
+<script src="dono.js?v=1"></script>
+</body>
+</html>
