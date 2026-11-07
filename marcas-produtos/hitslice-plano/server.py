@@ -339,13 +339,14 @@ async def logo(req: Request):
 
 
 OPCOES = {
-    "duracao": (int, (30, 60, 120, 300), 60),
+    "duracao": (int, (30, 60, 120, 150, 300), 60),  # 150 = 2–3 min
     "qtd": (int, (0, 3, 5, 10), 0),
     "enquadramento": (str, ("auto", "rosto", "dividida", "desfocado", "centro"), "auto"),
     "genero": (str, tuple(P.GENEROS), "auto"),
     "legenda": (bool, None, True),
     "estilo_legenda": (str, tuple(P.ESTILOS), "amarelo"),
     "posicao_legenda": (str, ("baixo", "meio", "alto"), "baixo"),
+    "posicao_gancho": (str, ("meio", "baixo"), "meio"),  # 07/11/2026: gancho no meio ou embaixo, máx. 2,8 s
     "titulo_gancho": (bool, None, True),
     "gancho_inicio": (bool, None, True),
     "marca_tipo": (str, ("nenhuma", "texto", "imagem"), "nenhuma"),
@@ -534,7 +535,7 @@ async def editar(tid: str, n: int, req: Request):
         if any(tt == tid for tt, _ in fila_ed) and sum(1 for tt, _ in fila_ed if tt == tid) >= 5:
             return JSONResponse({"erro": "fila"}, 429)
         if n == 0:
-            if len(t["cortes"]) >= 30:
+            if len(t["cortes"]) >= 300:  # sem limite prático (pedido do dono 07/11/2026; antes 30)
                 return JSONResponse({"erro": "muitos"}, 400)
             n = max([c["n"] for c in t["cortes"]] + [0]) + 1
             reg = {"n": n, "nome": f"corte{n:02d}", "nota": 0, "motivo": "", "versao": 0, "dur": round(dur, 1),
