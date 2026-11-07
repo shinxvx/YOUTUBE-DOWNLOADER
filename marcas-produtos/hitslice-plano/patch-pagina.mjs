@@ -7,7 +7,7 @@ const F = (n) => path.join(dir, n);
 function troca(n, pares) {
   let s = fs.readFileSync(F(n), 'utf8');
   for (const [a, b] of pares) {
-    const q = typeof a === 'string' ? s.split(a).length - 1 : (s.match(a) || []).length;
+    const q = typeof a === 'string' ? s.split(a).length - 1 : (s.match(new RegExp(a.source, a.flags + 'g')) || []).length;
     if (q !== 1) throw new Error(`${n}: achei ${q}x ${String(a).slice(0, 70)}`);
     s = typeof a === 'string' ? s.replace(a, () => b) : s.replace(a, b);
   }
