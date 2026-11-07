@@ -1,7 +1,8 @@
 // Aplica a identidade oficial (kit HitSlice_FoxGrab_Pacote_Geral, 07/11/2026) numa CÓPIA da página: app/public-nova.
 // Uso (no servidor): node aplicar-marca.mjs foxgrab|hitslice <pasta public-nova>
 // Não mexe na página no ar (app/public). Para publicar: trocar o volume do compose para ./app/public-nova (só com ordem do dono).
-// Regras do kit: SVGs oficiais como imagem (sem redesenhar), paletas e fontes separadas, SEM assinatura NINEFOX/Speed.
+// Regras do kit: SVGs oficiais como imagem (sem redesenhar), paletas e fontes separadas.
+// 07/11/2026: o DONO pediu de volta "by NINEFOX" no topo e o rodapé NINEFOX (com link para ninefox.com.br) — decisão dele, vale sobre o kit.
 import fs from 'fs';
 import path from 'path';
 
@@ -34,17 +35,10 @@ const M = {
 }[marca];
 
 // ---------- index.html ----------
-const logoHTML = `<a class="marca" href="/" aria-label="${M.nome}, início"><picture><source media="(max-width: 480px)" srcset="marca/${M.pref}-icone-negativa.svg"><img class="brand-logo" src="marca/${M.pref}-logo-negativa.svg" alt="${M.nome}" width="${M.w}" height="${M.h}"></picture></a>`;
-const RODAPE = `<!-- rodape-empresa:inicio -->
-<footer class="rs rs--centro"><div class="rs-in">
-<div class="rs-a"><p>Rua Gastão Madeira, 471 – Vila Maria Alta – São Paulo/SP – CEP 02131-080</p></div>
-<div class="rs-b"><p><a href="mailto:contato@ninefox.com.br">contato@ninefox.com.br</a></p></div>
-</div></footer>
-<!-- rodape-empresa:fim -->`;
+const logoHTML = `<a class="marca" href="/" aria-label="${M.nome} by NINEFOX"><picture><source media="(max-width: 480px)" srcset="marca/${M.pref}-icone-negativa.svg"><img class="brand-logo" src="marca/${M.pref}-logo-negativa.svg" alt="${M.nome}" width="${M.w}" height="${M.h}"></picture></a>`;
 troca('index.html', [
   [/<a class="marca" href="\/" aria-label="[^"]*"><img class="logo-nf"[^>]*><\/a>/, logoHTML],
-  [/\s*<a class="topo-link" href="https:\/\/(ninefox\.com\.br|foxgrab\.ninefox\.com\.br)\/"[^>]*>[\s\S]*?<\/a>/, ''],
-  [/,"publisher":\{"@type":"Organization","name":"NINEFOX","url":"https:\/\/ninefox\.com\.br\/"\}/, ''],
+  [/<a class="topo-link" href="https:\/\/(ninefox\.com\.br|foxgrab\.ninefox\.com\.br)\/"[^>]*>[\s\S]*?<\/a>/, '<a class="topo-link" href="https://ninefox.com.br/" target="_blank" rel="noopener">by NINEFOX <span aria-hidden="true">↗</span></a>'],
   [/<link rel="icon" href="icone\.svg\?v=\d+" type="image\/svg\+xml">/, '<link rel="icon" href="marca/favicon.svg?v=3" type="image/svg+xml">\n<link rel="icon" href="marca/favicon.ico?v=3" sizes="any">\n<link rel="apple-touch-icon" href="marca/apple-touch-icon.png?v=3">'],
   [/\n<link rel="icon" href="icone-192\.png\?v=\d+"[^>]*>/, '', false],
   [/\n<link rel="apple-touch-icon" href="apple-touch-icon\.png\?v=\d+">/, '', false],
@@ -52,7 +46,6 @@ troca('index.html', [
   [/<meta name="theme-color" content="#[0-9A-Fa-f]{6}">/, `<meta name="theme-color" content="${marca === 'foxgrab' ? '#18152B' : '#171717'}">`],
   [/og\.png\?v=\d+/, 'og.png?v=4'],
   [/estilo\.css\?v=\d+/, (s) => s.replace(/\d+$/, (n) => String(+n + 1))],
-  [/<!-- rodape-ninefox:inicio -->[\s\S]*?<!-- rodape-ninefox:fim -->/, RODAPE],
 ]);
 
 // ---------- manifest ----------
@@ -86,6 +79,8 @@ h1 { letter-spacing: -.03em; }
 .marca .brand-logo { width: 170px; height: auto; }
 @media (max-width: 480px) { .marca .brand-logo { width: 40px; height: auto; } }
 :focus-visible { outline-color: var(--m); }
+/* "by NINEFOX" no topo também no celular; some se faltar espaço (logado no HitSlice) */
+@media (max-width: 640px) { .topo-link { display: inline-flex; font-size: 12px; white-space: nowrap; } .topo-dir:has(.conta-topo:not([hidden])) .topo-link { display: none; } }
 `;
 const especifico = marca === 'foxgrab' ? `
 /* FoxGrab: simples, amigável, superfícies limpas; violeta nas ações */
